@@ -1,0 +1,48 @@
+experiment_id: P0-E005
+description: Preregistered phase-increment input diagnostic. The CNN receives unit
+  adjacent-sample phase increments; baselines continue to use raw complex IQ. All
+  random seeds and physical data conditions match P0-E001; optimization follows the
+  160-epoch P0-E002 setting, with three training seeds.
+input_representation: unit_phase_increment
+primary_snr_levels_db:
+- 0
+- 5
+- 10
+- 15
+- 20
+required_adjacent_primary_snr_points: 2
+prf_hz: 1300.0
+n_samples: 130
+train_count: 6000
+validation_count: 1200
+test_per_snr: 1024
+train_snr_levels_db:
+- -15
+- -5
+- 0
+- 10
+- 20
+test_snr_levels_db:
+- -15
+- -10
+- -5
+- 0
+- 5
+- 10
+- 15
+- 20
+train_seeds:
+- 101
+- 202
+- 303
+validation_seed: 3030
+test_seed: 7070
+epochs: 160
+batch_size: 128
+learning_rate: 0.001
+patience: 40
+teacher_weight: 0.5
+channels: 6
+kernel_size: 9
+bootstrap_samples: 500
+bootstrap_seed: 9182

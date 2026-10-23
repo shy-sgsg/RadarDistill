@@ -1,0 +1,639 @@
+{
+  "experiment_id": "P0-E005",
+  "status": "completed",
+  "data_type": "simulated single-target complex slow-time data",
+  "configuration": {
+    "experiment_id": "P0-E005",
+    "description": "Preregistered phase-increment input diagnostic. The CNN receives unit adjacent-sample phase increments; baselines continue to use raw complex IQ. All random seeds and physical data conditions match P0-E001; optimization follows the 160-epoch P0-E002 setting, with three training seeds.",
+    "input_representation": "unit_phase_increment",
+    "primary_snr_levels_db": [
+      0,
+      5,
+      10,
+      15,
+      20
+    ],
+    "required_adjacent_primary_snr_points": 2,
+    "prf_hz": 1300.0,
+    "n_samples": 130,
+    "train_count": 6000,
+    "validation_count": 1200,
+    "test_per_snr": 1024,
+    "train_snr_levels_db": [
+      -15,
+      -5,
+      0,
+      10,
+      20
+    ],
+    "test_snr_levels_db": [
+      -15,
+      -10,
+      -5,
+      0,
+      5,
+      10,
+      15,
+      20
+    ],
+    "train_seeds": [
+      101,
+      202,
+      303
+    ],
+    "validation_seed": 3030,
+    "test_seed": 7070,
+    "epochs": 160,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "patience": 40,
+    "teacher_weight": 0.5,
+    "channels": 6,
+    "kernel_size": 9,
+    "bootstrap_samples": 500,
+    "bootstrap_seed": 9182
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "device": "CPU; PyTorch and a usable NVIDIA GPU were unavailable in the checked environment"
+  },
+  "student": {
+    "architecture": "Conv1D(2, 6, kernel=9), ReLU, global average pooling, linear 2-vector",
+    "pooling": "mean",
+    "input_representation": "unit_phase_increment",
+    "input_samples": 129,
+    "hidden_units": null,
+    "training_replicates": [
+      {
+        "method": "E1_supervised",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 160,
+        "final_training_loss": 0.1405649744272232,
+        "best_validation_truth_mse": 0.1440492868423462,
+        "weights_file": "models/seed_101_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 160,
+        "final_training_loss": 0.13857474811871848,
+        "best_validation_truth_mse": 0.14468222856521606,
+        "weights_file": "models/seed_101_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 160,
+        "final_training_loss": 0.20882491715749105,
+        "best_validation_truth_mse": 0.143618643283844,
+        "weights_file": "models/seed_101_E3_supervised_plus_KD.npz"
+      },
+      {
+        "method": "E1_supervised",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 160,
+        "final_training_loss": 0.143435098250707,
+        "best_validation_truth_mse": 0.14411750435829163,
+        "weights_file": "models/seed_202_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 160,
+        "final_training_loss": 0.13902632673581442,
+        "best_validation_truth_mse": 0.1444414108991623,
+        "weights_file": "models/seed_202_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 160,
+        "final_training_loss": 0.21269984616835913,
+        "best_validation_truth_mse": 0.14397741854190826,
+        "weights_file": "models/seed_202_E3_supervised_plus_KD.npz"
+      },
+      {
+        "method": "E1_supervised",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 160,
+        "final_training_loss": 0.1344697671731313,
+        "best_validation_truth_mse": 0.13635560870170593,
+        "weights_file": "models/seed_303_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 160,
+        "final_training_loss": 0.12738792181015016,
+        "best_validation_truth_mse": 0.1336197853088379,
+        "weights_file": "models/seed_303_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 160,
+        "final_training_loss": 0.19493896680076916,
+        "best_validation_truth_mse": 0.13297900557518005,
+        "weights_file": "models/seed_303_E3_supervised_plus_KD.npz"
+      }
+    ],
+    "output_parameterization": "[cos(2*pi*f/PRF), sin(2*pi*f/PRF)]"
+  },
+  "teacher": {
+    "method": "continuous profile maximum likelihood from the periodogram",
+    "soft_target": "local profile-likelihood mean of circular frequency vectors in +/- 2 FFT bins around the ML mode",
+    "note": "Teacher estimates and soft targets are stored separately from physical frequency truth."
+  },
+  "metrics_definition": {
+    "frequency_error": "wrapped to [-PRF/2, PRF/2)",
+    "outlier_threshold_hz": 5.0,
+    "crlb": "standard-deviation CRLB for a complex single tone with unknown complex amplitude/phase and known per-sample SNR",
+    "confidence_interval": "95% percentile bootstrap interval over held-out test samples"
+  },
+  "per_snr": {
+    "constant_zero": {
+      "-15.0": {
+        "rmse_mean_hz": 376.210309273468,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 378.37772616121384,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 365.9897901133057,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 370.956311288968,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 378.8934033433262,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 372.89864171876184,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 376.5700785522397,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 376.08535126282266,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "random_uniform": {
+      "-15.0": {
+        "rmse_mean_hz": 371.38744648300377,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 368.54198396550805,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 381.0066335492521,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 382.8114141733966,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 374.30112547780215,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 374.95977312773925,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 379.1380143429956,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 374.5002013454183,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B0_fft_peak": {
+      "-15.0": {
+        "rmse_mean_hz": 315.0950073975136,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.9172879561194,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 2.9770126855454495,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 2.859637423572221,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 2.9147975630174163,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 2.855619949854381,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 2.8569999289335275,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 2.9636625580979663,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B1_fft_interpolated": {
+      "-15.0": {
+        "rmse_mean_hz": 315.04071848409745,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.88302831863568,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 1.8072307178904636,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 1.462671801335533,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 1.3340050132876662,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 1.2517516639047568,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 1.2081875748065551,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 1.232892256437001,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B2_phase_difference": {
+      "-15.0": {
+        "rmse_mean_hz": 307.52165856409687,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 182.43639241599314,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 45.008094685700094,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 12.895663869071804,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 4.093544812123722,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 1.3381786427514848,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 0.4808518035663071,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 0.20607909417896128,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B3_continuous_ML": {
+      "-15.0": {
+        "rmse_mean_hz": 315.0214237318002,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.88688228530658,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 0.6164963060045304,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 0.33749808907930884,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 0.18779593991874896,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 0.10626439590566782,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 0.06166676599137075,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 0.03315112618311353,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E1_supervised": {
+      "-15.0": {
+        "rmse_mean_hz": 325.2389188432255,
+        "rmse_std_hz": 3.231959669583402,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 225.57005081820532,
+        "rmse_std_hz": 3.8672103523799586,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 77.7759400370647,
+        "rmse_std_hz": 3.0502790597932,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 31.65455537449328,
+        "rmse_std_hz": 7.001138238034981,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 14.34521791043663,
+        "rmse_std_hz": 3.0277812218522064,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 11.564827587736056,
+        "rmse_std_hz": 3.9369721490181377,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 14.222432876444921,
+        "rmse_std_hz": 2.174451059254329,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 15.419859002803728,
+        "rmse_std_hz": 2.4557770500933156,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E2_teacher_KD": {
+      "-15.0": {
+        "rmse_mean_hz": 325.98398800631134,
+        "rmse_std_hz": 3.4874404675446566,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 225.73126640269516,
+        "rmse_std_hz": 4.236488240691589,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 77.11228041929111,
+        "rmse_std_hz": 4.388196838595115,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 33.23026458359215,
+        "rmse_std_hz": 6.741934301713732,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 15.458760631678999,
+        "rmse_std_hz": 4.535623702856951,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 12.459686221587353,
+        "rmse_std_hz": 4.5981082026395645,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 15.031291246995252,
+        "rmse_std_hz": 2.7599658058321186,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 15.76855727161923,
+        "rmse_std_hz": 2.4184113475458116,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E3_supervised_plus_KD": {
+      "-15.0": {
+        "rmse_mean_hz": 326.31077045435495,
+        "rmse_std_hz": 3.423125261130603,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 225.7552333925715,
+        "rmse_std_hz": 3.985370401334902,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 77.24251775227957,
+        "rmse_std_hz": 3.6687477409124245,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 33.255717873079966,
+        "rmse_std_hz": 5.966968055321363,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 14.984942855723284,
+        "rmse_std_hz": 2.809442333011683,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 11.418893329347616,
+        "rmse_std_hz": 3.8516587343501376,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 14.039965050543545,
+        "rmse_std_hz": 1.7730245545436243,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 14.917816056790604,
+        "rmse_std_hz": 1.6142274033820834,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    }
+  },
+  "paired_E3_minus_E1_rmse": {
+    "-15.0": {
+      "delta_rmse_hz": 1.0731160055938176,
+      "ci95_low_hz": -0.8348489832213645,
+      "ci95_high_hz": 4.149279314192192
+    },
+    "-10.0": {
+      "delta_rmse_hz": 0.1865343214687698,
+      "ci95_low_hz": -3.1043544125781697,
+      "ci95_high_hz": 2.789604557362241
+    },
+    "-5.0": {
+      "delta_rmse_hz": -0.5152257833322977,
+      "ci95_low_hz": -2.849843704777206,
+      "ci95_high_hz": 1.0286874702287097
+    },
+    "0.0": {
+      "delta_rmse_hz": 1.4441322279029762,
+      "ci95_low_hz": 0.5843886251997787,
+      "ci95_high_hz": 2.692680369164767
+    },
+    "5.0": {
+      "delta_rmse_hz": 0.6028221967235563,
+      "ci95_low_hz": -0.008551319413865154,
+      "ci95_high_hz": 1.1552989048165676
+    },
+    "10.0": {
+      "delta_rmse_hz": -0.15922533021962337,
+      "ci95_low_hz": -0.5379097645841463,
+      "ci95_high_hz": 0.19475742813196378
+    },
+    "15.0": {
+      "delta_rmse_hz": -0.21841824082427053,
+      "ci95_low_hz": -0.9543917833563363,
+      "ci95_high_hz": 0.39014865462684556
+    },
+    "20.0": {
+      "delta_rmse_hz": -0.5737550702439584,
+      "ci95_low_hz": -1.9027213566150376,
+      "ci95_high_hz": 0.3722125404093058
+    }
+  },
+  "paired_E1_minus_B0_fft_peak_rmse": {
+    "-15.0": {
+      "delta_rmse_hz": 10.15461679778167,
+      "ci95_low_hz": -3.9189990464320656,
+      "ci95_high_hz": 24.775735734822856
+    },
+    "-10.0": {
+      "delta_rmse_hz": 104.67486181140708,
+      "ci95_low_hz": 88.11526700548572,
+      "ci95_high_hz": 121.544985261161
+    },
+    "-5.0": {
+      "delta_rmse_hz": 74.83879322951802,
+      "ci95_low_hz": 69.62128033321493,
+      "ci95_high_hz": 80.19810939387509
+    },
+    "0.0": {
+      "delta_rmse_hz": 29.30693166674646,
+      "ci95_low_hz": 22.971924846009564,
+      "ci95_high_hz": 35.79520914134073
+    },
+    "5.0": {
+      "delta_rmse_hz": 11.641881876888485,
+      "ci95_low_hz": 8.140654104906316,
+      "ci95_high_hz": 13.888189359552147
+    },
+    "10.0": {
+      "delta_rmse_hz": 9.147646422352699,
+      "ci95_low_hz": 4.505256749978256,
+      "ci95_high_hz": 11.696485847680902
+    },
+    "15.0": {
+      "delta_rmse_hz": 11.475820979656294,
+      "ci95_low_hz": 9.119824771172727,
+      "ci95_high_hz": 13.299946950267712
+    },
+    "20.0": {
+      "delta_rmse_hz": 12.586019505517477,
+      "ci95_low_hz": 10.245530756881589,
+      "ci95_high_hz": 14.906602889039563
+    }
+  },
+  "artifact_files": [
+    "config.yaml",
+    "metrics.json",
+    "result.csv",
+    "analysis.md",
+    "predictions.npz",
+    "datasets/train_seed_*.npz",
+    "datasets/validation_seed_*.npz",
+    "datasets/test.npz",
+    "models/*.npz"
+  ]
+}

@@ -1,0 +1,583 @@
+{
+  "experiment_id": "P0-E001",
+  "status": "completed",
+  "data_type": "simulated single-target complex slow-time data",
+  "configuration": {
+    "experiment_id": "P0-E001",
+    "prf_hz": 1300.0,
+    "n_samples": 130,
+    "train_count": 6000,
+    "validation_count": 1200,
+    "test_per_snr": 1024,
+    "train_snr_levels_db": [
+      -15,
+      -5,
+      0,
+      10,
+      20
+    ],
+    "test_snr_levels_db": [
+      -15,
+      -10,
+      -5,
+      0,
+      5,
+      10,
+      15,
+      20
+    ],
+    "train_seeds": [
+      101,
+      202,
+      303
+    ],
+    "validation_seed": 3030,
+    "test_seed": 7070,
+    "epochs": 40,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "teacher_weight": 0.5,
+    "channels": 6,
+    "kernel_size": 9,
+    "bootstrap_samples": 500,
+    "bootstrap_seed": 9182
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "device": "CPU; PyTorch and a usable NVIDIA GPU were unavailable in the checked environment"
+  },
+  "student": {
+    "architecture": "Conv1D(2, 6, kernel=9), ReLU, global average pooling, linear 2-vector",
+    "training_replicates": [
+      {
+        "method": "E1_supervised",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 40,
+        "final_training_loss": 0.17339788460731506,
+        "best_validation_truth_mse": 0.18208561837673187,
+        "weights_file": "models/seed_101_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 40,
+        "final_training_loss": 0.16437829327583314,
+        "best_validation_truth_mse": 0.18256857991218567,
+        "weights_file": "models/seed_101_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 101,
+        "model_seed": 872,
+        "epochs_completed": 40,
+        "final_training_loss": 0.25569617076714835,
+        "best_validation_truth_mse": 0.18178662657737732,
+        "weights_file": "models/seed_101_E3_supervised_plus_KD.npz"
+      },
+      {
+        "method": "E1_supervised",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 40,
+        "final_training_loss": 0.18242372103532156,
+        "best_validation_truth_mse": 0.1809782087802887,
+        "weights_file": "models/seed_202_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 40,
+        "final_training_loss": 0.1694388129711151,
+        "best_validation_truth_mse": 0.18166746199131012,
+        "weights_file": "models/seed_202_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 202,
+        "model_seed": 973,
+        "epochs_completed": 40,
+        "final_training_loss": 0.26675128797690073,
+        "best_validation_truth_mse": 0.18094943463802338,
+        "weights_file": "models/seed_202_E3_supervised_plus_KD.npz"
+      },
+      {
+        "method": "E1_supervised",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 40,
+        "final_training_loss": 0.17715993785858156,
+        "best_validation_truth_mse": 0.18032294511795044,
+        "weights_file": "models/seed_303_E1_supervised.npz"
+      },
+      {
+        "method": "E2_teacher_KD",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 40,
+        "final_training_loss": 0.16935617832342784,
+        "best_validation_truth_mse": 0.17781944572925568,
+        "weights_file": "models/seed_303_E2_teacher_KD.npz"
+      },
+      {
+        "method": "E3_supervised_plus_KD",
+        "train_seed": 303,
+        "model_seed": 1074,
+        "epochs_completed": 40,
+        "final_training_loss": 0.2603357736269633,
+        "best_validation_truth_mse": 0.17756129801273346,
+        "weights_file": "models/seed_303_E3_supervised_plus_KD.npz"
+      }
+    ],
+    "output_parameterization": "[cos(2*pi*f/PRF), sin(2*pi*f/PRF)]"
+  },
+  "teacher": {
+    "method": "continuous profile maximum likelihood from the periodogram",
+    "soft_target": "local profile-likelihood mean of circular frequency vectors in +/- 2 FFT bins around the ML mode",
+    "note": "Teacher estimates and soft targets are stored separately from physical frequency truth."
+  },
+  "metrics_definition": {
+    "frequency_error": "wrapped to [-PRF/2, PRF/2)",
+    "outlier_threshold_hz": 5.0,
+    "crlb": "standard-deviation CRLB for a complex single tone with unknown complex amplitude/phase and known per-sample SNR",
+    "confidence_interval": "95% percentile bootstrap interval over held-out test samples"
+  },
+  "per_snr": {
+    "constant_zero": {
+      "-15.0": {
+        "rmse_mean_hz": 376.210309273468,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 378.37772616121384,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 365.9897901133057,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 370.956311288968,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 378.8934033433262,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 372.89864171876184,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 376.5700785522397,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 376.08535126282266,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "random_uniform": {
+      "-15.0": {
+        "rmse_mean_hz": 371.38744648300377,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 368.54198396550805,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 381.0066335492521,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 382.8114141733966,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 374.30112547780215,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 374.95977312773925,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 379.1380143429956,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 374.5002013454183,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B0_fft_peak": {
+      "-15.0": {
+        "rmse_mean_hz": 315.0950073975136,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.9172879561194,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 2.9770126855454495,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 2.859637423572221,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 2.9147975630174163,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 2.855619949854381,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 2.8569999289335275,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 2.9636625580979663,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B1_fft_interpolated": {
+      "-15.0": {
+        "rmse_mean_hz": 315.04071848409745,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.88302831863568,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 1.8072307178904636,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 1.462671801335533,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 1.3340050132876662,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 1.2517516639047568,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 1.2081875748065551,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 1.232892256437001,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B2_phase_difference": {
+      "-15.0": {
+        "rmse_mean_hz": 307.52165856409687,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 182.43639241599314,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 45.008094685700094,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 12.895663869071804,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 4.093544812123722,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 1.3381786427514848,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 0.4808518035663071,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 0.20607909417896128,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "B3_continuous_ML": {
+      "-15.0": {
+        "rmse_mean_hz": 315.0214237318002,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 120.88688228530658,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 0.6164963060045304,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 0.33749808907930884,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 0.18779593991874896,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 0.10626439590566782,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 0.06166676599137075,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 0.03315112618311353,
+        "rmse_std_hz": 0.0,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E1_supervised": {
+      "-15.0": {
+        "rmse_mean_hz": 316.1167713717669,
+        "rmse_std_hz": 0.9724956473208957,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 212.64999558832517,
+        "rmse_std_hz": 5.880695832673888,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 67.88248200644023,
+        "rmse_std_hz": 1.8770666103631364,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 27.75228699397115,
+        "rmse_std_hz": 1.29786898274739,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 18.398881493844844,
+        "rmse_std_hz": 1.1741596657181643,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 14.887715803873467,
+        "rmse_std_hz": 1.257176550260238,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 15.096457679421027,
+        "rmse_std_hz": 1.9025254889145586,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 14.996563506084286,
+        "rmse_std_hz": 1.9513980497600818,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E2_teacher_KD": {
+      "-15.0": {
+        "rmse_mean_hz": 314.0379834161674,
+        "rmse_std_hz": 1.1683207936752398,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 212.6006668595024,
+        "rmse_std_hz": 3.802104150811278,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 67.87338273396533,
+        "rmse_std_hz": 1.777034628893629,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 27.698733695951812,
+        "rmse_std_hz": 1.5912665266964043,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 18.205836745581646,
+        "rmse_std_hz": 0.6819897120524706,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 14.337769003874442,
+        "rmse_std_hz": 2.139526242024242,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 14.11030567544867,
+        "rmse_std_hz": 2.7276999847711134,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 13.809767994648547,
+        "rmse_std_hz": 2.756071522961156,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    },
+    "E3_supervised_plus_KD": {
+      "-15.0": {
+        "rmse_mean_hz": 314.7406937724081,
+        "rmse_std_hz": 1.077854627136539,
+        "crlb_sd_hz": 1.9228124700771325
+      },
+      "-10.0": {
+        "rmse_mean_hz": 211.8797291462126,
+        "rmse_std_hz": 5.189612610080503,
+        "crlb_sd_hz": 1.0812769125157031
+      },
+      "-5.0": {
+        "rmse_mean_hz": 66.47557702394302,
+        "rmse_std_hz": 1.3063402050311586,
+        "crlb_sd_hz": 0.6080466918818096
+      },
+      "0.0": {
+        "rmse_mean_hz": 26.58711680635098,
+        "rmse_std_hz": 1.966231039850054,
+        "crlb_sd_hz": 0.3419297824904247
+      },
+      "5.0": {
+        "rmse_mean_hz": 17.759319106521264,
+        "rmse_std_hz": 0.6559158646258428,
+        "crlb_sd_hz": 0.19228124700771326
+      },
+      "10.0": {
+        "rmse_mean_hz": 14.116001896712396,
+        "rmse_std_hz": 1.8097714722872325,
+        "crlb_sd_hz": 0.1081276912515703
+      },
+      "15.0": {
+        "rmse_mean_hz": 14.39537439733828,
+        "rmse_std_hz": 2.385523973909978,
+        "crlb_sd_hz": 0.06080466918818096
+      },
+      "20.0": {
+        "rmse_mean_hz": 14.376629261972726,
+        "rmse_std_hz": 2.3846044675204334,
+        "crlb_sd_hz": 0.03419297824904247
+      }
+    }
+  },
+  "paired_E3_minus_E1_rmse": {
+    "-15.0": {
+      "delta_rmse_hz": -1.375844456186428,
+      "ci95_low_hz": -2.8929798332189436,
+      "ci95_high_hz": -0.009902109002672793
+    },
+    "-10.0": {
+      "delta_rmse_hz": -0.7821026222975149,
+      "ci95_low_hz": -2.464708163594485,
+      "ci95_high_hz": 1.17032113370845
+    },
+    "-5.0": {
+      "delta_rmse_hz": -1.4156475438323213,
+      "ci95_low_hz": -2.6765772667511434,
+      "ci95_high_hz": -0.6020609315002038
+    },
+    "0.0": {
+      "delta_rmse_hz": -1.136968654282935,
+      "ci95_low_hz": -2.73661715797141,
+      "ci95_high_hz": -0.47367760477605
+    },
+    "5.0": {
+      "delta_rmse_hz": -0.6564492554103367,
+      "ci95_low_hz": -1.0492947620117856,
+      "ci95_high_hz": -0.08152702070400666
+    },
+    "10.0": {
+      "delta_rmse_hz": -0.7299277911423339,
+      "ci95_low_hz": -1.3038429777459557,
+      "ci95_high_hz": -0.13287995066846572
+    },
+    "15.0": {
+      "delta_rmse_hz": -0.6496201121755476,
+      "ci95_low_hz": -1.2432776774107426,
+      "ci95_high_hz": 0.006808044604502166
+    },
+    "20.0": {
+      "delta_rmse_hz": -0.5730941991546565,
+      "ci95_low_hz": -1.1018895381000515,
+      "ci95_high_hz": 0.10826949608053829
+    }
+  },
+  "artifact_files": [
+    "config.yaml",
+    "metrics.json",
+    "result.csv",
+    "analysis.md",
+    "predictions.npz",
+    "datasets/train_seed_*.npz",
+    "datasets/validation_seed_*.npz",
+    "datasets/test.npz",
+    "models/*.npz"
+  ]
+}
