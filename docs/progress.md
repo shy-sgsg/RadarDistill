@@ -251,3 +251,9 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **教师：** teacher 在 -20/-15 dB 检测 AUC 约 0.51/0.67且 Doppler RMSE 约 370/332 Hz；-10 dB 检测 AUC约0.982但 Doppler RMSE约287 Hz。检测知识和精频率知识不能视为同等可靠。
 - **决定：** H-ARCH-001 与 H-OPT-001 仍为 INCONCLUSIVE。D1-E002 优先 pilot 低成本 lag-one 复相干统计作为 S2；S1 只做单 seed 时间读出反证；S3 固定 FFT 混合结果单独归因。D1-E001 G1/G2/G3 保持原冻结结论。
 - **产物：** experiments/D1-R1/protocol.md、config.yaml、metrics.json、result.csv、analysis.md；测试 tests/test_d1_r1_diagnostics.py。
+
+## 2026-10-24：冻结 D1-E002 受控 Doppler 读出协议
+
+- **问题与证据：** D1-R1 显示高 SNR 残差在真值距离门下仍存在；池化前 probe 没有支持单纯扩大时间特征的说法；任务梯度诊断不支持直接改损失权重。S2 归一化 lag-one 相干统计因此作为优先纯 IQ 候选，S1 仅一次单 seed 反证，S3 作为 FFT 混合方法单独归因。
+- **冻结设计：** `experiments/D1-E002/protocol.md` 与 `config.yaml` 固定 S1/S2/S3 前向、参数量、E1 真值监督、1600 更新、有效 batch 64、train/validation/pilot/calibration/blind 种子、检测 `Pfa=1e-2` guardrail、高 SNR Doppler 主指标、range 非劣界、paired hierarchical bootstrap 与停止规则。protocol/config 测试展开 313 个数据流种子，确认无内部重复且不与登记 D0/D1 种子相撞。
+- **状态：** protocol/config 和配置测试先于候选训练准备；尚未生成 E002 数据、启动 pilot、calibration 或 blind。若无候选通过 pilot 屏选，不做 formal 或盲测。

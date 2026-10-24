@@ -1,0 +1,283 @@
+experiment_id: D1-E002
+title: Controlled Doppler readout comparison for the D1 task student
+date: 2026-10-24
+status: preregistered_before_candidate_training
+parent_experiment: D1-E001
+diagnostic_basis: experiments/D1-R1/analysis.md
+
+radar:
+  prf_hz: 1300
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+  doppler_interval_hz: [-650, 650] # half-open; errors wrap over PRF
+  target_range_cell_interval: [4.0, 28.0] # lower inclusive, upper exclusive
+
+data:
+  target_count: "0_or_1"
+  noise: circular_complex_awgn
+  input_shape: [3, 130, 32]
+  network_input: real_imag_planes # [B,6,130,32], real then imaginary
+  snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  training_snr_distribution: uniform_continuous_-20_to_20_db
+  h0_h1_prior: 0.5
+  train_examples_per_class: 4096
+  train_examples_per_chunk: 64 # per class; paired H0/H1 blocks
+  validation_examples_per_class_per_snr: 128
+  matched_counterfactual_h0_h1: true
+  normalization_uses_truth_or_snr: false
+  training_cache_committed: false
+
+seeds:
+  stream_stride: 1009
+  bootstrap: 2026250101
+
+splits:
+  pilot:
+    id: pilot_seed_1
+    train_seed: 2026210101
+    validation_seed: 2026210102
+    initialization_seed: 2026210103
+    train_examples_per_class: 4096
+    train_examples_per_chunk: 64
+    validation_examples_per_class_per_snr: 128
+  formal:
+    - id: seed_1
+      train_seed: 2026220101
+      validation_seed: 2026220102
+      initialization_seed: 2026220103
+      train_examples_per_class: 4096
+      train_examples_per_chunk: 64
+      validation_examples_per_class_per_snr: 128
+    - id: seed_2
+      train_seed: 2026220201
+      validation_seed: 2026220202
+      initialization_seed: 2026220203
+      train_examples_per_class: 4096
+      train_examples_per_chunk: 64
+      validation_examples_per_class_per_snr: 128
+    - id: seed_3
+      train_seed: 2026220301
+      validation_seed: 2026220302
+      initialization_seed: 2026220303
+      train_examples_per_class: 4096
+      train_examples_per_chunk: 64
+      validation_examples_per_class_per_snr: 128
+  calibration:
+    h0_seed_base: 2026230001
+    h0_examples_total: 50000
+    h0_examples_per_snr: 6250
+    snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  blind:
+    h0_seed_base: 2026240001
+    h1_seed_base: 2026241001
+    h0_examples_per_snr: 4096
+    h1_examples_per_snr: 1024
+    snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+    generation: after_candidates_checkpoints_and_calibration_rules_are_frozen
+  physical_consistency:
+    seed: 2026250201
+    examples: 256
+    snr_db: [0, 10]
+    common_phase_rotation_radians: [0.37, 1.41, 2.83]
+    frequency_shift_equivariance_hz: [0.625, 5.0]
+    purpose: diagnostic_only_not_a_candidate_selection_gate
+
+models:
+  S0:
+    role: primary_historical_anchor
+    training: false
+    architecture: frozen_D1_A_truth_only_TCN
+    checkpoints:
+      - experiments/D1-E001/formal/seed_1/A_truth_only/best_inference.pt
+      - experiments/D1-E001/formal/seed_2/A_truth_only/best_inference.pt
+      - experiments/D1-E001/formal/seed_3/A_truth_only/best_inference.pt
+    parameter_count: 9093
+  S0_D:
+    role: secondary_historical_anchor
+    training: false
+    architecture: frozen_D1_D_progressive_distillation_TCN
+    checkpoints:
+      - experiments/D1-E001/formal/seed_1/D_progressive_distillation/best_inference.pt
+      - experiments/D1-E001/formal/seed_2/D_progressive_distillation/best_inference.pt
+      - experiments/D1-E001/formal/seed_3/D_progressive_distillation/best_inference.pt
+  S1:
+    role: pure_IQ_temporal_readout_falsification
+    type: trainable_student
+    base: S0_TCN
+    change: four_segment_temporal_Doppler_readout_only
+    segments: [[0, 32], [32, 64], [64, 96], [96, 130]]
+    segment_pooling: mean_within_each_segment
+    Doppler_head: linear_128_to_2_circular_vector
+    all_other_heads_and_backbone: unchanged
+    parameter_count: 9285
+    added_parameters_vs_S0: 192
+    optimizer_updates: 1600
+    effective_batch_size: 64
+  S2:
+    role: primary_pure_IQ_candidate
+    type: trainable_student
+    base: S0_TCN
+    change: normalized_lag_one_complex_coherence_on_Doppler_readout_only
+    lag_one_statistic: "z[c,r] = sum_{n=0..128}(x[c,n+1,r]*conj(x[c,n,r])) / (sqrt(sum|x[c,n+1,r]|^2 * sum|x[c,n,r]|^2) + 1e-8)"
+    lag_one_axes: per_channel_per_range_cell
+    lag_one_feature_values: real_and_imaginary_parts
+    statistic_epsilon: 1.0e-8
+    Doppler_head_input_channels: 38 # 32 pooled TCN + 6 coherence values per range
+    all_other_heads_and_backbone: unchanged
+    parameter_count: 9105
+    added_parameters_vs_S0: 12
+    optimizer_updates: 1600
+    effective_batch_size: 64
+  S3:
+    role: FFT_assisted_hybrid_diagnostic
+    type: trainable_hybrid_student
+    base: S0_TCN_for_presence_and_range
+    change: fixed_FFT_plus_local_residual_MLP_for_Doppler
+    fft:
+      window: rectangular
+      zero_padding: right_to_520
+      nfft: 520
+      frequency_order: fftshift_centered
+      power: sum_over_three_channels_per_range_cell
+      coarse_peak: argmax_per_range_cell
+      local_patch_bins: [-2, -1, 0, 1, 2]
+      patch_transform: log_power_plus_epsilon_then_subtract_patch_mean
+      epsilon: 1.0e-12
+      bin_spacing_hz: 2.5
+    residual_mlp:
+      layers: [5, 16, 16, 1]
+      hidden_activation: silu
+      output_activation: tanh
+      maximum_absolute_correction_bins: 0.5
+    doppler_head: absent_from_TCN
+    parameter_count: 9412
+    added_parameters_vs_S0: 319
+    optimizer_updates: 1600
+    effective_batch_size: 64
+    label_clip: nearest_local_bin_residual_in_minus_0_5_to_0_5_bins
+    nonlearning_matches:
+      - centered_520_fft_three_point_log_power_parabolic
+      - centered_520_fft_five_bin_excess_power_centroid
+    attribution: hybrid_only_never_pure_IQ_success
+
+baselines:
+  historical_students: [S0, S0_D]
+  apx15_teacher: D0_APX15_slow_time_FFT_teacher_from_same_IQ
+  spectral:
+    native_fft_peak_nfft: 130
+    fourfold_zero_padded_fft_peak_nfft: 520
+    fourfold_zero_padded_three_point_parabolic_nfft: 520
+  lag_one_equal_channel_coherence: same_normalized_lag_one_features_as_S2_equal_weight_phase
+  profile_ml:
+    method: frozen_D1_profile_likelihood_implementation
+    h1_examples_per_snr: 128
+    selection: first_fixed_sample_ids_in_new_blind_stream
+    evaluation_only: true
+
+training:
+  objective: E1_physics_simulation_truth_supervision_only
+  teacher_labels_used: false
+  teacher_soft_responses_used: false
+  device: cuda:0
+  cpu_fallback: false
+  precision: float32
+  candidate_order: [S1, S2, S3]
+  one_model_on_gpu_at_a_time: true
+  generated_data_stays_on_cpu: true
+  effective_batch_size: 64
+  initial_microbatch_size: 64
+  microbatch_fallbacks: [32, 16]
+  oom_preserves_effective_batch_and_updates: true
+  optimizer:
+    name: AdamW
+    learning_rate: 0.001
+    final_learning_rate: 0.0001
+    schedule: cosine
+    weight_decay: 0.0001
+    gradient_clip_norm: 1.0
+  validation_interval_updates: 100
+  checkpoint_selection: lowest_equal_weight_mean_validation_doppler_rmse_over_0_5_10_20_db
+  early_stopping: false
+  same_train_validation_sample_ids_within_seed: true
+  same_backbone_initialization_seed_within_seed: true
+  same_minibatch_order_within_seed: true
+  same_optimizer_updates_and_effective_batch_across_candidates: true
+  common_task_loss_weights:
+    presence_bce: 1.0
+    range_cell_cross_entropy: 1.0
+    range_offset_smooth_l1: 1.0
+    doppler_circular_cosine: 1.0
+  S3_doppler_loss: circular_cosine_from_predicted_fft_residual
+
+acceptance:
+  primary_endpoint:
+    metric: mean_snr_doppler_rmse_hz
+    snr_db: [0, 5, 10, 20]
+    aggregation: equal_weight_mean_of_per_snr_RMSE
+    s1_s2_comparator: S0
+    s3_comparator: matched_nonlearning_three_point_fft
+    minimum_relative_gain_vs_s0: 0.10
+    formal_success_requires_paired_95pct_CI_for_candidate_minus_S0_below_zero: true
+    minimum_formal_seeds_with_improvement_direction: 2
+  hybrid_endpoint:
+    applies_only_to: S3
+    metric: mean_snr_doppler_rmse_hz
+    comparator: matched_nonlearning_three_point_fft
+    minimum_relative_gain: 0.10
+    requires_paired_95pct_CI_below_zero: true
+    minimum_formal_seeds_with_improvement_direction: 2
+  pilot_screen:
+    uses_only_pilot_validation: true
+    s1_s2_comparator: S0
+    s3_comparator: matched_nonlearning_three_point_fft
+    s1_s2_minimum_gain_vs_s0: 0.10
+    s3_minimum_gain_vs_matched_nonlearning_fft: 0.10
+    all_candidates_must_pass_shared_guards: true
+    maximum_single_primary_snr_regression_fraction: 0.05
+    minimum_low_snr_auc_delta_vs_s0: -0.05
+    high_snr_range_snr_db: [0, 5, 10, 20]
+    maximum_high_snr_range_rmse_increase_cells_vs_s0: 0.05
+    requires_finite_outputs_and_wrapped_frequency_decode: true
+    no_candidate_pass_means_no_formal_training: true
+    no_candidate_pass_means_no_new_blind_generation: true
+  detection_guardrail:
+    pfa: 0.01
+    calibration_threshold: conservative_upper_order_statistic_on_50000_balanced_snr_h0
+    threshold_comparator: score_strictly_greater_than_threshold
+    low_snr_db: [-20, -15, -10, -5]
+    aggregate: equal_weight_mean_pd
+    noninferiority_margin_pd: 0.05
+    minimum_paired_95pct_CI_lower_bound_for_candidate_minus_s0: -0.05
+    maximum_allowed_pointwise_pd_drop_per_snr: 0.10
+  range_guardrail:
+    snr_db: [0, 5, 10, 20]
+    aggregate: equal_weight_mean_range_rmse_cells
+    noninferiority_margin_cells: 0.05
+    maximum_paired_95pct_CI_upper_bound_for_candidate_minus_s0: 0.05
+  uncertainty:
+    bootstrap_replicates: 2000
+    method: paired_hierarchical_bootstrap_over_training_seed_then_blind_sample_id
+    sample_pairing: identical_blind_sample_ids_for_all_methods
+    interval: percentile_95pct
+    bootstrap_seed: 2026250101
+  stage_decision:
+    pure_IQ_candidate_supported_only_if_primary_detection_and_range_gates_all_pass: true
+    S3_cannot_satisfy_pure_IQ_gate: true
+    no_pure_IQ_candidate_pass_means_stop_D1_E002_structure_search: true
+    inconclusive_interval_means_no_GO_claim: true
+
+blind_generation:
+  generated: false
+  allowed_after:
+    - candidate_models_and_code_frozen
+    - calibration_scores_and_thresholds_frozen
+    - report_manifest_written
+  calibration_precedes_blind: true
+  blind_used_for_model_selection: false
+
+outputs:
+  required: [config_used.yaml, environment.json, metrics.json, result.csv, training_history.csv, analysis.md, rmse_snr.png, detection_roc.png]
+  checkpoints: initial_and_best_inference_per_seed
+  generated_training_data_committed: false
+  record: [git_sha, dirty_state, python, pytorch, cuda, driver, gpu, peak_allocated_bytes, peak_reserved_bytes, train_seconds, actual_microbatch, split_seeds]

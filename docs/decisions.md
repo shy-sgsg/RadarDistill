@@ -116,3 +116,9 @@
 - **证据：** D1-R1 在共同开发验证集上对三个 A/D formal seed 做了预测距离门与 true-range oracle 对照。0–20 dB 的 A Doppler 误差几乎不因 oracle 改变；-10 dB oracle 有明显改善但仍有约 186 Hz 残差。池化后固定线性 probe 比池化前更好，但维度差异使 H-ARCH-001 不能判定。最终 checkpoint 任务梯度 cosine 均值近零，但不能代表训练全过程。APX15 teacher 在 -20/-15 dB 检测和 Doppler 都不可靠，且 -10 dB 检测强而 Doppler 仍差。
 - **决定：** D1-E002 的单 seed 优先候选为 S2：在原 IQ TCN 的 per-range Doppler readout 旁加入归一化 lag-one 复相干特征；S1 四段时间读出只作单 seed falsification，S3 固定 FFT 辅助混合只作对照并与匹配非学习插值比较。维持 H0/H1、距离和 Doppler 任务，不加杂波、多目标或通道失配。
 - **边界：** R1 证据来自 D1 开发/验证材料，未读取最终盲测。它不证明 S2 改善，不证明全图 KL 误导学生，也不改变 D1-E001 G1/G2/G3。E002 正式预算、保护门和新盲测须先冻结。
+
+## 2026-10-24：冻结 D1-E002 受控 Doppler 读出协议
+
+- **决定：** S2 作为唯一优先纯 IQ 候选；S1 四段读出只作一 seed 反证；S3 定义为固定 520 点 FFT 加受限局部残差 MLP，并与同 FFT 和局部谱的两种非学习估计对照。候选仅用 E1 仿真真值，不添加教师蒸馏损失。
+- **统计门：** 高 SNR 平均 Doppler RMSE 是主终点，候选需达到至少 10% 点估计改善且配对 95% 区间完全低于零、至少 2/3 formal seed 同向；低 SNR `Pfa=1e-2` Pd 和高 SNR range RMSE 使用冻结非劣界。S3 不能满足纯 IQ 成功判断。
+- **数据/边界：** 新 pilot/formal/calibration/blind seed 范围已与 D0/D1 登记种子分离；盲测尚未生成。pilot 未过门即停止该候选，所有 pilot 均未过门则不做 formal 和 blind。D1-E001 冻结阶段结论不变。
