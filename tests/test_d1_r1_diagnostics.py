@@ -1,9 +1,13 @@
 import numpy as np
 import pytest
 import torch
+import warnings
+
+from scripts.diagnose_d1_r1 import _diagnostic_strata
 
 from radardistill.evaluation.d1_r1_diagnostics import (
     circular_doppler_error_hz,
+    diagnostic_truth_range_bins,
     decode_doppler_modes,
     fit_circular_ridge_probe,
     validate_diagnostic_cache_path,
@@ -66,3 +70,39 @@ def test_linear_probe_fits_circular_frequency_targets_without_wrap_bias():
     assert np.isfinite(result["rmse_hz"])
     assert result["rmse_hz"] < 2.0
     assert result["predicted_hz"].shape == eval_frequency.shape
+
+
+def test_h0_nan_range_truth_is_masked_before_oracle_indexing():
+    bins = diagnostic_truth_range_bins(
+        np.asarray([np.nan, 8.75, np.nan]),
+        np.asarray([False, True, False]),
+        range_bin_count=32,
+    )
+    np.testing.assert_array_equal(bins, np.asarray([0, 8, 0]))
+
+
+def test_oracle_range_diagnostic_rejects_nonfinite_h1_truth():
+    with pytest.raises(ValueError, match="H1"):
+        diagnostic_truth_range_bins(
+            np.asarray([np.nan]),
+            np.asarray([True]),
+            range_bin_count=32,
+        )
+
+
+def test_physical_strata_skip_masked_h0_truth_without_runtime_warnings():
+    arrays = {
+        "truth_presence": np.asarray([False, True]),
+        "truth_doppler_hz": np.asarray([np.nan, 649.0]),
+        "truth_initial_phase_rad": np.asarray([np.nan, 0.1]),
+        "truth_target_amplitude": np.asarray([np.nan, 1.2]),
+        "truth_range_cell": np.asarray([np.nan, 4.3]),
+        "snr_db": np.asarray([-20.0, 10.0]),
+    }
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", RuntimeWarning)
+        groups = _diagnostic_strata(arrays, np.asarray([0.0, 1.0, 1.2, 1.4, 2.0]))
+
+    assert groups["h1"].tolist() == [False, True]
+    assert groups["range_block"][1] == "range_0_7"
+    assert groups["nyquist_region"][1] == "within_65_hz"

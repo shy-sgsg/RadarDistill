@@ -28,6 +28,7 @@ from radardistill.evaluation.d1_evaluation import (  # noqa: E402
 )
 from radardistill.evaluation.d1_r1_diagnostics import (  # noqa: E402
     circular_doppler_error_hz,
+    diagnostic_truth_range_bins,
     decode_doppler_modes,
     fit_circular_ridge_probe,
     validate_diagnostic_cache_path,
@@ -101,13 +102,15 @@ def _evaluate_model(
             indices = np.arange(start, min(start + batch_size, count), dtype=np.int64)
             iq = _iq_to_tensor(arrays["iq"][indices], device)
             outputs = model(iq, compute_spectrum=False)
-            truth_bin = torch.floor(
-                torch.as_tensor(
+            truth_bin = torch.as_tensor(
+                diagnostic_truth_range_bins(
                     np.asarray(arrays["truth_range_cell"][indices]).copy(),
-                    device=device,
-                    dtype=torch.float32,
-                )
-            ).to(torch.long)
+                    np.asarray(arrays["truth_presence"][indices]).copy(),
+                    range_bin_count=outputs["range_logits"].shape[1],
+                ),
+                device=device,
+                dtype=torch.long,
+            )
             decoded = decode_doppler_modes(outputs, truth_bin, prf_hz=prf_hz)
             row = torch.arange(len(indices), device=device)
             predicted_bin = decoded["predicted_range_bin"]
@@ -163,25 +166,40 @@ def _diagnostic_strata(
     range_cell = np.asarray(arrays["truth_range_cell"], dtype=np.float64)
     snr = np.asarray(arrays["snr_db"], dtype=np.float64)
     freq_edges = np.asarray([-650.0, -325.0, 0.0, 325.0, 650.0])
-    freq_index = np.digitize(frequency, freq_edges[1:-1], right=False)
-    phase_index = np.floor(np.remainder(phase + math.pi, 2.0 * math.pi) / (math.pi / 4.0)).astype(int)
-    phase_index = np.clip(phase_index, 0, 7)
-    range_index = np.floor(range_cell).astype(int)
-    range_group = np.minimum(range_index // 8, 3)
-    amp_index = np.digitize(amplitude, amplitude_edges[1:-1], right=False)
+    if np.any(~np.isfinite(frequency[h1])) or np.any(~np.isfinite(phase[h1])):
+        raise ValueError("H1 frequency and initial-phase truths must be finite")
+    if np.any(~np.isfinite(amplitude[h1])) or np.any(~np.isfinite(range_cell[h1])):
+        raise ValueError("H1 amplitude and range truths must be finite")
+    frequency_band = np.full(len(h1), "masked_h0", dtype=object)
+    frequency_band_names = np.asarray(["[-650,-325)", "[-325,0)", "[0,325)", "[325,650)"], dtype=object)
+    freq_index = np.digitize(frequency[h1], freq_edges[1:-1], right=False)
+    frequency_band[h1] = frequency_band_names[np.clip(freq_index, 0, 3)]
+    nyquist_region = np.full(len(h1), "masked_h0", dtype=object)
+    nyquist_region[h1] = np.where(np.abs(frequency[h1]) >= 585.0, "within_65_hz", "interior")
+    phase_group = np.full(len(h1), "masked_h0", dtype=object)
+    phase_index = np.floor(
+        np.remainder(phase[h1] + math.pi, 2.0 * math.pi) / (math.pi / 4.0)
+    ).astype(int)
+    phase_group[h1] = np.asarray([f"phase_{i}" for i in range(8)], dtype=object)[
+        np.clip(phase_index, 0, 7)
+    ]
+    range_group = np.full(len(h1), "masked_h0", dtype=object)
+    range_index = np.floor(range_cell[h1]).astype(int)
+    range_group[h1] = np.asarray(
+        ["range_0_7", "range_8_15", "range_16_23", "range_24_31"], dtype=object
+    )[np.clip(range_index // 8, 0, 3)]
+    amplitude_group = np.full(len(h1), "masked_h0", dtype=object)
+    amp_index = np.digitize(amplitude[h1], amplitude_edges[1:-1], right=False)
+    amplitude_group[h1] = np.asarray([f"amp_q{i + 1}" for i in range(4)], dtype=object)[
+        np.clip(amp_index, 0, 3)
+    ]
     snr_name = np.asarray([str(int(value)) if float(value).is_integer() else str(value) for value in snr])
     return {
-        "frequency_band_hz": np.asarray(
-            ["[-650,-325)", "[-325,0)", "[0,325)", "[325,650)"], dtype=object
-        )[np.clip(freq_index, 0, 3)],
-        "nyquist_region": np.where(np.abs(frequency) >= 585.0, "within_65_hz", "interior"),
-        "initial_phase_octant": np.asarray([f"phase_{i}" for i in range(8)], dtype=object)[phase_index],
-        "target_amplitude_quartile": np.asarray([f"amp_q{i + 1}" for i in range(4)], dtype=object)[
-            np.clip(amp_index, 0, 3)
-        ],
-        "range_block": np.asarray(["range_0_7", "range_8_15", "range_16_23", "range_24_31"], dtype=object)[
-            np.clip(range_group, 0, 3)
-        ],
+        "frequency_band_hz": frequency_band,
+        "nyquist_region": nyquist_region,
+        "initial_phase_octant": phase_group,
+        "target_amplitude_quartile": amplitude_group,
+        "range_block": range_group,
         "snr_db": snr_name,
         "h1": h1,
     }

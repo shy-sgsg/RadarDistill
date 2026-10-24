@@ -38,6 +38,27 @@ def circular_doppler_error_hz(
     return np.remainder(estimate - truth + prf_hz / 2.0, prf_hz) - prf_hz / 2.0
 
 
+def diagnostic_truth_range_bins(
+    truth_range_cell: np.ndarray,
+    truth_presence: np.ndarray,
+    *,
+    range_bin_count: int,
+) -> np.ndarray:
+    """Create oracle indices for H1 only; H0 range labels are intentionally masked."""
+    values = np.asarray(truth_range_cell, dtype=np.float64).reshape(-1)
+    presence = np.asarray(truth_presence, dtype=np.bool_).reshape(-1)
+    if values.shape != presence.shape:
+        raise ValueError("truth range and presence arrays must have matching shapes")
+    if range_bin_count <= 0:
+        raise ValueError("range_bin_count must be positive")
+    h1_values = values[presence]
+    if np.any(~np.isfinite(h1_values)) or np.any(h1_values < 0.0) or np.any(h1_values >= range_bin_count):
+        raise ValueError("H1 truth ranges must be finite and inside the range-bin extent")
+    result = np.zeros(values.shape, dtype=np.int64)
+    result[presence] = np.floor(h1_values).astype(np.int64)
+    return result
+
+
 def fit_circular_ridge_probe(
     train_features: np.ndarray,
     train_frequency_hz: np.ndarray,
