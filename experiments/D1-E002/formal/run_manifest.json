@@ -1,0 +1,27 @@
+{
+  "experiment_id": "D1-E002",
+  "phase": "formal",
+  "status": "COMPLETED",
+  "code_commit": "286c68869bf23a03f47ed804cd625a1499b5fd10",
+  "pilot_code_commit": "90add1b9e06af7a16338222ba1ac1e819dd20730",
+  "pilot_selection_file": "experiments/D1-E002/pilot/selection_corrected.json",
+  "formal_candidates": [
+    "S1",
+    "S2"
+  ],
+  "environment": {
+    "git_sha": "4984e34fa90650bb4b28a5e2191c1c694dabde8e",
+    "dirty_state": {
+      "e002_implementation_paths_clean": true,
+      "workspace_has_uncommitted_changes": true
+    },
+    "python": "3.13.7",
+    "pytorch": "2.8.0+cu128",
+    "cuda_runtime": "12.8",
+    "driver": "580.178.04",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 3942383616,
+    "cuda_device": "cuda:0"
+  },
+  "blind_data_generated": false
+}

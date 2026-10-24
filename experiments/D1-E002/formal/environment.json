@@ -1,0 +1,14 @@
+{
+  "git_sha": "4984e34fa90650bb4b28a5e2191c1c694dabde8e",
+  "dirty_state": {
+    "e002_implementation_paths_clean": true,
+    "workspace_has_uncommitted_changes": true
+  },
+  "python": "3.13.7",
+  "pytorch": "2.8.0+cu128",
+  "cuda_runtime": "12.8",
+  "driver": "580.178.04",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "gpu_total_memory_bytes": 3942383616,
+  "cuda_device": "cuda:0"
+}
