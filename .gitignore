@@ -12,3 +12,5 @@ experiments/P0-E007/datasets/*.npz
 !experiments/P0-E007/datasets/final_blind.npz
 experiments/P1-A-E001/data/*.npz
 !experiments/P1-A-E001/data/blind_snr_*.npz
+experiments/D1-E001/data/cache/*.npy
+experiments/D1-E001/data/cache/*.npz

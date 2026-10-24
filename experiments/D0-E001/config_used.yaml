@@ -1,0 +1,171 @@
+experiment:
+  id: D0-E001
+  title: Three-channel range-compressed simulation and APX15 Doppler teacher checks
+  status: preregistered
+  date: 2026-10-24
+  purpose: Verify the reduced signal model and teacher adapter before D1 student training.
+  data_are_synthetic: true
+radar:
+  prf_hz: 1300.0
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+  doppler_interval_hz:
+  - -650.0
+  - 650.0
+waveform:
+  carrier_hz: 16000000000.0
+  bandwidth_hz: 50000000.0
+  sample_rate_hz: 60000000.0
+  pulse_width_s: 0.00013
+  pulse_sample_count: 7800
+  propagation_speed_mps: 299792458.0
+  range_coordinate: theoretical_bandwidth_resolution_cell
+  range_cell_m: 2.99792458
+  range_sample_spacing_m: 2.498270483
+  matched_filter_psf:
+    name: centered_rectangular_bandwidth_sinc
+    formula: sinc(range_cell - target_range_cell)
+    range_cell_interval:
+    - 0
+    - 31
+    target_range_cell_interval:
+    - 4.0
+    - 28.0
+  verifier:
+    sample_time: (n + 0.5) / sample_rate_hz
+    lfm_phase: exp(j*pi*(bandwidth_hz/pulse_width_s)*(t-pulse_width_s/2)^2)
+    fractional_range_offsets_cells: 191
+    offset_interval_cells:
+    - -0.95
+    - 0.95
+    max_normalized_magnitude_error: 0.0002
+channels:
+  geometry_source: GMTI_APX15_CoreX_Int16_20261014/simulator/scenarios/four_channel_three_targets_5period_single_beam_centered.run.json
+  geometry_interpretation: Use the first three receive phase centers of this four-channel
+    simulator scenario; this is a simulation subset, not a hardware calibration claim.
+  positions_xyz_m:
+  - - -0.085
+    - 0.0
+    - 0.085
+  - - 0.085
+    - 0.0
+    - 0.085
+  - - -0.085
+    - 0.0
+    - -0.085
+  coordinate_axes:
+  - north
+  - east
+  - up
+  azimuth_deg_interval:
+  - -60.0
+  - 60.0
+  elevation_deg_interval:
+  - -4.5
+  - -3.5
+  relative_steering: exp(-j*2*pi*dot(position_m - mean_position, look_unit_vector)/wavelength_m)
+  per_channel_amplitude_mismatch_db: 0.0
+target_and_noise:
+  target_presence_prior: 0.5
+  target_amplitude_db_interval:
+  - -6.0
+  - 6.0
+  initial_phase_rad_interval:
+  - 0.0
+  - 6.283185307179586
+  snr_definition: A^2 / E|w|^2 at the continuous peak of the range PSF, before sampling
+    loss
+  complex_noise:
+    distribution: circular_complex_gaussian
+    real_imag_variance: noise_power / 2 each
+    noise_power: A^2 * 10^(-snr_db/10)
+  class_conditioning: Draw SNR, reference amplitude, angles, phase, and noise under
+    identical priors for H0/H1; add the target only for H1.
+  h0_range_and_doppler_truth: null
+teacher:
+  source_adapter: APX15_ColFFTTranspose
+  implementation_scope: slow_time_spectrum_subchain_only
+  uses_truth_or_noise_power_metadata: false
+  window: rectangular
+  response:
+    nfft: 130
+    frequency_bins: 130
+    range_bins: 32
+    channel_power_aggregation: noncoherent_sum
+    normalization: whole_map_unit_sum
+    output_shape:
+    - 130
+    - 32
+  continuous_estimation:
+    nfft: 520
+    doppler_interpolation: three_bin_parabolic_circular_on_power
+    range_coarse_statistic: sum over fine Doppler bins of noncoherent power
+    range_interpolation: 'sinc neighbor-amplitude ratio: (a_right-a_left)/(a_right+a_left),
+      clipped to [-0.5, 0.5]'
+  detection_score: maximum fine-grid power divided by the whole-map median
+  confidence: maximum fine-grid power divided by whole-map power sum; concentration
+    score, not a calibrated probability
+  operational_threshold: null
+correctness_evaluation:
+  waveform_verifier:
+    offsets: 191
+  matched_noise_counterfactual_pairs: 256
+  reproducibility_examples: 32
+  channel_steering_examples: 256
+  native_dft_bin_tones: 130
+  noise_moment_complex_samples: 1000000
+  noise_power_relative_error_max: 0.005
+  noiseless_teacher_examples: 4096
+  noiseless_teacher_range_rmse_cells_max: 1.0e-06
+  noiseless_teacher_range_abs_error_cells_max: 1.0e-05
+  noiseless_teacher_doppler_rmse_hz_max: 0.035
+  noiseless_teacher_doppler_abs_error_hz_max: 0.06
+  noisy_teacher_snr_db:
+  - -20
+  - -15
+  - -10
+  - -5
+  - 0
+  - 5
+  - 10
+  - 20
+  noisy_teacher_examples_per_class_per_snr: 1024
+  teacher_detection_score_auc_gate:
+    snr_db: -10
+    minimum_auc: 0.98
+  bootstrap_replicates: 2000
+  bootstrap_seed: 2026102405
+  boundary_doppler_hz:
+  - -650.0
+  - -649.99
+  - 0.0
+  - 649.99
+  range_boundary_cells:
+  - 4.0
+  - 27.999
+protocol_design_sanity:
+  description: Non-persisted engineering checks used to set correctness tolerances;
+    excluded from formal D0 metrics.
+  lfm_offsets: 191
+  lfm_max_observed_magnitude_error: 0.00012662415
+  doppler_fractional_bin_sweep_points: 10001
+  doppler_interpolator_rmse_hz: 0.0290571
+  doppler_interpolator_max_abs_error_hz: 0.0405226
+  teacher_auc_samples_per_class_per_snr: 256
+  teacher_auc_rng_seed: 101
+  teacher_auc_at_minus_10_db: 0.9933
+  included_in_formal_metrics: false
+seeds:
+  matched_noise_counterfactual: 2026102401
+  noiseless_teacher: 2026102403
+  noisy_teacher: 2026102404
+  bootstrap: 2026102405
+  noise_moment: 2026102406
+  reproducibility: 2026102407
+  channel_steering: 2026102408
+execution:
+  batch_size_cpu_teacher: 64
+  persist_generated_correctness_arrays: false
+  persist_summary_metrics_and_examples: true
+  training_or_cuda_required: false

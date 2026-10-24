@@ -1,0 +1,241 @@
+experiment:
+  id: D1-E001
+  title: Teacher-guided direct detection and parameter estimation from three-channel slow-time IQ
+  status: preregistered
+  date: 2026-10-24
+  purpose: Compare direct truth supervision and three matched-budget teacher-guided strategies.
+  data_are_synthetic: true
+  protocol: experiments/D1-E001/protocol.md
+
+radar:
+  prf_hz: 1300.0
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+  doppler_interval_hz: [-650.0, 650.0] # half-open; Doppler is periodic
+  target_range_cell_interval: [4.0, 28.0] # lower inclusive, upper exclusive
+
+data:
+  input_shape: [3, 130, 32]
+  network_input: real_imag_channels # [B,6,130,32], real planes then imaginary planes
+  normalization: none # no truth, SNR, or noise-power metadata enters the student
+  h0_h1_prior: 0.5
+  training_snr_db_uniform: [-20.0, 20.0]
+  evaluation_snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  matched_counterfactual_train_validation: true
+  training_chunk_seed_stride_by_index: 1009
+  cache:
+    directory: experiments/D1-E001/data/cache
+    train_validation_iq_and_teacher_response: true
+    calibration_and_blind_iq: false # generate in deterministic batches after model freeze
+
+splits:
+  pilot:
+    train_examples_per_class: 4096
+    validation_examples_per_class_per_snr: 128
+    validation_seed_stride_by_snr_index: 1009
+    train_seed: 2026110101
+    validation_seed: 2026110102
+    initialization_seed: 2026110103
+  formal:
+    train_examples_per_class: 4096
+    validation_examples_per_class_per_snr: 128
+    validation_seed_stride_by_snr_index: 1009
+    training_seeds:
+      - id: seed_1
+        train: 2026120101
+        validation: 2026120102
+        initialization: 2026120103
+      - id: seed_2
+        train: 2026120201
+        validation: 2026120202
+        initialization: 2026120203
+      - id: seed_3
+        train: 2026120301
+        validation: 2026120302
+        initialization: 2026120303
+  detection_calibration:
+    h0_examples_total: 50000
+    h0_examples_per_snr: 6250
+    seed_base: 2026130001
+    seed_stride_by_snr_index: 1009
+    snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  final_blind:
+    h0_examples_per_snr: 4096
+    h1_examples_per_snr: 1024
+    seed_base_h0: 2026140001
+    seed_base_h1: 2026141001
+    seed_stride_by_snr_index: 1009
+    generation: after_all_model_checkpoints_and_calibration_rules_are_frozen
+    reuse: same generated sample ids for every model and baseline; never select a model
+  profile_ml_subset:
+    h1_examples_per_snr: 128 # first fixed indices from the blind H1 stream
+    selection: first_indices
+    evaluation_only: true
+  physical_consistency_validation:
+    examples: 256
+    seed: 2026150001
+    use: validation_split_only
+
+student:
+  architecture: lightweight_2d_depthwise_separable_tcn
+  input_channels: 6
+  width: 32
+  stem_range_kernel: [1, 3]
+  temporal_kernel: 3
+  temporal_dilations: [1, 2, 4, 8, 16, 32, 64]
+  residual_blocks: true
+  normalization: group_norm_8
+  activation: silu
+  theoretical_temporal_receptive_field: 255 # covers all 130 pulses
+  temporal_aggregation: mean
+  heads:
+    presence: one_logit
+    range: 32_cell_logits
+    range_offset: sigmoid_offset_per_cell_0_to_1
+    doppler: normalized_cos_sin_per_cell
+    training_only_spectrum: [130, 32]
+  inference_export: remove_training_only_spectrum_head
+  forbidden_in_student_forward: [fft, cfar, teacher, parameter_search]
+
+training:
+  required_device: cuda:0
+  cpu_fallback: false
+  precision: float32
+  effective_batch_size: 64
+  initial_microbatch_size: 64
+  oom_microbatch_fallbacks: [32, 16] # gradient accumulation preserves effective batch size
+  total_optimizer_updates_per_strategy: 1600
+  validation_interval_updates: 100
+  checkpoint_selection: minimum_validation_task_loss
+  early_stopping: false # fixed matched update budget
+  optimizer:
+    name: AdamW
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    schedule: cosine
+    final_learning_rate: 0.0001
+    gradient_clip_norm: 1.0
+  loss:
+    presence_bce_weight: 1.0
+    range_cell_cross_entropy_weight: 1.0
+    range_offset_smooth_l1_weight: 1.0
+    range_offset_smooth_l1_beta: 0.1
+    doppler_circular_cosine_weight: 1.0
+    teacher_response_kl_weight: 0.05
+    teacher_response_temperature: 1.0
+    parameter_losses_on_h0: false
+    teacher_response_loss_on_h0_and_h1: true
+  methods:
+    A_truth_only:
+      stages: [{name: truth, updates: 1600, task_weight: 1.0, teacher_weight: 0.0}]
+    B_teacher_pretrain_then_truth:
+      stages:
+        - {name: teacher_pretrain, updates: 400, task_weight: 0.0, teacher_weight: 0.05}
+        - {name: truth_finetune, updates: 1200, task_weight: 1.0, teacher_weight: 0.0}
+      freeze_auxiliary_head_after_pretraining: true
+    C_joint_truth_and_teacher:
+      stages: [{name: joint, updates: 1600, task_weight: 1.0, teacher_weight: 0.05}]
+    D_progressive_distillation:
+      stages:
+        - {name: teacher_pretrain, updates: 320, task_weight: 0.0, teacher_weight: 0.05}
+        - {name: joint, updates: 480, task_weight: 1.0, teacher_weight: 0.05}
+        - {name: linear_teacher_anneal, updates: 480, task_weight: 1.0, teacher_weight_start: 0.05, teacher_weight_end: 0.0}
+        - {name: truth_finetune, updates: 320, task_weight: 1.0, teacher_weight: 0.0}
+  paired_control:
+    same_train_validation_samples_within_seed: true
+    same_initial_state_within_seed: true
+    same_minibatch_order_within_seed: true
+    same_optimizer_updates_and_effective_batch_size: true
+    curriculum: none
+
+teacher:
+  name: APX15DopplerTeacher
+  outputs_saved_separately_from_truth: [teacher_response, teacher_detection_score, teacher_range_cell, teacher_doppler_hz, teacher_confidence]
+  student_training_uses: [teacher_response]
+  hard_estimates_are_training_targets: false
+  noise_power_metadata_passed_to_teacher_or_student: false
+
+baselines:
+  methods:
+    - APX15_teacher_4x_zero_padded_interpolated
+    - native_130_bin_fft_peak
+    - native_fft_log_magnitude_parabolic_interpolation
+    - fourfold_fft_parabolic_interpolation
+    - aggregate_multichannel_range_pulse_phase_difference
+    - single_target_continuous_profile_likelihood_reference
+  profile_likelihood:
+    unknown_complex_gain_per_channel: true
+    range_grid_step_cells: 0.25
+    frequency_fft_factor: 16
+    parabolic_refinement: range_and_doppler
+    max_h1_examples_per_snr: 128
+    detection_threshold_claim: false
+
+evaluation:
+  threshold_calibration:
+    false_alarm_operating_points: [0.01, 0.001]
+    quantile_rule: finite_sample_order_statistic
+    comparison: score_strictly_greater_than_threshold
+    blind_test_threshold_updates: false
+  detection:
+    metrics: [roc_auc, pd_at_calibrated_pfa, pfa_at_calibrated_threshold, confusion_counts]
+    report_by_snr_and_overall: true
+    pfa_1e_6_claim_allowed: false
+  estimation:
+    metrics: [range_mae_cells, range_rmse_cells, doppler_mae_hz, doppler_rmse_hz, doppler_bias_hz, outlier_rate]
+    doppler_error: wrap_to_half_open_prf_interval
+    outlier_threshold_hz: 50.0
+    report_all_h1: true
+    report_detected_h1_conditionally: true
+  grouping: [snr, range_quartile, doppler_sign_and_nyquist_neighborhood, amplitude_quartile]
+  uncertainty:
+    bootstrap_replicates: 2000
+    bootstrap_seed: 2026150101
+    detection_rate_interval: wilson_95
+    sample_metrics: stratified_paired_bootstrap_95
+    strategy_comparison: hierarchical_paired_bootstrap_over_seed_and_sample
+  diagnostics:
+    common_phase_rotation_radians: [0.37, 1.41, 2.83]
+    report_common_phase_output_sensitivity: true
+    report_frequency_shift_equivariance_hz: [0.625, 5.0]
+    use_validation_samples_only: true
+  primary_distillation_endpoint:
+    name: high_snr_normalized_joint_parameter_error
+    snr_db: [0, 5, 10, 20]
+    formula: "mean_snr(0.5*(range_rmse_cells/24 + doppler_rmse_hz/1300))"
+    detection_auc_noninferiority_margin: 0.02
+
+gates:
+  G1_truth_supervised_task_learning:
+    applies_to: A_truth_only
+    require_all_three_formal_seeds: true
+    snr_db: 20
+    minimum_detection_auc: 0.95
+    minimum_pd_at_pfa_1e_2: 0.90
+    maximum_range_rmse_cells_all_h1: 2.0
+    maximum_doppler_rmse_hz_all_h1: 50.0
+    beat_constant_range_and_doppler_baselines: true
+    paired_95_ci_for_both_parameter_errors_below_zero: true
+  G2_distillation_value:
+    compare: [B_teacher_pretrain_then_truth, C_joint_truth_and_teacher, D_progressive_distillation]
+    minimum_seeds_with_same_direction: 2
+    final_metric_rule: paired_95_ci_improvement_in_primary_endpoint_and_auc_drop_le_0_02
+    convergence_rule: "reach paired A best validation loss at least 20% fewer updates in >=2/3 seeds without >10% final blind endpoint regression"
+    no_posthoc_threshold_change: true
+  G3_traditional_competitiveness:
+    no_requirement_to_beat_profile_ml_in_all_conditions: true
+    competitive_if: "at >=2 adjacent SNRs in [0,5,10,20], a fixed model is within 0.05 Pd of APX15 teacher at Pfa=1e-2 and both parameter RMSEs <=2x the stronger of APX15 teacher and profile-ML"
+  stage_decision:
+    STOP: "G1 fails; preserve A/B/C/D negatives and do not add D2 complexity"
+    CONDITIONAL_GO: "G1 passes but neither G2 nor G3 supports expansion; only one bounded D1 follow-up may be proposed"
+    GO: "G1 passes and at least one of G2 or G3 passes"
+
+execution:
+  training_order: [pilot_A, pilot_B, pilot_C, pilot_D, formal_seed_1_A_to_D, formal_seed_2_A_to_D, formal_seed_3_A_to_D]
+  one_model_in_cuda_at_a_time: true
+  cuda_device: "RTX 3050 Laptop GPU, cuda:0"
+  record: [git_sha, dirty_state, python, pytorch, cuda, driver, gpu, peak_allocated_bytes, peak_reserved_bytes, train_seconds, samples_per_second, actual_microbatch]
+  require_checkpoint_and_seed_record: true
+  generated_training_data_committed: false
+  save: [config_used.yaml, environment.json, metrics.json, result.csv, training_history.csv, analysis.md, rmse_snr.png, detection_roc.png]

@@ -1,0 +1,15 @@
+{
+  "git_sha": "df25b79f8cb8d18c44b020ebb77d096c6b8ef265",
+  "tracked_worktree_changes": false,
+  "untracked_worktree_files_present": true,
+  "python": "3.13.7",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "torch": "2.8.0+cu128",
+  "torch_cuda_build": "12.8",
+  "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cuda_driver": "580.178.04",
+  "cuda_total_memory_bytes": 3942383616,
+  "cpu_count": 12,
+  "training_device": "cuda:0",
+  "precision": "float32"
+}

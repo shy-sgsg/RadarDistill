@@ -1,0 +1,218 @@
+{
+  "experiment_id": "D1-E001",
+  "phase": "detection_calibration",
+  "status": "COMPLETED",
+  "freeze_manifest": {
+    "code_commit": "209c48ef771e1ba66c763032d621715934f74f14",
+    "blob_oids": {
+      "src/radardistill/evaluation/d1_evaluation.py": "245dd79c5f2f18209b3cadbd1d8b904f7771210a",
+      "scripts/evaluate_d1_e001.py": "97a4a9a9fa62b23165f55cd96fe49006afd08b3d",
+      "experiments/D1-E001/config.yaml": "39726f6cccae780fc3d9c24a46b8b147f1de04a6",
+      "experiments/D1-E001/protocol.md": "8e7e52b771206abcbbe3a3bd786b5b4a51f09fcf",
+      "experiments/D1-E001/config_used.yaml": "00153af6b3f02294d28a01731e1e0696485267e4",
+      "experiments/D1-E001/formal/seed_1/A_truth_only/best_inference.pt": "ce4945baea056e497fe1928b48b23c22deda3d34",
+      "experiments/D1-E001/formal/seed_1/B_teacher_pretrain_then_truth/best_inference.pt": "2458028d725ded4cd50489f28aef1b547d7fcf8c",
+      "experiments/D1-E001/formal/seed_1/C_joint_truth_and_teacher/best_inference.pt": "bb3425dca78969500c04cc6fa222ab52e6947ce3",
+      "experiments/D1-E001/formal/seed_1/D_progressive_distillation/best_inference.pt": "274a131c9233b9e02f759076003281df7ca90c7d",
+      "experiments/D1-E001/formal/seed_2/A_truth_only/best_inference.pt": "ef0140071962dfa569a04b509b4cd08e8391a0f0",
+      "experiments/D1-E001/formal/seed_2/B_teacher_pretrain_then_truth/best_inference.pt": "d86dcac6b502dc8678468af80d76ccb7362175b8",
+      "experiments/D1-E001/formal/seed_2/C_joint_truth_and_teacher/best_inference.pt": "6632dccc72e941670477ec05227dfc193f15599d",
+      "experiments/D1-E001/formal/seed_2/D_progressive_distillation/best_inference.pt": "8652158ebd7cd474031835881a86239ebb06daf3",
+      "experiments/D1-E001/formal/seed_3/A_truth_only/best_inference.pt": "25624a383d642cab0cd1721f7567ce39fb92efde",
+      "experiments/D1-E001/formal/seed_3/B_teacher_pretrain_then_truth/best_inference.pt": "1d132c356675f70cdbd25f363572fca96e636742",
+      "experiments/D1-E001/formal/seed_3/C_joint_truth_and_teacher/best_inference.pt": "223115f13de2b7137e69063b8fc6f601d3e7e59d",
+      "experiments/D1-E001/formal/seed_3/D_progressive_distillation/best_inference.pt": "dbf2b068223cff229770ebbf036615aa10b2b53b"
+    }
+  },
+  "methods": {
+    "APX15_teacher": {
+      "0.01": {
+        "threshold": 7.274905579527515,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": 8.266468425824163,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_1/A_truth_only": {
+      "0.01": {
+        "threshold": -0.35730576515197754,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.1656951904296875,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_1/B_teacher_pretrain_then_truth": {
+      "0.01": {
+        "threshold": -0.24942779541015625,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.04425859451293945,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_1/C_joint_truth_and_teacher": {
+      "0.01": {
+        "threshold": -0.33405327796936035,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.12209939956665039,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_1/D_progressive_distillation": {
+      "0.01": {
+        "threshold": -0.24876976013183594,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.02399730682373047,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_2/A_truth_only": {
+      "0.01": {
+        "threshold": 0.1468806266784668,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": 1.0947494506835938,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_2/B_teacher_pretrain_then_truth": {
+      "0.01": {
+        "threshold": 0.010089397430419922,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": 0.9139971733093262,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_2/C_joint_truth_and_teacher": {
+      "0.01": {
+        "threshold": 0.13477206230163574,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": 1.0765914916992188,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_2/D_progressive_distillation": {
+      "0.01": {
+        "threshold": -0.24001312255859375,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.07770872116088867,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_3/A_truth_only": {
+      "0.01": {
+        "threshold": -0.27921605110168457,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.09060096740722656,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_3/B_teacher_pretrain_then_truth": {
+      "0.01": {
+        "threshold": -0.4069523811340332,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.2751462459564209,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_3/C_joint_truth_and_teacher": {
+      "0.01": {
+        "threshold": -0.24292731285095215,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.056655168533325195,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    },
+    "seed_3/D_progressive_distillation": {
+      "0.01": {
+        "threshold": -0.42716217041015625,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      },
+      "0.001": {
+        "threshold": -0.2716648578643799,
+        "n_h0": 50000,
+        "comparison": "score_strictly_greater_than_threshold"
+      }
+    }
+  },
+  "completed_methods": [
+    "APX15_teacher",
+    "seed_1/A_truth_only",
+    "seed_1/B_teacher_pretrain_then_truth",
+    "seed_1/C_joint_truth_and_teacher",
+    "seed_1/D_progressive_distillation",
+    "seed_2/A_truth_only",
+    "seed_2/B_teacher_pretrain_then_truth",
+    "seed_2/C_joint_truth_and_teacher",
+    "seed_2/D_progressive_distillation",
+    "seed_3/A_truth_only",
+    "seed_3/B_teacher_pretrain_then_truth",
+    "seed_3/C_joint_truth_and_teacher",
+    "seed_3/D_progressive_distillation"
+  ],
+  "calibration_samples_per_method": 50000,
+  "training_device": "cuda:0",
+  "precision": "float32",
+  "evaluation_environment": {
+    "python": "3.13.7",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "torch": "2.8.0+cu128",
+    "torch_cuda_build": "12.8",
+    "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "cuda_driver": "580.178.04",
+    "cuda_total_memory_bytes": 3942383616,
+    "evaluation_device": "cuda:0",
+    "precision": "float32",
+    "inference_batch_size": 128,
+    "peak_allocated_bytes": 358856704,
+    "peak_reserved_bytes": 398458880,
+    "elapsed_seconds": 532.1948127930082
+  }
+}

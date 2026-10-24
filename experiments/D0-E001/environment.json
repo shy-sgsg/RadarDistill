@@ -1,0 +1,14 @@
+{
+  "git_sha": "d93cfa72e9aceca6d14f0c4e680d624b0d9169cd",
+  "tracked_worktree_changes": false,
+  "python": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+  "numpy": "2.3.4",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "processor": "",
+  "cpu_count": 12,
+  "gxx": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "fftw3": "3.3.10",
+  "cuda_training_used": false,
+  "runtime_seconds": 39.08977464599593,
+  "peak_rss_bytes": 585211904
+}

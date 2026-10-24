@@ -1,0 +1,131 @@
+{
+  "experiment_id": "D1-E001",
+  "measurement_boundary": "already distance-compressed [B,3,130,32] complex IQ",
+  "dataset": {
+    "synthetic": true,
+    "snr_db": 10.0,
+    "target_presence_ratio": 1.0,
+    "seed": 2026102410
+  },
+  "protocol": {
+    "warmup_calls_per_batch": 5,
+    "timed_calls_per_batch": 30,
+    "timing": "synchronous end-to-end wall time including student host/device transfer, forward, decode, and result transfer",
+    "cpu_threads": 1,
+    "note": "Student GPU and CPU/APX15 CPU figures use the same IQ boundary but are not a deployment speed comparison; APX15 timing covers only its FFT subchain adapter and D0 estimator."
+  },
+  "environment": {
+    "python": "3.13.7",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "torch_cuda_build": "12.8",
+    "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "cuda_device_total_memory_bytes": 3942383616,
+    "cpu_threads": 1,
+    "git_revision": "10ad01eb925fc0bfafdcf63cdad0fe8b282c875d"
+  },
+  "methods": {
+    "D_progressive_distillation_student": {
+      "device": "cpu",
+      "parameter_count": 9093,
+      "checkpoint_bytes": 53033,
+      "batch_sizes": {
+        "1": {
+          "repeat_count": 30,
+          "batch_size": 1,
+          "mean_latency_ms": 3.9187289672554475,
+          "p50_latency_ms": 3.9716150058666244,
+          "p95_latency_ms": 4.128477648919215,
+          "mean_throughput_samples_per_second": 255.1847827078401
+        },
+        "32": {
+          "repeat_count": 30,
+          "batch_size": 32,
+          "mean_latency_ms": 235.46496816658572,
+          "p50_latency_ms": 234.17780549789313,
+          "p95_latency_ms": 301.8571206441265,
+          "mean_throughput_samples_per_second": 135.9013200526746
+        },
+        "128": {
+          "repeat_count": 30,
+          "batch_size": 128,
+          "mean_latency_ms": 2491.0942696990483,
+          "p50_latency_ms": 2487.121886006207,
+          "p95_latency_ms": 2701.31772184468,
+          "mean_throughput_samples_per_second": 51.38304140351293
+        }
+      }
+    },
+    "D_progressive_distillation_student_cuda": {
+      "device": "cuda:0",
+      "parameter_count": 9093,
+      "checkpoint_bytes": 53033,
+      "batch_sizes": {
+        "1": {
+          "repeat_count": 30,
+          "batch_size": 1,
+          "mean_latency_ms": 1.530644934003552,
+          "p50_latency_ms": 1.4340799971250817,
+          "p95_latency_ms": 1.9097324504400597,
+          "mean_throughput_samples_per_second": 653.319380468207,
+          "allocated_before_measurement_bytes": 47104,
+          "peak_allocated_bytes": 2809344,
+          "peak_reserved_bytes": 4194304
+        },
+        "32": {
+          "repeat_count": 30,
+          "batch_size": 32,
+          "mean_latency_ms": 15.768631601531524,
+          "p50_latency_ms": 15.228763004415669,
+          "p95_latency_ms": 18.013830350537315,
+          "mean_throughput_samples_per_second": 2029.3453996916262,
+          "allocated_before_measurement_bytes": 47104,
+          "peak_allocated_bytes": 89176064,
+          "peak_reserved_bytes": 119537664
+        },
+        "128": {
+          "repeat_count": 30,
+          "batch_size": 128,
+          "mean_latency_ms": 59.75015006503479,
+          "p50_latency_ms": 59.716404997743666,
+          "p95_latency_ms": 62.109643450094154,
+          "mean_throughput_samples_per_second": 2142.254033850609,
+          "allocated_before_measurement_bytes": 47104,
+          "peak_allocated_bytes": 358856704,
+          "peak_reserved_bytes": 465567744
+        }
+      }
+    },
+    "APX15_fft_subchain_cpu": {
+      "device": "cpu",
+      "implementation_scope": "APX15 ColFFTTranspose slow-time FFT subchain and D0 hard estimator",
+      "batch_sizes": {
+        "1": {
+          "repeat_count": 30,
+          "batch_size": 1,
+          "mean_latency_ms": 0.8251438654648761,
+          "p50_latency_ms": 0.8026829964364879,
+          "p95_latency_ms": 0.912937199609587,
+          "mean_throughput_samples_per_second": 1211.9098763906002
+        },
+        "32": {
+          "repeat_count": 30,
+          "batch_size": 32,
+          "mean_latency_ms": 50.60076293254193,
+          "p50_latency_ms": 50.59255000378471,
+          "p95_latency_ms": 51.9129427462758,
+          "mean_throughput_samples_per_second": 632.4015320215742
+        },
+        "128": {
+          "repeat_count": 30,
+          "batch_size": 128,
+          "mean_latency_ms": 185.6553988007363,
+          "p50_latency_ms": 182.7724945032969,
+          "p95_latency_ms": 196.77870785089908,
+          "mean_throughput_samples_per_second": 689.4493821716558
+        }
+      }
+    }
+  }
+}

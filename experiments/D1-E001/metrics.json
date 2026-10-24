@@ -1,0 +1,55 @@
+{
+  "experiment_id": "D1-E001",
+  "phase": "final_blind_review",
+  "status": "COMPLETED",
+  "stage_decision": "GO",
+  "gate_status": {
+    "G1_truth_supervised_task_learning": true,
+    "G2_distillation_value": true,
+    "G3_traditional_competitiveness": false
+  },
+  "key_results": {
+    "G1_passed_seeds": 3,
+    "G1_total_seeds": 3,
+    "G2_strategy_status": {
+      "B_teacher_pretrain_then_truth": false,
+      "C_joint_truth_and_teacher": true,
+      "D_progressive_distillation": true
+    },
+    "G3_passing_adjacent_snr_pairs": {
+      "A_truth_only": [],
+      "B_teacher_pretrain_then_truth": [],
+      "C_joint_truth_and_teacher": [],
+      "D_progressive_distillation": []
+    }
+  },
+  "full_metrics": "blind/metrics.json",
+  "result_table": "result.csv",
+  "review": "../../docs/stage_reviews/D1-E001_review.md",
+  "prediction_replay_command": "conda run --no-capture-output -n AISAR python scripts/evaluate_d1_e001.py --phase blind --replay-existing-predictions",
+  "analysis_replay": {
+    "predictions_reused": true,
+    "blind_samples_regenerated": false,
+    "student_methods_reused": [
+      "seed_1/A_truth_only",
+      "seed_1/B_teacher_pretrain_then_truth",
+      "seed_1/C_joint_truth_and_teacher",
+      "seed_1/D_progressive_distillation",
+      "seed_2/A_truth_only",
+      "seed_2/B_teacher_pretrain_then_truth",
+      "seed_2/C_joint_truth_and_teacher",
+      "seed_2/D_progressive_distillation",
+      "seed_3/A_truth_only",
+      "seed_3/B_teacher_pretrain_then_truth",
+      "seed_3/C_joint_truth_and_teacher",
+      "seed_3/D_progressive_distillation"
+    ],
+    "prediction_code_commit": "209c48ef771e1ba66c763032d621715934f74f14",
+    "analysis_code_commit": "64210fc887b7be6590dc8861d9e325ed2768aed3",
+    "changed_frozen_paths": [
+      "scripts/evaluate_d1_e001.py",
+      "src/radardistill/evaluation/d1_evaluation.py"
+    ],
+    "reason": "Corrected the G2 AUC non-inferiority margin lookup to read the pre-registered evaluation.primary_distillation_endpoint value. Models, predictions, thresholds, and metric definitions were reused."
+  }
+}

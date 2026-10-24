@@ -1,0 +1,208 @@
+{
+  "experiment_id": "D0-E001",
+  "status": "PASS",
+  "protocol_status": "preregistered_before_D0_implementation",
+  "waveform_verifier": {
+    "offset_count": 191,
+    "max_normalized_magnitude_error": 0.00012662415231795565,
+    "rmse_normalized_magnitude_error": 5.972430789127973e-05,
+    "max_error_offset_cells": 0.95
+  },
+  "counterfactual_h0_h1": {
+    "pairs": 256,
+    "identical_noise_arrays": true,
+    "identical_reference_amplitude": true,
+    "identical_noise_power": true,
+    "relative_target_residual_error": 1.4720462748172735e-07
+  },
+  "noise_moment": {
+    "complex_samples": 1000000,
+    "requested_power": 1.0,
+    "measured_power": 0.9988127816266019,
+    "relative_error": 0.0011872183733980801
+  },
+  "reproducibility": {
+    "count": 32,
+    "identical_all_fields": true,
+    "shape": [
+      32,
+      3,
+      130,
+      32
+    ]
+  },
+  "channel_steering": {
+    "count": 256,
+    "max_relative_phase_response_error": 0.0,
+    "max_unit_modulus_error": 2.220446049250313e-16
+  },
+  "native_fft_axis": {
+    "tested_tones": 130,
+    "passed_tones": 130,
+    "max_bin_error": 0,
+    "frequency_axis_hz": [
+      -650.0,
+      640.0
+    ],
+    "passed": true
+  },
+  "noiseless_teacher": {
+    "count": 4096,
+    "range_rmse_cells": 7.169988248158396e-10,
+    "range_max_abs_error_cells": 2.9540698776031604e-09,
+    "range_bias_cells": 9.670581392964839e-12,
+    "doppler_rmse_hz": 0.02903969378427312,
+    "doppler_max_abs_error_hz": 0.04052255917918046,
+    "doppler_bias_hz": 0.00031031997527028454,
+    "doppler_p99_abs_error_hz": 0.040518200890085156
+  },
+  "boundary_checks": {
+    "count": 8,
+    "range_max_abs_error_cells": 9.985669180423429e-09,
+    "doppler_max_abs_error_hz": 0.0008171199940534279,
+    "range_outputs_inside_window": true,
+    "passed": true
+  },
+  "teacher_by_snr": [
+    {
+      "snr_db": -20.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 0.48674678802490234,
+      "teacher_score_auc_ci95_low": 0.4621934652328491,
+      "teacher_score_auc_ci95_high": 0.5108519077301025,
+      "h0_score_median": 5.455791554666355,
+      "h0_score_p95": 6.608244219532755,
+      "h0_score_p99": 7.307376825869554,
+      "h1_range_rmse_cells": 11.294121855360357,
+      "h1_doppler_rmse_hz": 372.25750870826494,
+      "h1_doppler_bias_hz": 9.868718274688137
+    },
+    {
+      "snr_db": -15.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 0.6443023681640625,
+      "teacher_score_auc_ci95_low": 0.6196958541870117,
+      "teacher_score_auc_ci95_high": 0.6674197196960449,
+      "h0_score_median": 5.44478296380578,
+      "h0_score_p95": 6.523747892155157,
+      "h0_score_p99": 7.35880422047565,
+      "h1_range_rmse_cells": 10.735406134334252,
+      "h1_doppler_rmse_hz": 357.42404779316047,
+      "h1_doppler_bias_hz": 19.28733545148628
+    },
+    {
+      "snr_db": -10.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 0.9885616302490234,
+      "teacher_score_auc_ci95_low": 0.9841424226760864,
+      "teacher_score_auc_ci95_high": 0.9926111221313476,
+      "h0_score_median": 5.440653987814548,
+      "h0_score_p95": 6.518226567181468,
+      "h0_score_p99": 7.08356699827565,
+      "h1_range_rmse_cells": 9.126070117776147,
+      "h1_doppler_rmse_hz": 292.88303538131726,
+      "h1_doppler_bias_hz": 8.970989653147104
+    },
+    {
+      "snr_db": -5.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 1.0,
+      "teacher_score_auc_ci95_low": 1.0,
+      "teacher_score_auc_ci95_high": 1.0,
+      "h0_score_median": 5.461963998729041,
+      "h0_score_p95": 6.665753057921246,
+      "h0_score_p99": 7.376004195513786,
+      "h1_range_rmse_cells": 2.2438068475342052,
+      "h1_doppler_rmse_hz": 78.3870703408385,
+      "h1_doppler_bias_hz": 1.78759265599718
+    },
+    {
+      "snr_db": 0.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 1.0,
+      "teacher_score_auc_ci95_low": 1.0,
+      "teacher_score_auc_ci95_high": 1.0,
+      "h0_score_median": 5.4855937551068115,
+      "h0_score_p95": 6.5577905990660526,
+      "h0_score_p99": 7.217607334932872,
+      "h1_range_rmse_cells": 0.25889734898838207,
+      "h1_doppler_rmse_hz": 0.23440205479377368,
+      "h1_doppler_bias_hz": -0.005019772488635943
+    },
+    {
+      "snr_db": 5.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 1.0,
+      "teacher_score_auc_ci95_low": 1.0,
+      "teacher_score_auc_ci95_high": 1.0,
+      "h0_score_median": 5.4622578045514505,
+      "h0_score_p95": 6.583556622390123,
+      "h0_score_p99": 7.201125622696955,
+      "h1_range_rmse_cells": 0.2182729009629921,
+      "h1_doppler_rmse_hz": 0.13263622242251027,
+      "h1_doppler_bias_hz": -0.005387670423929181
+    },
+    {
+      "snr_db": 10.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 1.0,
+      "teacher_score_auc_ci95_low": 1.0,
+      "teacher_score_auc_ci95_high": 1.0,
+      "h0_score_median": 5.451600045621881,
+      "h0_score_p95": 6.563791921582838,
+      "h0_score_p99": 7.348043765211644,
+      "h1_range_rmse_cells": 0.149170300027469,
+      "h1_doppler_rmse_hz": 0.07784063648115552,
+      "h1_doppler_bias_hz": 0.003869034590798237
+    },
+    {
+      "snr_db": 20.0,
+      "n_h0": 1024,
+      "n_h1": 1024,
+      "teacher_score_auc": 1.0,
+      "teacher_score_auc_ci95_low": 1.0,
+      "teacher_score_auc_ci95_high": 1.0,
+      "h0_score_median": 5.401162100652227,
+      "h0_score_p95": 6.506890229308445,
+      "h0_score_p99": 7.227232946347885,
+      "h1_range_rmse_cells": 0.040280107782293066,
+      "h1_doppler_rmse_hz": 0.03696307974147465,
+      "h1_doppler_bias_hz": 0.0003701327130597454
+    }
+  ],
+  "gates": {
+    "lfm_matched_filter_psf": true,
+    "counterfactual_h0_h1_background": true,
+    "complex_awgn_power": true,
+    "seed_reproducibility_and_shape": true,
+    "three_channel_steering": true,
+    "native_apx15_fft_axis": true,
+    "noiseless_teacher_range_rmse": true,
+    "noiseless_teacher_range_max": true,
+    "noiseless_teacher_doppler_rmse": true,
+    "noiseless_teacher_doppler_max": true,
+    "nyquist_and_range_boundaries": true,
+    "teacher_auc_at_minus_10_db": true
+  },
+  "environment": {
+    "git_sha": "d93cfa72e9aceca6d14f0c4e680d624b0d9169cd",
+    "tracked_worktree_changes": false,
+    "python": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+    "numpy": "2.3.4",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "processor": "",
+    "cpu_count": 12,
+    "gxx": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "fftw3": "3.3.10",
+    "cuda_training_used": false,
+    "runtime_seconds": 39.08977464599593,
+    "peak_rss_bytes": 585211904
+  }
+}

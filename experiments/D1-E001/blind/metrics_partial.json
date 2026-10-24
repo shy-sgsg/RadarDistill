@@ -1,0 +1,70 @@
+{
+  "experiment_id": "D1-E001",
+  "phase": "final_blind",
+  "status": "COMPLETED",
+  "freeze_manifest": {
+    "code_commit": "209c48ef771e1ba66c763032d621715934f74f14",
+    "blob_oids": {
+      "src/radardistill/evaluation/d1_evaluation.py": "245dd79c5f2f18209b3cadbd1d8b904f7771210a",
+      "scripts/evaluate_d1_e001.py": "97a4a9a9fa62b23165f55cd96fe49006afd08b3d",
+      "experiments/D1-E001/config.yaml": "39726f6cccae780fc3d9c24a46b8b147f1de04a6",
+      "experiments/D1-E001/protocol.md": "8e7e52b771206abcbbe3a3bd786b5b4a51f09fcf",
+      "experiments/D1-E001/config_used.yaml": "00153af6b3f02294d28a01731e1e0696485267e4",
+      "experiments/D1-E001/formal/seed_1/A_truth_only/best_inference.pt": "ce4945baea056e497fe1928b48b23c22deda3d34",
+      "experiments/D1-E001/formal/seed_1/B_teacher_pretrain_then_truth/best_inference.pt": "2458028d725ded4cd50489f28aef1b547d7fcf8c",
+      "experiments/D1-E001/formal/seed_1/C_joint_truth_and_teacher/best_inference.pt": "bb3425dca78969500c04cc6fa222ab52e6947ce3",
+      "experiments/D1-E001/formal/seed_1/D_progressive_distillation/best_inference.pt": "274a131c9233b9e02f759076003281df7ca90c7d",
+      "experiments/D1-E001/formal/seed_2/A_truth_only/best_inference.pt": "ef0140071962dfa569a04b509b4cd08e8391a0f0",
+      "experiments/D1-E001/formal/seed_2/B_teacher_pretrain_then_truth/best_inference.pt": "d86dcac6b502dc8678468af80d76ccb7362175b8",
+      "experiments/D1-E001/formal/seed_2/C_joint_truth_and_teacher/best_inference.pt": "6632dccc72e941670477ec05227dfc193f15599d",
+      "experiments/D1-E001/formal/seed_2/D_progressive_distillation/best_inference.pt": "8652158ebd7cd474031835881a86239ebb06daf3",
+      "experiments/D1-E001/formal/seed_3/A_truth_only/best_inference.pt": "25624a383d642cab0cd1721f7567ce39fb92efde",
+      "experiments/D1-E001/formal/seed_3/B_teacher_pretrain_then_truth/best_inference.pt": "1d132c356675f70cdbd25f363572fca96e636742",
+      "experiments/D1-E001/formal/seed_3/C_joint_truth_and_teacher/best_inference.pt": "223115f13de2b7137e69063b8fc6f601d3e7e59d",
+      "experiments/D1-E001/formal/seed_3/D_progressive_distillation/best_inference.pt": "dbf2b068223cff229770ebbf036615aa10b2b53b"
+    }
+  },
+  "calibration_blob_oids": {
+    "experiments/D1-E001/calibration/metrics.json": "0d53238d695e0fba49c7e5c6be74caa4431c51d9"
+  },
+  "completed_student_methods": [
+    "seed_1/A_truth_only",
+    "seed_1/B_teacher_pretrain_then_truth",
+    "seed_1/C_joint_truth_and_teacher",
+    "seed_1/D_progressive_distillation",
+    "seed_2/A_truth_only",
+    "seed_2/B_teacher_pretrain_then_truth",
+    "seed_2/C_joint_truth_and_teacher",
+    "seed_2/D_progressive_distillation",
+    "seed_3/A_truth_only",
+    "seed_3/B_teacher_pretrain_then_truth",
+    "seed_3/C_joint_truth_and_teacher",
+    "seed_3/D_progressive_distillation"
+  ],
+  "classical_baselines_completed": true,
+  "analysis_replay": {
+    "predictions_reused": true,
+    "blind_samples_regenerated": false,
+    "student_methods_reused": [
+      "seed_1/A_truth_only",
+      "seed_1/B_teacher_pretrain_then_truth",
+      "seed_1/C_joint_truth_and_teacher",
+      "seed_1/D_progressive_distillation",
+      "seed_2/A_truth_only",
+      "seed_2/B_teacher_pretrain_then_truth",
+      "seed_2/C_joint_truth_and_teacher",
+      "seed_2/D_progressive_distillation",
+      "seed_3/A_truth_only",
+      "seed_3/B_teacher_pretrain_then_truth",
+      "seed_3/C_joint_truth_and_teacher",
+      "seed_3/D_progressive_distillation"
+    ],
+    "prediction_code_commit": "209c48ef771e1ba66c763032d621715934f74f14",
+    "analysis_code_commit": "64210fc887b7be6590dc8861d9e325ed2768aed3",
+    "changed_frozen_paths": [
+      "scripts/evaluate_d1_e001.py",
+      "src/radardistill/evaluation/d1_evaluation.py"
+    ],
+    "reason": "Corrected the G2 AUC non-inferiority margin lookup to read the pre-registered evaluation.primary_distillation_endpoint value. Models, predictions, thresholds, and metric definitions were reused."
+  }
+}
