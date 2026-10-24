@@ -14,6 +14,7 @@ D1-R1 的验证诊断显示，高 SNR Doppler 误差在真值距离门下仍然�
 ## 数据与执行
 
 - S1/S2 各完成三个独立训练种子、每个 1600 次更新，RTX 3050 Laptop GPU、FP32、有效 batch 64、按种子顺序训练；12 个正式/历史 checkpoint 在生成盲测前冻结。
+- 六个新训练实例的逐更新损失、学习率与验证记录见 [`formal/training_history.csv`](../../experiments/D1-E002/formal/training_history.csv)；正式和历史权重/模型清单在 `experiments/D1-E002/formal/`。
 - 使用独立 50,000-H0 calibration；14 个分数的经验 Pfa 均为 0.00998。盲测每 SNR 4096 H0 与 1024 H1，8 个 SNR 共 32,768 H0 和 8,192 H1。
 - 盲测只作最终评价。profile-ML 每 SNR 采用协议预定的前 128 个 H1；它是 D1 冻结实现的有限网格数值参考，不宣称连续全局 ML。
 - 初次盲测已保存样本及多数方法预测，但 evaluator 在 profile-ML 距离区间配置路径处以 `KeyError: 'waveform'` 中断。提交 `e7404f6` 修正 D0 波形区间读取后，用同一缓存与 IDs 补算 profile-ML 并完成汇总。保留初次失败清单与 partial metrics；盲测没有重生成，模型、阈值、指标和门槛没有变化。
