@@ -1,0 +1,110 @@
+{
+  "experiment_id": "D1-E002",
+  "status": "FROZEN",
+  "code_commit": "286c68869bf23a03f47ed804cd625a1499b5fd10",
+  "training_commit": "5dcb25d5c44e428ffb671ae3c65e2ca2b88bfe21",
+  "candidate_order": [
+    "S1",
+    "S2"
+  ],
+  "models": [
+    {
+      "id": "S0/seed_1",
+      "kind": "historical_task_student",
+      "variant": "S0",
+      "seed_id": "seed_1",
+      "checkpoint": "experiments/D1-E001/formal/seed_1/A_truth_only/best_inference.pt",
+      "git_blob": "ce4945baea056e497fe1928b48b23c22deda3d34"
+    },
+    {
+      "id": "S0_D/seed_1",
+      "kind": "historical_task_student",
+      "variant": "S0_D",
+      "seed_id": "seed_1",
+      "checkpoint": "experiments/D1-E001/formal/seed_1/D_progressive_distillation/best_inference.pt",
+      "git_blob": "274a131c9233b9e02f759076003281df7ca90c7d"
+    },
+    {
+      "id": "S1/seed_1",
+      "kind": "e002_candidate",
+      "variant": "S1",
+      "seed_id": "seed_1",
+      "checkpoint": "experiments/D1-E002/formal/seed_1/S1/best_inference.pt",
+      "git_blob": "b4dbf0a2bd34c4ad3765d0679ff8921cbe0892e2"
+    },
+    {
+      "id": "S2/seed_1",
+      "kind": "e002_candidate",
+      "variant": "S2",
+      "seed_id": "seed_1",
+      "checkpoint": "experiments/D1-E002/formal/seed_1/S2/best_inference.pt",
+      "git_blob": "64475aac6805b2c47a34924621a53f4eeb34818e"
+    },
+    {
+      "id": "S0/seed_2",
+      "kind": "historical_task_student",
+      "variant": "S0",
+      "seed_id": "seed_2",
+      "checkpoint": "experiments/D1-E001/formal/seed_2/A_truth_only/best_inference.pt",
+      "git_blob": "ef0140071962dfa569a04b509b4cd08e8391a0f0"
+    },
+    {
+      "id": "S0_D/seed_2",
+      "kind": "historical_task_student",
+      "variant": "S0_D",
+      "seed_id": "seed_2",
+      "checkpoint": "experiments/D1-E001/formal/seed_2/D_progressive_distillation/best_inference.pt",
+      "git_blob": "8652158ebd7cd474031835881a86239ebb06daf3"
+    },
+    {
+      "id": "S1/seed_2",
+      "kind": "e002_candidate",
+      "variant": "S1",
+      "seed_id": "seed_2",
+      "checkpoint": "experiments/D1-E002/formal/seed_2/S1/best_inference.pt",
+      "git_blob": "2b8a7e9adfab82c6006dc5812792261515e8dbd0"
+    },
+    {
+      "id": "S2/seed_2",
+      "kind": "e002_candidate",
+      "variant": "S2",
+      "seed_id": "seed_2",
+      "checkpoint": "experiments/D1-E002/formal/seed_2/S2/best_inference.pt",
+      "git_blob": "6688ca7d6835533d7f75d83481b1a2c1743e156e"
+    },
+    {
+      "id": "S0/seed_3",
+      "kind": "historical_task_student",
+      "variant": "S0",
+      "seed_id": "seed_3",
+      "checkpoint": "experiments/D1-E001/formal/seed_3/A_truth_only/best_inference.pt",
+      "git_blob": "25624a383d642cab0cd1721f7567ce39fb92efde"
+    },
+    {
+      "id": "S0_D/seed_3",
+      "kind": "historical_task_student",
+      "variant": "S0_D",
+      "seed_id": "seed_3",
+      "checkpoint": "experiments/D1-E001/formal/seed_3/D_progressive_distillation/best_inference.pt",
+      "git_blob": "dbf2b068223cff229770ebbf036615aa10b2b53b"
+    },
+    {
+      "id": "S1/seed_3",
+      "kind": "e002_candidate",
+      "variant": "S1",
+      "seed_id": "seed_3",
+      "checkpoint": "experiments/D1-E002/formal/seed_3/S1/best_inference.pt",
+      "git_blob": "fb8abaf4be1f22496257d4ee82532cc0345a6b81"
+    },
+    {
+      "id": "S2/seed_3",
+      "kind": "e002_candidate",
+      "variant": "S2",
+      "seed_id": "seed_3",
+      "checkpoint": "experiments/D1-E002/formal/seed_3/S2/best_inference.pt",
+      "git_blob": "96d70394f9e1054d62c411beed5c3f3873947ca8"
+    }
+  ],
+  "checkpoints_are_tracked_and_clean": true,
+  "calibration_and_blind_data_generated": false
+}
