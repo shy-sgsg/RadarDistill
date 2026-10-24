@@ -1,0 +1,1784 @@
+[
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.574920654296875e-05,
+    "rmse_deviation_hz": 6.428641790989786e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.4332275390625e-05,
+    "rmse_deviation_hz": 0.00010377098806202412
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 23.974966049194336,
+    "rmse_deviation_hz": 51.65597152709961
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 31.53671646118164,
+    "rmse_deviation_hz": 56.005577087402344
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 294.70099074102075,
+    "scaled_signal_frequency_rmse_hz": 183.36433803957837
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.6689300537109375e-05,
+    "rmse_deviation_hz": 4.415831426740624e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 1.9073486328125e-05,
+    "rmse_deviation_hz": 4.1085546399699524e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 37.474422454833984,
+    "rmse_deviation_hz": 68.26972198486328
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 35.64308166503906,
+    "rmse_deviation_hz": 51.231971740722656
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 286.58115359955093,
+    "scaled_signal_frequency_rmse_hz": 184.6382463581288
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.288818359375e-05,
+    "rmse_deviation_hz": 4.247867036610842e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.09808349609375e-05,
+    "rmse_deviation_hz": 4.764555342262611e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 37.47119903564453,
+    "rmse_deviation_hz": 68.23729705810547
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 35.78432083129883,
+    "rmse_deviation_hz": 51.48436737060547
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 286.6393090915058,
+    "scaled_signal_frequency_rmse_hz": 184.62912153605112
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.002716064453125e-05,
+    "rmse_deviation_hz": 4.178791641606949e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.4318695068359375e-05,
+    "rmse_deviation_hz": 4.7950001317076385e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 23.111469268798828,
+    "rmse_deviation_hz": 57.01922607421875
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 19.444814682006836,
+    "rmse_deviation_hz": 30.043851852416992
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 291.9571845982596,
+    "scaled_signal_frequency_rmse_hz": 181.53400038461896
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 3.4809112548828125e-05,
+    "rmse_deviation_hz": 6.451238732552156e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 4.38690185546875e-05,
+    "rmse_deviation_hz": 8.145964238792658e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 33.17805480957031,
+    "rmse_deviation_hz": 62.43614196777344
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 17.659255981445312,
+    "rmse_deviation_hz": 25.994041442871094
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 282.7865206040061,
+    "scaled_signal_frequency_rmse_hz": 179.3360256560845
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.09808349609375e-05,
+    "rmse_deviation_hz": 4.382753468235023e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.384185791015625e-05,
+    "rmse_deviation_hz": 4.57763671875e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 35.07872009277344,
+    "rmse_deviation_hz": 68.04658508300781
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 41.07239532470703,
+    "rmse_deviation_hz": 66.30915832519531
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 291.7590375141662,
+    "scaled_signal_frequency_rmse_hz": 187.83879531266192
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.6226043701171875e-05,
+    "rmse_deviation_hz": 6.451238732552156e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.24249267578125e-05,
+    "rmse_deviation_hz": 8.461407560389489e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 25.113733291625977,
+    "rmse_deviation_hz": 47.16984558105469
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 24.32689094543457,
+    "rmse_deviation_hz": 39.07044982910156
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 292.8324260235592,
+    "scaled_signal_frequency_rmse_hz": 179.69559818421328
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 8.440017700195312e-05,
+    "rmse_deviation_hz": 0.00014665514754597098
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.000102996826171875,
+    "rmse_deviation_hz": 0.00015672789595555514
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 152.4615478515625,
+    "rmse_deviation_hz": 207.39442443847656
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 147.54034423828125,
+    "rmse_deviation_hz": 189.56492614746094
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 337.3662128577224,
+    "scaled_signal_frequency_rmse_hz": 310.9199145351362
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 7.915496826171875e-05,
+    "rmse_deviation_hz": 0.00012489856453612447
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 8.678436279296875e-05,
+    "rmse_deviation_hz": 0.00013540832151193172
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 117.80685424804688,
+    "rmse_deviation_hz": 174.67848205566406
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 129.46630859375,
+    "rmse_deviation_hz": 178.1233367919922
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 335.10480763900495,
+    "scaled_signal_frequency_rmse_hz": 311.2758454627188
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 8.153915405273438e-05,
+    "rmse_deviation_hz": 0.00014545956219080836
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 9.918212890625e-05,
+    "rmse_deviation_hz": 0.0001982174871955067
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 140.46966552734375,
+    "rmse_deviation_hz": 200.08470153808594
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 152.18141174316406,
+    "rmse_deviation_hz": 207.80133056640625
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 332.7990467546321,
+    "scaled_signal_frequency_rmse_hz": 306.9845430029929
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 9.5367431640625e-05,
+    "rmse_deviation_hz": 0.00015334892668761313
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 9.250640869140625e-05,
+    "rmse_deviation_hz": 0.00014354620361700654
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 134.21958923339844,
+    "rmse_deviation_hz": 181.087646484375
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 127.92234802246094,
+    "rmse_deviation_hz": 176.22877502441406
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 333.6573560107067,
+    "scaled_signal_frequency_rmse_hz": 300.5008234446782
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.8596649169921875e-05,
+    "rmse_deviation_hz": 4.415831426740624e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.0503997802734375e-05,
+    "rmse_deviation_hz": 4.415831426740624e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 23.208059310913086,
+    "rmse_deviation_hz": 44.47693634033203
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 26.193872451782227,
+    "rmse_deviation_hz": 47.235443115234375
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 294.4237653257869,
+    "scaled_signal_frequency_rmse_hz": 181.2941514940055
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.6689300537109375e-05,
+    "rmse_deviation_hz": 3.6189394450047985e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.193450927734375e-05,
+    "rmse_deviation_hz": 4.640779661713168e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 31.502744674682617,
+    "rmse_deviation_hz": 67.56858825683594
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 26.04084014892578,
+    "rmse_deviation_hz": 49.009586334228516
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 290.7606712822934,
+    "scaled_signal_frequency_rmse_hz": 179.72631852736012
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.8596649169921875e-05,
+    "rmse_deviation_hz": 4.481254654820077e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 1.621246337890625e-05,
+    "rmse_deviation_hz": 3.658929199445993e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 31.497180938720703,
+    "rmse_deviation_hz": 67.52879333496094
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 26.040475845336914,
+    "rmse_deviation_hz": 48.981773376464844
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 290.728288322187,
+    "scaled_signal_frequency_rmse_hz": 179.7339491766674
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.765655517578125e-05,
+    "rmse_deviation_hz": 7.89190671639517e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.193450927734375e-05,
+    "rmse_deviation_hz": 4.640779661713168e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 21.503023147583008,
+    "rmse_deviation_hz": 33.7620964050293
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 30.40199851989746,
+    "rmse_deviation_hz": 73.5079574584961
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 297.8231626643734,
+    "scaled_signal_frequency_rmse_hz": 181.76455927977685
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.6702880859375e-05,
+    "rmse_deviation_hz": 5.448477531899698e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.8623809814453125e-05,
+    "rmse_deviation_hz": 7.686401659157127e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 24.54438018798828,
+    "rmse_deviation_hz": 38.08140563964844
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 37.627044677734375,
+    "rmse_deviation_hz": 75.59066772460938
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 291.8847175247892,
+    "scaled_signal_frequency_rmse_hz": 183.1993977581169
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.288818359375e-05,
+    "rmse_deviation_hz": 4.764555342262611e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.002716064453125e-05,
+    "rmse_deviation_hz": 4.037096005049534e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 30.798686981201172,
+    "rmse_deviation_hz": 64.199951171875
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 31.220306396484375,
+    "rmse_deviation_hz": 67.43538665771484
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 293.6819583220021,
+    "scaled_signal_frequency_rmse_hz": 181.57184800048827
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.6226043701171875e-05,
+    "rmse_deviation_hz": 5.6323329772567376e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 1.9550323486328125e-05,
+    "rmse_deviation_hz": 4.914893725072034e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 24.161026000976562,
+    "rmse_deviation_hz": 41.25972366333008
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 28.34128761291504,
+    "rmse_deviation_hz": 54.57324981689453
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 296.3098158008477,
+    "scaled_signal_frequency_rmse_hz": 179.75724761377248
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00011968612670898438,
+    "rmse_deviation_hz": 0.0001914202730404213
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00016069412231445312,
+    "rmse_deviation_hz": 0.00024857078096829355
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 160.56198120117188,
+    "rmse_deviation_hz": 213.64102172851562
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 166.7768096923828,
+    "rmse_deviation_hz": 226.93186950683594
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 324.5347050539938,
+    "scaled_signal_frequency_rmse_hz": 304.6776183127287
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.0001049041748046875,
+    "rmse_deviation_hz": 0.00017859954095911235
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00013589859008789062,
+    "rmse_deviation_hz": 0.00026357322349213064
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 152.95404052734375,
+    "rmse_deviation_hz": 210.62794494628906
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 152.2551727294922,
+    "rmse_deviation_hz": 210.80104064941406
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 331.18439475844895,
+    "scaled_signal_frequency_rmse_hz": 299.31011522392515
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00016927719116210938,
+    "rmse_deviation_hz": 0.0006653558230027556
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00016832351684570312,
+    "rmse_deviation_hz": 0.0005159580614417791
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 148.27996826171875,
+    "rmse_deviation_hz": 202.9859161376953
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 147.06454467773438,
+    "rmse_deviation_hz": 204.01463317871094
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 331.0695211384662,
+    "scaled_signal_frequency_rmse_hz": 300.1157350882615
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00011205673217773438,
+    "rmse_deviation_hz": 0.00017389330605510622
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00012874603271484375,
+    "rmse_deviation_hz": 0.00019210325262974948
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 145.50730895996094,
+    "rmse_deviation_hz": 204.57083129882812
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 161.90670776367188,
+    "rmse_deviation_hz": 215.4552001953125
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 334.5442029569936,
+    "scaled_signal_frequency_rmse_hz": 300.61468795228325
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.09808349609375e-05,
+    "rmse_deviation_hz": 4.825252835871652e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.0503997802734375e-05,
+    "rmse_deviation_hz": 4.481254654820077e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 22.55954360961914,
+    "rmse_deviation_hz": 42.599334716796875
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 37.98515319824219,
+    "rmse_deviation_hz": 65.1107177734375
+  },
+  {
+    "student": "S1",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 293.8154007634545,
+    "scaled_signal_frequency_rmse_hz": 180.52163335092325
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.811981201171875e-05,
+    "rmse_deviation_hz": 4.037096005049534e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.288818359375e-05,
+    "rmse_deviation_hz": 5.0607679440872744e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 18.904422760009766,
+    "rmse_deviation_hz": 33.5714225769043
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 22.843358993530273,
+    "rmse_deviation_hz": 36.35463333129883
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 290.53000341547187,
+    "scaled_signal_frequency_rmse_hz": 180.62845811188973
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.09808349609375e-05,
+    "rmse_deviation_hz": 5.0029284466290846e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.193450927734375e-05,
+    "rmse_deviation_hz": 4.703074591816403e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 18.916236877441406,
+    "rmse_deviation_hz": 33.82443618774414
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 22.528472900390625,
+    "rmse_deviation_hz": 35.76118087768555
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 290.4513567212758,
+    "scaled_signal_frequency_rmse_hz": 180.58202491604575
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 1.811981201171875e-05,
+    "rmse_deviation_hz": 5.5542830523336306e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.3365020751953125e-05,
+    "rmse_deviation_hz": 6.314447819022462e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 23.96859359741211,
+    "rmse_deviation_hz": 51.0577507019043
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 34.62861251831055,
+    "rmse_deviation_hz": 55.96955108642578
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 292.9763845936328,
+    "scaled_signal_frequency_rmse_hz": 180.0194671306108
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.7179718017578125e-05,
+    "rmse_deviation_hz": 5.934276123298332e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.337860107421875e-05,
+    "rmse_deviation_hz": 6.781153933843598e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 19.611888885498047,
+    "rmse_deviation_hz": 47.40237045288086
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 18.00504493713379,
+    "rmse_deviation_hz": 34.56160354614258
+  },
+  {
+    "student": "S1",
+    "strategy": "E2A_T3_full_response",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 294.30767223891814,
+    "scaled_signal_frequency_rmse_hz": 182.4043739044908
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.6226043701171875e-05,
+    "rmse_deviation_hz": 7.257956895045936e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.47955322265625e-05,
+    "rmse_deviation_hz": 9.123428753810003e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 21.928747177124023,
+    "rmse_deviation_hz": 57.57377624511719
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 20.62386131286621,
+    "rmse_deviation_hz": 36.756900787353516
+  },
+  {
+    "student": "S1",
+    "strategy": "E2B_T2_truth_validation",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 291.2833123207017,
+    "scaled_signal_frequency_rmse_hz": 182.31579761263242
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.3365020751953125e-05,
+    "rmse_deviation_hz": 5.475120633491315e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.337860107421875e-05,
+    "rmse_deviation_hz": 8.145964238792658e-05
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 23.03679656982422,
+    "rmse_deviation_hz": 39.61602020263672
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 27.790077209472656,
+    "rmse_deviation_hz": 57.28255081176758
+  },
+  {
+    "student": "S1",
+    "strategy": "E3_T3_truth_plus_response",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 295.0274553618828,
+    "scaled_signal_frequency_rmse_hz": 181.12059174160618
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.0001087188720703125,
+    "rmse_deviation_hz": 0.00018006017489824444
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.0001201629638671875,
+    "rmse_deviation_hz": 0.00017564184963703156
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 125.16307830810547,
+    "rmse_deviation_hz": 180.50169372558594
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 121.91871643066406,
+    "rmse_deviation_hz": 176.13583374023438
+  },
+  {
+    "student": "S2",
+    "strategy": "E1_truth",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 337.89550027967795,
+    "scaled_signal_frequency_rmse_hz": 308.83933114529214
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00011301040649414062,
+    "rmse_deviation_hz": 0.0002149134234059602
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00011396408081054688,
+    "rmse_deviation_hz": 0.00017965563165489584
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 170.9005889892578,
+    "rmse_deviation_hz": 237.7639617919922
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 152.01254272460938,
+    "rmse_deviation_hz": 212.76315307617188
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T1_hard",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 343.91632861956214,
+    "scaled_signal_frequency_rmse_hz": 306.8513567272671
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00012254714965820312,
+    "rmse_deviation_hz": 0.0002491555060259998
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.00011348724365234375,
+    "rmse_deviation_hz": 0.0002057108940789476
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 149.19422912597656,
+    "rmse_deviation_hz": 199.58140563964844
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 135.86740112304688,
+    "rmse_deviation_hz": 197.5477752685547
+  },
+  {
+    "student": "S2",
+    "strategy": "E2A_T2_local_soft",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 339.9499830686904,
+    "scaled_signal_frequency_rmse_hz": 307.3171749957936
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 0.00011777877807617188,
+    "rmse_deviation_hz": 0.0001820693869376555
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 0.000141143798828125,
+    "rmse_deviation_hz": 0.0002523473522160202
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 159.4967041015625,
+    "rmse_deviation_hz": 228.40325927734375
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 159.51231384277344,
+    "rmse_deviation_hz": 225.46023559570312
+  },
+  {
+    "student": "S2",
+    "strategy": "E3_T2_truth_plus_soft",
+    "train_seed": 1303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 330.5450105279612,
+    "scaled_signal_frequency_rmse_hz": 302.45811679191047
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 3.4809112548828125e-05,
+    "rmse_deviation_hz": 7.054612069623545e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.0040740966796875e-05,
+    "rmse_deviation_hz": 6.540843605762348e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 41.452423095703125,
+    "rmse_deviation_hz": 62.20248031616211
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 104.69690704345703,
+    "rmse_deviation_hz": 157.36624145507812
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 96.80431365966797,
+    "rmse_deviation_hz": 146.26931762695312,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 309.97044267515645,
+    "scaled_signal_frequency_rmse_hz": 231.0758492586363
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 2.8133392333984375e-05,
+    "rmse_deviation_hz": 5.8353645727038383e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.337860107421875e-05,
+    "rmse_deviation_hz": 6.337450759019703e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 44.53887939453125,
+    "rmse_deviation_hz": 74.33758544921875
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 114.34659576416016,
+    "rmse_deviation_hz": 170.1161651611328
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 95.39544677734375,
+    "rmse_deviation_hz": 142.77769470214844,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 308.76017627299706,
+    "scaled_signal_frequency_rmse_hz": 234.9376089017076
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 101,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 3.528594970703125e-05,
+    "rmse_deviation_hz": 0.0001421198685420677
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 101,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 2.7179718017578125e-05,
+    "rmse_deviation_hz": 8.444192644674331e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 101,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 45.327423095703125,
+    "rmse_deviation_hz": 68.3961410522461
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 101,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 112.81863403320312,
+    "rmse_deviation_hz": 168.13275146484375
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 101,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 94.75618743896484,
+    "rmse_deviation_hz": 142.04969787597656,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 308.541880738122,
+    "scaled_signal_frequency_rmse_hz": 231.95436623588205
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 6.29425048828125e-05,
+    "rmse_deviation_hz": 0.00024234589363913983
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 5.1021575927734375e-05,
+    "rmse_deviation_hz": 0.00015976250870153308
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 38.8934440612793,
+    "rmse_deviation_hz": 50.16102981567383
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 97.38218688964844,
+    "rmse_deviation_hz": 119.76606750488281
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 107.97034454345703,
+    "rmse_deviation_hz": 171.04010009765625,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 318.3534856864324,
+    "scaled_signal_frequency_rmse_hz": 230.79173000511372
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 5.817413330078125e-05,
+    "rmse_deviation_hz": 0.0001620236289454624
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 4.291534423828125e-05,
+    "rmse_deviation_hz": 9.027221676660702e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 43.88288879394531,
+    "rmse_deviation_hz": 66.96060180664062
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 93.37693786621094,
+    "rmse_deviation_hz": 114.79313659667969
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 107.07342529296875,
+    "rmse_deviation_hz": 172.30108642578125,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 317.2919687899058,
+    "scaled_signal_frequency_rmse_hz": 233.63102199869448
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 202,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 5.0067901611328125e-05,
+    "rmse_deviation_hz": 9.574813884682953e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 202,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 9.679794311523438e-05,
+    "rmse_deviation_hz": 0.0004891447606496513
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 202,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 39.98429870605469,
+    "rmse_deviation_hz": 51.57807922363281
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 202,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 98.30348205566406,
+    "rmse_deviation_hz": 120.3134536743164
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 202,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 109.18739318847656,
+    "rmse_deviation_hz": 173.69436645507812,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 318.85533177621465,
+    "scaled_signal_frequency_rmse_hz": 231.52858317799837
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 3.9577484130859375e-05,
+    "rmse_deviation_hz": 9.202833462040871e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 3.910064697265625e-05,
+    "rmse_deviation_hz": 7.436214218614623e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 52.123741149902344,
+    "rmse_deviation_hz": 75.0704574584961
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 107.3450698852539,
+    "rmse_deviation_hz": 148.69094848632812
+  },
+  {
+    "student": "S0",
+    "strategy": "E1_supervised",
+    "train_seed": 303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 116.2664566040039,
+    "rmse_deviation_hz": 171.52346801757812,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 320.55245075550494,
+    "scaled_signal_frequency_rmse_hz": 230.00428470719072
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 4.8160552978515625e-05,
+    "rmse_deviation_hz": 0.0001233746443176642
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 4.9114227294921875e-05,
+    "rmse_deviation_hz": 0.00012524760677479208
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 58.730682373046875,
+    "rmse_deviation_hz": 95.52305603027344
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 103.75434112548828,
+    "rmse_deviation_hz": 134.5616455078125
+  },
+  {
+    "student": "S0",
+    "strategy": "E2_teacher_KD",
+    "train_seed": 303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 106.76469421386719,
+    "rmse_deviation_hz": 154.32403564453125,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 317.9257853771326,
+    "scaled_signal_frequency_rmse_hz": 227.29746032535624
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 303,
+    "transform": "common_phase_rotation",
+    "mae_deviation_hz": 4.4345855712890625e-05,
+    "rmse_deviation_hz": 7.799166633049026e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 303,
+    "transform": "whole_observation_scale",
+    "mae_deviation_hz": 4.0531158447265625e-05,
+    "rmse_deviation_hz": 8.305184019263834e-05
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 303,
+    "transform": "frequency_shift",
+    "mae_deviation_hz": 54.649139404296875,
+    "rmse_deviation_hz": 94.51910400390625
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 303,
+    "transform": "complex_conjugation",
+    "mae_deviation_hz": 101.57909393310547,
+    "rmse_deviation_hz": 136.7313995361328
+  },
+  {
+    "student": "S0",
+    "strategy": "E3_supervised_plus_KD",
+    "train_seed": 303,
+    "transform": "signal_only_amplitude_scale_changes_snr",
+    "mae_deviation_hz": 115.01152038574219,
+    "rmse_deviation_hz": 170.8892822265625,
+    "signal_amplitude_scale": 1.7,
+    "snr_change_db": 4.608978427565479,
+    "base_frequency_rmse_hz": 319.9989961688161,
+    "scaled_signal_frequency_rmse_hz": 229.14353348179034
+  }
+]

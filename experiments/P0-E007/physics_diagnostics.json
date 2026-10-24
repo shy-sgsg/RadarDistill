@@ -1,0 +1,101 @@
+[
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17101,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.01220703125,
+    "common_complex_scale_max_abs_delta_hz": 0.017822265625,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.0002105236053466797,
+    "frequency_shift_equivariance_max_abs_hz": 0.012451171875
+  },
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17202,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.0064697265625,
+    "common_complex_scale_max_abs_delta_hz": 0.009033203125,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.0001500844955444336,
+    "frequency_shift_equivariance_max_abs_hz": 0.0067138671875
+  },
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17303,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.0059814453125,
+    "common_complex_scale_max_abs_delta_hz": 0.0089111328125,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.00015866756439208984,
+    "frequency_shift_equivariance_max_abs_hz": 0.006103515625
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17101,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.0068359375,
+    "common_complex_scale_max_abs_delta_hz": 0.0089111328125,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.00021028518676757812,
+    "frequency_shift_equivariance_max_abs_hz": 0.00714111328125
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17202,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.0120849609375,
+    "common_complex_scale_max_abs_delta_hz": 0.015869140625,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.00019824504852294922,
+    "frequency_shift_equivariance_max_abs_hz": 0.0123291015625
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17303,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.0067138671875,
+    "common_complex_scale_max_abs_delta_hz": 0.01263427734375,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.00023055076599121094,
+    "frequency_shift_equivariance_max_abs_hz": 0.006988525390625
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17101,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.018280029296875,
+    "common_complex_scale_max_abs_delta_hz": 0.01739501953125,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.00033164024353027344,
+    "frequency_shift_equivariance_max_abs_hz": 0.0198974609375
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17202,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.01318359375,
+    "common_complex_scale_max_abs_delta_hz": 0.0111083984375,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.0002847909927368164,
+    "frequency_shift_equivariance_max_abs_hz": 0.01904296875
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17303,
+    "sample_count": 256,
+    "common_phase_rotation_max_abs_delta_hz": 0.009796142578125,
+    "common_complex_scale_max_abs_delta_hz": 0.013427734375,
+    "frequency_shift_hz": 0.625,
+    "frequency_shift_equivariance_mae_hz": 0.0003134012222290039,
+    "frequency_shift_equivariance_max_abs_hz": 0.01934814453125
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "frozen_utc": "2026-10-24T06:35:47Z",
+  "training_records": [
+    {
+      "train_seed": 121001,
+      "torch_seed": 82101,
+      "best_epoch": 151,
+      "best_validation_loss": 0.10351083527008692,
+      "epochs_completed": 160,
+      "training_seconds": 14.904578858993773,
+      "peak_allocated_bytes": 18455552,
+      "peak_reserved_bytes": 23068672,
+      "checkpoint": "checkpoints/seed_121001.pt",
+      "resumed_from_checkpoint": false
+    },
+    {
+      "train_seed": 121002,
+      "torch_seed": 82202,
+      "best_epoch": 140,
+      "best_validation_loss": 0.10897398710250855,
+      "epochs_completed": 160,
+      "training_seconds": 14.641445031003968,
+      "peak_allocated_bytes": 18455552,
+      "peak_reserved_bytes": 23068672,
+      "checkpoint": "checkpoints/seed_121002.pt",
+      "resumed_from_checkpoint": false
+    },
+    {
+      "train_seed": 121003,
+      "torch_seed": 82303,
+      "best_epoch": 142,
+      "best_validation_loss": 0.10831056157747905,
+      "epochs_completed": 160,
+      "training_seconds": 14.522665053002129,
+      "peak_allocated_bytes": 18455552,
+      "peak_reserved_bytes": 23068672,
+      "checkpoint": "checkpoints/seed_121003.pt",
+      "resumed_from_checkpoint": false
+    }
+  ],
+  "model_count": 3
+}

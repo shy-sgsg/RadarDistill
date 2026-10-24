@@ -1,0 +1,287 @@
+[
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17101,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.008731185468250302,
+      "rmse_hz": 0.011324814574537845,
+      "p95_abs_hz": 0.019136445396492265,
+      "max_abs_hz": 0.0831298828125
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.008785221036311446,
+      "rmse_hz": 0.011505509201920741,
+      "p95_abs_hz": 0.019139535788042394,
+      "max_abs_hz": 0.0831298828125
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17202,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.025711555276466347,
+      "rmse_hz": 0.026418729571692567,
+      "p95_abs_hz": 0.03352809352003305,
+      "max_abs_hz": 0.033672173361196656
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.02571123862124394,
+      "rmse_hz": 0.026426050933794486,
+      "p95_abs_hz": 0.03351965118008593,
+      "max_abs_hz": 0.033672173361196656
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E1",
+    "train_seed": 17303,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.007052168142230919,
+      "rmse_hz": 0.007891520607877546,
+      "p95_abs_hz": 0.012449083938730609,
+      "max_abs_hz": 0.03875732421875
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.007111481931454181,
+      "rmse_hz": 0.00798960429697205,
+      "p95_abs_hz": 0.012459473487638206,
+      "max_abs_hz": 0.03875732421875
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-H",
+    "train_seed": 17101,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.008044343137143029,
+      "rmse_hz": 0.008940996293439862,
+      "p95_abs_hz": 0.013176040650114374,
+      "max_abs_hz": 0.013352778941680299
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.00811172356878491,
+      "rmse_hz": 0.008984624265193884,
+      "p95_abs_hz": 0.01318014346605878,
+      "max_abs_hz": 0.013352778941680299
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-H",
+    "train_seed": 17202,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.0100034423793664,
+      "rmse_hz": 0.011559182811071624,
+      "p95_abs_hz": 0.018414522315720206,
+      "max_abs_hz": 0.0968017578125
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.010126145249943628,
+      "rmse_hz": 0.011798993521466107,
+      "p95_abs_hz": 0.01841735458302196,
+      "max_abs_hz": 0.0968017578125
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-H",
+    "train_seed": 17303,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.009612031588057957,
+      "rmse_hz": 0.011224768236907842,
+      "p95_abs_hz": 0.01869134659007159,
+      "max_abs_hz": 0.018902732565038605
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.009653393855064045,
+      "rmse_hz": 0.011251643188854566,
+      "p95_abs_hz": 0.018718207622896443,
+      "max_abs_hz": 0.018902732565038605
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-S",
+    "train_seed": 17101,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.11166626822524212,
+      "rmse_hz": 0.12599509808130138,
+      "p95_abs_hz": 0.18829279795281764,
+      "max_abs_hz": 0.1906776795673295
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.11155410289015136,
+      "rmse_hz": 0.12587833979992413,
+      "p95_abs_hz": 0.18827007404195228,
+      "max_abs_hz": 0.1906600878255631
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-S",
+    "train_seed": 17202,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.1011529201796943,
+      "rmse_hz": 0.1133311752406775,
+      "p95_abs_hz": 0.16705136999280512,
+      "max_abs_hz": 0.16927863342766614
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.10135697524836375,
+      "rmse_hz": 0.11359078545084433,
+      "p95_abs_hz": 0.16672017648346582,
+      "max_abs_hz": 0.16923125277287454
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E2-S",
+    "train_seed": 17303,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.0910196497424024,
+      "rmse_hz": 0.10371121743249878,
+      "p95_abs_hz": 0.16500156480124128,
+      "max_abs_hz": 0.59051513671875
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.09145380502112803,
+      "rmse_hz": 0.10461324717200284,
+      "p95_abs_hz": 0.1643360822141915,
+      "max_abs_hz": 0.59051513671875
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17101,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.025876594342621517,
+      "rmse_hz": 0.03164514538825393,
+      "p95_abs_hz": 0.055918761392348415,
+      "max_abs_hz": 0.05663658938294702
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.025964664692311717,
+      "rmse_hz": 0.03173381736178647,
+      "p95_abs_hz": 0.055987619387195764,
+      "max_abs_hz": 0.05663658938294702
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17202,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.02221565795542424,
+      "rmse_hz": 0.026077079730801807,
+      "p95_abs_hz": 0.04570712531842105,
+      "max_abs_hz": 0.100830078125
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.022361485560991937,
+      "rmse_hz": 0.026332360236867473,
+      "p95_abs_hz": 0.045800961563344345,
+      "max_abs_hz": 0.100830078125
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1",
+    "strategy": "E3-S",
+    "train_seed": 17303,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.0314788234170032,
+      "rmse_hz": 0.03743639193869634,
+      "p95_abs_hz": 0.0636599278705546,
+      "max_abs_hz": 0.0643556144411832
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.031666105728934975,
+      "rmse_hz": 0.037547454494790126,
+      "p95_abs_hz": 0.06367657286978101,
+      "max_abs_hz": 0.06433467774468227
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17101,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.012680070524512532,
+      "rmse_hz": 0.09092679811776114,
+      "p95_abs_hz": 0.021310902881594984,
+      "max_abs_hz": 4.07513427734375
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.014650586202085036,
+      "rmse_hz": 0.1272378271905186,
+      "p95_abs_hz": 0.021274667827839266,
+      "max_abs_hz": 4.07513427734375
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17202,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.00853023698396188,
+      "rmse_hz": 0.009627958422262488,
+      "p95_abs_hz": 0.014881711565789147,
+      "max_abs_hz": 0.015029647295136783
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.008592246117552233,
+      "rmse_hz": 0.009665504028480307,
+      "p95_abs_hz": 0.014875486698855411,
+      "max_abs_hz": 0.01502879695658521
+    },
+    "nyquist_edge_count": 1036
+  },
+  {
+    "model": "M1_power",
+    "strategy": "E1",
+    "train_seed": 17303,
+    "count": 2048,
+    "all_frequency": {
+      "mae_hz": 0.010537762348197866,
+      "rmse_hz": 0.1501342405994114,
+      "p95_abs_hz": 0.014246779328306047,
+      "max_abs_hz": 6.782958984375
+    },
+    "nyquist_edge": {
+      "mae_hz": 0.013827430205492902,
+      "rmse_hz": 0.2109172240050007,
+      "p95_abs_hz": 0.014249962152206308,
+      "max_abs_hz": 6.782958984375
+    },
+    "nyquist_edge_count": 1036
+  }
+]

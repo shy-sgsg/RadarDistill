@@ -1,0 +1,322 @@
+{
+  "experiment_id": "P0-E007",
+  "status": "completed",
+  "data_roles": {
+    "development_benchmark_seed": 7070,
+    "development_is_final_blind": false,
+    "formal_train_seeds": [
+      17101,
+      17202,
+      17303
+    ],
+    "formal_validation_seeds": [
+      37101,
+      37202,
+      37303
+    ]
+  },
+  "environment": {
+    "python": "3.13.7",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "cuda_build": "12.8",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "training_device": "cuda:0",
+    "gpu_total_memory_bytes": 3942383616,
+    "gpu_free_memory_bytes_at_snapshot": 2649554944,
+    "gpu_total_memory_bytes_at_snapshot": 3942383616,
+    "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 580.178.04, 4096 MiB, 1233 MiB, 2527 MiB",
+    "git_head": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+    "git_dirty": true,
+    "git_status_short": "M AGENTS.md\n M README.md\n M docs/decisions.md\n M docs/experiment_protocol.md\n M docs/progress.md\n M docs/research_plan.md\n M src/radardistill/baselines.py\n M src/radardistill/cnn.py\n M src/radardistill/experiment.py\n?? docs/audits/\n?? docs/stage_reviews/\n?? docs/superpowers/\n?? experiments/P0-E006/\n?? experiments/P0-E007/\n?? scripts/run_p0_e006.py\n?? scripts/run_p0_e007.py\n?? src/radardistill/p0_e007.py\n?? src/radardistill/torch_experiment.py\n?? src/radardistill/torch_models.py\n?? tests/test_p0_e007.py\n?? tests/test_p0_methodology_audit.py",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43"
+  },
+  "classical_development_rmse_by_snr_hz": {
+    "B0_constant_zero": {
+      "-15.0": 376.210309273468,
+      "-10.0": 378.37772616121384,
+      "-5.0": 365.9897901133057,
+      "0.0": 370.956311288968,
+      "5.0": 378.8934033433262,
+      "10.0": 372.89864171876184,
+      "15.0": 376.5700785522397,
+      "20.0": 376.08535126282266
+    },
+    "B1_fft_peak": {
+      "-15.0": 315.0950073975136,
+      "-10.0": 120.9172879561194,
+      "-5.0": 2.9770126855454495,
+      "0.0": 2.859637423572221,
+      "5.0": 2.9147975630174163,
+      "10.0": 2.855619949854381,
+      "15.0": 2.8569999289335275,
+      "20.0": 2.9636625580979663
+    },
+    "B2_fft_interpolated": {
+      "-15.0": 315.04071848409745,
+      "-10.0": 120.88302831863568,
+      "-5.0": 1.8072307178904636,
+      "0.0": 1.462671801335533,
+      "5.0": 1.3340050132876662,
+      "10.0": 1.2517516639047568,
+      "15.0": 1.2081875748065551,
+      "20.0": 1.232892256437001
+    },
+    "B3_phase_difference": {
+      "-15.0": 307.52165856409687,
+      "-10.0": 182.43639241599314,
+      "-5.0": 45.008094685700094,
+      "0.0": 12.895663869071804,
+      "5.0": 4.093544812123722,
+      "10.0": 1.3381786427514848,
+      "15.0": 0.4808518035663071,
+      "20.0": 0.20607909417896128
+    },
+    "B4_local_profile_ML": {
+      "-15.0": 315.0214237318002,
+      "-10.0": 120.88688228530658,
+      "-5.0": 0.6164963060045304,
+      "0.0": 0.33749808907930884,
+      "5.0": 0.18779593991874896,
+      "10.0": 0.10626439590566782,
+      "15.0": 0.06166676599137075,
+      "20.0": 0.03315112618311353
+    },
+    "B6_4N_fft_peak": {
+      "-15.0": 295.28967721065874,
+      "-10.0": 85.86518638241667,
+      "-5.0": 0.9095331224455999,
+      "0.0": 0.7957509963734504,
+      "5.0": 0.7586651844127154,
+      "10.0": 0.7413105727793118,
+      "15.0": 0.710261665085899,
+      "20.0": 0.7319855305224744
+    },
+    "B8_16N_fft_peak": {
+      "-15.0": 295.7706793339225,
+      "-10.0": 85.67299136587688,
+      "-5.0": 0.649830458589453,
+      "0.0": 0.37519014274827067,
+      "5.0": 0.25894460728823043,
+      "10.0": 0.20400954724012746,
+      "15.0": 0.19059229244314987,
+      "20.0": 0.1836440918032115
+    },
+    "B9_4N_local_parabolic": {
+      "-15.0": 295.2672231085624,
+      "-10.0": 85.84772570541412,
+      "-5.0": 0.6164105051668827,
+      "0.0": 0.3373434270543732,
+      "5.0": 0.18810019526341595,
+      "10.0": 0.10653649982834777,
+      "15.0": 0.06217804925940472,
+      "20.0": 0.03405746640530659
+    },
+    "B10_16N_local_parabolic": {
+      "-15.0": 295.76226150424463,
+      "-10.0": 85.67635622756765,
+      "-5.0": 0.6164372503103438,
+      "0.0": 0.33748565335286784,
+      "5.0": 0.18780158764963747,
+      "10.0": 0.10626568574212454,
+      "15.0": 0.061664092588158394,
+      "20.0": 0.03314736455533556
+    }
+  },
+  "training_replicates": [
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "validation_seed": 37101,
+      "training": {
+        "model": "M1",
+        "strategy": "E1",
+        "train_seed": 17101,
+        "torch_seed": 81100,
+        "finite": true,
+        "epochs_completed": 141,
+        "selected_epoch": 101,
+        "validation_first_loss": 1.5341278235117595,
+        "validation_best_loss": 1.2278029537200927,
+        "training_seconds": 282.4297739360045,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17101.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.94954365639205,
+        "-10.0": 80.43904526950362,
+        "-5.0": 0.919995805548783,
+        "0.0": 0.33819182572871287,
+        "5.0": 0.1898512504801962,
+        "10.0": 0.10701890829916591,
+        "15.0": 0.06283583711441511,
+        "20.0": 0.03464767634720391
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "validation_seed": 37202,
+      "training": {
+        "model": "M1",
+        "strategy": "E1",
+        "train_seed": 17202,
+        "torch_seed": 81101,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 160,
+        "validation_first_loss": 1.6464507706960043,
+        "validation_best_loss": 1.3510239617029827,
+        "training_seconds": 300.22150750100263,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17202.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 287.40589991428124,
+        "-10.0": 77.87230998070027,
+        "-5.0": 1.0768581234778873,
+        "0.0": 0.3420460397248573,
+        "5.0": 0.19227336948483878,
+        "10.0": 0.11089784159793914,
+        "15.0": 0.06793954056015679,
+        "20.0": 0.0435798727249829
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "validation_seed": 37303,
+      "training": {
+        "model": "M1",
+        "strategy": "E1",
+        "train_seed": 17303,
+        "torch_seed": 81102,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 154,
+        "validation_first_loss": 1.5773997592926026,
+        "validation_best_loss": 1.281017802556356,
+        "training_seconds": 295.43627935599943,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17303.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.0577769553281,
+        "-10.0": 78.60699116813318,
+        "-5.0": 0.8701224679627874,
+        "0.0": 0.33732271764691085,
+        "5.0": 0.18925633265500005,
+        "10.0": 0.10690050924095224,
+        "15.0": 0.062382162710996523,
+        "20.0": 0.03431447966946724
+      }
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "validation_seed": 37101,
+      "training": {
+        "model": "M1_power",
+        "strategy": "E1",
+        "train_seed": 17101,
+        "torch_seed": 81200,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 142,
+        "validation_first_loss": 1.5164720662434896,
+        "validation_best_loss": 1.2146085691452027,
+        "training_seconds": 291.1851998029888,
+        "peak_gpu_memory_bytes": 71660544,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17101.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.3544327721879,
+        "-10.0": 75.27331181330183,
+        "-5.0": 0.9052229368895424,
+        "0.0": 0.3393154339351898,
+        "5.0": 0.1885864688081234,
+        "10.0": 0.1070762786529177,
+        "15.0": 0.0634034882970325,
+        "20.0": 0.03582524693312552
+      }
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "validation_seed": 37202,
+      "training": {
+        "model": "M1_power",
+        "strategy": "E1",
+        "train_seed": 17202,
+        "torch_seed": 81201,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 121,
+        "validation_first_loss": 1.5780178896586101,
+        "validation_best_loss": 1.3348540433247884,
+        "training_seconds": 291.54175621100876,
+        "peak_gpu_memory_bytes": 71660544,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17202.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.1374108380358,
+        "-10.0": 76.87277486431114,
+        "-5.0": 0.9843265409735669,
+        "0.0": 0.339636988360071,
+        "5.0": 0.18991888131063858,
+        "10.0": 0.107385126588903,
+        "15.0": 0.06315395593536653,
+        "20.0": 0.03494225385694846
+      }
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "validation_seed": 37303,
+      "training": {
+        "model": "M1_power",
+        "strategy": "E1",
+        "train_seed": 17303,
+        "torch_seed": 81202,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 155,
+        "validation_first_loss": 1.5893367226918538,
+        "validation_best_loss": 1.2762933619817098,
+        "training_seconds": 291.0318111279921,
+        "peak_gpu_memory_bytes": 71660544,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17303.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.037012219546,
+        "-10.0": 78.7110764793789,
+        "-5.0": 0.8808214348058854,
+        "0.0": 0.33803768867955014,
+        "5.0": 0.1899195692526493,
+        "10.0": 0.10752737240149941,
+        "15.0": 0.06274731456737538,
+        "20.0": 0.03460901189689271
+      }
+    }
+  ],
+  "kd_selection": {
+    "selected": [
+      "M1"
+    ],
+    "selected_reasons": {
+      "M1": "formal E1 mean 20 dB RMSE=0.03751 Hz; maximum consecutive FFT wins=5"
+    },
+    "rejected": {},
+    "rule": {
+      "max_rmse_20db_hz": 5.0,
+      "min_adjacent_fft_points": 2
+    }
+  }
+}

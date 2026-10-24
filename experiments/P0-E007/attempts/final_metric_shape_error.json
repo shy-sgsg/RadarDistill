@@ -1,0 +1,10 @@
+{
+  "phase": "final_metric_summary",
+  "status": "recovered_without_regenerating_data_or_reinferring_models",
+  "error": "paired_bootstrap_rmse_difference rejected baseline predictions shaped (1, n_samples) when candidate predictions were shaped (3, n_samples)",
+  "root_cause": "the hierarchical bootstrap broadcast a 1-D fixed baseline, but did not broadcast a 2-D single-row baseline across training seeds",
+  "evidence": "A regression test reproduced the ValueError; the fixed-baseline bootstrap test now passes.",
+  "final_blind_dataset_generated_count": 1,
+  "final_model_inference_count": 1,
+  "recovery": "Reused datasets/final_blind.npz, datasets/noiseless_correctness.npz, final_predictions.npz, noiseless_predictions.npz, noiseless_metrics.json, and physics_diagnostics.json. No model selection or parameter was changed."
+}

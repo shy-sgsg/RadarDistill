@@ -93,6 +93,89 @@ class TinyCircularCNN:
         output, _ = self._forward(features)
         return output
 
+    def loss_value(
+        self,
+        iq: np.ndarray,
+        targets: np.ndarray,
+        teacher_targets: np.ndarray | None = None,
+        distillation_weight: float = 0.0,
+    ) -> float:
+        """Evaluate the exact supervised plus optional distillation objective."""
+        features = _complex_features(iq)
+        y = np.asarray(targets, dtype=np.float32)
+        teacher = None if teacher_targets is None else np.asarray(teacher_targets, dtype=np.float32)
+        if features.shape[-1] != self.n_samples or y.shape != (len(features), 2):
+            raise ValueError("input or target shape does not match the model")
+        if teacher is not None and teacher.shape != y.shape:
+            raise ValueError("teacher target shape must match the physical target")
+        if distillation_weight < 0 or (teacher is None and distillation_weight != 0):
+            raise ValueError("a nonnegative weight and matching teacher target are required")
+        output, _ = self._forward(features)
+        loss = float(np.mean((output - y) ** 2))
+        if teacher is not None:
+            loss += distillation_weight * float(np.mean((output - teacher) ** 2))
+        return loss
+
+    def loss_and_gradients(
+        self,
+        iq: np.ndarray,
+        targets: np.ndarray,
+        teacher_targets: np.ndarray | None = None,
+        distillation_weight: float = 0.0,
+    ) -> tuple[float, dict[str, np.ndarray]]:
+        """Evaluate the training objective and return analytic parameter gradients."""
+        features = _complex_features(iq)
+        y = np.asarray(targets, dtype=np.float32)
+        teacher = None if teacher_targets is None else np.asarray(teacher_targets, dtype=np.float32)
+        if features.shape[-1] != self.n_samples or y.shape != (len(features), 2):
+            raise ValueError("input or target shape does not match the model")
+        if teacher is not None and teacher.shape != y.shape:
+            raise ValueError("teacher target shape must match the physical target")
+        if distillation_weight < 0 or (teacher is None and distillation_weight != 0):
+            raise ValueError("a nonnegative weight and matching teacher target are required")
+        return self._loss_and_gradients_from_features(features, y, teacher, distillation_weight)
+
+    def _loss_and_gradients_from_features(
+        self,
+        features: np.ndarray,
+        targets: np.ndarray,
+        teacher_targets: np.ndarray | None,
+        distillation_weight: float,
+    ) -> tuple[float, dict[str, np.ndarray]]:
+        output, cache = self._forward(features)
+        windows, convolution, activation, head_input, flattened, hidden_preactivation = cache
+        grad_output = (output - targets) / len(features)
+        loss = float(np.mean((output - targets) ** 2))
+        if teacher_targets is not None:
+            difference = output - teacher_targets
+            grad_output += distillation_weight * difference / len(features)
+            loss += distillation_weight * float(np.mean(difference**2))
+
+        grad_head_weight = grad_output.T @ head_input
+        grad_head_bias = np.sum(grad_output, axis=0)
+        grad_head_input = grad_output @ self.head_weight
+        gradients: dict[str, np.ndarray] = {
+            "head_weight": grad_head_weight,
+            "head_bias": grad_head_bias,
+        }
+        if self.pooling == "mean":
+            grad_activation = np.broadcast_to(
+                grad_head_input[:, :, None] / convolution.shape[-1], convolution.shape
+            )
+        else:
+            grad_hidden = grad_head_input * (hidden_preactivation > 0.0)
+            gradients["hidden_weight"] = grad_hidden.T @ flattened
+            gradients["hidden_bias"] = np.sum(grad_hidden, axis=0)
+            grad_flattened = grad_hidden @ self.hidden_weight
+            grad_activation = grad_flattened.reshape(activation.shape)
+
+        grad_convolution = grad_activation * (convolution > 0.0)
+        gradients["conv_weight"] = np.einsum(
+            "bol,bclk->ock", grad_convolution, windows, optimize=True
+        )
+        gradients["conv_bias"] = np.sum(grad_convolution, axis=(0, 2))
+        return loss, gradients
+
     def fit(
         self,
         iq: np.ndarray,
@@ -151,36 +234,14 @@ class TinyCircularCNN:
                 indices = order[start : start + batch_size]
                 xb = features[indices]
                 yb = y[indices]
-                output, cache = self._forward(xb)
-                windows, convolution, activation, head_input, flattened, hidden_preactivation = cache
-                grad_output = (output - yb) / (len(indices))
-                batch_loss = float(np.mean((output - yb) ** 2))
-                if teacher is not None:
-                    teacher_difference = output - teacher[indices]
-                    grad_output += distillation_weight * teacher_difference / len(indices)
-                    batch_loss += distillation_weight * float(np.mean(teacher_difference**2))
-
-                grad_head_weight = grad_output.T @ head_input
-                grad_head_bias = np.sum(grad_output, axis=0)
-                grad_head_input = grad_output @ self.head_weight
-                if self.pooling == "mean":
-                    grad_activation = np.broadcast_to(
-                        grad_head_input[:, :, None] / convolution.shape[-1], convolution.shape
-                    )
-                    gradients = [None, None]
-                else:
-                    grad_hidden = grad_head_input * (hidden_preactivation > 0.0)
-                    grad_hidden_weight = grad_hidden.T @ flattened
-                    grad_hidden_bias = np.sum(grad_hidden, axis=0)
-                    grad_flattened = grad_hidden @ self.hidden_weight
-                    grad_activation = grad_flattened.reshape(activation.shape)
-                    gradients = [None, None, grad_hidden_weight, grad_hidden_bias]
-                grad_convolution = grad_activation * (convolution > 0.0)
-                grad_conv_weight = np.einsum("bol,bclk->ock", grad_convolution, windows, optimize=True)
-                grad_conv_bias = np.sum(grad_convolution, axis=(0, 2))
-                gradients[0] = grad_conv_weight
-                gradients[1] = grad_conv_bias
-                gradients.extend([grad_head_weight, grad_head_bias])
+                batch_loss, gradient_map = self._loss_and_gradients_from_features(
+                    xb, yb, None if teacher is None else teacher[indices], distillation_weight
+                )
+                gradient_names = ["conv_weight", "conv_bias"]
+                if self.pooling == "flatten":
+                    gradient_names.extend(["hidden_weight", "hidden_bias"])
+                gradient_names.extend(["head_weight", "head_bias"])
+                gradients = [gradient_map[name] for name in gradient_names]
 
                 step += 1
                 for index, (parameter, gradient) in enumerate(zip(params, gradients)):

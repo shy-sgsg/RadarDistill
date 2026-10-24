@@ -1,0 +1,671 @@
+{
+  "paired_bootstrap_samples": 2000,
+  "paired_bootstrap_seed": 98765,
+  "primary_snr_levels_db": [
+    0.0,
+    5.0,
+    10.0,
+    15.0,
+    20.0
+  ],
+  "comparisons": {
+    "model__M1__E1_vs_B0_constant_zero": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 382.3941174944493,
+        "mean_rmse_difference_hz": -382.0405239040527,
+        "ci95_low_hz": -389.4555973482783,
+        "ci95_high_hz": -374.30786697198806,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 370.0674797417634,
+        "mean_rmse_difference_hz": -369.8744769594324,
+        "ci95_low_hz": -377.6959390939802,
+        "ci95_high_hz": -361.8628925615043,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 372.7970776487626,
+        "mean_rmse_difference_hz": -372.68086538896546,
+        "ci95_low_hz": -380.1479351857851,
+        "ci95_high_hz": -365.0155086239599,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 376.00715194456785,
+        "mean_rmse_difference_hz": -375.94468026065977,
+        "ci95_low_hz": -384.35428822714005,
+        "ci95_high_hz": -368.52804939480825,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 379.1523343311587,
+        "mean_rmse_difference_hz": -379.1133421323681,
+        "ci95_low_hz": -387.2145129567328,
+        "ci95_high_hz": -371.67135501016264,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B10_16N_local_parabolic": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.35071883586399205,
+        "mean_rmse_difference_hz": 0.0028747545325831236,
+        "ci95_low_hz": -4.4732893593478446e-05,
+        "ci95_high_hz": 0.006214299452679908,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.19139672137923722,
+        "mean_rmse_difference_hz": 0.0016060609517570823,
+        "ci95_low_hz": -0.0001009233635900962,
+        "ci95_high_hz": 0.0040589781272813725,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.11379349017664757,
+        "mean_rmse_difference_hz": 0.002418769620448541,
+        "ci95_low_hz": 0.000776612829315038,
+        "ci95_high_hz": 0.004658392449113406,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.06016654118229956,
+        "mean_rmse_difference_hz": 0.0023051427258076046,
+        "ci95_low_hz": 0.00022033664394027904,
+        "ci95_high_hz": 0.005388538747115538,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.034866487291326645,
+        "mean_rmse_difference_hz": 0.004125711499315968,
+        "ci95_low_hz": 0.0012023612813214066,
+        "ci95_high_hz": 0.008172027974650697,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B1_fft_peak": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 2.867076124746364,
+        "mean_rmse_difference_hz": -2.5134825343497886,
+        "ci95_low_hz": -2.571967383151067,
+        "ci95_high_hz": -2.449755497942047,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 2.9241917447628665,
+        "mean_rmse_difference_hz": -2.7311889624318724,
+        "ci95_low_hz": -2.7921521445537034,
+        "ci95_high_hz": -2.668341420071879,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 2.8741714132456964,
+        "mean_rmse_difference_hz": -2.7579591534486,
+        "ci95_low_hz": -2.8170882490034312,
+        "ci95_high_hz": -2.693132249093448,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 2.8819562171501922,
+        "mean_rmse_difference_hz": -2.8194845332420853,
+        "ci95_low_hz": -2.877643301315617,
+        "ci95_high_hz": -2.762082136061655,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 2.9318301676602196,
+        "mean_rmse_difference_hz": -2.892837968869577,
+        "ci95_low_hz": -2.9528319153286784,
+        "ci95_high_hz": -2.832167188012,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B2_fft_interpolated": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 1.469303760481046,
+        "mean_rmse_difference_hz": -1.1157101700844707,
+        "ci95_low_hz": -1.1528256449961498,
+        "ci95_high_hz": -1.081496636104386,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 1.3216356850183537,
+        "mean_rmse_difference_hz": -1.1286329026873594,
+        "ci95_low_hz": -1.1546727765012825,
+        "ci95_high_hz": -1.10184278358308,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 1.2619073962451375,
+        "mean_rmse_difference_hz": -1.1456951364480414,
+        "ci95_low_hz": -1.166213559210423,
+        "ci95_high_hz": -1.1251245955044065,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 1.2462081223661687,
+        "mean_rmse_difference_hz": -1.1837364384580615,
+        "ci95_low_hz": -1.2031459957865942,
+        "ci95_high_hz": -1.1636236346045883,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 1.2346432951659116,
+        "mean_rmse_difference_hz": -1.1956510963752691,
+        "ci95_low_hz": -1.214164066578769,
+        "ci95_high_hz": -1.1767753076097087,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B3_phase_difference": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 13.100233952082364,
+        "mean_rmse_difference_hz": -12.74664036168579,
+        "ci95_low_hz": -13.213798792086312,
+        "ci95_high_hz": -12.278513122895903,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 4.1013221776028645,
+        "mean_rmse_difference_hz": -3.9083193952718704,
+        "ci95_low_hz": -4.041939901742408,
+        "ci95_high_hz": -3.7685129277167477,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 1.3928057575033899,
+        "mean_rmse_difference_hz": -1.2765934977062938,
+        "ci95_low_hz": -1.3206832324193367,
+        "ci95_high_hz": -1.2308509359324373,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.5076818430454373,
+        "mean_rmse_difference_hz": -0.44521015913733014,
+        "ci95_low_hz": -0.4621201488796868,
+        "ci95_high_hz": -0.42779718768659875,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.20260329462570928,
+        "mean_rmse_difference_hz": -0.16361109583506667,
+        "ci95_low_hz": -0.1717697212066473,
+        "ci95_high_hz": -0.15570305371480658,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B4_local_profile_ML": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.3507329469604394,
+        "mean_rmse_difference_hz": 0.00286064343613579,
+        "ci95_low_hz": -7.165383294223946e-05,
+        "ci95_high_hz": 0.006214004172782713,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.191397311104894,
+        "mean_rmse_difference_hz": 0.0016054712261003024,
+        "ci95_low_hz": -0.00010302818087344483,
+        "ci95_high_hz": 0.004066318564920702,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.11378689968507938,
+        "mean_rmse_difference_hz": 0.0024253601120167306,
+        "ci95_low_hz": 0.0007737118865740539,
+        "ci95_high_hz": 0.004673964550329185,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.060171488246885674,
+        "mean_rmse_difference_hz": 0.002300195661221492,
+        "ci95_low_hz": 0.00021298921291957907,
+        "ci95_high_hz": 0.005386284686455616,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.034874130322795904,
+        "mean_rmse_difference_hz": 0.004118068467846708,
+        "ci95_low_hz": 0.0011977646814774338,
+        "ci95_high_hz": 0.008164504917719756,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B5_global_grid_profile_ML": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.3507328258868642,
+        "mean_rmse_difference_hz": 0.0028607645097109557,
+        "ci95_low_hz": -7.149041009532339e-05,
+        "ci95_high_hz": 0.006214255218455891,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.19139744727565264,
+        "mean_rmse_difference_hz": 0.0016053350553416612,
+        "ci95_low_hz": -0.00010310763131673381,
+        "ci95_high_hz": 0.004066580336418726,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.11378673307469746,
+        "mean_rmse_difference_hz": 0.002425526722398652,
+        "ci95_low_hz": 0.000773962593489819,
+        "ci95_high_hz": 0.004674129772506795,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.06017140000701726,
+        "mean_rmse_difference_hz": 0.0023002839010899043,
+        "ci95_low_hz": 0.0002131507525995344,
+        "ci95_high_hz": 0.005386295286167347,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.0348742503362216,
+        "mean_rmse_difference_hz": 0.004117948454421011,
+        "ci95_low_hz": 0.0011976816891282095,
+        "ci95_high_hz": 0.00816425257050918,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B6_4N_fft_peak": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.7919062128946909,
+        "mean_rmse_difference_hz": -0.4383126224981157,
+        "ci95_low_hz": -0.4596834864383628,
+        "ci95_high_hz": -0.4163112046669408,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.7363247974184023,
+        "mean_rmse_difference_hz": -0.543322015087408,
+        "ci95_low_hz": -0.5611811643555026,
+        "ci95_high_hz": -0.5261894664044313,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.7319647105115411,
+        "mean_rmse_difference_hz": -0.615752450714445,
+        "ci95_low_hz": -0.6330594913770607,
+        "ci95_high_hz": -0.5992490982647536,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.7221890166554991,
+        "mean_rmse_difference_hz": -0.6597173327473919,
+        "ci95_low_hz": -0.6750924037211972,
+        "ci95_high_hz": -0.6441809814123096,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.7319700734626449,
+        "mean_rmse_difference_hz": -0.6929778746720022,
+        "ci95_low_hz": -0.7090459865204989,
+        "ci95_high_hz": -0.6774855919377534,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B8_16N_fft_peak": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.4023445323076739,
+        "mean_rmse_difference_hz": -0.048750941911098744,
+        "ci95_low_hz": -0.056806614225966584,
+        "ci95_high_hz": -0.040130509668637564,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.2619526256322225,
+        "mean_rmse_difference_hz": -0.06894984330122819,
+        "ci95_low_hz": -0.07590020604078772,
+        "ci95_high_hz": -0.06144629571267992,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.21659991449399466,
+        "mean_rmse_difference_hz": -0.10038765469689855,
+        "ci95_low_hz": -0.10633324924527501,
+        "ci95_high_hz": -0.09450167934999124,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.18674036088698476,
+        "mean_rmse_difference_hz": -0.12426867697887758,
+        "ci95_low_hz": -0.1298612801919851,
+        "ci95_high_hz": -0.11893804271504607,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.18649990052398172,
+        "mean_rmse_difference_hz": -0.1475077017333391,
+        "ci95_low_hz": -0.1533575670872372,
+        "ci95_high_hz": -0.1417882052326162,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_B9_4N_local_parabolic": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.3509501668103519,
+        "mean_rmse_difference_hz": 0.0026434235862232702,
+        "ci95_low_hz": -0.00012117224580649316,
+        "ci95_high_hz": 0.005857966452461504,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.19171810902787892,
+        "mean_rmse_difference_hz": 0.00128467330311538,
+        "ci95_low_hz": -0.00041019700591979694,
+        "ci95_high_hz": 0.003657278326598239,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.11411105220272495,
+        "mean_rmse_difference_hz": 0.0021012075943711572,
+        "ci95_low_hz": 0.0004479160681575858,
+        "ci95_high_hz": 0.0043450479953425275,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.060554489283064956,
+        "mean_rmse_difference_hz": 0.0019171946250422095,
+        "ci95_low_hz": -0.00023401581888144677,
+        "ci95_high_hz": 0.005029353293205494,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.03547262368533302,
+        "mean_rmse_difference_hz": 0.0035195751053095914,
+        "ci95_low_hz": 0.0006057931104443947,
+        "ci95_high_hz": 0.0076630460687778165,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E2-H_vs_E1": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.35100656272609143,
+        "baseline_mean_rmse_hz": 0.3535935903965752,
+        "mean_rmse_difference_hz": -0.0025870276704837436,
+        "ci95_low_hz": -0.005869587264310111,
+        "ci95_high_hz": 0.0003357977913136846,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1913302353804637,
+        "baseline_mean_rmse_hz": 0.1930027823309943,
+        "mean_rmse_difference_hz": -0.0016725469505305957,
+        "ci95_low_hz": -0.004055233975413495,
+        "ci95_high_hz": 0.00010163435055723336,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11458100108832554,
+        "baseline_mean_rmse_hz": 0.11621225979709611,
+        "mean_rmse_difference_hz": -0.0016312587087705666,
+        "ci95_low_hz": -0.0038333746482465576,
+        "ci95_high_hz": 7.593616009666128e-05,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.060945342743003554,
+        "baseline_mean_rmse_hz": 0.062471683908107166,
+        "mean_rmse_difference_hz": -0.0015263411651036118,
+        "ci95_low_hz": -0.004639449793484501,
+        "ci95_high_hz": 0.0005576519931406466,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03694025338151171,
+        "baseline_mean_rmse_hz": 0.03899219879064261,
+        "mean_rmse_difference_hz": -0.0020519454091309022,
+        "ci95_low_hz": -0.005986716704651446,
+        "ci95_high_hz": 0.0009556121691186986,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E2-S_vs_E1": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.48829513700061034,
+        "baseline_mean_rmse_hz": 0.3535935903965752,
+        "mean_rmse_difference_hz": 0.13470154660403516,
+        "ci95_low_hz": 0.09903957591067288,
+        "ci95_high_hz": 0.1704797689153084,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.2089215972790198,
+        "baseline_mean_rmse_hz": 0.1930027823309943,
+        "mean_rmse_difference_hz": 0.015918814948025495,
+        "ci95_low_hz": 0.010106390168596349,
+        "ci95_high_hz": 0.02144113858792447,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.15086932301674055,
+        "baseline_mean_rmse_hz": 0.11621225979709611,
+        "mean_rmse_difference_hz": 0.03465706321964444,
+        "ci95_low_hz": 0.028967490613248964,
+        "ci95_high_hz": 0.04142963404835045,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.1198604934300274,
+        "baseline_mean_rmse_hz": 0.062471683908107166,
+        "mean_rmse_difference_hz": 0.057388809521920235,
+        "ci95_low_hz": 0.050280923861651436,
+        "ci95_high_hz": 0.06732302055401032,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.11787778872701704,
+        "baseline_mean_rmse_hz": 0.03899219879064261,
+        "mean_rmse_difference_hz": 0.07888558993637443,
+        "ci95_low_hz": 0.0708359045673953,
+        "ci95_high_hz": 0.09074820516093106,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E3-S_vs_E1": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3580821720990337,
+        "baseline_mean_rmse_hz": 0.3535935903965752,
+        "mean_rmse_difference_hz": 0.004488581702458527,
+        "ci95_low_hz": -0.0007649493248233635,
+        "ci95_high_hz": 0.010428734319545493,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.19355355506729,
+        "baseline_mean_rmse_hz": 0.1930027823309943,
+        "mean_rmse_difference_hz": 0.000550772736295696,
+        "ci95_low_hz": -0.0028704144025605864,
+        "ci95_high_hz": 0.0033475938783469046,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11853762735606233,
+        "baseline_mean_rmse_hz": 0.11621225979709611,
+        "mean_rmse_difference_hz": 0.0023253675589662154,
+        "ci95_low_hz": -0.0014141197811222382,
+        "ci95_high_hz": 0.005442505827052736,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.0669713812339807,
+        "baseline_mean_rmse_hz": 0.062471683908107166,
+        "mean_rmse_difference_hz": 0.00449969732587354,
+        "ci95_low_hz": -0.0011940035280836325,
+        "ci95_high_hz": 0.008795894436877574,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.04783236790082132,
+        "baseline_mean_rmse_hz": 0.03899219879064261,
+        "mean_rmse_difference_hz": 0.008840169110178708,
+        "ci95_low_hz": 0.0015129037256784758,
+        "ci95_high_hz": 0.015147891722052068,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    },
+    "model__M1__E1_vs_M1_power_E1": {
+      "0.0": {
+        "candidate_mean_rmse_hz": 0.3535935903965752,
+        "baseline_mean_rmse_hz": 0.3525186710787808,
+        "mean_rmse_difference_hz": 0.001074919317794354,
+        "ci95_low_hz": -0.0006390975138166152,
+        "ci95_high_hz": 0.0030276912867474946,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 98765
+      },
+      "5.0": {
+        "candidate_mean_rmse_hz": 0.1930027823309943,
+        "baseline_mean_rmse_hz": 0.19251066752317644,
+        "mean_rmse_difference_hz": 0.0004921148078178561,
+        "ci95_low_hz": -0.0011359008108901738,
+        "ci95_high_hz": 0.002397997115775143,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 99765
+      },
+      "10.0": {
+        "candidate_mean_rmse_hz": 0.11621225979709611,
+        "baseline_mean_rmse_hz": 0.11536146688883166,
+        "mean_rmse_difference_hz": 0.0008507929082644528,
+        "ci95_low_hz": -0.0007264160388731747,
+        "ci95_high_hz": 0.0028700044396764448,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 100765
+      },
+      "15.0": {
+        "candidate_mean_rmse_hz": 0.062471683908107166,
+        "baseline_mean_rmse_hz": 0.06078082144597901,
+        "mean_rmse_difference_hz": 0.0016908624621281565,
+        "ci95_low_hz": -0.00043526503615236544,
+        "ci95_high_hz": 0.004955552141073189,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 101765
+      },
+      "20.0": {
+        "candidate_mean_rmse_hz": 0.03899219879064261,
+        "baseline_mean_rmse_hz": 0.03677389402607169,
+        "mean_rmse_difference_hz": 0.0022183047645709247,
+        "ci95_low_hz": -0.0005675090804108631,
+        "ci95_high_hz": 0.0066029108705865265,
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 102765
+      }
+    }
+  }
+}

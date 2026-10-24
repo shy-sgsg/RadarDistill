@@ -1,0 +1,15 @@
+{
+  "python": "3.13.7",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "cuda_build": "12.8",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "gpu_total_memory_bytes": 3942383616,
+  "gpu_free_memory_at_start_bytes": 2627928064,
+  "gpu_visible_total_bytes": 3942383616,
+  "git_commit": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+  "git_worktree_dirty_at_run": true,
+  "device": "cuda:0"
+}

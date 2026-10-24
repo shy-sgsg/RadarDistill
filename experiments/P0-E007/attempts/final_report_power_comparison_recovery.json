@@ -1,0 +1,19 @@
+{
+  "phase": "final_report_summary",
+  "status": "recovered_from_saved_predictions",
+  "issue": "The initial paired_comparisons.json omitted M1 E1 versus M1_power E1 because the final summarizer checked an architecture alias rather than the saved prediction key.",
+  "prediction_key_used": "model__M1_power__E1",
+  "candidate_key": "model__M1__E1",
+  "bootstrap_samples": 2000,
+  "bootstrap_seed_by_primary_snr": {
+    "0.0": 98765,
+    "5.0": 99765,
+    "10.0": 100765,
+    "15.0": 101765,
+    "20.0": 102765
+  },
+  "final_blind_dataset_generated_count": 1,
+  "final_model_inference_count": 1,
+  "recovery": "Recomputed the missing paired RMSE comparisons from final_predictions.npz using paired_bootstrap_rmse_difference; updated paired_comparisons.json; fixed the prediction-key condition; rebuilt analysis.md and rmse_snr.png. No data generation, inference, model selection, or training was repeated.",
+  "scientific_result": "All five primary SNR confidence intervals include zero. At 20 dB, M1 minus M1_power is +0.002218 Hz with 95% CI [-0.000568, +0.006603] Hz."
+}

@@ -78,6 +78,19 @@ def _student_input(iq: np.ndarray, representation: str) -> np.ndarray:
     raise ValueError(f"unknown student input representation: {representation}")
 
 
+def _select_validation_target(
+    protocol: str,
+    validation_truth: np.ndarray,
+    validation_teacher: np.ndarray,
+) -> np.ndarray:
+    """Choose E2 checkpoint-selection labels through an explicit protocol."""
+    if protocol == "teacher":
+        return validation_teacher
+    if protocol == "truth":
+        return validation_truth
+    raise ValueError("E2 validation protocol must be 'teacher' or 'truth'")
+
+
 def _bootstrap_rmse_ci(errors: np.ndarray, rng: np.random.Generator, samples: int) -> tuple[float, float]:
     errors = np.asarray(errors, dtype=np.float64)
     if len(errors) == 0:
@@ -124,7 +137,8 @@ def _test_subsets(batch: SignalBatch, prf_hz: float) -> dict[str, np.ndarray]:
     for index in range(4):
         subsets[f"amplitude_quartile_{index}"] = amp_ids == index
 
-    bin_width = prf_hz / 130.0
+    n_samples = batch.iq.shape[-1]
+    bin_width = prf_hz / n_samples
     offset = (batch.frequency_hz / bin_width + 0.5) % 1.0 - 0.5
     offset_ids = np.clip(np.floor((offset + 0.5) * 4.0).astype(int), 0, 3)
     for index in range(4):
@@ -277,6 +291,12 @@ def _analysis_text(
         )
     else:
         input_description = "原始复 IQ。"
+    e2_validation_target = str(config.get("e2_validation_target", "truth_legacy"))
+    e2_validation_description = {
+        "teacher": "teacher-validation selection (E2-A)",
+        "truth": "truth-validation selection (E2-B)",
+        "truth_legacy": "truth-validation selection inherited from the original protocol (E2-B)",
+    }.get(e2_validation_target, f"invalid E2 validation mode: {e2_validation_target}")
     return f"""# P0 experiment analysis
 
 **Experiment:** `{config['experiment_id']}`  
@@ -290,7 +310,7 @@ def _analysis_text(
 - Independent training replicates: {len(config['train_seeds'])}; held-out samples per SNR: {config['test_per_snr']}.
 - Student input: {input_description}
 - Student: {student_description}.
-- E1 trains on physical truth; E2 trains only on local teacher likelihood soft targets; E3 combines physical truth loss with teacher loss of weight {config['teacher_weight']}.
+- E1 trains on physical truth; E2 trains only on local teacher likelihood soft targets and uses {e2_validation_description}; E3 combines physical truth loss with teacher loss of weight {config['teacher_weight']}.
 - Errors wrap modulo PRF. An outlier is an absolute wrapped error above half one native FFT bin ({config['prf_hz'] / (2 * config['n_samples']):.6g} Hz).
 
 ## Highest-SNR RMSE comparison
@@ -362,6 +382,9 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
     prf_hz = float(config["prf_hz"])
     n_samples = int(config["n_samples"])
     input_representation = str(config.get("input_representation", "raw_iq"))
+    e2_validation_mode = str(config.get("e2_validation_target", "truth_legacy"))
+    if e2_validation_mode not in {"teacher", "truth", "truth_legacy"}:
+        raise ValueError("e2_validation_target must be 'teacher', 'truth', or 'truth_legacy'")
     rng = np.random.default_rng(int(config.get("bootstrap_seed", 9182)))
 
     test_batches = [
@@ -440,13 +463,33 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
 
         truth_targets = frequency_to_circle(train.frequency_hz, prf_hz).astype(np.float32)
         validation_truth = frequency_to_circle(validation.frequency_hz, prf_hz).astype(np.float32)
+        validation_selection_mode = "truth" if e2_validation_mode != "teacher" else "teacher"
+        validation_selection_target = _select_validation_target(
+            validation_selection_mode,
+            validation_truth,
+            validation_soft.astype(np.float32),
+        )
         model_seed = train_seed + 771
         train_specs = [
-            ("E1_supervised", truth_targets, None, 0.0),
-            ("E2_teacher_KD", train_soft.astype(np.float32), None, 0.0),
-            ("E3_supervised_plus_KD", truth_targets, train_soft.astype(np.float32), float(config["teacher_weight"])),
+            ("E1_supervised", truth_targets, None, 0.0, validation_truth, "truth"),
+            (
+                "E2_teacher_KD",
+                train_soft.astype(np.float32),
+                None,
+                0.0,
+                validation_selection_target,
+                e2_validation_mode,
+            ),
+            (
+                "E3_supervised_plus_KD",
+                truth_targets,
+                train_soft.astype(np.float32),
+                float(config["teacher_weight"]),
+                validation_truth,
+                "truth",
+            ),
         ]
-        for strategy, targets, teacher_targets, teacher_weight in train_specs:
+        for strategy, targets, teacher_targets, teacher_weight, selection_targets, selection_name in train_specs:
             model = TinyCircularCNN(
                 n_samples=student_train_iq.shape[1],
                 seed=model_seed,
@@ -464,7 +507,7 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
                 seed=model_seed,
                 teacher_targets=teacher_targets,
                 distillation_weight=teacher_weight,
-                validation_data=(student_validation_iq, validation_truth),
+                validation_data=(student_validation_iq, selection_targets),
                 patience=int(config["patience"]),
             )
             prediction = circle_to_frequency(model.predict(student_test_iq), prf_hz)
@@ -478,6 +521,10 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
                     "model_seed": model_seed,
                     "epochs_completed": len(history),
                     "final_training_loss": float(history[-1]),
+                    "validation_selection_target": selection_name,
+                    "best_validation_selection_mse": float(
+                        np.mean((model.predict(student_validation_iq) - selection_targets) ** 2)
+                    ),
                     "best_validation_truth_mse": float(
                         np.mean((model.predict(student_validation_iq) - validation_truth) ** 2)
                     ),
@@ -599,7 +646,7 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
             "python": sys.version.split()[0],
             "numpy": np.__version__,
             "platform": platform.platform(),
-            "device": "CPU; PyTorch and a usable NVIDIA GPU were unavailable in the checked environment",
+            "device": "CPU; legacy student uses the NumPy implementation",
         },
         "student": {
             "architecture": (
@@ -620,6 +667,11 @@ def run_p0(config: dict, output_dir: str | Path) -> dict:
             "method": "continuous profile maximum likelihood from the periodogram",
             "soft_target": "local profile-likelihood mean of circular frequency vectors in +/- 2 FFT bins around the ML mode",
             "note": "Teacher estimates and soft targets are stored separately from physical frequency truth.",
+        },
+        "validation_protocols": {
+            "E1": "physical truth",
+            "E2": e2_validation_mode,
+            "E3": "physical truth (truth is part of the training objective)",
         },
         "metrics_definition": {
             "frequency_error": "wrapped to [-PRF/2, PRF/2)",

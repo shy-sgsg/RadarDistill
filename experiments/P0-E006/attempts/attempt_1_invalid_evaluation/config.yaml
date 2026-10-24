@@ -1,0 +1,72 @@
+experiment_id: P0-E006
+title: Physical inductive bias and knowledge distillation for lightweight Doppler
+  estimation
+prf_hz: 1300.0
+n_samples: 130
+data:
+  train_count: 6000
+  validation_count: 1200
+  test_per_snr: 1024
+  train_snr_levels_db:
+  - -15
+  - -5
+  - 0
+  - 10
+  - 20
+  test_snr_levels_db:
+  - -15
+  - -10
+  - -5
+  - 0
+  - 5
+  - 10
+  - 15
+  - 20
+  train_seeds:
+  - 1101
+  - 1202
+  - 1303
+  validation_seeds:
+  - 3303
+  - 3404
+  - 3505
+  development_seed: 7070
+  final_test_seed: 909090
+  noiseless_seed: 777771
+  noiseless_count: 2048
+  amplitude_range:
+  - 0.5
+  - 1.5
+model:
+  lag_features:
+  - 1
+  - 2
+  - 4
+  - 8
+  spectrum_fft_factor: 4
+  correlation_hidden_units: 32
+  spectrum_hidden_units: 64
+  local_teacher_candidates: 65
+  local_teacher_half_width_native_bins: 2.0
+  local_teacher_temperature: 1.0
+training:
+  device: cuda
+  epochs: 160
+  batch_size: 128
+  learning_rate: 0.001
+  patience: 40
+  teacher_weight: 0.5
+  response_weight: 0.5
+  torch_seed_base: 91000
+evaluation:
+  primary_snr_levels_db:
+  - 0
+  - 5
+  - 10
+  - 15
+  - 20
+  required_adjacent_primary_snr_points: 2
+  bootstrap_samples: 2000
+  bootstrap_seed: 918206
+  global_ml_grid_size: 4096
+  correlation_grid_size: 8192

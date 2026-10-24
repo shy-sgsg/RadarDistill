@@ -1,0 +1,3975 @@
+{
+  "experiment_id": "P0-E006",
+  "status": "completed",
+  "data_type": "simulated single-target complex slow-time data",
+  "data_roles": {
+    "E001-E005": "development_benchmark",
+    "E006_test": "final_blind"
+  },
+  "configuration": {
+    "experiment_id": "P0-E006",
+    "title": "Physical inductive bias and knowledge distillation for lightweight Doppler estimation",
+    "prf_hz": 1300.0,
+    "n_samples": 130,
+    "data": {
+      "train_count": 6000,
+      "validation_count": 1200,
+      "test_per_snr": 1024,
+      "train_snr_levels_db": [
+        -15,
+        -5,
+        0,
+        10,
+        20
+      ],
+      "test_snr_levels_db": [
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15,
+        20
+      ],
+      "train_seeds": [
+        1101,
+        1202,
+        1303
+      ],
+      "validation_seeds": [
+        3303,
+        3404,
+        3505
+      ],
+      "development_seed": 7070,
+      "final_test_seed": 909090,
+      "noiseless_seed": 777771,
+      "noiseless_count": 2048,
+      "amplitude_range": [
+        0.5,
+        1.5
+      ]
+    },
+    "model": {
+      "lag_features": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "spectrum_fft_factor": 4,
+      "correlation_hidden_units": 32,
+      "spectrum_hidden_units": 64,
+      "local_teacher_candidates": 65,
+      "local_teacher_half_width_native_bins": 2.0,
+      "local_teacher_temperature": 1.0
+    },
+    "training": {
+      "device": "cuda",
+      "epochs": 160,
+      "batch_size": 128,
+      "learning_rate": 0.001,
+      "patience": 40,
+      "teacher_weight": 0.5,
+      "response_weight": 0.5,
+      "torch_seed_base": 91000
+    },
+    "evaluation": {
+      "primary_snr_levels_db": [
+        0,
+        5,
+        10,
+        15,
+        20
+      ],
+      "required_adjacent_primary_snr_points": 2,
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 918206,
+      "global_ml_grid_size": 4096,
+      "correlation_grid_size": 8192
+    }
+  },
+  "code_version": {
+    "commit": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+    "dirty_at_start": true
+  },
+  "environment": {
+    "python": "3.13.7",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "cuda_build": "12.8",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "free_gpu_bytes_after_run": 2837315584,
+    "total_gpu_bytes": 3942383616,
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "training_device": "cuda:0"
+  },
+  "splits": [
+    {
+      "train_seed": 1101,
+      "validation_seed": 3303,
+      "train_count": 6000,
+      "validation_count": 1200
+    },
+    {
+      "train_seed": 1202,
+      "validation_seed": 3404,
+      "train_count": 6000,
+      "validation_count": 1200
+    },
+    {
+      "train_seed": 1303,
+      "validation_seed": 3505,
+      "train_count": 6000,
+      "validation_count": 1200
+    }
+  ],
+  "training_replicates": [
+    {
+      "student": "S1",
+      "strategy": "E1_truth",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 154,
+      "best_validation_selection_loss": 0.09073673188686371,
+      "final_training_loss": 0.08653836697340012,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E1_truth.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 156,
+      "best_validation_selection_loss": 0.07502330094575882,
+      "final_training_loss": 0.07898135642210642,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 156,
+      "best_validation_selection_loss": 0.07494466006755829,
+      "final_training_loss": 0.07892374688386918,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 154,
+      "best_validation_selection_loss": 0.0909387618303299,
+      "final_training_loss": 0.12620452358325324,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E3_T2_truth_plus_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T3_full_response",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 158,
+      "best_validation_selection_loss": 0.10603239387273788,
+      "final_training_loss": 0.10178560038407644,
+      "validation_selection_target": "teacher_full",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E2A_T3_full_response.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2B_T2_truth_validation",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 149,
+      "best_validation_selection_loss": 0.09232823550701141,
+      "final_training_loss": 0.07892374688386918,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E2B_T2_truth_validation.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T3_truth_plus_response",
+      "train_seed": 1101,
+      "torch_seed": 91000,
+      "epochs_completed": 160,
+      "selected_epoch": 160,
+      "best_validation_selection_loss": 0.09101755172014236,
+      "final_training_loss": 0.13850768093268076,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1101_E3_T3_truth_plus_response.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E1_truth",
+      "train_seed": 1101,
+      "torch_seed": 91100,
+      "epochs_completed": 72,
+      "selected_epoch": 32,
+      "best_validation_selection_loss": 0.2109522819519043,
+      "final_training_loss": 0.09091442952553432,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1101_E1_truth.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1101,
+      "torch_seed": 91100,
+      "epochs_completed": 61,
+      "selected_epoch": 21,
+      "best_validation_selection_loss": 0.20970086753368378,
+      "final_training_loss": 0.10717130436499914,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1101_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1101,
+      "torch_seed": 91100,
+      "epochs_completed": 70,
+      "selected_epoch": 30,
+      "best_validation_selection_loss": 0.20778430998325348,
+      "final_training_loss": 0.08472776281833648,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1101_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1101,
+      "torch_seed": 91100,
+      "epochs_completed": 69,
+      "selected_epoch": 29,
+      "best_validation_selection_loss": 0.20992332696914673,
+      "final_training_loss": 0.15265388397375743,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1101_E3_T2_truth_plus_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E1_truth",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 157,
+      "best_validation_selection_loss": 0.09597264975309372,
+      "final_training_loss": 0.09151671971877416,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E1_truth.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 160,
+      "best_validation_selection_loss": 0.0828571543097496,
+      "final_training_loss": 0.07916172961393993,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 160,
+      "best_validation_selection_loss": 0.0827937051653862,
+      "final_training_loss": 0.07912993611892065,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 159,
+      "best_validation_selection_loss": 0.09602008759975433,
+      "final_training_loss": 0.13124779963493347,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E3_T2_truth_plus_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T3_full_response",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 158,
+      "best_validation_selection_loss": 0.11087609827518463,
+      "final_training_loss": 0.10148064311345419,
+      "validation_selection_target": "teacher_full",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E2A_T3_full_response.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2B_T2_truth_validation",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 159,
+      "best_validation_selection_loss": 0.09797900170087814,
+      "final_training_loss": 0.07912993611892065,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E2B_T2_truth_validation.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T3_truth_plus_response",
+      "train_seed": 1202,
+      "torch_seed": 92000,
+      "epochs_completed": 160,
+      "selected_epoch": 158,
+      "best_validation_selection_loss": 0.09637080878019333,
+      "final_training_loss": 0.14241619618733725,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1202_E3_T3_truth_plus_response.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E1_truth",
+      "train_seed": 1202,
+      "torch_seed": 92100,
+      "epochs_completed": 72,
+      "selected_epoch": 32,
+      "best_validation_selection_loss": 0.21644192934036255,
+      "final_training_loss": 0.10545949564377467,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1202_E1_truth.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1202,
+      "torch_seed": 92100,
+      "epochs_completed": 72,
+      "selected_epoch": 32,
+      "best_validation_selection_loss": 0.2133668065071106,
+      "final_training_loss": 0.1026373578508695,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1202_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1202,
+      "torch_seed": 92100,
+      "epochs_completed": 72,
+      "selected_epoch": 32,
+      "best_validation_selection_loss": 0.21314910054206848,
+      "final_training_loss": 0.10350353356202444,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1202_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1202,
+      "torch_seed": 92100,
+      "epochs_completed": 70,
+      "selected_epoch": 30,
+      "best_validation_selection_loss": 0.2153782695531845,
+      "final_training_loss": 0.1903838938474655,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1202_E3_T2_truth_plus_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E1_truth",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 157,
+      "best_validation_selection_loss": 0.09303520619869232,
+      "final_training_loss": 0.08896753784020742,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E1_truth.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 155,
+      "best_validation_selection_loss": 0.07896989583969116,
+      "final_training_loss": 0.08145560918251674,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 155,
+      "best_validation_selection_loss": 0.07893344759941101,
+      "final_training_loss": 0.0814452647169431,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 156,
+      "best_validation_selection_loss": 0.0929446816444397,
+      "final_training_loss": 0.12977675129969915,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E3_T2_truth_plus_soft.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2A_T3_full_response",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 160,
+      "best_validation_selection_loss": 0.10358768701553345,
+      "final_training_loss": 0.10284342459837596,
+      "validation_selection_target": "teacher_full",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E2A_T3_full_response.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E2B_T2_truth_validation",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 156,
+      "best_validation_selection_loss": 0.09366245567798615,
+      "final_training_loss": 0.0814452647169431,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E2B_T2_truth_validation.pt"
+    },
+    {
+      "student": "S1",
+      "strategy": "E3_T3_truth_plus_response",
+      "train_seed": 1303,
+      "torch_seed": 93000,
+      "epochs_completed": 160,
+      "selected_epoch": 152,
+      "best_validation_selection_loss": 0.09401573240756989,
+      "final_training_loss": 0.14092500426371893,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S1_seed1303_E3_T3_truth_plus_response.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E1_truth",
+      "train_seed": 1303,
+      "torch_seed": 93100,
+      "epochs_completed": 71,
+      "selected_epoch": 31,
+      "best_validation_selection_loss": 0.20294255018234253,
+      "final_training_loss": 0.10675035458803177,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1303_E1_truth.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T1_hard",
+      "train_seed": 1303,
+      "torch_seed": 93100,
+      "epochs_completed": 85,
+      "selected_epoch": 45,
+      "best_validation_selection_loss": 0.20451416075229645,
+      "final_training_loss": 0.08523098061482112,
+      "validation_selection_target": "teacher_hard",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1303_E2A_T1_hard.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E2A_T2_local_soft",
+      "train_seed": 1303,
+      "torch_seed": 93100,
+      "epochs_completed": 78,
+      "selected_epoch": 38,
+      "best_validation_selection_loss": 0.20385167002677917,
+      "final_training_loss": 0.09621937425931294,
+      "validation_selection_target": "teacher_soft",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1303_E2A_T2_local_soft.pt"
+    },
+    {
+      "student": "S2",
+      "strategy": "E3_T2_truth_plus_soft",
+      "train_seed": 1303,
+      "torch_seed": 93100,
+      "epochs_completed": 91,
+      "selected_epoch": 51,
+      "best_validation_selection_loss": 0.20173312723636627,
+      "final_training_loss": 0.14867136041323345,
+      "validation_selection_target": "truth",
+      "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E006/models/S2_seed1303_E3_T2_truth_plus_soft.pt"
+    }
+  ],
+  "noiseless_correctness": {
+    "S1/E1_truth/seed_1101": {
+      "n": 2048,
+      "mae_hz": 3.0102233737009714,
+      "rmse_hz": 3.5561923119228918,
+      "p95_abs_error_hz": 6.4013901383435154
+    },
+    "S1/E2A_T1_hard/seed_1101": {
+      "n": 2048,
+      "mae_hz": 2.1448987632964567,
+      "rmse_hz": 2.746564839597336,
+      "p95_abs_error_hz": 5.452937669018587
+    },
+    "S1/E2A_T2_local_soft/seed_1101": {
+      "n": 2048,
+      "mae_hz": 2.1474989017473662,
+      "rmse_hz": 2.743572436132501,
+      "p95_abs_error_hz": 5.426019004410109
+    },
+    "S1/E3_T2_truth_plus_soft/seed_1101": {
+      "n": 2048,
+      "mae_hz": 2.949204438192179,
+      "rmse_hz": 3.487081461126352,
+      "p95_abs_error_hz": 5.888164284914706
+    },
+    "S1/E2A_T3_full_response/seed_1101": {
+      "n": 2048,
+      "mae_hz": 6.010550786161074,
+      "rmse_hz": 7.066719018557143,
+      "p95_abs_error_hz": 13.158225788187767
+    },
+    "S1/E2B_T2_truth_validation/seed_1101": {
+      "n": 2048,
+      "mae_hz": 2.528199886220226,
+      "rmse_hz": 3.0383853790592465,
+      "p95_abs_error_hz": 5.5349181880366345
+    },
+    "S1/E3_T3_truth_plus_response/seed_1101": {
+      "n": 2048,
+      "mae_hz": 3.346748376176971,
+      "rmse_hz": 4.04596191105437,
+      "p95_abs_error_hz": 7.931009115740823
+    },
+    "S2/E1_truth/seed_1101": {
+      "n": 2048,
+      "mae_hz": 27.70023346092133,
+      "rmse_hz": 33.775996997924516,
+      "p95_abs_error_hz": 62.037503967023255
+    },
+    "S2/E2A_T1_hard/seed_1101": {
+      "n": 2048,
+      "mae_hz": 36.24932071871621,
+      "rmse_hz": 43.513115267576836,
+      "p95_abs_error_hz": 82.16764861770612
+    },
+    "S2/E2A_T2_local_soft/seed_1101": {
+      "n": 2048,
+      "mae_hz": 31.11741634491666,
+      "rmse_hz": 38.8693761548574,
+      "p95_abs_error_hz": 75.34027197990156
+    },
+    "S2/E3_T2_truth_plus_soft/seed_1101": {
+      "n": 2048,
+      "mae_hz": 29.575095991064106,
+      "rmse_hz": 35.30124310013592,
+      "p95_abs_error_hz": 64.72711784495671
+    },
+    "S1/E1_truth/seed_1202": {
+      "n": 2048,
+      "mae_hz": 2.4380998879286357,
+      "rmse_hz": 3.0428925638030013,
+      "p95_abs_error_hz": 5.829188341640412
+    },
+    "S1/E2A_T1_hard/seed_1202": {
+      "n": 2048,
+      "mae_hz": 2.452626738282414,
+      "rmse_hz": 3.125790144656993,
+      "p95_abs_error_hz": 6.511317055500192
+    },
+    "S1/E2A_T2_local_soft/seed_1202": {
+      "n": 2048,
+      "mae_hz": 2.462570055085256,
+      "rmse_hz": 3.1323741844616566,
+      "p95_abs_error_hz": 6.50476071550554
+    },
+    "S1/E3_T2_truth_plus_soft/seed_1202": {
+      "n": 2048,
+      "mae_hz": 2.410003011371114,
+      "rmse_hz": 2.9244859570526094,
+      "p95_abs_error_hz": 5.572335674593035
+    },
+    "S1/E2A_T3_full_response/seed_1202": {
+      "n": 2048,
+      "mae_hz": 4.150980002760404,
+      "rmse_hz": 4.97988226351028,
+      "p95_abs_error_hz": 9.081776435632639
+    },
+    "S1/E2B_T2_truth_validation/seed_1202": {
+      "n": 2048,
+      "mae_hz": 2.3957113472103924,
+      "rmse_hz": 3.0923547876633943,
+      "p95_abs_error_hz": 6.099987990652276
+    },
+    "S1/E3_T3_truth_plus_response/seed_1202": {
+      "n": 2048,
+      "mae_hz": 3.011127787325408,
+      "rmse_hz": 3.721656488862561,
+      "p95_abs_error_hz": 7.165259129681095
+    },
+    "S2/E1_truth/seed_1202": {
+      "n": 2048,
+      "mae_hz": 30.981239578821906,
+      "rmse_hz": 38.7734889681112,
+      "p95_abs_error_hz": 76.97915179131007
+    },
+    "S2/E2A_T1_hard/seed_1202": {
+      "n": 2048,
+      "mae_hz": 31.286068732929643,
+      "rmse_hz": 38.79028666872823,
+      "p95_abs_error_hz": 73.3809412440278
+    },
+    "S2/E2A_T2_local_soft/seed_1202": {
+      "n": 2048,
+      "mae_hz": 31.094116965769953,
+      "rmse_hz": 36.50147800948029,
+      "p95_abs_error_hz": 65.16113798322357
+    },
+    "S2/E3_T2_truth_plus_soft/seed_1202": {
+      "n": 2048,
+      "mae_hz": 26.316345939011185,
+      "rmse_hz": 35.034052737914614,
+      "p95_abs_error_hz": 73.60690181217005
+    },
+    "S1/E1_truth/seed_1303": {
+      "n": 2048,
+      "mae_hz": 2.6668555840405563,
+      "rmse_hz": 3.1790099320784693,
+      "p95_abs_error_hz": 5.748656951779227
+    },
+    "S1/E2A_T1_hard/seed_1303": {
+      "n": 2048,
+      "mae_hz": 1.9833109446239259,
+      "rmse_hz": 2.594818803933228,
+      "p95_abs_error_hz": 5.3037914273141205
+    },
+    "S1/E2A_T2_local_soft/seed_1303": {
+      "n": 2048,
+      "mae_hz": 1.9785145037752088,
+      "rmse_hz": 2.588288048700305,
+      "p95_abs_error_hz": 5.291782413003567
+    },
+    "S1/E3_T2_truth_plus_soft/seed_1303": {
+      "n": 2048,
+      "mae_hz": 2.2141803482567286,
+      "rmse_hz": 2.8321449423189504,
+      "p95_abs_error_hz": 5.793649868999818
+    },
+    "S1/E2A_T3_full_response/seed_1303": {
+      "n": 2048,
+      "mae_hz": 5.961192528938696,
+      "rmse_hz": 7.16244444023934,
+      "p95_abs_error_hz": 13.34846409896053
+    },
+    "S1/E2B_T2_truth_validation/seed_1303": {
+      "n": 2048,
+      "mae_hz": 2.612348278059769,
+      "rmse_hz": 3.1148241294459758,
+      "p95_abs_error_hz": 5.98484945881006
+    },
+    "S1/E3_T3_truth_plus_response/seed_1303": {
+      "n": 2048,
+      "mae_hz": 3.3867069229512405,
+      "rmse_hz": 4.154372949774382,
+      "p95_abs_error_hz": 8.250315289259628
+    },
+    "S2/E1_truth/seed_1303": {
+      "n": 2048,
+      "mae_hz": 26.539479658305765,
+      "rmse_hz": 33.51099638038369,
+      "p95_abs_error_hz": 65.81845143687465
+    },
+    "S2/E2A_T1_hard/seed_1303": {
+      "n": 2048,
+      "mae_hz": 30.63906556708879,
+      "rmse_hz": 37.02402627670431,
+      "p95_abs_error_hz": 71.26423145322845
+    },
+    "S2/E2A_T2_local_soft/seed_1303": {
+      "n": 2048,
+      "mae_hz": 24.480945506948693,
+      "rmse_hz": 33.34541428418548,
+      "p95_abs_error_hz": 73.62227589918706
+    },
+    "S2/E3_T2_truth_plus_soft/seed_1303": {
+      "n": 2048,
+      "mae_hz": 27.616073669100594,
+      "rmse_hz": 35.337955401901525,
+      "p95_abs_error_hz": 73.43007031746907
+    }
+  },
+  "per_snr": {
+    "development_benchmark": {
+      "B0_constant_zero": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 376.2103092734679,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 378.37772616121396,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 365.9897901133057,
+          "rmse_sd_seed_hz": 0.0,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 370.9563112889681,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 378.89340334332616,
+          "rmse_sd_seed_hz": 5.684688862542964e-14,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 372.8986417187617,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 376.5700785522396,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 376.0853512628227,
+          "rmse_sd_seed_hz": 5.684688862542964e-14,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B1_fft_peak": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.30217333582846,
+          "rmse_sd_seed_hz": 3.0731643607787427,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.21100469225905,
+          "rmse_sd_seed_hz": 4.919184124358669,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1438291949096,
+          "rmse_sd_seed_hz": 7.150714612666873,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.19826026387057,
+          "rmse_sd_seed_hz": 3.865130518866388,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.1955926629668,
+          "rmse_sd_seed_hz": 7.312052098205684,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.25025237784087,
+          "rmse_sd_seed_hz": 6.145017199244441,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.25927222716564,
+          "rmse_sd_seed_hz": 3.5862167725581915,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.2733020993793,
+          "rmse_sd_seed_hz": 2.301194750569992,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B2_fft_interpolated": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.30164753397537,
+          "rmse_sd_seed_hz": 3.0738977738381887,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.2104228632055,
+          "rmse_sd_seed_hz": 4.919158078213483,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.144962247218,
+          "rmse_sd_seed_hz": 7.150350768944833,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.1989505515271,
+          "rmse_sd_seed_hz": 3.864729222150989,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.195243469743,
+          "rmse_sd_seed_hz": 7.311968509930939,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.2506051222084,
+          "rmse_sd_seed_hz": 6.145104801322203,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.25835575806263,
+          "rmse_sd_seed_hz": 3.585527733095693,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.2728523668815,
+          "rmse_sd_seed_hz": 2.30073894950652,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B3_phase_difference": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.25819335316714,
+          "rmse_sd_seed_hz": 3.0888633744613485,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.2242666556244,
+          "rmse_sd_seed_hz": 4.891958694064493,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.16426520149895,
+          "rmse_sd_seed_hz": 7.203755698534703,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.2035799848185,
+          "rmse_sd_seed_hz": 3.8649568424324303,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.18492077233645,
+          "rmse_sd_seed_hz": 7.3016079404943035,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.25804124208605,
+          "rmse_sd_seed_hz": 6.128314495001672,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2707581358132,
+          "rmse_sd_seed_hz": 3.5854236489129123,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.29721182689497,
+          "rmse_sd_seed_hz": 2.3067745482950563,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B4_local_profile_ML": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.30094889515533,
+          "rmse_sd_seed_hz": 3.0746733265423933,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.2103994067413,
+          "rmse_sd_seed_hz": 4.919187265193421,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1453191614727,
+          "rmse_sd_seed_hz": 7.150881785741076,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.19912664897504,
+          "rmse_sd_seed_hz": 3.8648336414672313,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.1958263410185,
+          "rmse_sd_seed_hz": 7.31237678326567,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.25001286998025,
+          "rmse_sd_seed_hz": 6.145142298748416,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2584061307308,
+          "rmse_sd_seed_hz": 3.585202933446044,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27346710678404,
+          "rmse_sd_seed_hz": 2.301155256362973,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B5_global_grid_profile_ML": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2752734434466,
+          "rmse_sd_seed_hz": 3.078998304502791,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.18743084388655,
+          "rmse_sd_seed_hz": 4.928344977940203,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1986167824472,
+          "rmse_sd_seed_hz": 7.161739570557639,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.2164451185449,
+          "rmse_sd_seed_hz": 3.8663416312494823,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.143132667242,
+          "rmse_sd_seed_hz": 7.295601296006702,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.29219466713107,
+          "rmse_sd_seed_hz": 6.143732883488469,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2278656555561,
+          "rmse_sd_seed_hz": 3.5656702688880415,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27779613192354,
+          "rmse_sd_seed_hz": 2.2978731414940463,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B6_4N_fft_peak": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2770941747656,
+          "rmse_sd_seed_hz": 3.0802928775869924,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.18903334574816,
+          "rmse_sd_seed_hz": 4.925577038498,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1911038112735,
+          "rmse_sd_seed_hz": 7.163918308910161,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.21273421472324,
+          "rmse_sd_seed_hz": 3.8649875845460957,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.1468488533286,
+          "rmse_sd_seed_hz": 7.298993569783728,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.29014257381533,
+          "rmse_sd_seed_hz": 6.143609246485169,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2325371158025,
+          "rmse_sd_seed_hz": 3.5691577435677333,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27970837502914,
+          "rmse_sd_seed_hz": 2.299439402117938,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B7_multilag_correlation": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2914600538999,
+          "rmse_sd_seed_hz": 3.0609467479065424,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.21682119075945,
+          "rmse_sd_seed_hz": 4.928681085586777,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1606032278554,
+          "rmse_sd_seed_hz": 7.154589805296685,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.21106259761694,
+          "rmse_sd_seed_hz": 3.869048936946073,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.2139490588669,
+          "rmse_sd_seed_hz": 7.3057757503599845,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.24273495891475,
+          "rmse_sd_seed_hz": 6.151350617347939,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2567562312232,
+          "rmse_sd_seed_hz": 3.5847202052174167,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.2677763390268,
+          "rmse_sd_seed_hz": 2.297840374849326,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E1_supervised": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 325.2389188432255,
+          "rmse_sd_seed_hz": 3.231959669583402,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 225.57005081820532,
+          "rmse_sd_seed_hz": 3.8672103523799586,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 77.7759400370647,
+          "rmse_sd_seed_hz": 3.0502790597932,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 31.65455537449328,
+          "rmse_sd_seed_hz": 7.001138238034981,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 14.34521791043663,
+          "rmse_sd_seed_hz": 3.0277812218522064,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 11.564827587736056,
+          "rmse_sd_seed_hz": 3.9369721490181377,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 14.222432876444921,
+          "rmse_sd_seed_hz": 2.174451059254329,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 15.419859002803728,
+          "rmse_sd_seed_hz": 2.4557770500933156,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E2_teacher_KD": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 325.98398800631134,
+          "rmse_sd_seed_hz": 3.4874404675446566,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 225.73126640269516,
+          "rmse_sd_seed_hz": 4.236488240691589,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 77.11228041929111,
+          "rmse_sd_seed_hz": 4.388196838595115,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 33.23026458359215,
+          "rmse_sd_seed_hz": 6.741934301713732,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 15.458760631678999,
+          "rmse_sd_seed_hz": 4.535623702856951,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 12.459686221587353,
+          "rmse_sd_seed_hz": 4.5981082026395645,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 15.031291246995252,
+          "rmse_sd_seed_hz": 2.7599658058321186,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 15.76855727161923,
+          "rmse_sd_seed_hz": 2.4184113475458116,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E3_supervised_plus_KD": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 326.31077045435495,
+          "rmse_sd_seed_hz": 3.423125261130603,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 225.7552333925715,
+          "rmse_sd_seed_hz": 3.985370401334902,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 77.24251775227957,
+          "rmse_sd_seed_hz": 3.6687477409124245,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 33.255717873079966,
+          "rmse_sd_seed_hz": 5.966968055321363,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 14.984942855723284,
+          "rmse_sd_seed_hz": 2.809442333011683,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 11.418893329347616,
+          "rmse_sd_seed_hz": 3.8516587343501376,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 14.039965050543545,
+          "rmse_sd_seed_hz": 1.7730245545436243,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 14.917816056790604,
+          "rmse_sd_seed_hz": 1.6142274033820834,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E1_truth": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 309.5439323297343,
+          "rmse_sd_seed_hz": 1.4031451530260315,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 177.3142581910512,
+          "rmse_sd_seed_hz": 1.2135565377692568,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.82428376580626,
+          "rmse_sd_seed_hz": 1.4715523677858682,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.893290756117942,
+          "rmse_sd_seed_hz": 0.6538836604190443,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.936861496214209,
+          "rmse_sd_seed_hz": 0.22191319005581245,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.485642525665043,
+          "rmse_sd_seed_hz": 0.33081834724378795,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.512198256460943,
+          "rmse_sd_seed_hz": 0.18668277945682377,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.9886588195363752,
+          "rmse_sd_seed_hz": 0.2569013662578927,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T1_hard": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 308.97832463589504,
+          "rmse_sd_seed_hz": 1.0758922045196269,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 179.6023623640293,
+          "rmse_sd_seed_hz": 2.310160613156439,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.51523832342198,
+          "rmse_sd_seed_hz": 1.1602141769762082,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.637742800491265,
+          "rmse_sd_seed_hz": 0.3580966985510801,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.3584929088867,
+          "rmse_sd_seed_hz": 0.06413703570682817,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.2951938470579787,
+          "rmse_sd_seed_hz": 0.2943470989710671,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.252958156284487,
+          "rmse_sd_seed_hz": 0.4467370038038413,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.5687032649360035,
+          "rmse_sd_seed_hz": 0.3288969488997606,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T2_local_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 308.9789897087366,
+          "rmse_sd_seed_hz": 1.0549269417079825,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 179.59155989001238,
+          "rmse_sd_seed_hz": 2.2861374883973973,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.51226930902402,
+          "rmse_sd_seed_hz": 1.160698692600467,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.6318262118843805,
+          "rmse_sd_seed_hz": 0.3696770958784432,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.35369212860197,
+          "rmse_sd_seed_hz": 0.05570955281937826,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.2965703542850404,
+          "rmse_sd_seed_hz": 0.2941101947610963,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.2514199268255193,
+          "rmse_sd_seed_hz": 0.4527898472242185,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.56677789686003,
+          "rmse_sd_seed_hz": 0.33490362902060833,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E3_T2_truth_plus_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 309.65706237457357,
+          "rmse_sd_seed_hz": 1.6353578630760395,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 177.40669321756522,
+          "rmse_sd_seed_hz": 0.6464118476602034,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 22.906903480576133,
+          "rmse_sd_seed_hz": 1.1131066236893126,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.514740493165001,
+          "rmse_sd_seed_hz": 0.3697530043335463,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.759966866055847,
+          "rmse_sd_seed_hz": 0.42173676759734374,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.2374986699354555,
+          "rmse_sd_seed_hz": 0.22097780608205547,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.227444994492505,
+          "rmse_sd_seed_hz": 0.32133792445228704,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.754902212124891,
+          "rmse_sd_seed_hz": 0.421378628711796,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T3_full_response": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 308.0176257943059,
+          "rmse_sd_seed_hz": 0.39198661794405415,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 180.48743922930927,
+          "rmse_sd_seed_hz": 1.1479668398232532,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 30.302068552158612,
+          "rmse_sd_seed_hz": 1.0975182375701393,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 10.708479383120379,
+          "rmse_sd_seed_hz": 0.9958600328500374,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 9.901319978744182,
+          "rmse_sd_seed_hz": 0.4111613823264052,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 5.315819625210412,
+          "rmse_sd_seed_hz": 0.8873848807802406,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 5.424508852297412,
+          "rmse_sd_seed_hz": 1.200988814445726,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 6.006856928566716,
+          "rmse_sd_seed_hz": 1.2490847361008186,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2B_T2_truth_validation": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 309.08617599003884,
+          "rmse_sd_seed_hz": 1.2162392923398246,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 179.1169828045315,
+          "rmse_sd_seed_hz": 1.8232783463767062,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.59221345167036,
+          "rmse_sd_seed_hz": 0.9596915073710192,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.591358977556187,
+          "rmse_sd_seed_hz": 0.3249570119822732,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.623135797855711,
+          "rmse_sd_seed_hz": 0.21986601895410274,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.569793122008666,
+          "rmse_sd_seed_hz": 0.16214435346589093,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.5560111547551165,
+          "rmse_sd_seed_hz": 0.0647152445655094,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.7693739490591085,
+          "rmse_sd_seed_hz": 0.03182607662462896,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E3_T3_truth_plus_response": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 308.9135311935276,
+          "rmse_sd_seed_hz": 1.3465182597556418,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 177.7129400576714,
+          "rmse_sd_seed_hz": 0.6617035764256656,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 24.900520143260906,
+          "rmse_sd_seed_hz": 0.3948066275952761,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 9.115314708801664,
+          "rmse_sd_seed_hz": 1.1768237676388746,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 7.7639683966428015,
+          "rmse_sd_seed_hz": 1.2678329716378662,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 3.4363414061548188,
+          "rmse_sd_seed_hz": 0.37030581246114797,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 3.151070716972555,
+          "rmse_sd_seed_hz": 0.23141508320681708,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 3.6275154028718943,
+          "rmse_sd_seed_hz": 0.24083547503470887,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E1_truth": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 343.432760845094,
+          "rmse_sd_seed_hz": 7.182176039409092,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 301.5270571061171,
+          "rmse_sd_seed_hz": 3.1826149176534844,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 252.84722063801692,
+          "rmse_sd_seed_hz": 3.7813638945156285,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 150.41963765321762,
+          "rmse_sd_seed_hz": 3.053327862868241,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 62.275287175081424,
+          "rmse_sd_seed_hz": 0.8860296695452441,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 30.38237632391946,
+          "rmse_sd_seed_hz": 2.191511616758739,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 24.808699471894357,
+          "rmse_sd_seed_hz": 5.050510068867067,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 27.223961986087712,
+          "rmse_sd_seed_hz": 3.171408897774819,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E2A_T1_hard": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 345.5013505900908,
+          "rmse_sd_seed_hz": 1.9801522074083056,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 303.59968326236736,
+          "rmse_sd_seed_hz": 3.843778851671018,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 255.4062057169424,
+          "rmse_sd_seed_hz": 5.583728559280773,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 155.1494856904642,
+          "rmse_sd_seed_hz": 4.3610751401330035,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 65.80967280742466,
+          "rmse_sd_seed_hz": 4.186202306412106,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 33.0103192319315,
+          "rmse_sd_seed_hz": 1.2966429877507684,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 27.367687869827225,
+          "rmse_sd_seed_hz": 1.9899085420263012,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 28.367082699304067,
+          "rmse_sd_seed_hz": 1.7426448796426013,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E2A_T2_local_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 345.4606732549799,
+          "rmse_sd_seed_hz": 2.3861600150136986,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 302.88957128998277,
+          "rmse_sd_seed_hz": 2.609372180459657,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 252.62273862927194,
+          "rmse_sd_seed_hz": 3.245299288491302,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 152.76686819109815,
+          "rmse_sd_seed_hz": 5.792934618094104,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 62.27834141888772,
+          "rmse_sd_seed_hz": 3.6251151253730556,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 31.011661738976045,
+          "rmse_sd_seed_hz": 1.7364729535518477,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 24.7691000431707,
+          "rmse_sd_seed_hz": 0.8727074555753829,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 25.504961732486112,
+          "rmse_sd_seed_hz": 3.3124628056161667,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E3_T2_truth_plus_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 345.2411658687881,
+          "rmse_sd_seed_hz": 6.077531819039128,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 302.1172330804172,
+          "rmse_sd_seed_hz": 5.2342477931387,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 254.0189011659377,
+          "rmse_sd_seed_hz": 4.1232410238215325,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 151.80906122992172,
+          "rmse_sd_seed_hz": 4.835324905680434,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 60.083766060797636,
+          "rmse_sd_seed_hz": 2.2624014652025246,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 28.024560998587475,
+          "rmse_sd_seed_hz": 2.722662603303444,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 22.68898829679866,
+          "rmse_sd_seed_hz": 1.9424416115171628,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 25.178015926836043,
+          "rmse_sd_seed_hz": 2.7027413494252595,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      }
+    },
+    "final_blind": {
+      "B0_constant_zero": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 367.6350916396438,
+          "rmse_sd_seed_hz": 0.0,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 378.4732041803948,
+          "rmse_sd_seed_hz": 5.684688862542964e-14,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 380.80216820422095,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 378.9997230214259,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 369.1104160911097,
+          "rmse_sd_seed_hz": 0.0,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 374.2845892824561,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 373.8444792903348,
+          "rmse_sd_seed_hz": 1.1369377725085927e-13,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 371.73685828229344,
+          "rmse_sd_seed_hz": 0.0,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B1_fft_peak": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2177203736777,
+          "rmse_sd_seed_hz": 6.189756683184072,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.24392546251863,
+          "rmse_sd_seed_hz": 4.482875721916844,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.19671848563894,
+          "rmse_sd_seed_hz": 7.0228896506868885,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25723668343414,
+          "rmse_sd_seed_hz": 3.7223778622037202,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.2191397801639,
+          "rmse_sd_seed_hz": 5.701237166816248,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.2731766629442,
+          "rmse_sd_seed_hz": 2.4899569981639655,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2538900253721,
+          "rmse_sd_seed_hz": 1.980763939469654,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.2783299233254,
+          "rmse_sd_seed_hz": 2.465439473055272,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B2_fft_interpolated": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.21825771941633,
+          "rmse_sd_seed_hz": 6.189568268543808,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.24370431071225,
+          "rmse_sd_seed_hz": 4.482985129590278,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.19677569978944,
+          "rmse_sd_seed_hz": 7.02282009543476,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25713671073584,
+          "rmse_sd_seed_hz": 3.7223265588264933,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.2197844379288,
+          "rmse_sd_seed_hz": 5.701093241200126,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.27292656032984,
+          "rmse_sd_seed_hz": 2.4897442719105447,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.25443468303695,
+          "rmse_sd_seed_hz": 1.9808907551025376,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27854963253424,
+          "rmse_sd_seed_hz": 2.464744356387511,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B3_phase_difference": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2211222571794,
+          "rmse_sd_seed_hz": 6.187865926816345,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.25534886051094,
+          "rmse_sd_seed_hz": 4.475487958143533,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.2071044574586,
+          "rmse_sd_seed_hz": 6.990406013743918,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.22596528803757,
+          "rmse_sd_seed_hz": 3.712122389958119,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.24961286477117,
+          "rmse_sd_seed_hz": 5.667203742790303,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.2561642515659,
+          "rmse_sd_seed_hz": 2.4925155467364046,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.28432309187144,
+          "rmse_sd_seed_hz": 1.9708569108616782,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27408594053804,
+          "rmse_sd_seed_hz": 2.4527145164786184,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B4_local_profile_ML": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.21929709796393,
+          "rmse_sd_seed_hz": 6.190241634101333,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.24319780363277,
+          "rmse_sd_seed_hz": 4.4826399862920185,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.19523784950354,
+          "rmse_sd_seed_hz": 7.0237215371138175,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25655406981224,
+          "rmse_sd_seed_hz": 3.7222051856345666,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.2208850297686,
+          "rmse_sd_seed_hz": 5.701669023217802,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.27286856587193,
+          "rmse_sd_seed_hz": 2.4898373929505024,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2547737183106,
+          "rmse_sd_seed_hz": 1.9802065262046367,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.2789737614579,
+          "rmse_sd_seed_hz": 2.46545114045402,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B5_global_grid_profile_ML": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.23031005149255,
+          "rmse_sd_seed_hz": 6.183342979915441,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.23470696941445,
+          "rmse_sd_seed_hz": 4.487336057575491,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.18839959741666,
+          "rmse_sd_seed_hz": 7.026044766541103,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25200528891776,
+          "rmse_sd_seed_hz": 3.7183531618627934,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.23267217995294,
+          "rmse_sd_seed_hz": 5.700104434294937,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.2777572357261,
+          "rmse_sd_seed_hz": 2.497433347135611,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.25903489253164,
+          "rmse_sd_seed_hz": 1.9831449337420006,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.28647765399467,
+          "rmse_sd_seed_hz": 2.4623001431904505,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B6_4N_fft_peak": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2332428853766,
+          "rmse_sd_seed_hz": 6.181117844992721,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.23378981708737,
+          "rmse_sd_seed_hz": 4.487744377189908,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.1862307978669,
+          "rmse_sd_seed_hz": 7.026923404904297,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25014781156295,
+          "rmse_sd_seed_hz": 3.7194414236808657,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.2339135246035,
+          "rmse_sd_seed_hz": 5.70022721895469,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.27815816898305,
+          "rmse_sd_seed_hz": 2.498993918221165,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.2587317594858,
+          "rmse_sd_seed_hz": 1.9837456107360207,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.28891225119037,
+          "rmse_sd_seed_hz": 2.461667528255373,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "B7_multilag_correlation": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 375.2324240901955,
+          "rmse_sd_seed_hz": 6.19077163054876,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 375.2471921138956,
+          "rmse_sd_seed_hz": 4.4802329038574555,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 375.2130736587491,
+          "rmse_sd_seed_hz": 7.014256385880054,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 375.25108182523564,
+          "rmse_sd_seed_hz": 3.7441492746667464,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 375.21289959522574,
+          "rmse_sd_seed_hz": 5.724257716089329,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 375.2712458693469,
+          "rmse_sd_seed_hz": 2.4863758706623162,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 375.25510697763264,
+          "rmse_sd_seed_hz": 1.9877126540268184,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 375.27543158127514,
+          "rmse_sd_seed_hz": 2.4604630383028954,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E1_supervised": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 318.73874634636456,
+          "rmse_sd_seed_hz": 3.313026874578356,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 225.64860359606158,
+          "rmse_sd_seed_hz": 3.4062736036860524,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 73.5420050510538,
+          "rmse_sd_seed_hz": 4.164043687161438,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 31.893719167023793,
+          "rmse_sd_seed_hz": 6.92701515163241,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 14.45464549724766,
+          "rmse_sd_seed_hz": 2.748269595637323,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 11.661314847479462,
+          "rmse_sd_seed_hz": 3.5589439724830974,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 14.090671156625618,
+          "rmse_sd_seed_hz": 1.6270418517174654,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 15.330186857261202,
+          "rmse_sd_seed_hz": 2.6598652000093868,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E2_teacher_KD": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 318.0669154237202,
+          "rmse_sd_seed_hz": 4.320190272179306,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 225.17181515072946,
+          "rmse_sd_seed_hz": 2.7334404916366903,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 72.86918260030698,
+          "rmse_sd_seed_hz": 5.031768539366637,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 33.45897985317911,
+          "rmse_sd_seed_hz": 7.0688856738598576,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 15.478511091055724,
+          "rmse_sd_seed_hz": 4.111309831841576,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 12.765042492861232,
+          "rmse_sd_seed_hz": 4.444511436247159,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 14.89558357876689,
+          "rmse_sd_seed_hz": 2.4685767821996123,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 15.651929432332357,
+          "rmse_sd_seed_hz": 2.5900165130345365,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S0/E3_supervised_plus_KD": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 317.49461718933304,
+          "rmse_sd_seed_hz": 5.020691895145971,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 223.937436188217,
+          "rmse_sd_seed_hz": 1.2967532881797377,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 73.54315709506712,
+          "rmse_sd_seed_hz": 3.829708987868327,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 33.49375595064409,
+          "rmse_sd_seed_hz": 6.0427211580913305,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 14.927290739912989,
+          "rmse_sd_seed_hz": 2.4162898698061395,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 11.461797614194404,
+          "rmse_sd_seed_hz": 3.469432494946785,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 13.870073141371856,
+          "rmse_sd_seed_hz": 1.4230246942082276,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 14.795590082764122,
+          "rmse_sd_seed_hz": 1.8411728642215328,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E1_truth": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 298.7068622482691,
+          "rmse_sd_seed_hz": 0.6330982233610485,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 172.03525671289106,
+          "rmse_sd_seed_hz": 1.3287275835529155,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 24.223923344396326,
+          "rmse_sd_seed_hz": 2.0776395966625283,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.736159043607579,
+          "rmse_sd_seed_hz": 0.5216163409140722,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.742854154216908,
+          "rmse_sd_seed_hz": 0.21990883260342822,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.610924612910944,
+          "rmse_sd_seed_hz": 0.41495138186741465,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.4343296512496795,
+          "rmse_sd_seed_hz": 0.16623061159922367,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.92630151723073,
+          "rmse_sd_seed_hz": 0.24865426275830702,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T1_hard": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 296.65342288491235,
+          "rmse_sd_seed_hz": 1.0025922230397482,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 171.56715757619986,
+          "rmse_sd_seed_hz": 2.019872807120679,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.675589536012527,
+          "rmse_sd_seed_hz": 0.8597384380766951,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.521399278959606,
+          "rmse_sd_seed_hz": 0.05099413371327815,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.300901335904943,
+          "rmse_sd_seed_hz": 0.23235257338580903,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.3042928258719972,
+          "rmse_sd_seed_hz": 0.2988775595080115,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.218650034020951,
+          "rmse_sd_seed_hz": 0.34454008677077747,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.58107498936989,
+          "rmse_sd_seed_hz": 0.2815934990936052,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T2_local_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 296.64091923538496,
+          "rmse_sd_seed_hz": 0.99185385818975,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 171.5627974569732,
+          "rmse_sd_seed_hz": 2.0194192447883017,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.672965193500158,
+          "rmse_sd_seed_hz": 0.8567475449306174,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.51603379284476,
+          "rmse_sd_seed_hz": 0.06033065808938782,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.298088729722649,
+          "rmse_sd_seed_hz": 0.23722873188265067,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.30552870439092,
+          "rmse_sd_seed_hz": 0.2973801371815236,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.2189853219954556,
+          "rmse_sd_seed_hz": 0.3503991667032307,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.580214348993977,
+          "rmse_sd_seed_hz": 0.28759628503456736,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E3_T2_truth_plus_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 298.3552538977154,
+          "rmse_sd_seed_hz": 1.151791403461713,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 171.3117265933863,
+          "rmse_sd_seed_hz": 1.9117619037374842,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.108800368512487,
+          "rmse_sd_seed_hz": 1.2401722768949455,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.401330696945702,
+          "rmse_sd_seed_hz": 0.12182552661855194,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.777578222136296,
+          "rmse_sd_seed_hz": 0.29483970382753366,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.3209987740229696,
+          "rmse_sd_seed_hz": 0.245740942221963,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.1698215156043785,
+          "rmse_sd_seed_hz": 0.296350319205851,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.7475655695705132,
+          "rmse_sd_seed_hz": 0.38400830747779774,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2A_T3_full_response": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 296.09330272148276,
+          "rmse_sd_seed_hz": 1.6240823743334483,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 174.3962143826694,
+          "rmse_sd_seed_hz": 1.129358378192997,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 29.97096887321283,
+          "rmse_sd_seed_hz": 0.5719448888506227,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 10.63487981895142,
+          "rmse_sd_seed_hz": 0.9850919149200427,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 9.992588939995182,
+          "rmse_sd_seed_hz": 0.4721547787200619,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 5.3936605882040825,
+          "rmse_sd_seed_hz": 0.8084597580387889,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 5.4823510881446795,
+          "rmse_sd_seed_hz": 1.208109985464105,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 6.012810335919601,
+          "rmse_sd_seed_hz": 1.2464534280409207,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E2B_T2_truth_validation": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 298.24981319375485,
+          "rmse_sd_seed_hz": 0.1443083161071193,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 171.86855665776338,
+          "rmse_sd_seed_hz": 1.1821089918313525,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 23.568423881220934,
+          "rmse_sd_seed_hz": 0.64718685736128,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 7.433413932825548,
+          "rmse_sd_seed_hz": 0.08427707953057441,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 5.4934423711823115,
+          "rmse_sd_seed_hz": 0.4704457914483277,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 2.7272309970683573,
+          "rmse_sd_seed_hz": 0.0674402193400431,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 2.552286206564395,
+          "rmse_sd_seed_hz": 0.111345362071817,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 2.8366109707959275,
+          "rmse_sd_seed_hz": 0.03807316256508841,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S1/E3_T3_truth_plus_response": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 297.7755306631557,
+          "rmse_sd_seed_hz": 1.1261534387953533,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 172.30792815734048,
+          "rmse_sd_seed_hz": 1.499571436364853,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 24.967652336127898,
+          "rmse_sd_seed_hz": 0.3174218811947328,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 8.703898413096171,
+          "rmse_sd_seed_hz": 1.1193537372629094,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 7.88561383282356,
+          "rmse_sd_seed_hz": 1.2735973110978187,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 3.4450063285301695,
+          "rmse_sd_seed_hz": 0.29518010063496697,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 3.2046359230230563,
+          "rmse_sd_seed_hz": 0.1398317078965599,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 3.649880753349786,
+          "rmse_sd_seed_hz": 0.21748730178387574,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E1_truth": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 335.2712623565111,
+          "rmse_sd_seed_hz": 4.922519272228959,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 304.62708889891206,
+          "rmse_sd_seed_hz": 1.4063644902425207,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 246.6620769696464,
+          "rmse_sd_seed_hz": 1.9904633054915817,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 152.36916618284081,
+          "rmse_sd_seed_hz": 2.5527818174741683,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 60.89255014365963,
+          "rmse_sd_seed_hz": 0.3238759841000778,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 31.77816811312025,
+          "rmse_sd_seed_hz": 2.6706672319795293,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 24.657439198865642,
+          "rmse_sd_seed_hz": 4.56438181281118,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 26.74972018229059,
+          "rmse_sd_seed_hz": 3.811761416919124,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E2A_T1_hard": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 332.6767475850284,
+          "rmse_sd_seed_hz": 4.345493902059672,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 303.63317192916514,
+          "rmse_sd_seed_hz": 1.90557330319627,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 249.1564059205824,
+          "rmse_sd_seed_hz": 3.680332446387812,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 160.16175806919637,
+          "rmse_sd_seed_hz": 5.0604017646562065,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 64.81650638579434,
+          "rmse_sd_seed_hz": 3.7604632804046267,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 33.19951298931145,
+          "rmse_sd_seed_hz": 1.0889647888277056,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 27.268351621680363,
+          "rmse_sd_seed_hz": 1.6205463401599411,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 29.146068849401967,
+          "rmse_sd_seed_hz": 0.8087617209199194,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E2A_T2_local_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 332.7340526156244,
+          "rmse_sd_seed_hz": 3.412367029557184,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 304.41578630556654,
+          "rmse_sd_seed_hz": 3.309179143675282,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 249.184023659257,
+          "rmse_sd_seed_hz": 3.498450205687706,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 159.59022771553634,
+          "rmse_sd_seed_hz": 7.023807106421111,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 62.89440427548228,
+          "rmse_sd_seed_hz": 3.1703077835082825,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 31.205892885758203,
+          "rmse_sd_seed_hz": 2.0444106533178537,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 24.42074756331934,
+          "rmse_sd_seed_hz": 0.8857202392598832,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 25.506156481183694,
+          "rmse_sd_seed_hz": 3.230787179237696,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      },
+      "S2/E3_T2_truth_plus_soft": {
+        "-15.0": {
+          "rmse_mean_seed_hz": 336.6927072171655,
+          "rmse_sd_seed_hz": 2.713999157323914,
+          "crlb_sd_hz": 1.9228124700771325,
+          "n_per_seed": 1024
+        },
+        "-10.0": {
+          "rmse_mean_seed_hz": 306.49796388425915,
+          "rmse_sd_seed_hz": 2.977188635336702,
+          "crlb_sd_hz": 1.0812769125157031,
+          "n_per_seed": 1024
+        },
+        "-5.0": {
+          "rmse_mean_seed_hz": 250.00040400034527,
+          "rmse_sd_seed_hz": 3.247510111707064,
+          "crlb_sd_hz": 0.6080466918818096,
+          "n_per_seed": 1024
+        },
+        "0.0": {
+          "rmse_mean_seed_hz": 152.4951173771343,
+          "rmse_sd_seed_hz": 5.3355026163894514,
+          "crlb_sd_hz": 0.3419297824904247,
+          "n_per_seed": 1024
+        },
+        "5.0": {
+          "rmse_mean_seed_hz": 54.99285440132291,
+          "rmse_sd_seed_hz": 4.255056089733721,
+          "crlb_sd_hz": 0.19228124700771326,
+          "n_per_seed": 1024
+        },
+        "10.0": {
+          "rmse_mean_seed_hz": 28.71246819192699,
+          "rmse_sd_seed_hz": 2.419930005647513,
+          "crlb_sd_hz": 0.1081276912515703,
+          "n_per_seed": 1024
+        },
+        "15.0": {
+          "rmse_mean_seed_hz": 23.325187349300695,
+          "rmse_sd_seed_hz": 2.2573636825528363,
+          "crlb_sd_hz": 0.06080466918818096,
+          "n_per_seed": 1024
+        },
+        "20.0": {
+          "rmse_mean_seed_hz": 24.51294908594683,
+          "rmse_sd_seed_hz": 2.2113891983456626,
+          "crlb_sd_hz": 0.03419297824904247,
+          "n_per_seed": 1024
+        }
+      }
+    }
+  },
+  "paired_E1_minus_fft_peak_rmse": {
+    "S1/E1_truth": {
+      "0.0": {
+        "delta_rmse_hz": -361.92707949835307,
+        "ci95_low_hz": -371.8852444253857,
+        "ci95_high_hz": -351.5248009402314,
+        "candidate_rmse_ci95_low_hz": 7.23179164230847,
+        "candidate_rmse_ci95_high_hz": 8.329693673583808,
+        "reference_rmse_ci95_low_hz": 359.2475333318933,
+        "reference_rmse_ci95_high_hz": 379.7467782254184
+      },
+      "5.0": {
+        "delta_rmse_hz": -375.63157734650434,
+        "ci95_low_hz": -385.7343461419779,
+        "ci95_high_hz": -365.70905092106676,
+        "candidate_rmse_ci95_low_hz": 5.484686061023893,
+        "candidate_rmse_ci95_high_hz": 6.019751713915037,
+        "reference_rmse_ci95_low_hz": 371.55838034850956,
+        "reference_rmse_ci95_high_hz": 391.61065027984154
+      },
+      "10.0": {
+        "delta_rmse_hz": -371.975397970137,
+        "ci95_low_hz": -382.5544282876462,
+        "ci95_high_hz": -361.7968689919514,
+        "candidate_rmse_ci95_low_hz": 2.1876120322956343,
+        "candidate_rmse_ci95_high_hz": 2.99463065752989,
+        "reference_rmse_ci95_low_hz": 364.4428243802771,
+        "reference_rmse_ci95_high_hz": 385.22871173999374
+      },
+      "15.0": {
+        "delta_rmse_hz": -374.04823239874344,
+        "ci95_low_hz": -383.96588803562213,
+        "ci95_high_hz": -363.4431847703235,
+        "candidate_rmse_ci95_low_hz": 2.2605528080996162,
+        "candidate_rmse_ci95_high_hz": 2.606517810854812,
+        "reference_rmse_ci95_low_hz": 365.7064169587107,
+        "reference_rmse_ci95_high_hz": 386.4671480269015
+      },
+      "20.0": {
+        "delta_rmse_hz": -373.33263373539154,
+        "ci95_low_hz": -383.1780414212883,
+        "ci95_high_hz": -363.26047418267535,
+        "candidate_rmse_ci95_low_hz": 2.6888817717827536,
+        "candidate_rmse_ci95_high_hz": 3.164260918515138,
+        "reference_rmse_ci95_low_hz": 366.2951143290442,
+        "reference_rmse_ci95_high_hz": 386.08587639012165
+      }
+    },
+    "S2/E1_truth": {
+      "0.0": {
+        "delta_rmse_hz": -217.29153124150682,
+        "ci95_low_hz": -230.9060859104433,
+        "ci95_high_hz": -203.08546420886736,
+        "candidate_rmse_ci95_low_hz": 142.12889880045063,
+        "candidate_rmse_ci95_high_hz": 162.39705442935036,
+        "reference_rmse_ci95_low_hz": 359.10056721204654,
+        "reference_rmse_ci95_high_hz": 380.1773818649799
+      },
+      "5.0": {
+        "delta_rmse_hz": -320.48411342289063,
+        "ci95_low_hz": -331.74826546683585,
+        "ci95_high_hz": -309.67803625238,
+        "candidate_rmse_ci95_low_hz": 56.755198294463646,
+        "candidate_rmse_ci95_high_hz": 65.25203360173863,
+        "reference_rmse_ci95_low_hz": 371.04566065827646,
+        "reference_rmse_ci95_high_hz": 391.69867726159566
+      },
+      "10.0": {
+        "delta_rmse_hz": -342.7553180196165,
+        "ci95_low_hz": -353.01346300872115,
+        "ci95_high_hz": -332.8282578766745,
+        "candidate_rmse_ci95_low_hz": 29.15465060856446,
+        "candidate_rmse_ci95_high_hz": 34.44321001920662,
+        "reference_rmse_ci95_low_hz": 364.65476983890017,
+        "reference_rmse_ci95_high_hz": 384.26117219539486
+      },
+      "15.0": {
+        "delta_rmse_hz": -351.548853765554,
+        "ci95_low_hz": -362.4298749246864,
+        "ci95_high_hz": -340.3129336209854,
+        "candidate_rmse_ci95_low_hz": 20.20511136861474,
+        "candidate_rmse_ci95_high_hz": 28.804020472634974,
+        "reference_rmse_ci95_low_hz": 365.61714250515223,
+        "reference_rmse_ci95_high_hz": 386.59413994382976
+      },
+      "20.0": {
+        "delta_rmse_hz": -349.3358029710411,
+        "ci95_low_hz": -359.91980441474254,
+        "ci95_high_hz": -338.7069976503235,
+        "candidate_rmse_ci95_low_hz": 23.20859111479735,
+        "candidate_rmse_ci95_high_hz": 30.026990377627044,
+        "reference_rmse_ci95_low_hz": 366.61589473074434,
+        "reference_rmse_ci95_high_hz": 385.7342819659047
+      }
+    }
+  },
+  "paired_E1_minus_same_frontend_rmse": {
+    "S1/E1_truth": {
+      "0.0": {
+        "delta_rmse_hz": -364.35083905899336,
+        "ci95_low_hz": -374.6800075473007,
+        "ci95_high_hz": -354.4024564281078,
+        "candidate_rmse_ci95_low_hz": 7.219893500767671,
+        "candidate_rmse_ci95_high_hz": 8.349170071423817,
+        "reference_rmse_ci95_low_hz": 362.1349161604276,
+        "reference_rmse_ci95_high_hz": 382.43771686248937
+      },
+      "5.0": {
+        "delta_rmse_hz": -377.55967485219514,
+        "ci95_low_hz": -388.2496927606876,
+        "ci95_high_hz": -367.37327130084964,
+        "candidate_rmse_ci95_low_hz": 5.4553429140691705,
+        "candidate_rmse_ci95_high_hz": 6.022686972458201,
+        "reference_rmse_ci95_low_hz": 373.04717794550254,
+        "reference_rmse_ci95_high_hz": 393.973781383106
+      },
+      "10.0": {
+        "delta_rmse_hz": -373.4331992479053,
+        "ci95_low_hz": -383.3252246173037,
+        "ci95_high_hz": -363.5253232259759,
+        "candidate_rmse_ci95_low_hz": 2.1925750778323674,
+        "candidate_rmse_ci95_high_hz": 2.9811904780618694,
+        "reference_rmse_ci95_low_hz": 366.22029756561096,
+        "reference_rmse_ci95_high_hz": 385.9610405395318
+      },
+      "15.0": {
+        "delta_rmse_hz": -374.4709415803349,
+        "ci95_low_hz": -384.63995115896574,
+        "ci95_high_hz": -364.1607583178697,
+        "candidate_rmse_ci95_low_hz": 2.2573546568529097,
+        "candidate_rmse_ci95_high_hz": 2.591689536194493,
+        "reference_rmse_ci95_low_hz": 366.5921922716714,
+        "reference_rmse_ci95_high_hz": 387.0676231315084
+      },
+      "20.0": {
+        "delta_rmse_hz": -374.9197016305475,
+        "ci95_low_hz": -384.6517161138152,
+        "ci95_high_hz": -364.9992110501697,
+        "candidate_rmse_ci95_low_hz": 2.6873895899138396,
+        "candidate_rmse_ci95_high_hz": 3.1739676222315265,
+        "reference_rmse_ci95_low_hz": 367.86330148969563,
+        "reference_rmse_ci95_high_hz": 387.5949289681471
+      }
+    },
+    "S2/E1_truth": {
+      "0.0": {
+        "delta_rmse_hz": -219.78812478284468,
+        "ci95_low_hz": -233.45151082051376,
+        "ci95_high_hz": -206.49434812324034,
+        "candidate_rmse_ci95_low_hz": 142.11383332056133,
+        "candidate_rmse_ci95_high_hz": 162.50950965124454,
+        "reference_rmse_ci95_low_hz": 361.6729290805801,
+        "reference_rmse_ci95_high_hz": 382.3093460082513
+      },
+      "5.0": {
+        "delta_rmse_hz": -322.4376853578307,
+        "ci95_low_hz": -333.27228619355895,
+        "ci95_high_hz": -311.1023642180383,
+        "candidate_rmse_ci95_low_hz": 57.03491022984672,
+        "candidate_rmse_ci95_high_hz": 65.03690684835573,
+        "reference_rmse_ci95_low_hz": 373.2688291123092,
+        "reference_rmse_ci95_high_hz": 393.16809338595795
+      },
+      "10.0": {
+        "delta_rmse_hz": -344.27040544523203,
+        "ci95_low_hz": -354.89095804864246,
+        "ci95_high_hz": -333.35566406742834,
+        "candidate_rmse_ci95_low_hz": 29.12857563694076,
+        "candidate_rmse_ci95_high_hz": 34.44588478108498,
+        "reference_rmse_ci95_low_hz": 365.9059148213937,
+        "reference_rmse_ci95_high_hz": 386.3260988634285
+      },
+      "15.0": {
+        "delta_rmse_hz": -351.961446528559,
+        "ci95_low_hz": -362.49754241951683,
+        "ci95_high_hz": -340.51394637425585,
+        "candidate_rmse_ci95_low_hz": 20.197442772108303,
+        "candidate_rmse_ci95_high_hz": 28.857976663836904,
+        "reference_rmse_ci95_low_hz": 366.2895489344798,
+        "reference_rmse_ci95_high_hz": 386.9367850394288
+      },
+      "20.0": {
+        "delta_rmse_hz": -350.9971527232539,
+        "ci95_low_hz": -361.87275326961213,
+        "ci95_high_hz": -340.5591277008554,
+        "candidate_rmse_ci95_low_hz": 23.155180530710105,
+        "candidate_rmse_ci95_high_hz": 30.049154628254456,
+        "reference_rmse_ci95_low_hz": 367.98325127558337,
+        "reference_rmse_ci95_high_hz": 387.75372301637174
+      }
+    }
+  },
+  "paired_E2_minus_E1_rmse": {
+    "S1/E2A_T1_hard": {
+      "0.0": {
+        "delta_rmse_hz": -0.2263591094619688,
+        "ci95_low_hz": -0.7290632381357235,
+        "ci95_high_hz": 0.23514933131152288,
+        "candidate_rmse_ci95_low_hz": 7.212512711308943,
+        "candidate_rmse_ci95_high_hz": 7.840247498195494,
+        "reference_rmse_ci95_low_hz": 7.203960679990118,
+        "reference_rmse_ci95_high_hz": 8.335350750782482
+      },
+      "5.0": {
+        "delta_rmse_hz": -0.4413653029428355,
+        "ci95_low_hz": -0.8198743287365883,
+        "ci95_high_hz": -0.0704903266879082,
+        "candidate_rmse_ci95_low_hz": 5.008058066082475,
+        "candidate_rmse_ci95_high_hz": 5.5956429247819095,
+        "reference_rmse_ci95_low_hz": 5.474094019033453,
+        "reference_rmse_ci95_high_hz": 6.018363006384096
+      },
+      "10.0": {
+        "delta_rmse_hz": -0.315636697044134,
+        "ci95_low_hz": -0.7181191938209056,
+        "ci95_high_hz": 0.28618170555531064,
+        "candidate_rmse_ci95_low_hz": 1.9622507814144394,
+        "candidate_rmse_ci95_high_hz": 2.5420683878047536,
+        "reference_rmse_ci95_low_hz": 2.183023691331086,
+        "reference_rmse_ci95_high_hz": 2.965200463354356
+      },
+      "15.0": {
+        "delta_rmse_hz": -0.20169668505065275,
+        "ci95_low_hz": -0.3933547766403239,
+        "ci95_high_hz": 0.013194763781749776,
+        "candidate_rmse_ci95_low_hz": 1.930399920366529,
+        "candidate_rmse_ci95_high_hz": 2.5612079624134862,
+        "reference_rmse_ci95_low_hz": 2.26662583984243,
+        "reference_rmse_ci95_high_hz": 2.5957914947876186
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.34204065507107995,
+        "ci95_low_hz": -0.5514351832164537,
+        "ci95_high_hz": -0.08678782783222369,
+        "candidate_rmse_ci95_low_hz": 2.275936763940109,
+        "candidate_rmse_ci95_high_hz": 2.8537967885863824,
+        "reference_rmse_ci95_low_hz": 2.665027178041074,
+        "reference_rmse_ci95_high_hz": 3.159128003578446
+      }
+    },
+    "S1/E2A_T2_local_soft": {
+      "0.0": {
+        "delta_rmse_hz": -0.23167841774274134,
+        "ci95_low_hz": -0.7229637604654033,
+        "ci95_high_hz": 0.21572857144689575,
+        "candidate_rmse_ci95_low_hz": 7.199532329849185,
+        "candidate_rmse_ci95_high_hz": 7.845925379241327,
+        "reference_rmse_ci95_low_hz": 7.202742044597248,
+        "reference_rmse_ci95_high_hz": 8.356601309285388
+      },
+      "5.0": {
+        "delta_rmse_hz": -0.4440321412714052,
+        "ci95_low_hz": -0.8133675675922643,
+        "ci95_high_hz": -0.08991233559148905,
+        "candidate_rmse_ci95_low_hz": 4.98369240716441,
+        "candidate_rmse_ci95_high_hz": 5.586766563743264,
+        "reference_rmse_ci95_low_hz": 5.463899721935891,
+        "reference_rmse_ci95_high_hz": 6.0274993264592025
+      },
+      "10.0": {
+        "delta_rmse_hz": -0.31453606227811415,
+        "ci95_low_hz": -0.7174417718345932,
+        "ci95_high_hz": 0.2141457700911983,
+        "candidate_rmse_ci95_low_hz": 1.9924043750523501,
+        "candidate_rmse_ci95_high_hz": 2.5367256805718124,
+        "reference_rmse_ci95_low_hz": 2.2407409780596645,
+        "reference_rmse_ci95_high_hz": 2.982751549859097
+      },
+      "15.0": {
+        "delta_rmse_hz": -0.20075735234863368,
+        "ci95_low_hz": -0.39778932153618884,
+        "ci95_high_hz": 0.022660074109569536,
+        "candidate_rmse_ci95_low_hz": 1.9167690272667801,
+        "candidate_rmse_ci95_high_hz": 2.5823360914118934,
+        "reference_rmse_ci95_low_hz": 2.2573291873259786,
+        "reference_rmse_ci95_high_hz": 2.5950855683446616
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.3424582786647625,
+        "ci95_low_hz": -0.5636621763301011,
+        "ci95_high_hz": -0.09042117123119116,
+        "candidate_rmse_ci95_low_hz": 2.2826762618206424,
+        "candidate_rmse_ci95_high_hz": 2.855284270724148,
+        "reference_rmse_ci95_low_hz": 2.689197488715085,
+        "reference_rmse_ci95_high_hz": 3.1727741944676895
+      }
+    },
+    "S1/E2A_T3_full_response": {
+      "0.0": {
+        "delta_rmse_hz": 2.917378645751082,
+        "ci95_low_hz": 2.3150629117544326,
+        "ci95_high_hz": 3.5348756536035837,
+        "candidate_rmse_ci95_low_hz": 9.734105729784561,
+        "candidate_rmse_ci95_high_hz": 11.61363058365501,
+        "reference_rmse_ci95_low_hz": 7.230149420772025,
+        "reference_rmse_ci95_high_hz": 8.3246619454828
+      },
+      "5.0": {
+        "delta_rmse_hz": 4.2543622615751,
+        "ci95_low_hz": 3.7392042232533185,
+        "ci95_high_hz": 4.827082271770631,
+        "candidate_rmse_ci95_low_hz": 9.511364973256308,
+        "candidate_rmse_ci95_high_hz": 10.542876208650654,
+        "reference_rmse_ci95_low_hz": 5.473834801776306,
+        "reference_rmse_ci95_high_hz": 6.0390457290669906
+      },
+      "10.0": {
+        "delta_rmse_hz": 2.8010885658473486,
+        "ci95_low_hz": 1.5629885022898171,
+        "ci95_high_hz": 3.532613792240081,
+        "candidate_rmse_ci95_low_hz": 4.552602715393892,
+        "candidate_rmse_ci95_high_hz": 6.049233594597693,
+        "reference_rmse_ci95_low_hz": 2.2010979592508138,
+        "reference_rmse_ci95_high_hz": 2.9791259954652616
+      },
+      "15.0": {
+        "delta_rmse_hz": 3.132274923808594,
+        "ci95_low_hz": 1.5598913286821425,
+        "ci95_high_hz": 3.9872684637075184,
+        "candidate_rmse_ci95_low_hz": 4.12798923296163,
+        "candidate_rmse_ci95_high_hz": 6.294781483891388,
+        "reference_rmse_ci95_low_hz": 2.264189030302987,
+        "reference_rmse_ci95_high_hz": 2.5948529446565423
+      },
+      "20.0": {
+        "delta_rmse_hz": 3.164995960523908,
+        "ci95_low_hz": 1.6896885246875322,
+        "ci95_high_hz": 4.134364615865003,
+        "candidate_rmse_ci95_low_hz": 4.622234100353806,
+        "candidate_rmse_ci95_high_hz": 6.889513466041707,
+        "reference_rmse_ci95_low_hz": 2.6894577295858513,
+        "reference_rmse_ci95_high_hz": 3.161854211389396
+      }
+    },
+    "S1/E2B_T2_truth_validation": {
+      "0.0": {
+        "delta_rmse_hz": -0.3141412061631925,
+        "ci95_low_hz": -0.9132592924818389,
+        "ci95_high_hz": 0.23275937931131946,
+        "candidate_rmse_ci95_low_hz": 7.103178799310749,
+        "candidate_rmse_ci95_high_hz": 7.75876847085071,
+        "reference_rmse_ci95_low_hz": 7.20874525654945,
+        "reference_rmse_ci95_high_hz": 8.34043520356101
+      },
+      "5.0": {
+        "delta_rmse_hz": -0.23880513343105125,
+        "ci95_low_hz": -0.6510755375465547,
+        "ci95_high_hz": 0.14972949322656037,
+        "candidate_rmse_ci95_low_hz": 5.074693201610062,
+        "candidate_rmse_ci95_high_hz": 6.016862424235103,
+        "reference_rmse_ci95_low_hz": 5.478528426894651,
+        "reference_rmse_ci95_high_hz": 6.034365478010556
+      },
+      "10.0": {
+        "delta_rmse_hz": 0.09497140569502349,
+        "ci95_low_hz": -0.2446379050858908,
+        "ci95_high_hz": 0.48159537230424315,
+        "candidate_rmse_ci95_low_hz": 2.590220184908769,
+        "candidate_rmse_ci95_high_hz": 2.8531347067236186,
+        "reference_rmse_ci95_low_hz": 2.1861469307293078,
+        "reference_rmse_ci95_high_hz": 2.988944052300641
+      },
+      "15.0": {
+        "delta_rmse_hz": 0.11579441182421313,
+        "ci95_low_hz": -0.07804742969646673,
+        "ci95_high_hz": 0.34770999814144743,
+        "candidate_rmse_ci95_low_hz": 2.4309228707630606,
+        "candidate_rmse_ci95_high_hz": 2.6677708784009213,
+        "reference_rmse_ci95_low_hz": 2.259148052958174,
+        "reference_rmse_ci95_high_hz": 2.605834198877984
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.09655465600791624,
+        "ci95_low_hz": -0.3419791155779051,
+        "ci95_high_hz": 0.19396907174357297,
+        "candidate_rmse_ci95_low_hz": 2.743511127234524,
+        "candidate_rmse_ci95_high_hz": 2.920484902049218,
+        "reference_rmse_ci95_low_hz": 2.6833555059978886,
+        "reference_rmse_ci95_high_hz": 3.167803038656978
+      }
+    },
+    "S2/E2A_T1_hard": {
+      "0.0": {
+        "delta_rmse_hz": 7.8316227390594975,
+        "ci95_low_hz": 0.42923259448610196,
+        "ci95_high_hz": 16.37541980997664,
+        "candidate_rmse_ci95_low_hz": 149.8017949963569,
+        "candidate_rmse_ci95_high_hz": 171.30513374501479,
+        "reference_rmse_ci95_low_hz": 142.78675215716063,
+        "reference_rmse_ci95_high_hz": 161.96545611674318
+      },
+      "5.0": {
+        "delta_rmse_hz": 3.996064958374447,
+        "ci95_low_hz": -0.5048407730167274,
+        "ci95_high_hz": 8.988222405530468,
+        "candidate_rmse_ci95_low_hz": 59.50417745539215,
+        "candidate_rmse_ci95_high_hz": 70.57667089382007,
+        "reference_rmse_ci95_low_hz": 56.98480988445184,
+        "reference_rmse_ci95_high_hz": 65.07227972333115
+      },
+      "10.0": {
+        "delta_rmse_hz": 1.3585217143497843,
+        "ci95_low_hz": -2.371560515435171,
+        "ci95_high_hz": 4.72748659668183,
+        "candidate_rmse_ci95_low_hz": 31.496135352372765,
+        "candidate_rmse_ci95_high_hz": 34.72612745505636,
+        "reference_rmse_ci95_low_hz": 29.190738727625938,
+        "reference_rmse_ci95_high_hz": 34.538493913134175
+      },
+      "15.0": {
+        "delta_rmse_hz": 2.3629464469603825,
+        "ci95_low_hz": -1.3349515479169816,
+        "ci95_high_hz": 7.96856117834488,
+        "candidate_rmse_ci95_low_hz": 25.429021453356814,
+        "candidate_rmse_ci95_high_hz": 28.88218632695573,
+        "reference_rmse_ci95_low_hz": 20.234824373020803,
+        "reference_rmse_ci95_high_hz": 28.96749194483055
+      },
+      "20.0": {
+        "delta_rmse_hz": 2.223381823829868,
+        "ci95_low_hz": -1.6805187744007872,
+        "ci95_high_hz": 6.730953344433882,
+        "candidate_rmse_ci95_low_hz": 28.022555471989364,
+        "candidate_rmse_ci95_high_hz": 30.39359589580379,
+        "reference_rmse_ci95_low_hz": 23.292922704847612,
+        "reference_rmse_ci95_high_hz": 30.17105140352718
+      }
+    },
+    "S2/E2A_T2_local_soft": {
+      "0.0": {
+        "delta_rmse_hz": 7.309815370704712,
+        "ci95_low_hz": -1.2039714514366608,
+        "ci95_high_hz": 16.62360837748908,
+        "candidate_rmse_ci95_low_hz": 147.8018891593289,
+        "candidate_rmse_ci95_high_hz": 171.24690084735838,
+        "reference_rmse_ci95_low_hz": 142.04934432120152,
+        "reference_rmse_ci95_high_hz": 161.9779310169469
+      },
+      "5.0": {
+        "delta_rmse_hz": 2.054525776560695,
+        "ci95_low_hz": -2.148954561695199,
+        "ci95_high_hz": 6.3384663230260525,
+        "candidate_rmse_ci95_low_hz": 57.55903062049143,
+        "candidate_rmse_ci95_high_hz": 68.40383431815394,
+        "reference_rmse_ci95_low_hz": 56.890149546667686,
+        "reference_rmse_ci95_high_hz": 65.05375541566673
+      },
+      "10.0": {
+        "delta_rmse_hz": -0.6023888150190899,
+        "ci95_low_hz": -3.86845452916039,
+        "ci95_high_hz": 3.3862638894243067,
+        "candidate_rmse_ci95_low_hz": 28.95614435372395,
+        "candidate_rmse_ci95_high_hz": 33.35902365035444,
+        "reference_rmse_ci95_low_hz": 28.992236970923127,
+        "reference_rmse_ci95_high_hz": 34.50273683228232
+      },
+      "15.0": {
+        "delta_rmse_hz": -0.5060357598228933,
+        "ci95_low_hz": -3.7955153327800937,
+        "ci95_high_hz": 3.2947546796950253,
+        "candidate_rmse_ci95_low_hz": 23.20416364885498,
+        "candidate_rmse_ci95_high_hz": 25.602064730183535,
+        "reference_rmse_ci95_low_hz": 20.159535021865477,
+        "reference_rmse_ci95_high_hz": 28.945279752038868
+      },
+      "20.0": {
+        "delta_rmse_hz": -1.2879617577394278,
+        "ci95_low_hz": -3.455016650158934,
+        "ci95_high_hz": 0.8267044445299092,
+        "candidate_rmse_ci95_low_hz": 22.113920136586394,
+        "candidate_rmse_ci95_high_hz": 28.053869810858153,
+        "reference_rmse_ci95_low_hz": 23.02012945299663,
+        "reference_rmse_ci95_high_hz": 30.015287037528093
+      }
+    }
+  },
+  "paired_teacher_ablation_rmse": {
+    "S1/E2A_soft_minus_E2B_soft": {
+      "0.0": {
+        "delta_rmse_hz": 0.08246278842045118,
+        "ci95_low_hz": -0.07448676532779878,
+        "ci95_high_hz": 0.23155676653157542,
+        "candidate_rmse_ci95_low_hz": 7.174531751010304,
+        "candidate_rmse_ci95_high_hz": 7.8329507604128485,
+        "reference_rmse_ci95_low_hz": 7.094924780249419,
+        "reference_rmse_ci95_high_hz": 7.754972509711743
+      },
+      "5.0": {
+        "delta_rmse_hz": -0.20522700784035397,
+        "ci95_low_hz": -0.5056356233836807,
+        "ci95_high_hz": 0.05076593522339354,
+        "candidate_rmse_ci95_low_hz": 5.00101012579664,
+        "candidate_rmse_ci95_high_hz": 5.588428170991375,
+        "reference_rmse_ci95_low_hz": 5.034757529647019,
+        "reference_rmse_ci95_high_hz": 5.988665367803222
+      },
+      "10.0": {
+        "delta_rmse_hz": -0.40950746797313764,
+        "ci95_low_hz": -0.822573458953237,
+        "ci95_high_hz": -0.13556304214602377,
+        "candidate_rmse_ci95_low_hz": 1.9762696410536218,
+        "candidate_rmse_ci95_high_hz": 2.5388051776757354,
+        "reference_rmse_ci95_low_hz": 2.5880545933131707,
+        "reference_rmse_ci95_high_hz": 2.846558194257566
+      },
+      "15.0": {
+        "delta_rmse_hz": -0.3165517641728468,
+        "ci95_low_hz": -0.6511486253355587,
+        "ci95_high_hz": -0.026807723581282413,
+        "candidate_rmse_ci95_low_hz": 1.9411785372113353,
+        "candidate_rmse_ci95_high_hz": 2.575079795150292,
+        "reference_rmse_ci95_low_hz": 2.4259624843571057,
+        "reference_rmse_ci95_high_hz": 2.6660148307568856
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.2459036226568463,
+        "ci95_low_hz": -0.5769553040009388,
+        "ci95_high_hz": 0.05055630526593539,
+        "candidate_rmse_ci95_low_hz": 2.2939875069986626,
+        "candidate_rmse_ci95_high_hz": 2.8450232204476222,
+        "reference_rmse_ci95_low_hz": 2.732283892239029,
+        "reference_rmse_ci95_high_hz": 2.9256726058992255
+      }
+    },
+    "S1/T3_full_response_minus_T1_point": {
+      "0.0": {
+        "delta_rmse_hz": 3.143737755213051,
+        "ci95_low_hz": 2.2495446681379794,
+        "ci95_high_hz": 4.122210069297287,
+        "candidate_rmse_ci95_low_hz": 9.749417614015988,
+        "candidate_rmse_ci95_high_hz": 11.641437345008857,
+        "reference_rmse_ci95_low_hz": 7.208115784805429,
+        "reference_rmse_ci95_high_hz": 7.847145238261835
+      },
+      "5.0": {
+        "delta_rmse_hz": 4.695727564517935,
+        "ci95_low_hz": 4.042280631087541,
+        "ci95_high_hz": 5.476783639483473,
+        "candidate_rmse_ci95_low_hz": 9.48643772865775,
+        "candidate_rmse_ci95_high_hz": 10.571356390264622,
+        "reference_rmse_ci95_low_hz": 5.000681644771039,
+        "reference_rmse_ci95_high_hz": 5.577694086338331
+      },
+      "10.0": {
+        "delta_rmse_hz": 3.1167252628914826,
+        "ci95_low_hz": 2.102283333088807,
+        "ci95_high_hz": 4.067646507819628,
+        "candidate_rmse_ci95_low_hz": 4.574913296681836,
+        "candidate_rmse_ci95_high_hz": 6.038783933287172,
+        "reference_rmse_ci95_low_hz": 1.97682106506178,
+        "reference_rmse_ci95_high_hz": 2.537276385431983
+      },
+      "15.0": {
+        "delta_rmse_hz": 3.3339716088592466,
+        "ci95_low_hz": 1.5885306731445266,
+        "ci95_high_hz": 4.307455164874327,
+        "candidate_rmse_ci95_low_hz": 4.170222350903722,
+        "candidate_rmse_ci95_high_hz": 6.285620914134866,
+        "reference_rmse_ci95_low_hz": 1.9356838696080267,
+        "reference_rmse_ci95_high_hz": 2.548022156935911
+      },
+      "20.0": {
+        "delta_rmse_hz": 3.507036615594988,
+        "ci95_low_hz": 1.7600969755114773,
+        "ci95_high_hz": 4.522145894848946,
+        "candidate_rmse_ci95_low_hz": 4.586942967621514,
+        "candidate_rmse_ci95_high_hz": 6.87444061182416,
+        "reference_rmse_ci95_low_hz": 2.293980403813199,
+        "reference_rmse_ci95_high_hz": 2.8515170690066216
+      }
+    },
+    "S1/T2_local_soft_minus_T1_point": {
+      "0.0": {
+        "delta_rmse_hz": -0.005319308280772539,
+        "ci95_low_hz": -0.018716146502801113,
+        "ci95_high_hz": 0.003203968096915098,
+        "candidate_rmse_ci95_low_hz": 7.201022081295548,
+        "candidate_rmse_ci95_high_hz": 7.842635581052718,
+        "reference_rmse_ci95_low_hz": 7.207759611177576,
+        "reference_rmse_ci95_high_hz": 7.847724078456282
+      },
+      "5.0": {
+        "delta_rmse_hz": -0.0026668383285697317,
+        "ci95_low_hz": -0.009304472453918123,
+        "ci95_high_hz": 0.0014425681507189007,
+        "candidate_rmse_ci95_low_hz": 5.0041208830688255,
+        "candidate_rmse_ci95_high_hz": 5.579702260501084,
+        "reference_rmse_ci95_low_hz": 5.009234804365023,
+        "reference_rmse_ci95_high_hz": 5.5798590395669265
+      },
+      "10.0": {
+        "delta_rmse_hz": 0.0011006347660198479,
+        "ci95_low_hz": -0.001931596475517594,
+        "ci95_high_hz": 0.003359249142358988,
+        "candidate_rmse_ci95_low_hz": 1.976126241914851,
+        "candidate_rmse_ci95_high_hz": 2.540057005001402,
+        "reference_rmse_ci95_low_hz": 1.9740479882364705,
+        "reference_rmse_ci95_high_hz": 2.540381816776026
+      },
+      "15.0": {
+        "delta_rmse_hz": 0.0009393327020190689,
+        "ci95_low_hz": -0.004380501927338592,
+        "ci95_high_hz": 0.006606304181868876,
+        "candidate_rmse_ci95_low_hz": 1.933188354371652,
+        "candidate_rmse_ci95_high_hz": 2.5845394350417252,
+        "reference_rmse_ci95_low_hz": 1.9377702493634497,
+        "reference_rmse_ci95_high_hz": 2.5781973129091713
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.0004176235936825812,
+        "ci95_low_hz": -0.0060480162461402755,
+        "ci95_high_hz": 0.0063132687754461885,
+        "candidate_rmse_ci95_low_hz": 2.3140052724718445,
+        "candidate_rmse_ci95_high_hz": 2.8467003470287318,
+        "reference_rmse_ci95_low_hz": 2.3209062916628826,
+        "reference_rmse_ci95_high_hz": 2.841397729872337
+      }
+    }
+  },
+  "paired_E3_minus_E1_rmse": {
+    "S1/E3_T2_truth_plus_soft": {
+      "0.0": {
+        "delta_rmse_hz": -0.3458745513705548,
+        "ci95_low_hz": -0.7596237546829989,
+        "ci95_high_hz": -0.031244793162358807,
+        "candidate_rmse_ci95_low_hz": 7.09275385691631,
+        "candidate_rmse_ci95_high_hz": 7.714445563294907,
+        "reference_rmse_ci95_low_hz": 7.214702397930231,
+        "reference_rmse_ci95_high_hz": 8.300596878437705
+      },
+      "5.0": {
+        "delta_rmse_hz": 0.03693100960818185,
+        "ci95_low_hz": -0.10250672615542125,
+        "ci95_high_hz": 0.17071337835211392,
+        "candidate_rmse_ci95_low_hz": 5.451105842168835,
+        "candidate_rmse_ci95_high_hz": 6.115032075430032,
+        "reference_rmse_ci95_low_hz": 5.463300095844064,
+        "reference_rmse_ci95_high_hz": 6.040554105208732
+      },
+      "10.0": {
+        "delta_rmse_hz": -0.3031600108171859,
+        "ci95_low_hz": -0.8599813659280566,
+        "ci95_high_hz": 0.09508824182186183,
+        "candidate_rmse_ci95_low_hz": 2.109170812161748,
+        "candidate_rmse_ci95_high_hz": 2.577333973227986,
+        "reference_rmse_ci95_low_hz": 2.1794937644357786,
+        "reference_rmse_ci95_high_hz": 2.9780298826364504
+      },
+      "15.0": {
+        "delta_rmse_hz": -0.2548389616901314,
+        "ci95_low_hz": -0.4942700514592782,
+        "ci95_high_hz": 0.01486812103597998,
+        "candidate_rmse_ci95_low_hz": 1.9294854043957193,
+        "candidate_rmse_ci95_high_hz": 2.479887431544576,
+        "reference_rmse_ci95_low_hz": 2.2698640066663858,
+        "reference_rmse_ci95_high_hz": 2.596898430432954
+      },
+      "20.0": {
+        "delta_rmse_hz": -0.1679381942674003,
+        "ci95_low_hz": -0.32529329231319504,
+        "ci95_high_hz": -0.018655614828934304,
+        "candidate_rmse_ci95_low_hz": 2.416535303379905,
+        "candidate_rmse_ci95_high_hz": 3.1353682162561882,
+        "reference_rmse_ci95_low_hz": 2.6818677503403565,
+        "reference_rmse_ci95_high_hz": 3.158232141424266
+      }
+    },
+    "S1/E3_T3_truth_plus_response": {
+      "0.0": {
+        "delta_rmse_hz": 1.0038775894816023,
+        "ci95_low_hz": 0.13702336247096666,
+        "ci95_high_hz": 1.7008798401542997,
+        "candidate_rmse_ci95_low_hz": 7.530733629366767,
+        "candidate_rmse_ci95_high_hz": 9.63374171583985,
+        "reference_rmse_ci95_low_hz": 7.205829085295464,
+        "reference_rmse_ci95_high_hz": 8.331880919079751
+      },
+      "5.0": {
+        "delta_rmse_hz": 2.208223669953746,
+        "ci95_low_hz": 1.0826819741599985,
+        "ci95_high_hz": 3.7553935512952368,
+        "candidate_rmse_ci95_low_hz": 6.942755334091485,
+        "candidate_rmse_ci95_high_hz": 9.300030427459072,
+        "reference_rmse_ci95_low_hz": 5.471555197744687,
+        "reference_rmse_ci95_high_hz": 6.023713197820765
+      },
+      "10.0": {
+        "delta_rmse_hz": 0.8206112907598975,
+        "ci95_low_hz": 0.4627875724403045,
+        "ci95_high_hz": 1.2400601647710394,
+        "candidate_rmse_ci95_low_hz": 3.158901938862474,
+        "candidate_rmse_ci95_high_hz": 3.7479465388181605,
+        "reference_rmse_ci95_low_hz": 2.1969190877967257,
+        "reference_rmse_ci95_high_hz": 2.9674619204885957
+      },
+      "15.0": {
+        "delta_rmse_hz": 0.7685586368240185,
+        "ci95_low_hz": 0.45204124077085056,
+        "ci95_high_hz": 1.055550809370196,
+        "candidate_rmse_ci95_low_hz": 3.0363905107751776,
+        "candidate_rmse_ci95_high_hz": 3.3597248626297658,
+        "reference_rmse_ci95_low_hz": 2.2580732224469315,
+        "reference_rmse_ci95_high_hz": 2.604670082444066
+      },
+      "20.0": {
+        "delta_rmse_hz": 0.7208620803761194,
+        "ci95_low_hz": 0.4222285115838931,
+        "ci95_high_hz": 1.0873374947586616,
+        "candidate_rmse_ci95_low_hz": 3.422503392517706,
+        "candidate_rmse_ci95_high_hz": 3.855740299676118,
+        "reference_rmse_ci95_low_hz": 2.676323777641139,
+        "reference_rmse_ci95_high_hz": 3.169851859354433
+      }
+    },
+    "S2/E3_T2_truth_plus_soft": {
+      "0.0": {
+        "delta_rmse_hz": 0.17390902625746207,
+        "ci95_low_hz": -5.3595852190282915,
+        "ci95_high_hz": 5.811888169302678,
+        "candidate_rmse_ci95_low_hz": 140.69786329335597,
+        "candidate_rmse_ci95_high_hz": 163.54793844897392,
+        "reference_rmse_ci95_low_hz": 142.09517696619946,
+        "reference_rmse_ci95_high_hz": 162.83349103194664
+      },
+      "5.0": {
+        "delta_rmse_hz": -5.7906346622193325,
+        "ci95_low_hz": -10.631883576608256,
+        "ci95_high_hz": -0.9591142386276371,
+        "candidate_rmse_ci95_low_hz": 49.59597476909306,
+        "candidate_rmse_ci95_high_hz": 60.33265021242194,
+        "reference_rmse_ci95_low_hz": 56.82403810240098,
+        "reference_rmse_ci95_high_hz": 64.9964630776254
+      },
+      "10.0": {
+        "delta_rmse_hz": -3.072522374563892,
+        "ci95_low_hz": -4.437728495590353,
+        "ci95_high_hz": -1.7469672156909741,
+        "candidate_rmse_ci95_low_hz": 26.315587642413565,
+        "candidate_rmse_ci95_high_hz": 31.257229346748794,
+        "reference_rmse_ci95_low_hz": 29.06342641331802,
+        "reference_rmse_ci95_high_hz": 34.47095414868685
+      },
+      "15.0": {
+        "delta_rmse_hz": -1.53959405390669,
+        "ci95_low_hz": -4.4450022788138694,
+        "ci95_high_hz": 1.1129695034431022,
+        "candidate_rmse_ci95_low_hz": 20.968553025437146,
+        "candidate_rmse_ci95_high_hz": 25.246217586675115,
+        "reference_rmse_ci95_low_hz": 20.257387752986524,
+        "reference_rmse_ci95_high_hz": 28.820559147124538
+      },
+      "20.0": {
+        "delta_rmse_hz": -2.350808834844411,
+        "ci95_low_hz": -5.539660375609818,
+        "ci95_high_hz": 0.2300401872614439,
+        "candidate_rmse_ci95_low_hz": 22.538654252353382,
+        "candidate_rmse_ci95_high_hz": 26.65165650217591,
+        "reference_rmse_ci95_low_hz": 23.353492896929612,
+        "reference_rmse_ci95_high_hz": 30.19381687247113
+      }
+    }
+  },
+  "gates": {
+    "G1_learning_feasibility": {
+      "passed": false,
+      "criteria": "noiseless MAE<1 Hz and P95<5 Hz for >=2/3 seeds; 20 dB RMSE at least 50% below zero predictor",
+      "students": [
+        {
+          "student": "S1",
+          "noiseless_seeds_passed": 0,
+          "rmse_20db_hz": 2.92630151723073,
+          "zero_rmse_20db_hz": 371.73685828229344
+        },
+        {
+          "student": "S2",
+          "noiseless_seeds_passed": 0,
+          "rmse_20db_hz": 26.74972018229059,
+          "zero_rmse_20db_hz": 371.73685828229344
+        }
+      ]
+    },
+    "G2_classical_competitiveness": {
+      "passed": true,
+      "fft_primary_gate_passed": true,
+      "fft_windows_by_student": {
+        "S1/E1_truth": [
+          [
+            "0.0",
+            "5.0"
+          ],
+          [
+            "5.0",
+            "10.0"
+          ],
+          [
+            "10.0",
+            "15.0"
+          ],
+          [
+            "15.0",
+            "20.0"
+          ]
+        ],
+        "S2/E1_truth": [
+          [
+            "0.0",
+            "5.0"
+          ],
+          [
+            "5.0",
+            "10.0"
+          ],
+          [
+            "10.0",
+            "15.0"
+          ],
+          [
+            "15.0",
+            "20.0"
+          ]
+        ]
+      },
+      "same_frontend_windows_by_student": {
+        "S1": [
+          [
+            "0.0",
+            "5.0"
+          ],
+          [
+            "5.0",
+            "10.0"
+          ],
+          [
+            "10.0",
+            "15.0"
+          ],
+          [
+            "15.0",
+            "20.0"
+          ]
+        ],
+        "S2": [
+          [
+            "0.0",
+            "5.0"
+          ],
+          [
+            "5.0",
+            "10.0"
+          ],
+          [
+            "10.0",
+            "15.0"
+          ],
+          [
+            "15.0",
+            "20.0"
+          ]
+        ]
+      }
+    },
+    "G3_distillation_value": {
+      "passed": true,
+      "criteria": "paired 95% CI wholly below zero at two adjacent primary SNR points and at least 2/3 seed-level RMSE deltas below zero at each point",
+      "passing_adjacent_windows_by_method": {
+        "S1/E3_T2_truth_plus_soft": [],
+        "S1/E3_T3_truth_plus_response": [],
+        "S2/E3_T2_truth_plus_soft": [
+          [
+            5.0,
+            10.0
+          ]
+        ]
+      },
+      "seed_direction_by_snr": {
+        "S1/E3_T2_truth_plus_soft": {
+          "0.0": {
+            "seeds_improved": 3,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -0.07141423711785766,
+              -0.12133949168630576,
+              -0.8117313111814743
+            ]
+          },
+          "5.0": {
+            "seeds_improved": 1,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.042735801054779365,
+              -0.044052814147198305,
+              0.10548921685058765
+            ]
+          },
+          "10.0": {
+            "seeds_improved": 2,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.09487915062582797,
+              -0.8851845497411972,
+              -0.07947211754855266
+            ]
+          },
+          "15.0": {
+            "seeds_improved": 2,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.035329476227507595,
+              -0.48904413965669224,
+              -0.33980974350672
+            ]
+          },
+          "20.0": {
+            "seeds_improved": 3,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -0.0026164134750663592,
+              -0.2754916248374837,
+              -0.25809980466809357
+            ]
+          }
+        },
+        "S1/E3_T3_truth_plus_response": {
+          "0.0": {
+            "seeds_improved": 0,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.07880022473189552,
+              1.6519390772209421,
+              1.1724788065129363
+            ]
+          },
+          "5.0": {
+            "seeds_improved": 0,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              1.2084919843278934,
+              3.8394655632432926,
+              1.3803214882487733
+            ]
+          },
+          "10.0": {
+            "seeds_improved": 0,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              1.3004008877663495,
+              0.7332911006952232,
+              0.4685531583961051
+            ]
+          },
+          "15.0": {
+            "seeds_improved": 0,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.79728690241082,
+              0.4601006926162383,
+              1.0535312202930704
+            ]
+          },
+          "20.0": {
+            "seeds_improved": 0,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.6127885183640585,
+              0.4643111230544057,
+              1.0936380669387105
+            ]
+          }
+        },
+        "S2/E3_T2_truth_plus_soft": {
+          "0.0": {
+            "seeds_improved": 1,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              0.06437475743598498,
+              3.803016827650964,
+              -3.4895380022063307
+            ]
+          },
+          "5.0": {
+            "seeds_improved": 3,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -3.0324029863734907,
+              -4.204269940724004,
+              -10.462414299912709
+            ]
+          },
+          "10.0": {
+            "seeds_improved": 3,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -3.7363578900498418,
+              -2.971820925815088,
+              -2.488920947714849
+            ]
+          },
+          "15.0": {
+            "seeds_improved": 2,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -4.608571989514498,
+              -0.11021367478731392,
+              0.7220301156069553
+            ]
+          },
+          "20.0": {
+            "seeds_improved": 3,
+            "seed_count": 3,
+            "per_seed_delta_rmse_hz": [
+              -5.588868970309136,
+              -0.6981911664779687,
+              -0.4232531522441718
+            ]
+          }
+        }
+      }
+    }
+  },
+  "physics_diagnostics_file": "physics_diagnostics.json",
+  "plots": [
+    "figures/rmse_snr.png",
+    "figures/rmse_crlb_ratio.png",
+    "figures/training_loss.png",
+    "figures/error_distribution_20db.png",
+    "figures/frequency_groups_20db.png",
+    "figures/distillation_ablation_20db.png"
+  ],
+  "artifact_files": [
+    "config.yaml",
+    "protocol.md",
+    "metrics.json",
+    "result.csv",
+    "analysis.md",
+    "predictions.npz",
+    "training_history.csv",
+    "physics_diagnostics.json",
+    "noiseless_metrics.json",
+    "datasets/",
+    "models/",
+    "figures/"
+  ]
+}

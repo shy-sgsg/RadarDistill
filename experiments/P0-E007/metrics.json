@@ -1,0 +1,1619 @@
+{
+  "experiment_id": "P0-E007",
+  "status": "completed",
+  "data_roles": {
+    "development_seed": 7070,
+    "final_blind_seed_by_snr": {
+      "-10.0": 1000983,
+      "-15.0": 999983,
+      "-5.0": 1001983,
+      "0.0": 1002983,
+      "10.0": 1004983,
+      "15.0": 1005983,
+      "20.0": 1006983,
+      "5.0": 1003983
+    },
+    "final_blind_is_independent": true,
+    "final_blind_generated_once": true,
+    "saved_model_predictions_reused": true,
+    "blind_dataset_generation_count": 1,
+    "noiseless_seed": 989897,
+    "test_count_per_snr": 1024
+  },
+  "environment": {
+    "python": "3.13.7",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "cuda_build": "12.8",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "training_device": "cuda:0",
+    "gpu_total_memory_bytes": 3942383616,
+    "gpu_free_memory_bytes_at_snapshot": 2306277376,
+    "gpu_total_memory_bytes_at_snapshot": 3942383616,
+    "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 580.178.04, 4096 MiB, 1561 MiB, 2200 MiB",
+    "git_head": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+    "git_dirty": true,
+    "git_status_short": "M AGENTS.md\n M README.md\n M docs/decisions.md\n M docs/experiment_protocol.md\n M docs/progress.md\n M docs/research_plan.md\n M src/radardistill/baselines.py\n M src/radardistill/cnn.py\n M src/radardistill/experiment.py\n?? docs/audits/\n?? docs/stage_reviews/\n?? docs/superpowers/\n?? experiments/P0-E006/\n?? experiments/P0-E007/\n?? scripts/run_p0_e006.py\n?? scripts/run_p0_e007.py\n?? src/radardistill/p0_e007.py\n?? src/radardistill/torch_experiment.py\n?? src/radardistill/torch_models.py\n?? tests/test_p0_e007.py\n?? tests/test_p0_methodology_audit.py",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43"
+  },
+  "training_models_and_checkpoints": {
+    "model__M1__E1": [
+      {
+        "train_seed": 17101,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17101.pt",
+        "selected_epoch": 101
+      },
+      {
+        "train_seed": 17202,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17202.pt",
+        "selected_epoch": 160
+      },
+      {
+        "train_seed": 17303,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E1_seed17303.pt",
+        "selected_epoch": 154
+      }
+    ],
+    "model__M1__E2-H": [
+      {
+        "train_seed": 17101,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17101.pt",
+        "selected_epoch": 110
+      },
+      {
+        "train_seed": 17202,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17202.pt",
+        "selected_epoch": 151
+      },
+      {
+        "train_seed": 17303,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17303.pt",
+        "selected_epoch": 144
+      }
+    ],
+    "model__M1__E2-S": [
+      {
+        "train_seed": 17101,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17101.pt",
+        "selected_epoch": 159
+      },
+      {
+        "train_seed": 17202,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17202.pt",
+        "selected_epoch": 157
+      },
+      {
+        "train_seed": 17303,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17303.pt",
+        "selected_epoch": 153
+      }
+    ],
+    "model__M1__E3-S": [
+      {
+        "train_seed": 17101,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17101.pt",
+        "selected_epoch": 149
+      },
+      {
+        "train_seed": 17202,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17202.pt",
+        "selected_epoch": 128
+      },
+      {
+        "train_seed": 17303,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17303.pt",
+        "selected_epoch": 160
+      }
+    ],
+    "model__M1_power__E1": [
+      {
+        "train_seed": 17101,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17101.pt",
+        "selected_epoch": 142
+      },
+      {
+        "train_seed": 17202,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17202.pt",
+        "selected_epoch": 121
+      },
+      {
+        "train_seed": 17303,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_power_E1_seed17303.pt",
+        "selected_epoch": 155
+      }
+    ]
+  },
+  "classical_and_student_metrics_by_method": {
+    "baseline__B0_constant_zero": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          371.8222838787499
+        ],
+        "mean_rmse_hz": 371.8222838787499,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          375.349256780192
+        ],
+        "mean_rmse_hz": 375.349256780192,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          378.9810757566103
+        ],
+        "mean_rmse_hz": 378.9810757566103,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          382.3941174944493
+        ],
+        "mean_rmse_hz": 382.3941174944493,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          370.06747974176335
+        ],
+        "mean_rmse_hz": 370.06747974176335,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          372.79707764876264
+        ],
+        "mean_rmse_hz": 372.79707764876264,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          376.00715194456785
+        ],
+        "mean_rmse_hz": 376.00715194456785,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          379.1523343311587
+        ],
+        "mean_rmse_hz": 379.1523343311587,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B1_fft_peak": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          307.3285795631122
+        ],
+        "mean_rmse_hz": 307.3285795631122,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          115.88581269532705
+        ],
+        "mean_rmse_hz": 115.88581269532705,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          3.0420698952229905
+        ],
+        "mean_rmse_hz": 3.0420698952229905,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          2.867076124746364
+        ],
+        "mean_rmse_hz": 2.867076124746364,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          2.924191744762866
+        ],
+        "mean_rmse_hz": 2.924191744762866,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          2.8741714132456964
+        ],
+        "mean_rmse_hz": 2.8741714132456964,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          2.8819562171501922
+        ],
+        "mean_rmse_hz": 2.8819562171501922,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          2.9318301676602196
+        ],
+        "mean_rmse_hz": 2.9318301676602196,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B2_fft_interpolated": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          307.43927182963967
+        ],
+        "mean_rmse_hz": 307.43927182963967,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          115.85607215288252
+        ],
+        "mean_rmse_hz": 115.85607215288252,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          1.8119584260830717
+        ],
+        "mean_rmse_hz": 1.8119584260830717,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          1.4693037604810457
+        ],
+        "mean_rmse_hz": 1.4693037604810457,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          1.3216356850183537
+        ],
+        "mean_rmse_hz": 1.3216356850183537,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          1.2619073962451375
+        ],
+        "mean_rmse_hz": 1.2619073962451375,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          1.2462081223661687
+        ],
+        "mean_rmse_hz": 1.2462081223661687,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          1.2346432951659116
+        ],
+        "mean_rmse_hz": 1.2346432951659116,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B3_phase_difference": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          313.71254235597536
+        ],
+        "mean_rmse_hz": 313.71254235597536,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          186.64270827379067
+        ],
+        "mean_rmse_hz": 186.64270827379067,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          44.598611066527276
+        ],
+        "mean_rmse_hz": 44.598611066527276,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          13.100233952082364
+        ],
+        "mean_rmse_hz": 13.100233952082364,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          4.1013221776028645
+        ],
+        "mean_rmse_hz": 4.1013221776028645,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          1.3928057575033899
+        ],
+        "mean_rmse_hz": 1.3928057575033899,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.5076818430454373
+        ],
+        "mean_rmse_hz": 0.5076818430454373,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.20260329462570928
+        ],
+        "mean_rmse_hz": 0.20260329462570928,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B4_local_profile_ML": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          307.3111890690652
+        ],
+        "mean_rmse_hz": 307.3111890690652,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          115.89599683723998
+        ],
+        "mean_rmse_hz": 115.89599683723998,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6223589747036172
+        ],
+        "mean_rmse_hz": 0.6223589747036172,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35073294696043933
+        ],
+        "mean_rmse_hz": 0.35073294696043933,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.191397311104894
+        ],
+        "mean_rmse_hz": 0.191397311104894,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11378689968507938
+        ],
+        "mean_rmse_hz": 0.11378689968507938,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.060171488246885674
+        ],
+        "mean_rmse_hz": 0.060171488246885674,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.034874130322795904
+        ],
+        "mean_rmse_hz": 0.034874130322795904,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B6_4N_fft_peak": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          299.9098254723057
+        ],
+        "mean_rmse_hz": 299.9098254723057,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          80.58874733598941
+        ],
+        "mean_rmse_hz": 80.58874733598941,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.9570773979930584
+        ],
+        "mean_rmse_hz": 0.9570773979930584,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.7919062128946909
+        ],
+        "mean_rmse_hz": 0.7919062128946909,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.7363247974184023
+        ],
+        "mean_rmse_hz": 0.7363247974184023,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.731964710511541
+        ],
+        "mean_rmse_hz": 0.731964710511541,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.7221890166554991
+        ],
+        "mean_rmse_hz": 0.7221890166554991,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.7319700734626449
+        ],
+        "mean_rmse_hz": 0.7319700734626449,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B8_16N_fft_peak": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          298.79578386290507
+        ],
+        "mean_rmse_hz": 298.79578386290507,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          79.63832359574293
+        ],
+        "mean_rmse_hz": 79.63832359574293,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6404768421500309
+        ],
+        "mean_rmse_hz": 0.6404768421500309,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.40234453230767386
+        ],
+        "mean_rmse_hz": 0.40234453230767386,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.2619526256322225
+        ],
+        "mean_rmse_hz": 0.2619526256322225,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.21659991449399468
+        ],
+        "mean_rmse_hz": 0.21659991449399468,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.18674036088698476
+        ],
+        "mean_rmse_hz": 0.18674036088698476,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.18649990052398172
+        ],
+        "mean_rmse_hz": 0.18649990052398172,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B9_4N_local_parabolic": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          299.907129899624
+        ],
+        "mean_rmse_hz": 299.907129899624,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          80.58655565911457
+        ],
+        "mean_rmse_hz": 80.58655565911457,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6229679497258109
+        ],
+        "mean_rmse_hz": 0.6229679497258109,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.3509501668103519
+        ],
+        "mean_rmse_hz": 0.3509501668103519,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.19171810902787892
+        ],
+        "mean_rmse_hz": 0.19171810902787892,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11411105220272495
+        ],
+        "mean_rmse_hz": 0.11411105220272495,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.060554489283064956
+        ],
+        "mean_rmse_hz": 0.060554489283064956,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.03547262368533302
+        ],
+        "mean_rmse_hz": 0.03547262368533302,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B10_16N_local_parabolic": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          298.79289970020875
+        ],
+        "mean_rmse_hz": 298.79289970020875,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          79.63465639091012
+        ],
+        "mean_rmse_hz": 79.63465639091012,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6224247129845638
+        ],
+        "mean_rmse_hz": 0.6224247129845638,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35071883586399205
+        ],
+        "mean_rmse_hz": 0.35071883586399205,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.1913967213792372
+        ],
+        "mean_rmse_hz": 0.1913967213792372,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11379349017664755
+        ],
+        "mean_rmse_hz": 0.11379349017664755,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.06016654118229956
+        ],
+        "mean_rmse_hz": 0.06016654118229956,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.034866487291326645
+        ],
+        "mean_rmse_hz": 0.034866487291326645,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "baseline__B5_global_grid_profile_ML": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          298.79077842509065
+        ],
+        "mean_rmse_hz": 298.79077842509065,
+        "std_rmse_hz": 0.0
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          79.63461155125104
+        ],
+        "mean_rmse_hz": 79.63461155125104,
+        "std_rmse_hz": 0.0
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6223591080742085
+        ],
+        "mean_rmse_hz": 0.6223591080742085,
+        "std_rmse_hz": 0.0
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35073282588686416
+        ],
+        "mean_rmse_hz": 0.35073282588686416,
+        "std_rmse_hz": 0.0
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.1913974472756526
+        ],
+        "mean_rmse_hz": 0.1913974472756526,
+        "std_rmse_hz": 0.0
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11378673307469746
+        ],
+        "mean_rmse_hz": 0.11378673307469746,
+        "std_rmse_hz": 0.0
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.06017140000701726
+        ],
+        "mean_rmse_hz": 0.06017140000701726,
+        "std_rmse_hz": 0.0
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.0348742503362216
+        ],
+        "mean_rmse_hz": 0.0348742503362216,
+        "std_rmse_hz": 0.0
+      }
+    },
+    "model__M1__E1": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          288.63597464727223,
+          287.37218639606084,
+          286.5862649617377
+        ],
+        "mean_rmse_hz": 287.5314753350236,
+        "std_rmse_hz": 1.0340972745832147
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          79.08300568347073,
+          78.97224377989203,
+          78.14610726534916
+        ],
+        "mean_rmse_hz": 78.73378557623731,
+        "std_rmse_hz": 0.5119486279279917
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          1.1141908442134105,
+          1.249450441074019,
+          1.0394989269683645
+        ],
+        "mean_rmse_hz": 1.1343800707519314,
+        "std_rmse_hz": 0.10642186438877115
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35388750313798034,
+          0.3553748131806467,
+          0.3515184548710984
+        ],
+        "mean_rmse_hz": 0.3535935903965752,
+        "std_rmse_hz": 0.0019449070357155272
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.19218564881125103,
+          0.19510316482647408,
+          0.19171953335525774
+        ],
+        "mean_rmse_hz": 0.1930027823309943,
+        "std_rmse_hz": 0.00183385410408446
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.1152017519584578,
+          0.11848578526233548,
+          0.114949242170495
+        ],
+        "mean_rmse_hz": 0.1162122597970961,
+        "std_rmse_hz": 0.001972974614401623
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.061022691901262645,
+          0.06585619364166591,
+          0.06053616618139292
+        ],
+        "mean_rmse_hz": 0.062471683908107166,
+        "std_rmse_hz": 0.0029411488268088607
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.03722274385588872,
+          0.04368514264395739,
+          0.0360687098720817
+        ],
+        "mean_rmse_hz": 0.038992198790642606,
+        "std_rmse_hz": 0.004104965300306344
+      }
+    },
+    "model__M1__E2-H": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          286.79288175206096,
+          288.13792356281016,
+          286.6816692255136
+        ],
+        "mean_rmse_hz": 287.2041581801282,
+        "std_rmse_hz": 0.8105741168681612
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          75.53649732537468,
+          77.21113533568814,
+          73.7941227016018
+        ],
+        "mean_rmse_hz": 75.51391845422154,
+        "std_rmse_hz": 1.7086182105559282
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.6222195579503347,
+          0.6219374365744739,
+          0.6221932259003211
+        ],
+        "mean_rmse_hz": 0.6221167401417099,
+        "std_rmse_hz": 0.000155838606038909
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35100699993943235,
+          0.35102540762190637,
+          0.35098728061693574
+        ],
+        "mean_rmse_hz": 0.35100656272609143,
+        "std_rmse_hz": 1.9067262352964012e-05
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.19131254395328207,
+          0.19139769225195769,
+          0.19128046993615133
+        ],
+        "mean_rmse_hz": 0.1913302353804637,
+        "std_rmse_hz": 6.0580589115188184e-05
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11436524871929318,
+          0.11464846238434086,
+          0.1147292921613424
+        ],
+        "mean_rmse_hz": 0.11458100108832547,
+        "std_rmse_hz": 0.00019116792819355257
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.06065885792470377,
+          0.06106590056576619,
+          0.0611112697385408
+        ],
+        "mean_rmse_hz": 0.06094534274300359,
+        "std_rmse_hz": 0.0002491380215799526
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.03651812505569551,
+          0.03721484110333373,
+          0.03708779398550594
+        ],
+        "mean_rmse_hz": 0.036940253381511724,
+        "std_rmse_hz": 0.00037105186312615227
+      }
+    },
+    "model__M1__E2-S": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          296.28865536179524,
+          295.4305169078223,
+          296.50137725918097
+        ],
+        "mean_rmse_hz": 296.07351650959953,
+        "std_rmse_hz": 0.5669206446417894
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          84.12560678598692,
+          90.83139191715134,
+          88.65965920720137
+        ],
+        "mean_rmse_hz": 87.87221930344656,
+        "std_rmse_hz": 3.4215398226318383
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          4.981761784988672,
+          5.678970152442049,
+          6.851449620531729
+        ],
+        "mean_rmse_hz": 5.83739385265415,
+        "std_rmse_hz": 0.9448580328208521
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.5150417067485469,
+          0.451238659502496,
+          0.49860504475078904
+        ],
+        "mean_rmse_hz": 0.4882951370006106,
+        "std_rmse_hz": 0.03312744870697625
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.212285303067629,
+          0.20676248181086188,
+          0.20771700695856837
+        ],
+        "mean_rmse_hz": 0.20892159727901974,
+        "std_rmse_hz": 0.0029518921116198577
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.15594637433065256,
+          0.14907146801040128,
+          0.14759012670916774
+        ],
+        "mean_rmse_hz": 0.15086932301674053,
+        "std_rmse_hz": 0.004458803712405044
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.12829001039425705,
+          0.11836510335743654,
+          0.11292636653838858
+        ],
+        "mean_rmse_hz": 0.1198604934300274,
+        "std_rmse_hz": 0.007790220262251492
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.12829696211902103,
+          0.11693740867754329,
+          0.10839899538448675
+        ],
+        "mean_rmse_hz": 0.11787778872701703,
+        "std_rmse_hz": 0.009982259564860273
+      }
+    },
+    "model__M1__E3-S": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          288.09132277072445,
+          286.65613098902617,
+          287.8957004478875
+        ],
+        "mean_rmse_hz": 287.54771806921275,
+        "std_rmse_hz": 0.7783075641831474
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          81.12935773759484,
+          78.61695158157818,
+          78.58649635929044
+        ],
+        "mean_rmse_hz": 79.44426855948781,
+        "std_rmse_hz": 1.459409481184498
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          1.9547964772067579,
+          1.6183949732015022,
+          1.6647471298398984
+        ],
+        "mean_rmse_hz": 1.7459795267493863,
+        "std_rmse_hz": 0.18231982806320035
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.3630899611987683,
+          0.35417130743868147,
+          0.3569852476596509
+        ],
+        "mean_rmse_hz": 0.35808217209903354,
+        "std_rmse_hz": 0.0045593890645966965
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.19389873039314595,
+          0.19244035426342845,
+          0.1943215805452954
+        ],
+        "mean_rmse_hz": 0.1935535550672899,
+        "std_rmse_hz": 0.0009869714206002115
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11860820527104278,
+          0.11718519365796677,
+          0.11981948313917733
+        ],
+        "mean_rmse_hz": 0.11853762735606228,
+        "std_rmse_hz": 0.0013185621711798003
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.06686607806122886,
+          0.0645886853041691,
+          0.06945938033654413
+        ],
+        "mean_rmse_hz": 0.0669713812339807,
+        "std_rmse_hz": 0.002437054388651266
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.04764498024697184,
+          0.04446709868082854,
+          0.051385024774663605
+        ],
+        "mean_rmse_hz": 0.04783236790082133,
+        "std_rmse_hz": 0.0034627678177366187
+      }
+    },
+    "model__M1_power__E1": {
+      "-15.0": {
+        "seed_rmse_hz": [
+          288.4660335956182,
+          287.83066509284515,
+          285.5063737836247
+        ],
+        "mean_rmse_hz": 287.2676908240294,
+        "std_rmse_hz": 1.558076240494622
+      },
+      "-10.0": {
+        "seed_rmse_hz": [
+          79.08116131018267,
+          80.34690693838454,
+          78.94124802054621
+        ],
+        "mean_rmse_hz": 79.45643875637114,
+        "std_rmse_hz": 0.7743346302070623
+      },
+      "-5.0": {
+        "seed_rmse_hz": [
+          0.9759183981694043,
+          1.1888628180217313,
+          0.9757310833615617
+        ],
+        "mean_rmse_hz": 1.0468374331842325,
+        "std_rmse_hz": 0.12299762690958332
+      },
+      "0.0": {
+        "seed_rmse_hz": [
+          0.35172757886240746,
+          0.35391705818979424,
+          0.3519113761841411
+        ],
+        "mean_rmse_hz": 0.35251867107878093,
+        "std_rmse_hz": 0.001214520583627642
+      },
+      "5.0": {
+        "seed_rmse_hz": [
+          0.1918955030875274,
+          0.19281771115310173,
+          0.1928187883288999
+        ],
+        "mean_rmse_hz": 0.19251066752317633,
+        "std_rmse_hz": 0.000532748301022526
+      },
+      "10.0": {
+        "seed_rmse_hz": [
+          0.11490343817352176,
+          0.11560809906420974,
+          0.11557286342876354
+        ],
+        "mean_rmse_hz": 0.11536146688883168,
+        "std_rmse_hz": 0.00039705555724314475
+      },
+      "15.0": {
+        "seed_rmse_hz": [
+          0.06102662635554417,
+          0.06075399441694905,
+          0.06056184356544377
+        ],
+        "mean_rmse_hz": 0.060780821445978996,
+        "std_rmse_hz": 0.00023354983966662887
+      },
+      "20.0": {
+        "seed_rmse_hz": [
+          0.037458421439808265,
+          0.03667481397877649,
+          0.03618844665963027
+        ],
+        "mean_rmse_hz": 0.036773894026071674,
+        "std_rmse_hz": 0.0006407586342774062
+      }
+    }
+  },
+  "noiseless_metrics": [
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.008731185468250302,
+        "rmse_hz": 0.011324814574537845,
+        "p95_abs_hz": 0.019136445396492265,
+        "max_abs_hz": 0.0831298828125
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.008785221036311446,
+        "rmse_hz": 0.011505509201920741,
+        "p95_abs_hz": 0.019139535788042394,
+        "max_abs_hz": 0.0831298828125
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.025711555276466347,
+        "rmse_hz": 0.026418729571692567,
+        "p95_abs_hz": 0.03352809352003305,
+        "max_abs_hz": 0.033672173361196656
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.02571123862124394,
+        "rmse_hz": 0.026426050933794486,
+        "p95_abs_hz": 0.03351965118008593,
+        "max_abs_hz": 0.033672173361196656
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.007052168142230919,
+        "rmse_hz": 0.007891520607877546,
+        "p95_abs_hz": 0.012449083938730609,
+        "max_abs_hz": 0.03875732421875
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.007111481931454181,
+        "rmse_hz": 0.00798960429697205,
+        "p95_abs_hz": 0.012459473487638206,
+        "max_abs_hz": 0.03875732421875
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17101,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.008044343137143029,
+        "rmse_hz": 0.008940996293439862,
+        "p95_abs_hz": 0.013176040650114374,
+        "max_abs_hz": 0.013352778941680299
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.00811172356878491,
+        "rmse_hz": 0.008984624265193884,
+        "p95_abs_hz": 0.01318014346605878,
+        "max_abs_hz": 0.013352778941680299
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17202,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.0100034423793664,
+        "rmse_hz": 0.011559182811071624,
+        "p95_abs_hz": 0.018414522315720206,
+        "max_abs_hz": 0.0968017578125
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.010126145249943628,
+        "rmse_hz": 0.011798993521466107,
+        "p95_abs_hz": 0.01841735458302196,
+        "max_abs_hz": 0.0968017578125
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17303,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.009612031588057957,
+        "rmse_hz": 0.011224768236907842,
+        "p95_abs_hz": 0.01869134659007159,
+        "max_abs_hz": 0.018902732565038605
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.009653393855064045,
+        "rmse_hz": 0.011251643188854566,
+        "p95_abs_hz": 0.018718207622896443,
+        "max_abs_hz": 0.018902732565038605
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17101,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.11166626822524212,
+        "rmse_hz": 0.12599509808130138,
+        "p95_abs_hz": 0.18829279795281764,
+        "max_abs_hz": 0.1906776795673295
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.11155410289015136,
+        "rmse_hz": 0.12587833979992413,
+        "p95_abs_hz": 0.18827007404195228,
+        "max_abs_hz": 0.1906600878255631
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17202,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.1011529201796943,
+        "rmse_hz": 0.1133311752406775,
+        "p95_abs_hz": 0.16705136999280512,
+        "max_abs_hz": 0.16927863342766614
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.10135697524836375,
+        "rmse_hz": 0.11359078545084433,
+        "p95_abs_hz": 0.16672017648346582,
+        "max_abs_hz": 0.16923125277287454
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17303,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.0910196497424024,
+        "rmse_hz": 0.10371121743249878,
+        "p95_abs_hz": 0.16500156480124128,
+        "max_abs_hz": 0.59051513671875
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.09145380502112803,
+        "rmse_hz": 0.10461324717200284,
+        "p95_abs_hz": 0.1643360822141915,
+        "max_abs_hz": 0.59051513671875
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17101,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.025876594342621517,
+        "rmse_hz": 0.03164514538825393,
+        "p95_abs_hz": 0.055918761392348415,
+        "max_abs_hz": 0.05663658938294702
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.025964664692311717,
+        "rmse_hz": 0.03173381736178647,
+        "p95_abs_hz": 0.055987619387195764,
+        "max_abs_hz": 0.05663658938294702
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17202,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.02221565795542424,
+        "rmse_hz": 0.026077079730801807,
+        "p95_abs_hz": 0.04570712531842105,
+        "max_abs_hz": 0.100830078125
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.022361485560991937,
+        "rmse_hz": 0.026332360236867473,
+        "p95_abs_hz": 0.045800961563344345,
+        "max_abs_hz": 0.100830078125
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17303,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.0314788234170032,
+        "rmse_hz": 0.03743639193869634,
+        "p95_abs_hz": 0.0636599278705546,
+        "max_abs_hz": 0.0643556144411832
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.031666105728934975,
+        "rmse_hz": 0.037547454494790126,
+        "p95_abs_hz": 0.06367657286978101,
+        "max_abs_hz": 0.06433467774468227
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.012680070524512532,
+        "rmse_hz": 0.09092679811776114,
+        "p95_abs_hz": 0.021310902881594984,
+        "max_abs_hz": 4.07513427734375
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.014650586202085036,
+        "rmse_hz": 0.1272378271905186,
+        "p95_abs_hz": 0.021274667827839266,
+        "max_abs_hz": 4.07513427734375
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.00853023698396188,
+        "rmse_hz": 0.009627958422262488,
+        "p95_abs_hz": 0.014881711565789147,
+        "max_abs_hz": 0.015029647295136783
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.008592246117552233,
+        "rmse_hz": 0.009665504028480307,
+        "p95_abs_hz": 0.014875486698855411,
+        "max_abs_hz": 0.01502879695658521
+      },
+      "nyquist_edge_count": 1036
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "count": 2048,
+      "all_frequency": {
+        "mae_hz": 0.010537762348197866,
+        "rmse_hz": 0.1501342405994114,
+        "p95_abs_hz": 0.014246779328306047,
+        "max_abs_hz": 6.782958984375
+      },
+      "nyquist_edge": {
+        "mae_hz": 0.013827430205492902,
+        "rmse_hz": 0.2109172240050007,
+        "p95_abs_hz": 0.014249962152206308,
+        "max_abs_hz": 6.782958984375
+      },
+      "nyquist_edge_count": 1036
+    }
+  ],
+  "physics_diagnostics": [
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.01220703125,
+      "common_complex_scale_max_abs_delta_hz": 0.017822265625,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.0002105236053466797,
+      "frequency_shift_equivariance_max_abs_hz": 0.012451171875
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.0064697265625,
+      "common_complex_scale_max_abs_delta_hz": 0.009033203125,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.0001500844955444336,
+      "frequency_shift_equivariance_max_abs_hz": 0.0067138671875
+    },
+    {
+      "model": "M1",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.0059814453125,
+      "common_complex_scale_max_abs_delta_hz": 0.0089111328125,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.00015866756439208984,
+      "frequency_shift_equivariance_max_abs_hz": 0.006103515625
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17101,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.0068359375,
+      "common_complex_scale_max_abs_delta_hz": 0.0089111328125,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.00021028518676757812,
+      "frequency_shift_equivariance_max_abs_hz": 0.00714111328125
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17202,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.0120849609375,
+      "common_complex_scale_max_abs_delta_hz": 0.015869140625,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.00019824504852294922,
+      "frequency_shift_equivariance_max_abs_hz": 0.0123291015625
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17303,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.0067138671875,
+      "common_complex_scale_max_abs_delta_hz": 0.01263427734375,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.00023055076599121094,
+      "frequency_shift_equivariance_max_abs_hz": 0.006988525390625
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17101,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.018280029296875,
+      "common_complex_scale_max_abs_delta_hz": 0.01739501953125,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.00033164024353027344,
+      "frequency_shift_equivariance_max_abs_hz": 0.0198974609375
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17202,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.01318359375,
+      "common_complex_scale_max_abs_delta_hz": 0.0111083984375,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.0002847909927368164,
+      "frequency_shift_equivariance_max_abs_hz": 0.01904296875
+    },
+    {
+      "model": "M1_power",
+      "strategy": "E1",
+      "train_seed": 17303,
+      "sample_count": 256,
+      "common_phase_rotation_max_abs_delta_hz": 0.009796142578125,
+      "common_complex_scale_max_abs_delta_hz": 0.013427734375,
+      "frequency_shift_hz": 0.625,
+      "frequency_shift_equivariance_mae_hz": 0.0003134012222290039,
+      "frequency_shift_equivariance_max_abs_hz": 0.01934814453125
+    }
+  ],
+  "gates": {
+    "G1": {
+      "pass": true,
+      "pure_coherent_candidates": {
+        "M1": {
+          "pass": true,
+          "passing_seed_count": 3,
+          "required_seed_count": 2,
+          "seed_results": [
+            {
+              "train_seed": 17101,
+              "noiseless_all_pass": true,
+              "noiseless_mae_hz": 0.008731185468250302,
+              "noiseless_p95_hz": 0.019136445396492265,
+              "noiseless_nyquist_mae_hz": 0.008785221036311446,
+              "noiseless_nyquist_p95_hz": 0.019139535788042394,
+              "rmse_20db_hz": 0.03722274385588872,
+              "beats_zero_by_50pct": true
+            },
+            {
+              "train_seed": 17202,
+              "noiseless_all_pass": true,
+              "noiseless_mae_hz": 0.025711555276466347,
+              "noiseless_p95_hz": 0.03352809352003305,
+              "noiseless_nyquist_mae_hz": 0.02571123862124394,
+              "noiseless_nyquist_p95_hz": 0.03351965118008593,
+              "rmse_20db_hz": 0.04368514264395739,
+              "beats_zero_by_50pct": true
+            },
+            {
+              "train_seed": 17303,
+              "noiseless_all_pass": true,
+              "noiseless_mae_hz": 0.007052168142230919,
+              "noiseless_p95_hz": 0.012449083938730609,
+              "noiseless_nyquist_mae_hz": 0.007111481931454181,
+              "noiseless_nyquist_p95_hz": 0.012459473487638206,
+              "rmse_20db_hz": 0.0360687098720817,
+              "beats_zero_by_50pct": true
+            }
+          ]
+        }
+      },
+      "data_seed_roles_disjoint": true,
+      "data_seed_roles": {
+        "screen_train": 17117,
+        "screen_validation": 27117,
+        "formal_train": [
+          17101,
+          17202,
+          17303
+        ],
+        "formal_validation": [
+          37101,
+          37202,
+          37303
+        ],
+        "development": 7070,
+        "noiseless": 989897,
+        "final_blind_base": 999983,
+        "final_blind_by_snr": {
+          "-10.0": 1000983,
+          "-15.0": 999983,
+          "-5.0": 1001983,
+          "0.0": 1002983,
+          "10.0": 1004983,
+          "15.0": 1005983,
+          "20.0": 1006983,
+          "5.0": 1003983
+        }
+      },
+      "zero_frequency_rmse_20db_hz": 379.1523343311587
+    },
+    "G2": {
+      "pass": true,
+      "main_fft_peak_pass_models": [
+        "M1"
+      ],
+      "main_fft_peak_by_model": {
+        "M1": {
+          "pass": true,
+          "required_adjacent_snr_points": 2,
+          "maximum_adjacent_passes": 5,
+          "pass_by_snr": {
+            "0.0": true,
+            "5.0": true,
+            "10.0": true,
+            "15.0": true,
+            "20.0": true
+          }
+        }
+      },
+      "matched_frontend_gates": {
+        "M1_vs_16N_fft_peak": {
+          "pass": true,
+          "required_adjacent_snr_points": 2,
+          "maximum_adjacent_passes": 5,
+          "pass_by_snr": {
+            "0.0": true,
+            "5.0": true,
+            "10.0": true,
+            "15.0": true,
+            "20.0": true
+          }
+        }
+      },
+      "definition": "candidate-minus-baseline paired RMSE 95% CI upper bound below zero at the required adjacent primary SNR points"
+    },
+    "G3": {
+      "pass": false,
+      "by_model": {
+        "M1": {
+          "pass": false,
+          "required_adjacent_snr_points": 2,
+          "maximum_adjacent_passes": 0,
+          "pass_by_snr": {
+            "0.0": false,
+            "5.0": false,
+            "10.0": false,
+            "15.0": false,
+            "20.0": false
+          },
+          "seed_improvement_count_by_snr": {
+            "0.0": 1,
+            "5.0": 1,
+            "10.0": 1,
+            "15.0": 1,
+            "20.0": 0
+          },
+          "seed_consistency_by_snr": {
+            "0.0": false,
+            "5.0": false,
+            "10.0": false,
+            "15.0": false,
+            "20.0": false
+          },
+          "ci_and_seed_consistency_by_snr": {
+            "0.0": false,
+            "5.0": false,
+            "10.0": false,
+            "15.0": false,
+            "20.0": false
+          }
+        }
+      }
+    }
+  },
+  "stage_decision": "GO",
+  "outlier_threshold_hz": 5.0,
+  "matched_frontend_interpretation": {
+    "M1": "fixed 16N FFT plus learned circular coherent readout versus fixed 16N FFT peak",
+    "M2": "fixed 4N FFT plus learned residual versus the same 4N spectrum's local three-point log-parabolic interpolation"
+  }
+}

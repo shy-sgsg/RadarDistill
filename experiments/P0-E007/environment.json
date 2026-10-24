@@ -1,0 +1,17 @@
+{
+  "python": "3.13.7",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "cuda_build": "12.8",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "training_device": "cuda:0",
+  "gpu_total_memory_bytes": 3942383616,
+  "gpu_free_memory_bytes_at_snapshot": 2209480704,
+  "gpu_total_memory_bytes_at_snapshot": 3942383616,
+  "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 580.178.04, 4096 MiB, 1653 MiB, 2108 MiB",
+  "git_head": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+  "git_dirty": true,
+  "git_status_short": "M AGENTS.md\n M README.md\n M docs/decisions.md\n M docs/experiment_protocol.md\n M docs/progress.md\n M docs/research_plan.md\n M src/radardistill/baselines.py\n M src/radardistill/cnn.py\n M src/radardistill/experiment.py\n?? docs/audits/\n?? docs/stage_reviews/\n?? docs/superpowers/\n?? experiments/P0-E006/\n?? experiments/P0-E007/\n?? scripts/run_p0_e006.py\n?? scripts/run_p0_e007.py\n?? src/radardistill/p0_e007.py\n?? src/radardistill/torch_experiment.py\n?? src/radardistill/torch_models.py\n?? tests/test_p0_e007.py\n?? tests/test_p0_methodology_audit.py",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43"
+}

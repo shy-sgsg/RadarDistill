@@ -1,0 +1,19 @@
+{
+  "phase": "screen_preparation",
+  "batch_size": 64,
+  "precision": "float32",
+  "device": "cuda:0",
+  "status": "interrupted_before_any_checkpoint_or_epoch_record",
+  "reason": "The conda subprocess output was not live-streamed. Device activity was visible, but the exact substage could not be established before interruption; no model checkpoint, epoch history, or scientific metric was produced.",
+  "scientific_results": "none",
+  "screen_train_seed": 17117,
+  "screen_validation_seed": 27117,
+  "generated_datasets_retained": true,
+  "observed_gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device_memory_observation_mib": {
+    "used": 1582,
+    "free": 2179,
+    "training_process_memory": 202
+  },
+  "recovery": "Use --live-stream and preserve the existing seeded screen datasets when restarting."
+}

@@ -1,0 +1,78 @@
+experiment_id: P0-E007
+title: Circular spectral equivariance, FFT sub-bin refinement, and IQ Transformer
+prf_hz: 1300.0
+n_samples: 130
+data:
+  train_count: 6000
+  validation_count: 1200
+  train_snr_levels_db: [-15, -5, 0, 10, 20]
+  test_snr_levels_db: [-15, -10, -5, 0, 5, 10, 15, 20]
+  primary_snr_levels_db: [0, 5, 10, 15, 20]
+  amplitude_range: [0.5, 1.5]
+  screen_train_seed: 17117
+  screen_validation_seed: 27117
+  formal_train_seeds: [17101, 17202, 17303]
+  formal_validation_seeds: [37101, 37202, 37303]
+  screen_torch_seeds:
+    M1: 80101
+    M1_power: 80102
+    M2: 80201
+    M3: 80301
+  formal_torch_seed_base: 81000
+  development_seed: 7070
+  noiseless_seed: 989897
+  noiseless_count: 2048
+  final_test_seed: 999983
+  test_per_snr: 1024
+models:
+  m1:
+    fft_factor: 16
+    hidden_channels: [16, 16, 16]
+    kernel_size: 7
+    target_sigma_bins: 0.5
+  m1_power:
+    same_architecture_as: M1
+    input_channels: [log_power]
+  m2:
+    fft_factor: 4
+    local_window_bins: 9
+    hidden_units: [64, 32]
+    correction_half_width_bins: 0.5
+    soft_teacher_candidates: 65
+  m3:
+    fft_factor_for_output: 16
+    d_model: 32
+    n_heads: 4
+    n_layers: 2
+    feedforward_dim: 64
+    dropout: 0.05
+    target_sigma_bins: 0.5
+training:
+  device: cuda
+  precision: float32
+  batch_size: 64
+  learning_rate: 0.001
+  epochs: 160
+  patience: 40
+  teacher_soft_weight: 0.5
+  oom_batch_size: 32
+  amp: false
+teacher:
+  point_estimator: fft_initialized_local_profile_ml
+  soft_profile_temperature: 2.0
+  hard_target_sigma_bins: 0.5
+evaluation:
+  global_ml_grid_size: 8192
+  outlier_threshold_hz: 5.0
+  bootstrap_samples: 2000
+  bootstrap_seed: 98765
+  primary_snr_levels_db: [0, 5, 10, 15, 20]
+  selection_dev_seed: 7070
+  selection_max_rmse_20db_hz: 5.0
+  selection_min_adjacent_fft_points: 2
+  g1_noiseless_mae_hz: 1.0
+  g1_noiseless_p95_hz: 5.0
+  g1_required_seeds: 2
+  g2_required_adjacent_snr: 2
+  g3_required_adjacent_snr: 2
+  paired_bootstrap_samples: 2000

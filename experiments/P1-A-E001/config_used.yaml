@@ -1,0 +1,68 @@
+experiment_id: P1-A-E001
+title: Ideal three-channel relative phase estimation
+prf_hz: 1300.0
+n_samples: 130
+data:
+  train_count: 6000
+  validation_count: 1200
+  train_snr_levels_db:
+  - -15
+  - -5
+  - 0
+  - 10
+  - 20
+  test_snr_levels_db:
+  - -15
+  - -10
+  - -5
+  - 0
+  - 5
+  - 10
+  - 15
+  - 20
+  amplitude_range:
+  - 0.5
+  - 1.5
+  train_seeds:
+  - 121001
+  - 121002
+  - 121003
+  validation_seeds:
+  - 221001
+  - 221002
+  - 221003
+  torch_seeds:
+  - 82101
+  - 82202
+  - 82303
+  noiseless_seed: 301997
+  noiseless_count: 2048
+  final_test_seed: 401999
+  test_per_snr: 1024
+model:
+  input_features: normalized_cross_coherence_C21_C31
+  hidden_units:
+  - 64
+  - 64
+  output:
+  - cos_delta21
+  - sin_delta21
+  - cos_delta31
+  - sin_delta31
+training:
+  device: cuda
+  precision: float32
+  batch_size: 64
+  learning_rate: 0.001
+  epochs: 160
+  patience: 40
+evaluation:
+  constant_phase_baseline: 0.0
+  outlier_threshold_rad: 0.7853981633974483
+  bootstrap_samples: 2000
+  bootstrap_seed: 198765
+  noiseless_mae_max_rad: 0.01
+  noiseless_p95_max_rad: 0.05
+  required_noiseless_seeds: 2
+  required_blind_seeds: 2
+  physics_invariance_max_error_rad: 0.02

@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-23",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "precision": "float32",
+  "warmup_steps_per_case": 3,
+  "timed_train_steps_per_case": 10,
+  "measurements": {
+    "M1": {
+      "batch_64": {"ms_per_step": 19.4, "peak_allocated_mib": 69.5, "samples_per_second": 3304},
+      "batch_128": {"ms_per_step": 40.4, "peak_allocated_mib": 138.9, "samples_per_second": 3172},
+      "batch_256": {"ms_per_step": 80.1, "peak_allocated_mib": 275.5, "samples_per_second": 3196}
+    },
+    "M3": {
+      "batch_64": {"ms_per_step": 54.6, "peak_allocated_mib": 57.4, "samples_per_second": 1171},
+      "batch_128": {"ms_per_step": 112.3, "peak_allocated_mib": 99.5, "samples_per_second": 1140},
+      "batch_256": {"ms_per_step": 219.4, "peak_allocated_mib": 178.4, "samples_per_second": 1167}
+    }
+  },
+  "decision": "Keep preregistered batch size 64; it provided comparable or better throughput and low allocated memory."
+}

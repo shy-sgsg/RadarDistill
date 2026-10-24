@@ -1,0 +1,21 @@
+{
+  "experiment_id": "P1-A-E001",
+  "created_utc": "2026-10-24T06:35:54Z",
+  "command": "scripts/run_p1_a_e001.py",
+  "project_root": "/home/shy/AIR/SAR+AI/project/RadarDistill",
+  "blind_test_generated_once_after_models_frozen": true,
+  "output_files": [
+    "config.yaml",
+    "protocol.md",
+    "environment.json",
+    "models_frozen.json",
+    "blind_manifest.json",
+    "metrics.json",
+    "result.csv",
+    "grouped_metrics.csv",
+    "paired_comparisons.json",
+    "predictions.npz",
+    "rmse_snr.png",
+    "analysis.md"
+  ]
+}

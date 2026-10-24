@@ -1,0 +1,19 @@
+{
+  "phase": "screen",
+  "model": "M1",
+  "strategy": "E1",
+  "train_seed": 17117,
+  "torch_seed": 80101,
+  "batch_size": 64,
+  "precision": "float32",
+  "device": "cuda:0",
+  "status": "completed_checkpoint_recovered_for_screen_selection",
+  "epochs_completed": 160,
+  "selected_epoch": 157,
+  "validation_first_loss": 1.6876955032348633,
+  "validation_best_loss": 1.2727784895896912,
+  "failure_after_model": "The stage stopped before M1_power began because e007_loss rejected the registered M1_power ablation name.",
+  "recovery": "The checkpoint and full 160-epoch history were retained and reused for development scoring; the implementation failure was fixed and regression-tested.",
+  "training_time_seconds": null,
+  "peak_gpu_memory_bytes": null
+}

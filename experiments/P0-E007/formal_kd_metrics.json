@@ -1,0 +1,312 @@
+{
+  "experiment_id": "P0-E007",
+  "status": "completed",
+  "eligible_models": [
+    "M1"
+  ],
+  "strategy_definitions": {
+    "E2-H": "teacher hard point only",
+    "E2-S": "teacher soft profile response only",
+    "E3-S": "physical truth plus 0.5 times soft profile response"
+  },
+  "environment": {
+    "python": "3.13.7",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "cuda_build": "12.8",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "training_device": "cuda:0",
+    "gpu_total_memory_bytes": 3942383616,
+    "gpu_free_memory_bytes_at_snapshot": 2182021120,
+    "gpu_total_memory_bytes_at_snapshot": 3942383616,
+    "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 580.178.04, 4096 MiB, 1679 MiB, 2081 MiB",
+    "git_head": "81b85e1700918ddb5ecde10a0083495e5a84e0ee",
+    "git_dirty": true,
+    "git_status_short": "M AGENTS.md\n M README.md\n M docs/decisions.md\n M docs/experiment_protocol.md\n M docs/progress.md\n M docs/research_plan.md\n M src/radardistill/baselines.py\n M src/radardistill/cnn.py\n M src/radardistill/experiment.py\n?? docs/audits/\n?? docs/stage_reviews/\n?? docs/superpowers/\n?? experiments/P0-E006/\n?? experiments/P0-E007/\n?? scripts/run_p0_e006.py\n?? scripts/run_p0_e007.py\n?? src/radardistill/p0_e007.py\n?? src/radardistill/torch_experiment.py\n?? src/radardistill/torch_models.py\n?? tests/test_p0_e007.py\n?? tests/test_p0_methodology_audit.py",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43"
+  },
+  "development_is_final_blind": false,
+  "development_teacher_hard_rmse_by_snr_hz": {
+    "-15.0": 315.0214237318002,
+    "-10.0": 120.88688228530658,
+    "-5.0": 0.6164963060045304,
+    "0.0": 0.33749808907930884,
+    "5.0": 0.18779593991874896,
+    "10.0": 0.10626439590566782,
+    "15.0": 0.06166676599137075,
+    "20.0": 0.03315112618311353
+  },
+  "training_replicates": [
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17101,
+      "validation_seed": 37101,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-H",
+        "train_seed": 17101,
+        "torch_seed": 81110,
+        "finite": true,
+        "epochs_completed": 150,
+        "selected_epoch": 110,
+        "validation_first_loss": 0.7113824931780497,
+        "validation_best_loss": 0.2224061010281245,
+        "training_seconds": 279.7412559939985,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17101.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 290.3452653937509,
+        "-10.0": 76.00876034043107,
+        "-5.0": 0.6158985920167969,
+        "0.0": 0.3376138527136172,
+        "5.0": 0.18812017270174478,
+        "10.0": 0.1066827930603536,
+        "15.0": 0.06260195126990516,
+        "20.0": 0.03455738760627756
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17101,
+      "validation_seed": 37101,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-S",
+        "train_seed": 17101,
+        "torch_seed": 81120,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 159,
+        "validation_first_loss": 0.7334683227539063,
+        "validation_best_loss": 0.24529343485832214,
+        "training_seconds": 298.632983789008,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17101.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 289.7903098315303,
+        "-10.0": 85.99856809319535,
+        "-5.0": 4.833435427618253,
+        "0.0": 0.49353036040007453,
+        "5.0": 0.21147878073714144,
+        "10.0": 0.14641128207239967,
+        "15.0": 0.12959157140175342,
+        "20.0": 0.1267855209246803
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17101,
+      "validation_seed": 37101,
+      "training": {
+        "model": "M1",
+        "strategy": "E3-S",
+        "train_seed": 17101,
+        "torch_seed": 81130,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 149,
+        "validation_first_loss": 1.5618026447296143,
+        "validation_best_loss": 1.2360819816589355,
+        "training_seconds": 299.5797281060077,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17101.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 287.35243601117213,
+        "-10.0": 81.7225344443068,
+        "-5.0": 1.8204563602961505,
+        "0.0": 0.34507710861523166,
+        "5.0": 0.19150640317010437,
+        "10.0": 0.11090378042908518,
+        "15.0": 0.06983274629195096,
+        "20.0": 0.04606684104730709
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17202,
+      "validation_seed": 37202,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-H",
+        "train_seed": 17202,
+        "torch_seed": 81111,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 151,
+        "validation_first_loss": 0.7295322052637736,
+        "validation_best_loss": 0.21615939497947692,
+        "training_seconds": 318.33010540199757,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17202.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 289.9112148998854,
+        "-10.0": 75.49048593834755,
+        "-5.0": 0.6164061803751713,
+        "0.0": 0.3376001683301271,
+        "5.0": 0.18824808678497662,
+        "10.0": 0.10701434995988585,
+        "15.0": 0.06303236455051013,
+        "20.0": 0.03539994973400369
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17202,
+      "validation_seed": 37202,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-S",
+        "train_seed": 17202,
+        "torch_seed": 81121,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 157,
+        "validation_first_loss": 0.7456679066022237,
+        "validation_best_loss": 0.24960346380869547,
+        "training_seconds": 332.3182916680089,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17202.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 288.7594661104326,
+        "-10.0": 88.27761607471001,
+        "-5.0": 4.941682392554268,
+        "0.0": 0.4298273773124896,
+        "5.0": 0.20408372989874635,
+        "10.0": 0.14027837170684784,
+        "15.0": 0.11971857415366513,
+        "20.0": 0.11489598490767028
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17202,
+      "validation_seed": 37202,
+      "training": {
+        "model": "M1",
+        "strategy": "E3-S",
+        "train_seed": 17202,
+        "torch_seed": 81131,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 128,
+        "validation_first_loss": 1.5943788607915244,
+        "validation_best_loss": 1.3462869008382161,
+        "training_seconds": 306.9561247500096,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17202.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 285.6091110238835,
+        "-10.0": 78.68315506329726,
+        "-5.0": 1.4031213847375827,
+        "0.0": 0.3385272010574623,
+        "5.0": 0.1904074940171568,
+        "10.0": 0.10846973660490304,
+        "15.0": 0.06643985460854954,
+        "20.0": 0.04177543961020347
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-H",
+      "train_seed": 17303,
+      "validation_seed": 37303,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-H",
+        "train_seed": 17303,
+        "torch_seed": 81112,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 144,
+        "validation_first_loss": 0.6972950315475464,
+        "validation_best_loss": 0.2134897392988205,
+        "training_seconds": 300.11677733900433,
+        "peak_gpu_memory_bytes": 74492416,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-H_seed17303.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 289.08187760099304,
+        "-10.0": 73.92279442281172,
+        "-5.0": 0.6159227511172185,
+        "0.0": 0.33760393210052897,
+        "5.0": 0.1881515074602247,
+        "10.0": 0.10717466369317116,
+        "15.0": 0.06297734404757231,
+        "20.0": 0.03546786583745072
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E2-S",
+      "train_seed": 17303,
+      "validation_seed": 37303,
+      "training": {
+        "model": "M1",
+        "strategy": "E2-S",
+        "train_seed": 17303,
+        "torch_seed": 81122,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 153,
+        "validation_first_loss": 0.6656821179389953,
+        "validation_best_loss": 0.25057377020517985,
+        "training_seconds": 302.8104052209965,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E2-S_seed17303.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 288.3551553711408,
+        "-10.0": 88.320850300611,
+        "-5.0": 6.226615042465261,
+        "0.0": 0.47581964465417176,
+        "5.0": 0.20540035708268395,
+        "10.0": 0.13815139171475255,
+        "15.0": 0.1142404331019635,
+        "20.0": 0.10703297168106977
+      }
+    },
+    {
+      "model": "M1",
+      "strategy": "E3-S",
+      "train_seed": 17303,
+      "validation_seed": 37303,
+      "training": {
+        "model": "M1",
+        "strategy": "E3-S",
+        "train_seed": 17303,
+        "torch_seed": 81132,
+        "finite": true,
+        "epochs_completed": 160,
+        "selected_epoch": 160,
+        "validation_first_loss": 1.5798837502797445,
+        "validation_best_loss": 1.2990057198206584,
+        "training_seconds": 315.6279137229867,
+        "peak_gpu_memory_bytes": 73796608,
+        "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/P0-E007/models/formal/M1_E3-S_seed17303.pt"
+      },
+      "development_rmse_by_snr_hz": {
+        "-15.0": 286.4745388613412,
+        "-10.0": 79.26160657313983,
+        "-5.0": 1.4335679475098753,
+        "0.0": 0.3425650259592491,
+        "5.0": 0.19147387132323704,
+        "10.0": 0.11200878185985334,
+        "15.0": 0.07149573377038913,
+        "20.0": 0.050336561657204695
+      }
+    }
+  ]
+}

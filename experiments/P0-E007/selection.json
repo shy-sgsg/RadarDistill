@@ -1,0 +1,34 @@
+{
+  "selected": [
+    "M1"
+  ],
+  "selected_reasons": {
+    "M1": "validation drop=0.246, 20 dB RMSE=0.03862 Hz, max consecutive FFT wins=5"
+  },
+  "rejected": {
+    "M2": "validation objective dropped by less than the required 20%",
+    "M3": "validation objective dropped by less than the required 20%; development RMSE and adjacent FFT-win criteria both failed"
+  },
+  "rule": {
+    "max_rmse_20db_hz": 5.0,
+    "min_adjacent_fft_points": 2,
+    "minimum_validation_drop": 0.2
+  },
+  "m1_power_ablation": {
+    "finite": true,
+    "validation_first_loss": 1.6713784662882487,
+    "validation_best_loss": 1.274782223701477,
+    "development_rmse_20db_hz": 0.03566713381249336,
+    "fft_win_by_snr": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "structural_transform_ok": true
+  },
+  "selected_models": [
+    "M1"
+  ]
+}

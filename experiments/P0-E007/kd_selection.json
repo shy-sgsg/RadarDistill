@@ -1,0 +1,13 @@
+{
+  "selected": [
+    "M1"
+  ],
+  "selected_reasons": {
+    "M1": "formal E1 mean 20 dB RMSE=0.03751 Hz; maximum consecutive FFT wins=5"
+  },
+  "rejected": {},
+  "rule": {
+    "max_rmse_20db_hz": 5.0,
+    "min_adjacent_fft_points": 2
+  }
+}
