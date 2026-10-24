@@ -9,6 +9,7 @@ import yaml
 from radardistill.evaluation.d1_e002 import (
     _candidate_gate,
     _open_or_generate_evaluation_cache,
+    _profile_ml_prediction,
     _summarize_prediction,
     energy_detection_score,
     estimate_fft_at_range,
@@ -100,6 +101,41 @@ def test_evaluation_cache_streams_small_split_once_with_stable_sample_ids(tmp_pa
     assert arrays["sample_id"].tolist() == list(range(6))
     assert arrays["snr_db"].tolist() == [0.0, 0.0, 0.0, 5.0, 5.0, 5.0]
     assert not arrays["truth_presence"].any()
+
+
+def test_profile_ml_uses_range_interval_from_d0_waveform_config(monkeypatch) -> None:
+    from radardistill.evaluation import d1_evaluation
+
+    captured: dict[str, object] = {}
+
+    def fake_profile_ml(iq: np.ndarray, **kwargs: object) -> dict[str, np.ndarray]:
+        captured.update(kwargs)
+        return {
+            "range_cell": np.asarray([12.0]),
+            "doppler_hz": np.asarray([15.0]),
+        }
+
+    monkeypatch.setattr(d1_evaluation, "estimate_profile_ml_reference", fake_profile_ml)
+    config = yaml.safe_load((ROOT / "experiments/D1-E002/config.yaml").read_text())
+    config["data"]["snr_db"] = [0]
+    config["baselines"]["profile_ml"]["h1_examples_per_snr"] = 1
+    arrays = {
+        "iq": np.zeros((1, 3, 130, 32), dtype=np.complex64),
+        "sample_id": np.asarray([42001]),
+        "truth_presence": np.asarray([True]),
+        "truth_range_cell": np.asarray([12.0]),
+        "truth_doppler_hz": np.asarray([15.0]),
+        "truth_initial_phase_rad": np.asarray([0.2]),
+        "truth_target_amplitude": np.asarray([1.0]),
+        "snr_db": np.asarray([0.0]),
+    }
+
+    prediction = _profile_ml_prediction(ROOT, arrays, config)
+
+    assert captured["range_interval"] == (4.0, 28.0)
+    assert captured["range_grid_step"] == 0.25
+    assert captured["frequency_fft_factor"] == 16
+    assert prediction["sample_id"].tolist() == [42001]
 
 
 def test_blind_metric_summary_uses_wrapped_error_and_calibration_threshold() -> None:

@@ -964,6 +964,7 @@ def _profile_ml_prediction(
     from .d1_evaluation import estimate_profile_ml_reference
 
     d1 = yaml.safe_load((root / "experiments/D1-E001/config.yaml").read_text(encoding="utf-8"))
+    d0 = _d0_config(root)
     count = int(config["baselines"]["profile_ml"]["h1_examples_per_snr"])
     snrs = [float(value) for value in config["data"]["snr_db"]]
     masks = [np.isclose(arrays["snr_db"], snr) & np.asarray(arrays["truth_presence"], dtype=bool) for snr in snrs]
@@ -974,7 +975,7 @@ def _profile_ml_prediction(
     profile = estimate_profile_ml_reference(
         np.asarray(arrays["iq"][indices]).copy(),
         prf_hz=float(config["radar"]["prf_hz"]),
-        range_interval=tuple(d1["waveform"]["matched_filter_psf"]["target_range_cell_interval"]),
+        range_interval=tuple(d0["waveform"]["matched_filter_psf"]["target_range_cell_interval"]),
         range_grid_step=float(d1["baselines"]["profile_likelihood"]["range_grid_step_cells"]),
         frequency_fft_factor=int(d1["baselines"]["profile_likelihood"]["frequency_fft_factor"]),
         chunk_size=1,
@@ -1558,6 +1559,132 @@ def _plot_blind_results(
     plt.close(fig)
 
 
+def _finalize_blind_evaluation(
+    *,
+    root: Path,
+    blind_dir: Path,
+    config: dict[str, Any],
+    device: Any,
+    batch_size: int,
+    started: float,
+    model_manifest: dict[str, Any],
+    calibration: dict[str, Any],
+    predictions: dict[str, dict[str, np.ndarray]],
+    blind_arrays: dict[str, np.ndarray],
+    run_manifest: dict[str, Any],
+    partial: dict[str, Any],
+    replay_provenance: dict[str, Any] | None = None,
+) -> Path:
+    summaries = {
+        name: _summarize_prediction(name, prediction, calibration, config)
+        for name, prediction in predictions.items()
+    }
+    gates = {
+        candidate: _candidate_gate(
+            candidate,
+            prediction_by_name=predictions,
+            summaries=summaries,
+            calibration=calibration,
+            config=config,
+        )
+        for candidate in model_manifest["candidate_order"]
+    }
+    pure_pass = any(gates[name]["passed"] for name in ("S1", "S2") if name in gates)
+    hybrid_pass = bool(gates.get("S3", {}).get("passed", False))
+    decision = "GO" if pure_pass else "STOP / REDIRECT"
+    if not pure_pass and hybrid_pass:
+        decision += "（仅 FFT 辅助混合方法通过；纯 IQ 结构停止）"
+    physical = {
+        entry["id"]: _predict_physical_consistency(
+            root, entry, config, device, batch_size
+        )
+        for entry in model_manifest["models"]
+        if entry["kind"] == "e002_candidate"
+    }
+    partial.update(
+        {
+            "status": "COMPLETED",
+            "methods": summaries,
+            "gates": gates,
+            "stage_decision": decision,
+            "pure_iq_candidate_passed": pure_pass,
+            "fft_hybrid_candidate_passed": hybrid_pass,
+            "physical_consistency": physical,
+            "sample_counts": {
+                "blind_h0": int(np.count_nonzero(~np.asarray(blind_arrays["truth_presence"]))),
+                "blind_h1": int(np.count_nonzero(np.asarray(blind_arrays["truth_presence"]))),
+                "profile_ml_h1_per_snr": int(config["baselines"]["profile_ml"]["h1_examples_per_snr"]),
+            },
+            "environment": _evaluation_environment(
+                root, device, batch_size, time.perf_counter() - started
+            ),
+            "calibration_thresholds": calibration["methods"],
+            "blind_data_used_for_model_selection": False,
+        }
+    )
+    if replay_provenance is not None:
+        partial["evaluation_replay"] = replay_provenance
+    _write_json(blind_dir / "metrics.json", partial)
+    _write_json(blind_dir / "environment.json", partial["environment"])
+    if replay_provenance is None:
+        (blind_dir / "metrics_partial.json").unlink(missing_ok=True)
+    _write_result_csv(blind_dir / "result.csv", summaries)
+    _plot_blind_results(
+        blind_dir,
+        predictions,
+        summaries,
+        [float(value) for value in config["data"]["snr_db"]],
+    )
+    analysis = [
+        "# D1-E002 独立盲测阶段结果",
+        "",
+        f"**阶段决策：{decision}。**",
+        "",
+        "本结果来自冻结的单目标、三通道复 AWGN 仿真；盲测仅用于最终评价，没有用于模型或阈值选择。频率误差按 PRF=1300 Hz 周期回绕。所有学生与 APX15 使用独立 H0 校准阈值；经典频率估计器共用预注册非相干能量检测分数，profile-ML 只报告固定 H1 子集参数误差。",
+        "",
+        "## 候选阶段门",
+        "",
+    ]
+    for name, gate in gates.items():
+        analysis.append(
+            f"- **{name}**：{'通过' if gate['passed'] else '未通过'}；主 RMSE 相对 {gate['doppler_comparator']} 改善 {100*gate['relative_gain']:.2f}%；Doppler Δ 95% CI {gate['doppler_delta_paired_hierarchical_bootstrap_95_ci_hz']} Hz；检测与距离门分别为 {gate['gates']['low_snr_detection_noninferiority']} / {gate['gates']['high_snr_range_noninferiority']}。"
+        )
+    analysis.extend(
+        [
+            "",
+            "## 结论限制",
+            "",
+            "D1-E001 的 G1/G2/G3 历史阶段结论没有改写。profile-ML 是 D1 已冻结的有限网格数值参考，不等同于连续全局 ML。盲测检测样本不支持 1e-6 虚警率声明；本阶段不验证杂波、多目标、通道误差、实时性或真实回波泛化。各方法完整逐 SNR 表格见 `result.csv`，模型与物理一致性细节见 `metrics.json`，RMSE 与 ROC 曲线见 PNG。",
+        ]
+    )
+    if replay_provenance is not None:
+        analysis.extend(
+            [
+                "",
+                "## 评估器更正与重放",
+                "",
+                "首次评价已生成固定 blind 样本并保存模型/APX15/传统方法预测；在 profile-ML 预测之前因错误读取范围配置而中断。保留原始失败清单与 partial metrics；本报告用修正后的距离区间对同一 blind cache 完成缺失 profile-ML 估计和汇总，没有重新生成样本、重训模型或重校准阈值。",
+            ]
+        )
+    (blind_dir / "analysis.md").write_text("\n".join(analysis) + "\n", encoding="utf-8")
+    if replay_provenance is None:
+        run_manifest["status"] = "COMPLETED"
+    else:
+        initial_failure = blind_dir / "run_manifest_initial_failure.json"
+        if initial_failure.exists():
+            raise FileExistsError(f"preserving existing failure manifest: {initial_failure}")
+        _write_json(initial_failure, run_manifest)
+        run_manifest["status"] = "COMPLETED_AFTER_REPLAY"
+        run_manifest["initial_failure_manifest"] = "experiments/D1-E002/blind/run_manifest_initial_failure.json"
+        run_manifest["evaluation_replay"] = replay_provenance
+        run_manifest["blind_data_regenerated"] = False
+        run_manifest.pop("failure", None)
+    run_manifest["stage_decision"] = decision
+    run_manifest["environment"] = partial["environment"]
+    _write_json(blind_dir / "run_manifest.json", run_manifest)
+    return blind_dir
+
+
 def run_d1_e002_blind(
     root: str | Path,
     config_path: str | Path,
@@ -1665,91 +1792,20 @@ def run_d1_e002_blind(
         predictions["profile_ml"] = profile
         _write_prediction(prediction_dir / "profile_ml.npz", profile)
 
-        summaries = {
-            name: _summarize_prediction(name, prediction, calibration, config)
-            for name, prediction in predictions.items()
-        }
-        gates = {
-            candidate: _candidate_gate(
-                candidate,
-                prediction_by_name=predictions,
-                summaries=summaries,
-                calibration=calibration,
-                config=config,
-            )
-            for candidate in model_manifest["candidate_order"]
-        }
-        pure_pass = any(gates[name]["passed"] for name in ("S1", "S2") if name in gates)
-        hybrid_pass = bool(gates.get("S3", {}).get("passed", False))
-        decision = "GO" if pure_pass else "STOP / REDIRECT"
-        if not pure_pass and hybrid_pass:
-            decision += "（仅 FFT 辅助混合方法通过；纯 IQ 结构停止）"
-        physical = {
-            entry["id"]: _predict_physical_consistency(
-                root_path, entry, config, device, batch_size
-            )
-            for entry in model_manifest["models"]
-            if entry["kind"] == "e002_candidate"
-        }
-        partial.update(
-            {
-                "status": "COMPLETED",
-                "methods": summaries,
-                "gates": gates,
-                "stage_decision": decision,
-                "pure_iq_candidate_passed": pure_pass,
-                "fft_hybrid_candidate_passed": hybrid_pass,
-                "physical_consistency": physical,
-                "sample_counts": {
-                    "blind_h0": int(np.count_nonzero(~np.asarray(blind_arrays["truth_presence"]))),
-                    "blind_h1": int(np.count_nonzero(np.asarray(blind_arrays["truth_presence"]))),
-                    "profile_ml_h1_per_snr": int(config["baselines"]["profile_ml"]["h1_examples_per_snr"]),
-                },
-                "environment": _evaluation_environment(
-                    root_path, device, batch_size, time.perf_counter() - started
-                ),
-                "calibration_thresholds": calibration["methods"],
-                "blind_data_used_for_model_selection": False,
-            }
+        return _finalize_blind_evaluation(
+            root=root_path,
+            blind_dir=blind_dir,
+            config=config,
+            device=device,
+            batch_size=batch_size,
+            started=started,
+            model_manifest=model_manifest,
+            calibration=calibration,
+            predictions=predictions,
+            blind_arrays=blind_arrays,
+            run_manifest=run_manifest,
+            partial=partial,
         )
-        _write_json(blind_dir / "metrics.json", partial)
-        _write_json(blind_dir / "environment.json", partial["environment"])
-        (blind_dir / "metrics_partial.json").unlink(missing_ok=True)
-        _write_result_csv(blind_dir / "result.csv", summaries)
-        _plot_blind_results(
-            blind_dir,
-            predictions,
-            summaries,
-            [float(value) for value in config["data"]["snr_db"]],
-        )
-        analysis = [
-            "# D1-E002 独立盲测阶段结果",
-            "",
-            f"**阶段决策：{decision}。**",
-            "",
-            "本结果来自冻结的单目标、三通道复 AWGN 仿真；盲测仅用于最终评价，没有用于模型或阈值选择。频率误差按 PRF=1300 Hz 周期回绕。所有学生与 APX15 使用独立 H0 校准阈值；经典频率估计器共用预注册非相干能量检测分数，profile-ML 只报告固定 H1 子集参数误差。",
-            "",
-            "## 候选阶段门",
-            "",
-        ]
-        for name, gate in gates.items():
-            analysis.append(
-                f"- **{name}**：{'通过' if gate['passed'] else '未通过'}；主 RMSE 相对 {gate['doppler_comparator']} 改善 {100*gate['relative_gain']:.2f}%；Doppler Δ 95% CI {gate['doppler_delta_paired_hierarchical_bootstrap_95_ci_hz']} Hz；检测与距离门分别为 {gate['gates']['low_snr_detection_noninferiority']} / {gate['gates']['high_snr_range_noninferiority']}。"
-            )
-        analysis.extend(
-            [
-                "",
-                "## 结论限制",
-                "",
-                "D1-E001 的 G1/G2/G3 历史阶段结论没有改写。profile-ML 是 D1 已冻结的有限网格数值参考，不等同于连续全局 ML。盲测检测样本不支持 1e-6 虚警率声明；本阶段不验证杂波、多目标、通道误差、实时性或真实回波泛化。各方法完整逐 SNR 表格见 `result.csv`，模型与物理一致性细节见 `metrics.json`，RMSE 与 ROC 曲线见 PNG。",
-            ]
-        )
-        (blind_dir / "analysis.md").write_text("\n".join(analysis) + "\n", encoding="utf-8")
-        run_manifest["status"] = "COMPLETED"
-        run_manifest["stage_decision"] = decision
-        run_manifest["environment"] = partial["environment"]
-        _write_json(blind_dir / "run_manifest.json", run_manifest)
-        return blind_dir
     except BaseException as error:
         partial["status"] = "FAILED"
         partial["failure"] = f"{type(error).__name__}: {error}"
@@ -1757,4 +1813,220 @@ def run_d1_e002_blind(
         run_manifest["status"] = "FAILED"
         run_manifest["failure"] = partial["failure"]
         _write_json(blind_dir / "run_manifest.json", run_manifest)
+        raise
+
+
+def _load_saved_prediction(path: Path) -> dict[str, np.ndarray]:
+    if not path.is_file():
+        raise FileNotFoundError(f"saved blind prediction is required for replay: {path}")
+    with np.load(path, allow_pickle=False) as values:
+        return {name: values[name] for name in values.files}
+
+
+def _model_manifest_for_blind_replay(
+    root: Path,
+    formal_dir: Path,
+    config: dict[str, Any],
+) -> tuple[dict[str, Any], str]:
+    manifest_path = formal_dir / "model_manifest.json"
+    relative_manifest = manifest_path.resolve().relative_to(root).as_posix()
+    _require_clean_tracked(root, [relative_manifest])
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("status") != "FROZEN" or not manifest.get("models"):
+        raise RuntimeError("blind replay requires the committed frozen model manifest")
+    for entry in manifest["models"]:
+        relative = str(entry["checkpoint"])
+        _require_clean_tracked(root, [relative])
+        if _git(root, "rev-parse", f"HEAD:{relative}") != entry.get("git_blob"):
+            raise RuntimeError(f"frozen checkpoint blob changed before blind replay: {relative}")
+    frozen_paths = _d1_e002_code_paths()
+    changed = _git(root, "diff", "--name-only", f"{manifest['code_commit']}..HEAD", "--", *frozen_paths).splitlines()
+    if changed != ["src/radardistill/evaluation/d1_e002.py"]:
+        raise RuntimeError(f"blind replay permits only the recorded evaluation correction: {changed}")
+    return manifest, _git(root, "rev-parse", "HEAD")
+
+
+def replay_d1_e002_blind(
+    root: str | Path,
+    config_path: str | Path,
+    *,
+    batch_size: int = 64,
+) -> Path:
+    """Finish the failed frozen blind run from its existing cache and predictions."""
+    import torch
+
+    root_path = Path(root).resolve()
+    config_file = Path(config_path).resolve()
+    if batch_size <= 0:
+        raise ValueError("batch_size must be positive")
+    config = _load_d1_e002_config(root_path, config_file)
+    device = _require_cuda(str(config["training"]["device"]))
+    formal_dir = root_path / "experiments" / "D1-E002" / "formal"
+    model_manifest, replay_code_commit = _model_manifest_for_blind_replay(
+        root_path, formal_dir, config
+    )
+    calibration_dir = root_path / "experiments" / "D1-E002" / "calibration"
+    calibration, _ = _require_clean_calibration(root_path, calibration_dir)
+    calibration_run = json.loads((calibration_dir / "run_manifest.json").read_text(encoding="utf-8"))
+    if calibration.get("status") != "COMPLETED" or calibration_run.get("model_manifest_commit") != calibration.get("model_manifest_commit"):
+        raise RuntimeError("committed calibration must match its frozen model manifest before replay")
+    model_manifest_relative = (formal_dir / "model_manifest.json").resolve().relative_to(root_path).as_posix()
+    frozen_manifest = subprocess.run(
+        ["git", "-C", str(root_path), "show", f"{calibration['model_manifest_commit']}:{model_manifest_relative}"],
+        check=True,
+        capture_output=True,
+    ).stdout
+    if frozen_manifest != (root_path / model_manifest_relative).read_bytes():
+        raise RuntimeError("model manifest changed after detection calibration")
+
+    blind_dir = root_path / "experiments" / "D1-E002" / "blind"
+    prediction_dir = blind_dir / "predictions"
+    manifest_path = blind_dir / "run_manifest.json"
+    partial_path = blind_dir / "metrics_partial.json"
+    if not blind_dir.is_dir() or not manifest_path.is_file() or not partial_path.is_file():
+        raise FileNotFoundError("failed D1-E002 blind output and partial record are required")
+    if (blind_dir / "metrics.json").exists() or (blind_dir / "result.csv").exists():
+        raise FileExistsError("completed blind outputs already exist; preserving them")
+    if (blind_dir / "run_manifest_initial_failure.json").exists():
+        raise FileExistsError("initial blind failure was already archived; preserving existing replay state")
+    initial_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    initial_partial = json.loads(partial_path.read_text(encoding="utf-8"))
+    expected_failure = "KeyError: 'waveform'"
+    if (
+        initial_manifest.get("status") != "FAILED"
+        or initial_manifest.get("failure") != expected_failure
+        or not initial_manifest.get("blind_data_generated", False)
+        or initial_manifest.get("blind_used_for_model_selection", True)
+        or initial_partial.get("status") != "FAILED"
+        or initial_partial.get("failure") != expected_failure
+    ):
+        raise RuntimeError("blind replay is restricted to the recorded pre-metric profile-ML config failure")
+    if (
+        initial_manifest.get("model_manifest_commit") != calibration.get("model_manifest_commit")
+        or initial_manifest.get("code_commit") != model_manifest.get("code_commit")
+    ):
+        raise RuntimeError("failed blind run does not match the frozen model/calibration pair")
+
+    blind_cache = root_path / "experiments" / "D1-E002" / "data" / "blind_cache"
+    if not (blind_cache / "manifest.json").is_file():
+        raise FileNotFoundError("replay requires the existing blind cache; new blind samples are forbidden")
+    required_arrays = (*_E002_ARRAYS, "sample_id")
+    if any(not (blind_cache / f"{name}.npy").is_file() for name in required_arrays):
+        raise FileNotFoundError("existing blind cache is incomplete; refusing to generate replacement data")
+    blind_arrays = _open_or_generate_evaluation_cache(
+        root=root_path,
+        config=config,
+        d0_config=_d0_config(root_path),
+        kind="blind",
+    )
+
+    predictions: dict[str, dict[str, np.ndarray]] = {}
+    expected_files: set[str] = set()
+    for entry in model_manifest["models"]:
+        name = str(entry["id"])
+        filename = f"{name.replace('/', '__')}.npz"
+        prediction = _load_saved_prediction(prediction_dir / filename)
+        if not np.array_equal(prediction.get("sample_id"), blind_arrays["sample_id"]):
+            raise ValueError(f"saved model predictions do not match frozen blind IDs: {name}")
+        predictions[name] = prediction
+        expected_files.add(filename)
+        if entry["variant"] == "S2":
+            matched_name = f"S2_matched_lag_one/{entry['seed_id']}"
+            matched_file = f"{matched_name.replace('/', '__')}.npz"
+            matched = _load_saved_prediction(prediction_dir / matched_file)
+            if not np.array_equal(matched.get("sample_id"), blind_arrays["sample_id"]):
+                raise ValueError(f"saved matched lag-one predictions do not match blind IDs: {matched_name}")
+            predictions[matched_name] = matched
+            expected_files.add(matched_file)
+        elif entry["variant"] == "S3":
+            for label in ("S3_matched_three_point", "S3_matched_centroid"):
+                matched_name = f"{label}/{entry['seed_id']}"
+                matched_file = f"{matched_name.replace('/', '__')}.npz"
+                matched = _load_saved_prediction(prediction_dir / matched_file)
+                if not np.array_equal(matched.get("sample_id"), blind_arrays["sample_id"]):
+                    raise ValueError(f"saved matched S3 predictions do not match blind IDs: {matched_name}")
+                predictions[matched_name] = matched
+                expected_files.add(matched_file)
+
+    for filename, name in (
+        ("APX15_teacher.npz", "APX15_teacher"),
+        ("native_fft_peak.npz", "native_fft_peak"),
+        ("native_fft_log_parabolic.npz", "native_fft_log_parabolic"),
+        ("fourfold_fft_peak.npz", "fourfold_fft_peak"),
+        ("fourfold_fft_parabolic.npz", "fourfold_fft_parabolic"),
+        ("lag_one_equal_channel.npz", "lag_one_equal_channel"),
+        ("nonlearning_iq_energy_detector.npz", "nonlearning_iq_energy_detector"),
+    ):
+        prediction = _load_saved_prediction(prediction_dir / filename)
+        if not np.array_equal(prediction.get("sample_id"), blind_arrays["sample_id"]):
+            raise ValueError(f"saved baseline predictions do not match blind IDs: {name}")
+        predictions[name] = prediction
+        expected_files.add(filename)
+    if (prediction_dir / "profile_ml.npz").exists():
+        raise FileExistsError("profile-ML prediction already exists; preserving it")
+    existing_npz = {path.name for path in prediction_dir.glob("*.npz")}
+    if existing_npz != expected_files:
+        raise RuntimeError(f"unexpected or missing pre-replay prediction artifacts: {sorted(existing_npz ^ expected_files)}")
+
+    started = time.perf_counter()
+    profile = _profile_ml_prediction(root_path, blind_arrays, config)
+    expected_profile_ids: list[int] = []
+    for snr in config["data"]["snr_db"]:
+        mask = np.isclose(blind_arrays["snr_db"], float(snr)) & np.asarray(blind_arrays["truth_presence"], dtype=bool)
+        expected_profile_ids.extend(
+            np.asarray(blind_arrays["sample_id"])[np.flatnonzero(mask)[: int(config["baselines"]["profile_ml"]["h1_examples_per_snr"])]].tolist()
+        )
+    if not np.array_equal(profile["sample_id"], np.asarray(expected_profile_ids, dtype=np.int64)):
+        raise ValueError("corrected profile-ML subset differs from the frozen blind H1 IDs")
+    predictions["profile_ml"] = profile
+    _write_prediction(prediction_dir / "profile_ml.npz", profile)
+
+    replay_provenance = {
+        "reason": "original profile-ML range interval lookup failed before metric summarization",
+        "original_failure": expected_failure,
+        "evaluation_code_commit": replay_code_commit,
+        "model_manifest_commit": calibration["model_manifest_commit"],
+        "calibration_thresholds_reused": True,
+        "saved_predictions_reused": sorted(expected_files),
+        "profile_ml_prediction_added": "experiments/D1-E002/blind/predictions/profile_ml.npz",
+        "blind_cache_reused": True,
+        "blind_data_regenerated": False,
+        "blind_data_used_for_model_selection": False,
+    }
+    partial: dict[str, Any] = {
+        "experiment_id": "D1-E002",
+        "phase": "blind",
+        "status": "REPLAYING_EXISTING_BLIND",
+        "methods": {},
+        "gates": {},
+    }
+    run_manifest = dict(initial_manifest)
+    try:
+        return _finalize_blind_evaluation(
+            root=root_path,
+            blind_dir=blind_dir,
+            config=config,
+            device=device,
+            batch_size=batch_size,
+            started=started,
+            model_manifest=model_manifest,
+            calibration=calibration,
+            predictions=predictions,
+            blind_arrays=blind_arrays,
+            run_manifest=run_manifest,
+            partial=partial,
+            replay_provenance=replay_provenance,
+        )
+    except BaseException as error:
+        failure_path = blind_dir / f"replay_failure_{replay_code_commit[:7]}.json"
+        _write_json(
+            failure_path,
+            {
+                "status": "FAILED",
+                "failure": f"{type(error).__name__}: {error}",
+                "evaluation_code_commit": replay_code_commit,
+                "blind_cache_reused": True,
+                "blind_data_regenerated": False,
+            },
+        )
         raise
