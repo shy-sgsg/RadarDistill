@@ -122,3 +122,9 @@
 - **决定：** S2 作为唯一优先纯 IQ 候选；S1 四段读出只作一 seed 反证；S3 定义为固定 520 点 FFT 加受限局部残差 MLP，并与同 FFT 和局部谱的两种非学习估计对照。候选仅用 E1 仿真真值，不添加教师蒸馏损失。
 - **统计门：** 高 SNR 平均 Doppler RMSE 是主终点，候选需达到至少 10% 点估计改善且配对 95% 区间完全低于零、至少 2/3 formal seed 同向；低 SNR `Pfa=1e-2` Pd 和高 SNR range RMSE 使用冻结非劣界。S3 不能满足纯 IQ 成功判断。
 - **数据/边界：** 新 pilot/formal/calibration/blind seed 范围已与 D0/D1 登记种子分离；盲测尚未生成。pilot 未过门即停止该候选，所有 pilot 均未过门则不做 formal 和 blind。D1-E001 冻结阶段结论不变。
+
+## 2026-10-24：首次训练前补明 D1-E002 评价分数与流式 seed
+
+- **触发：** 对 E002 执行器的预训练审阅发现，协议虽要求各方法校准检测阈值，却未定义 FFT/lag-one 频率基线的检测分数，也未写出流式盲测分块的派生 seed。
+- **决定：** 学生各用 presence logit，APX15 使用 D0 冻结检测分数；经典频率估计共用非相干峰值距离能量分数 `max_r sum_(c,n)|x[c,n,r]|²`，该检测结果不归因于频率估计器。profile-ML 维持固定 H1 参数子集，只报告估计。校准/盲测每 64 条用 `base + snr_index*1009 + chunk_index*1009*snr_count` 派生 seed。固定 Doppler/range 分组边界和 Nyquist 25 Hz 邻域。
+- **边界：** 这项协议澄清发生在 E002 train/validation、calibration 和 blind 数据生成之前，不依赖候选结果，不改变模型、预算或成功门槛；原 D1-E001 结论保持不变。

@@ -26,10 +26,24 @@ def _e002_data_seeds(config: dict) -> set[int]:
         seeds.update(_stream(split["train_seed"], chunks, stride))
         seeds.update(_stream(split["validation_seed"], len(config["data"]["snr_db"]), stride))
     calibration = splits["calibration"]
-    seeds.update(_stream(calibration["h0_seed_base"], len(config["data"]["snr_db"]), stride))
+    snr_count = len(config["data"]["snr_db"])
+    chunk_size = config["data"]["evaluation_generation_chunk_size"]
+    for snr_index in range(snr_count):
+        chunks = (calibration["h0_examples_per_snr"] + chunk_size - 1) // chunk_size
+        seeds.update(
+            calibration["h0_seed_base"]
+            + snr_index * stride
+            + chunk * stride * snr_count
+            for chunk in range(chunks)
+        )
     blind = splits["blind"]
-    seeds.update(_stream(blind["h0_seed_base"], len(config["data"]["snr_db"]), stride))
-    seeds.update(_stream(blind["h1_seed_base"], len(config["data"]["snr_db"]), stride))
+    for seed_key, count_key in (("h0_seed_base", "h0_examples_per_snr"), ("h1_seed_base", "h1_examples_per_snr")):
+        for snr_index in range(snr_count):
+            chunks = (blind[count_key] + chunk_size - 1) // chunk_size
+            seeds.update(
+                blind[seed_key] + snr_index * stride + chunk * stride * snr_count
+                for chunk in range(chunks)
+            )
     seeds.add(splits["physical_consistency"]["seed"])
     return seeds
 
@@ -39,6 +53,7 @@ def _e002_all_seeds(config: dict) -> set[int]:
     seeds.add(config["seeds"]["bootstrap"])
     for split in [config["splits"]["pilot"], *config["splits"]["formal"]]:
         seeds.add(split["initialization_seed"])
+        seeds.add(split["batch_order_seed"])
     return seeds
 
 
@@ -101,7 +116,18 @@ def _expected_e002_data_seed_count(config: dict) -> int:
         for split in [splits["pilot"], *splits["formal"]]
     )
     validation_streams = 1 + len(splits["formal"])
-    return train_chunks + validation_streams * stream_count + 3 * stream_count + 1
+    chunk_size = config["data"]["evaluation_generation_chunk_size"]
+    calibration = config["splits"]["calibration"]
+    blind = config["splits"]["blind"]
+    calibration_chunks = (calibration["h0_examples_per_snr"] + chunk_size - 1) // chunk_size
+    blind_h0_chunks = (blind["h0_examples_per_snr"] + chunk_size - 1) // chunk_size
+    blind_h1_chunks = (blind["h1_examples_per_snr"] + chunk_size - 1) // chunk_size
+    return (
+        train_chunks
+        + validation_streams * stream_count
+        + stream_count * (calibration_chunks + blind_h0_chunks + blind_h1_chunks)
+        + 1
+    )
 
 
 def test_e002_preserves_the_frozen_single_target_signal_model() -> None:
@@ -127,7 +153,7 @@ def test_e002_seeds_are_disjoint_from_prior_registered_data_and_each_other() -> 
     assert len(seeds) == _expected_e002_data_seed_count(config)
     assert seeds.isdisjoint(_prior_registered_seeds())
     all_seeds = _e002_all_seeds(config)
-    assert len(all_seeds) == len(seeds) + 1 + 1 + len(config["splits"]["formal"])
+    assert len(all_seeds) == len(seeds) + 1 + 2 * (1 + len(config["splits"]["formal"]))
     assert all_seeds.isdisjoint(_prior_registered_seeds())
 
 

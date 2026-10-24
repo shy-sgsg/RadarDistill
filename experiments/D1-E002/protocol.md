@@ -52,15 +52,15 @@ R1 排除了预测距离门作为高 SNR 主要误差源的解释；固定 ridge
 
 ## 4. 保留的传统方法
 
-在相同开发验证及最终 blind sample IDs 上报告冻结 D1 APX15 慢时间 FFT 教师、原生 130 点 FFT peak、520 点四倍补零 peak、520 点三点插值、S2 的等权 lag-one 估计、S3 匹配非学习估计器。profile-ML 沿用冻结 D1 实现，只对预先固定的每 SNR 前 128 个 blind H1 运行，用作参考，不参与训练、pilot 选择或阈值设定。该 ML 数值实现、采样子集和其计算边界须在结果中说明。
+在相同开发验证及最终 blind sample IDs 上报告冻结 D1 APX15 慢时间 FFT 教师、原生 130 点 FFT peak、520 点四倍补零 peak、520 点三点插值、S2 的等权 lag-one 估计、S3 匹配非学习估计器。profile-ML 沿用冻结 D1 实现，只对预先固定的每 SNR 前 128 个 blind H1 运行，用作参数估计参考，不参与训练、pilot 选择或阈值设定；该小型 H1 子集不产生 profile-ML 的检测结果。该 ML 数值实现、采样子集和其计算边界须在结果中说明。
 
 所有方法共用新验证和 blind 样本。传统方法只按自身可见 IQ 估计，不得读取物理真值。仅真值距离门误差和 FFT capture 计算可将真值当作离线诊断分组，不能作为正常推理输出。
 
 ## 5. 数据、随机种子与盲测隔离
 
-完整随机种子和数据量以 `config.yaml` 为准。E002 预留独立命名空间：pilot `202621xxxx`；正式 train/validation/initialization `202622xxxx`；检测 calibration `202623xxxx`；final blind `202624xxxx`；bootstrap 和物理一致性 `202625xxxx`。训练块和逐 SNR 流按固定 stride 1009 派生。配置测试会展开各个派生种子，确认它们彼此无重复，且与 D0/D1 已登记的训练、验证、calibration、blind 和物理一致性种子无交集。
+完整随机种子和数据量以 `config.yaml` 为准。E002 预留独立命名空间：pilot `202621xxxx`；正式 train/validation/initialization `202622xxxx`；检测 calibration `202623xxxx`；final blind `202624xxxx`；bootstrap 和物理一致性 `202625xxxx`。训练块按固定 stride 1009 派生；流式 calibration/blind 每 64 条为一块，种子为 `base + snr_index*1009 + chunk_index*1009*snr_count`。配置测试会展开各个派生种子，确认它们彼此无重复，且与 D0/D1 已登记种子无交集。
 
-pilot 和每个正式 seed 使用各 4096 个 H0、4096 个 H1 训练样本；每个验证 SNR 有 128 个 H0 和 128 个 H1，共 2048 条。每个候选同 seed 使用同一训练/验证 sample IDs、样本顺序、有效 batch、骨干及公共任务头初始权重。新 calibration 使用 50,000 个 H0（8 个 SNR 各 6,250）。所有 checkpoint、模型列表、代码和阈值规则冻结后，才可生成 final blind；每 SNR 4096 个 H0、1024 个 H1，共 40,960 条。profile-ML 子集为每 SNR 前 128 个 H1。所有方法和 seed 模型按同一 blind sample IDs 评价。
+pilot 和每个正式 seed 使用各 4096 个 H0、4096 个 H1 训练样本；每个验证 SNR 有 128 个 H0 和 128 个 H1，共 2048 条。每个候选同 seed 使用同一训练/验证 sample IDs、由配置中独立 `batch_order_seed` 派生的同一平衡 minibatch 顺序、有效 batch、骨干及公共任务头初始权重。新 calibration 使用 50,000 个 H0（8 个 SNR 各 6,250）。所有 checkpoint、模型列表、代码和阈值规则冻结后，才可生成 final blind；每 SNR 4096 个 H0、1024 个 H1，共 40,960 条。profile-ML 子集为每 SNR 前 128 个 H1。所有方法和 seed 模型按同一 blind sample IDs 评价。
 
 在本协议提交前不生成 E002 train/validation、calibration 或 blind 数据；旧 D1 blind 和 calibration 不打开作选择。校准/盲测按配置重新生成，不缓存到 GPU；正式 blind 的模型选择用途为 false。若 pilot 无候选达筛选门槛，不做正式训练，也不生成 E002 final blind。
 
@@ -85,7 +85,7 @@ pilot 门槛只筛明显不成立的候选，不作为正式效应证据。S1 �
 
 **主指标：** 每个方法在 0/5/10/20 dB 的 per-SNR H1 Doppler RMSE 等权平均，单位 Hz。候选相对其 seed 配对 S0 的差记作 `ΔRMSE = RMSE_candidate − RMSE_S0`。同时逐 SNR 报告结果、MAE、bias、`|error|>50 Hz` 比率和检测正确条件误差。
 
-**检测阈值：** 对每个方法单独使用新 50,000 H0 calibration，在全 SNR 平衡混合流上校准 `Pfa=1e-2`。把 H0 分数升序排列，阈值取索引 `ceil((N+1)×(1−Pfa))−1` 对应的分数；判决为 `score > threshold`，相等计为未检测以保持保守。盲测不重估阈值。报告校准实际 Pfa、blind Pfa、各 SNR Pd/AUC、漏检和 95% 二项区间。
+**检测阈值：** 对每个学生 checkpoint 使用其 presence logit；APX15 使用 D0 已定义的 teacher detection score；在新 50,000 H0 calibration 上分别校准 `Pfa=1e-2`。FFT 峰值/插值和 lag-one 频率估计共用一条明确的非相干能量检测器，分数为 `max_r sum_(c,n) |x[c,n,r]|^2`，只校准一个阈值；其 Pd 是检测器结果，不归因给对应频率估计器。profile-ML 只处理每 SNR 固定的 128 个 H1 参数子集，不报告其检测指标。把 H0 分数升序排列，阈值取索引 `ceil((N+1)×(1−Pfa))−1` 对应的分数；判决为 `score > threshold`，相等计为未检测以保持保守。盲测不重估阈值。报告校准实际 Pfa、blind Pfa、各 SNR Pd/AUC、漏检和 95% 二项区间。
 
 **检测保护门：** 低 SNR `[-20,-15,-10,-5] dB` 等权平均 Pd 的 paired 95% CI 下界必须高于 `−0.05`；任何一个低 SNR 点的 Pd 点估计不得比 S0 低超过 0.10。
 
@@ -95,7 +95,7 @@ pilot 门槛只筛明显不成立的候选，不作为正式效应证据。S1 �
 
 95% 区间使用 2,000 次 paired hierarchical bootstrap：先以放回方式抽三对 formal training seed，再在每个 SNR 抽相同 blind sample IDs；所有方法在每次重复内使用相同 ID 重采样。seed 方向、每 seed 指标和样本数量同时列出，不能只报 pooled 区间。任何未通过或区间跨零的结果不得称为已证明改善。
 
-报告不同 Doppler 四分段/正负频率/Nyquist 邻域、初相八分段、幅度四分位、范围区间、SNR 和训练 seed。另用独立开发诊断 seed 的 256 条 H1（0/10 dB 各 128 条）执行物理一致性检查：对所有通道/脉冲/距离统一乘 `exp(jθ)`，`θ∈{0.37,1.41,2.83}`；再用 `exp(j2πΔf n/PRF)` 调制，`Δf∈{±0.625,±5.0} Hz`。报告 Doppler 输出的公共相位敏感度、频移等变残差、检测分数/距离输出变化；这些是诊断指标，不增加事后通过门。还报告 range、教师/FFT/profile-ML 差距、S2 非学习统计 baseline、S3 相同 FFT baseline、条件 CRLB、参数量、FFT/相干操作边界、训练时间和 GPU 峰值分配/保留显存。统计和物理一致性只针对该仿真条件，不外推到真实 GMTI。
+报告 Doppler 四分段（固定 `[-650,650) Hz` 等宽分箱）、正/负频率、距 Nyquist 边界 25 Hz 邻域、初相八分箱、幅度四分位、range 四分位、SNR 和训练 seed。另用独立开发诊断 seed 的 256 条 H1（0/10 dB 各 128 条）执行物理一致性检查：对所有通道/脉冲/距离统一乘 `exp(jθ)`，`θ∈{0.37,1.41,2.83}`；再用 `exp(j2πΔf n/PRF)` 调制，`Δf∈{±0.625,±5.0} Hz`。报告 Doppler 输出的公共相位敏感度、频移等变残差、检测分数/距离输出变化；这些是诊断指标，不增加事后通过门。还报告 range、教师/FFT/profile-ML 差距、S2 非学习统计 baseline、S3 相同 FFT baseline、条件 CRLB、参数量、FFT/相干操作边界、训练时间和 GPU 峰值分配/保留显存。统计和物理一致性只针对该仿真条件，不外推到真实 GMTI。
 
 ## 8. 决定与停止规则
 
@@ -114,4 +114,4 @@ pilot 门槛只筛明显不成立的候选，不作为正式效应证据。S1 �
 5. 冻结候选 checkpoint、代码和模型 manifest；新建独立 calibration 并冻结检测阈值；随后才生成一次 final blind。
 6. 对所有方法使用同一 blind IDs 评估，运行冻结 profile-ML 子集、bootstrap 和误差分组；写出结果和阶段审查。
 
-协议冻结后若发现配置/代码错误，暂停实验，记录变更原因；不得沿用已查看的 pilot 或 blind 作为新盲测。盲测只可在模型和门槛未接触 blind 数据前生成。
+在首次候选数据生成前的实现审阅中补明了经典估计器共享的检测分数、profile-ML 的检测范围和流式 evaluation chunk seed 公式；此变更不依赖 E002 训练/验证结果，且发生在训练、校准及盲测数据生成之前。后续若发现配置/代码错误，暂停实验，记录变更原因；不得沿用已查看的 pilot 或 blind 作为新盲测。盲测只可在模型和门槛未接触 blind 数据前生成。

@@ -19,7 +19,9 @@ data:
   input_shape: [3, 130, 32]
   network_input: real_imag_planes # [B,6,130,32], real then imaginary
   snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
-  training_snr_distribution: uniform_continuous_-20_to_20_db
+  training_snr_distribution: uniform_continuous
+  training_snr_interval_db: [-20.0, 20.0]
+  evaluation_generation_chunk_size: 64
   h0_h1_prior: 0.5
   train_examples_per_class: 4096
   train_examples_per_chunk: 64 # per class; paired H0/H1 blocks
@@ -38,6 +40,7 @@ splits:
     train_seed: 2026210101
     validation_seed: 2026210102
     initialization_seed: 2026210103
+    batch_order_seed: 2026210104
     train_examples_per_class: 4096
     train_examples_per_chunk: 64
     validation_examples_per_class_per_snr: 128
@@ -46,6 +49,7 @@ splits:
       train_seed: 2026220101
       validation_seed: 2026220102
       initialization_seed: 2026220103
+      batch_order_seed: 2026220104
       train_examples_per_class: 4096
       train_examples_per_chunk: 64
       validation_examples_per_class_per_snr: 128
@@ -53,6 +57,7 @@ splits:
       train_seed: 2026220201
       validation_seed: 2026220202
       initialization_seed: 2026220203
+      batch_order_seed: 2026220204
       train_examples_per_class: 4096
       train_examples_per_chunk: 64
       validation_examples_per_class_per_snr: 128
@@ -60,6 +65,7 @@ splits:
       train_seed: 2026220301
       validation_seed: 2026220302
       initialization_seed: 2026220303
+      batch_order_seed: 2026220304
       train_examples_per_class: 4096
       train_examples_per_chunk: 64
       validation_examples_per_class_per_snr: 128
@@ -174,6 +180,11 @@ baselines:
     h1_examples_per_snr: 128
     selection: first_fixed_sample_ids_in_new_blind_stream
     evaluation_only: true
+  detection_scores:
+    learned_students: presence_logit
+    apx15_teacher: D0_teacher_detection_score
+    fft_and_lag_one_estimators: max_range_noncoherent_integrated_energy
+    profile_ml: estimation_only_no_detection_result
 
 training:
   objective: E1_physics_simulation_truth_supervision_only
@@ -201,6 +212,7 @@ training:
   early_stopping: false
   same_train_validation_sample_ids_within_seed: true
   same_backbone_initialization_seed_within_seed: true
+  batch_order_seed_field: batch_order_seed
   same_minibatch_order_within_seed: true
   same_optimizer_updates_and_effective_batch_across_candidates: true
   common_task_loss_weights:
@@ -250,6 +262,19 @@ acceptance:
     noninferiority_margin_pd: 0.05
     minimum_paired_95pct_CI_lower_bound_for_candidate_minus_s0: -0.05
     maximum_allowed_pointwise_pd_drop_per_snr: 0.10
+  detection_score_policy:
+    learned_students: calibrated_individually_by_checkpoint_presence_logit
+    apx15_teacher: calibrated_by_its_frozen_d0_detection_score
+    classical_frequency_estimators: share_calibrated_noncoherent_energy_detector
+    energy_detector_score: "max_r sum_(c,n) |x[c,n,r]|^2"
+    profile_ml_detection: not_evaluated_on_fixed_128_h1_per_snr_estimation_subset
+  stratification:
+    doppler_outlier_threshold_hz: 50.0
+    nyquist_neighborhood_half_width_hz: 25.0
+    doppler_quartiles: 4
+    range_quartiles: 4
+    initial_phase_bins: 8
+    amplitude_quartiles: 4
   range_guardrail:
     snr_db: [0, 5, 10, 20]
     aggregate: equal_weight_mean_range_rmse_cells
