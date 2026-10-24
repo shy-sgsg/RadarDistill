@@ -269,4 +269,4 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 
 - **执行：** S1、S2 各按 seed_1/2/3 顺序完成 1600 次更新，共六个 CUDA 训练实例。AISAR、RTX 3050 Laptop GPU（4 GiB）、FP32、有效 batch 64；无 OOM、无预算缩减。S1 每 seed 约 148 秒、峰值已分配显存约 1080 MiB；S2 每 seed 约 138 秒、峰值约 1046 MiB。
 - **formal validation 诊断：** 每个 checkpoint 仅按协议选自对应验证集。三 seed 的高 SNR 平均 Doppler RMSE：S0 为 29.09/22.98/25.60 Hz；S1 为 26.22/28.92/26.74 Hz（仅 1/3 seed 点估计改善）；S2 为 21.30/26.27/24.32 Hz（2/3 seed 点估计改善）。这些验证数据用于 checkpoint 和训练诊断，不能替代独立盲测或正式区间结论。
-- **状态与下一步：** formal metrics 记为 `COMPLETED`，所有实例都满足更新预算；`formal/model_manifest.json` 已冻结 12 个 checkpoint（S0/S0_D/S1/S2 各 seed）及对应 Git blob。提交清单后生成新的独立检测 calibration 并冻结阈值，最后才生成一次 final blind；目前 calibration/blind 均未生成，未作 GO/STOP 最终阶段判断。
+- **状态与下一步：** formal metrics 记为 `COMPLETED`，所有实例都满足更新预算；`formal/model_manifest.json` 已冻结 12 个 checkpoint（S0/S0_D/S1/S2 各 seed）及对应 Git blob。新 calibration 已使用 50,000 个 H0；12 个模型 checkpoint、APX15 和共享能量分数共 14 个校准分数，经验 `Pfa` 均为 0.00998。提交 calibration 阈值与 score 后，才生成一次 final blind；blind 尚未生成，未作 GO/STOP 最终阶段判断。

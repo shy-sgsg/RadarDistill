@@ -1,0 +1,141 @@
+{
+  "experiment_id": "D1-E002",
+  "phase": "calibration",
+  "status": "COMPLETED",
+  "model_manifest_commit": "2390fb0a47dc08d7c6e4c3178f33d393bb01f1db",
+  "methods": {
+    "S0/seed_1": {
+      "score_source": "presence_logit",
+      "threshold": -0.34870004653930664,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S0_D/seed_1": {
+      "score_source": "presence_logit",
+      "threshold": -0.24195003509521484,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S1/seed_1": {
+      "score_source": "presence_logit",
+      "threshold": 0.229966402053833,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S2/seed_1": {
+      "score_source": "presence_logit",
+      "threshold": 0.00461125373840332,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S0/seed_2": {
+      "score_source": "presence_logit",
+      "threshold": 0.14611458778381348,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S0_D/seed_2": {
+      "score_source": "presence_logit",
+      "threshold": -0.23337936401367188,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S1/seed_2": {
+      "score_source": "presence_logit",
+      "threshold": -0.003349781036376953,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S2/seed_2": {
+      "score_source": "presence_logit",
+      "threshold": -0.0068738460540771484,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S0/seed_3": {
+      "score_source": "presence_logit",
+      "threshold": -0.2747077941894531,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S0_D/seed_3": {
+      "score_source": "presence_logit",
+      "threshold": -0.4211583137512207,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S1/seed_3": {
+      "score_source": "presence_logit",
+      "threshold": 0.1214451789855957,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "S2/seed_3": {
+      "score_source": "presence_logit",
+      "threshold": 0.13289117813110352,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "APX15_teacher": {
+      "score_source": "D0_teacher_detection_score",
+      "threshold": 7.279938933337073,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    },
+    "nonlearning_iq_energy_detector": {
+      "score_source": "max_range_noncoherent_integrated_energy",
+      "threshold": 138839.2388111055,
+      "n_h0": 50000,
+      "pfa_target": 0.01,
+      "calibration_pfa": 0.00998,
+      "comparison": "score_strictly_greater_than_threshold"
+    }
+  },
+  "calibration_samples_per_method": 50000,
+  "threshold_rule": "ceil((N+1)*(1-Pfa))-1 order statistic; strict greater-than",
+  "environment": {
+    "git_sha": "2390fb0a47dc08d7c6e4c3178f33d393bb01f1db",
+    "dirty_state": {
+      "e002_implementation_paths_clean": true,
+      "workspace_has_uncommitted_changes": true
+    },
+    "python": "3.13.7",
+    "pytorch": "2.8.0+cu128",
+    "cuda_runtime": "12.8",
+    "driver": "580.178.04",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 3942383616,
+    "cuda_device": "cuda:0",
+    "precision": "float32",
+    "batch_size": 64,
+    "peak_allocated_bytes": 176830976,
+    "peak_reserved_bytes": 203423744,
+    "elapsed_seconds": 427.3550809020089
+  }
+}
