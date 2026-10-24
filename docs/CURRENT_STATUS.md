@@ -2,7 +2,7 @@
 
 **更新日期：** 2026-10-25
 **工作分支：** `main`
-**审查基线提交：** `1383289eae128c0215b111d136003c5e617da9ec`（`main`；当前文档提交 SHA 可用 `git rev-parse HEAD` 查询）
+**审查基线提交：** `3695e163df2b1c7b145f01301e0fa16a750a7f6e`（2026-10-25 本轮核对时的 `main` HEAD；当前版本 SHA 可用 `git rev-parse HEAD` 查询）
 **最新完成工作：** D1-E002 独立盲测与阶段审查；D1-R1 诊断审查已补齐。
 **阶段判断：** D1-E001 原 GO → D2 保持；D1-E002 的 AWGN Doppler 结构搜索 STOP / REDIRECT。
 
