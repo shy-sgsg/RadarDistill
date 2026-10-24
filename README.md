@@ -8,7 +8,7 @@ RadarDistill 研究如何结合可信物理仿真真值和传统雷达教师，�
 
 D0-E001 仿真/教师子链正确性检查 12/12 通过。D1-E001 的阶段决定为 GO：学生从距离压缩三通道 IQ 学习了检测、距离和 Doppler，部分蒸馏策略改善最终联合指标，但未改善收敛速度。低 SNR 检测较弱，高 SNR Doppler RMSE 仍约 25–35 Hz，明显差于传统精估计器；完整链速度优势尚未证明。
 
-当前唯一优先任务是 D1-R1 Doppler 误差诊断。用户已批准随后开展有界 D1-E002 结构比较，具体方案和新盲测须依据 R1 证据冻结。D1-E001 的阶段结论不会被新实验追改。
+D1-R1 Doppler 误差诊断已完成；高 SNR 的预测距离门与 oracle 距离门误差相近，时间池化的因果作用尚未证实。当前优先冻结 D1-E002 协议并开展有界 pilot，具体结果和新盲测门槛须预先冻结。D1-E001 的阶段结论不会被新实验追改。
 
 ## 研究主线
 
@@ -28,6 +28,7 @@ D0-E001 仿真/教师子链正确性检查 12/12 通过。D1-E001 的阶段决�
 - 动态路线图：[docs/RESEARCH_ROADMAP.md](docs/RESEARCH_ROADMAP.md)
 - 假设登记：[docs/research/ASSUMPTION_REGISTER.md](docs/research/ASSUMPTION_REGISTER.md)
 - D0/D1 汇总与阶段审查：[D0-D1 总结](docs/stage_reviews/D0-D1_overall_report.md)、[D1-E001 审查](docs/stage_reviews/D1-E001_review.md)
+- D1-R1 诊断：[协议](experiments/D1-R1/protocol.md)、[结果分析](experiments/D1-R1/analysis.md)、metrics.json 和 result.csv
 - 冻结配置和实验分析：[D0-E001](experiments/D0-E001/)、[D1-E001](experiments/D1-E001/)
 - 编码和审查协议：[docs/governance/](docs/governance/)
 - 研究方案细节与历史：[research_plan.md](docs/research_plan.md)、[progress.md](docs/progress.md)、[decisions.md](docs/decisions.md)

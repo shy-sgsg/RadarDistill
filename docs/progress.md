@@ -242,3 +242,12 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - 阶段决策 **GO → D2**，但仅按阶段规范一次增加一个复杂度。低 SNR 检测与参数估计、传统竞争力均有限；`Pfa=1e-6`、真实 GMTI、多目标、杂波、失配和完整 CoreX 链均未验证。完整审查见 `docs/stage_reviews/D1-E001_review.md`。
 - 补充了已距离压缩 IQ 输入边界的初步成本测量：D 学生 CUDA 单样本平均/P95 为 1.53/1.91 ms，batch 128 为 59.75/62.11 ms，CUDA 峰值分配显存约 359 MB；APX15 FFT 子链 CPU 单样本为 0.83 ms。设备不同、处理链边界有限，不据此宣称速度优势。数据和计时命令见 `experiments/D1-E001/benchmark/inference_cost.json`、`scripts/benchmark_d1_e001.py`。
 - 完成 D0/D1 综合报告，回答了检测、参数估计、FFT、教师预训练、联合蒸馏、去教师化、传统算法差距及精度/计算优先级八项问题。下一项建议是精度优先的 Doppler 表示对照；它尚未预注册或启动。见 `docs/stage_reviews/D0-D1_overall_report.md`。
+
+## 2026-10-24：D1-R1 Doppler 误差来源诊断
+
+- **范围：** 使用 D1 的 pilot_validation、三个 seed 的 train/validation 缓存和 A/D formal inference checkpoints；不读取最终 blind 或 calibration。推理在 AISAR/PyTorch 2.8.0+cu128、RTX 3050 Laptop CUDA 上完成，batch 32，峰值分配显存约 548 MiB。复现入口为 scripts/diagnose_d1_r1.py。
+- **发现：** A 的 0/5/10/20 dB 预测距离门与 true-range oracle Doppler RMSE 跨 seed 均几乎一致；-10 dB oracle 从约 311 Hz 降至 186 Hz，表明距离选择会额外影响低 SNR，但不是高 SNR 主要误差源。高 SNR Doppler 仍约 20–32 Hz。
+- **表征/任务：** 固定 ridge 下池化后 probe 比池化前好，但池化前维度 4160 对比池化后 32、训练样本仅 1024，不能作池化因果结论。final checkpoint 上各任务梯度余弦均值接近 0，样本/阶段范围有限，不能排除训练中的瞬态冲突。仅有 inference checkpoint，KL 共享主干梯度无法重算。
+- **教师：** teacher 在 -20/-15 dB 检测 AUC 约 0.51/0.67且 Doppler RMSE 约 370/332 Hz；-10 dB 检测 AUC约0.982但 Doppler RMSE约287 Hz。检测知识和精频率知识不能视为同等可靠。
+- **决定：** H-ARCH-001 与 H-OPT-001 仍为 INCONCLUSIVE。D1-E002 优先 pilot 低成本 lag-one 复相干统计作为 S2；S1 只做单 seed 时间读出反证；S3 固定 FFT 混合结果单独归因。D1-E001 G1/G2/G3 保持原冻结结论。
+- **产物：** experiments/D1-R1/protocol.md、config.yaml、metrics.json、result.csv、analysis.md；测试 tests/test_d1_r1_diagnostics.py。

@@ -1,0 +1,55 @@
+experiment_id: D1-R1
+title: task-level student continuous Doppler error diagnosis
+date: 2026-10-24
+status: completed_development_diagnostic
+source_experiment: D1-E001
+source_config: experiments/D1-E001/config.yaml
+source_protocol: experiments/D1-E001/protocol.md
+diagnostic_code_commit: 4f50df0c9249948b1f2ef5a0961e746e4e0883da
+signal_model:
+  prf_hz: 1300
+  pulse_count: 130
+  channels: 3
+  range_bins: 32
+  target_count: 0_or_1
+  noise: circular_complex_awgn
+data:
+  common_evaluation_split: experiments/D1-E001/data/cache/pilot_validation
+  common_examples: 2048
+  fixed_snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  examples_per_class_per_snr: 128
+  formal_train_cache_pattern: experiments/D1-E001/data/cache/seed_{1,2,3}_train
+  formal_validation_cache_pattern: experiments/D1-E001/data/cache/seed_{1,2,3}_validation
+  final_blind_accessed: false
+  calibration_accessed: false
+models:
+  primary: A_truth_only
+  sensitivity: D_progressive_distillation
+  training_seeds: [1, 2, 3]
+  checkpoints:
+    - experiments/D1-E001/formal/seed_{seed}/A_truth_only/best_inference.pt
+    - experiments/D1-E001/formal/seed_{seed}/D_progressive_distillation/best_inference.pt
+execution:
+  training_performed: false
+  device: cuda:0
+  batch_size: 32
+  amp: false
+diagnostics:
+  doppler_decode:
+    ordinary: predicted_range_argmax
+    oracle: floor_truth_range_cell_read_only
+    prf_wrapped_error: true
+  probe:
+    training_h1_samples_per_seed: 1024
+    validation_h1_samples_per_seed: 1024
+    train_samples_per_each_5db_snr_bin: 128
+    ridge_alpha: 1.0
+    target: [cos_2pi_f_over_prf, sin_2pi_f_over_prf]
+  gradients:
+    samples_per_seed_snr_bin: {h0: 16, h1: 16}
+    shared_parameters: [stem, temporal_blocks]
+    teacher_kl_gradient_available: false
+outputs:
+  metrics: experiments/D1-R1/metrics.json
+  results: experiments/D1-R1/result.csv
+  analysis: experiments/D1-R1/analysis.md

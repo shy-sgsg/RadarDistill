@@ -5,12 +5,13 @@
 
 ## 当前阶段
 
-**D1：任务级检测与参数估计的有界诊断。** D1-E001 已按其冻结门完成，阶段决定 GO → D2。用户额外批准先做 D1-R1 Doppler 误差诊断和 D1-E002 受控结构比较；这两项是对现有 D1 瓶颈的有界后续研究，不改写 D1-E001 的阶段门或结果。
+**D1：任务级检测与参数估计的有界后续诊断。** D1-E001 已按冻结门完成，阶段 GO → D2 不变；D1-R1 已完成。用户批准继续做 D1-E002 受控结构比较，正式协议和门槛须在新盲测前冻结。
 
 ## 已完成实验与证据
 
 - **D0-E001：** 12/12 仿真和教师子链正确性检查通过；结果仅支持简化仿真/FFT 子链有效。
 - **D1-E001：** 三种子正式训练、独立校准和盲测完成；G1、G2 通过，G3 未通过。受测真值监督学生可学习最终任务；部分联合/渐进蒸馏最终指标改善，但没有收敛加速证据。
+- **D1-R1：** 只用 D1 训练/验证材料完成三种子预测门/oracle 门、池化前后线性 probe、A/D 任务梯度和教师分组质量诊断。高 SNR oracle 几乎不改变 Doppler 误差；pooling 因果仍未决；低 SNR 教师检测和 Doppler 质量区间不同。见 experiments/D1-R1/。
 - **P0/P1 历史先导：** P0-E006 STOP/REDIRECT；P0-E007 G1/G2 PASS、G3 FAIL；P1-A-E001 STOP/REDIRECT。它们保留独立结论，不作为 D1 的数据或可重复新盲测。
 
 详见 docs/stage_reviews/D0-D1_overall_report.md、D1-E001_review.md、P0_final_review.md、P0-E007_review.md 和 P1-A-E001_review.md。
@@ -26,7 +27,7 @@
 | 当前学生解决低 SNR 检测 | NOT_SUPPORTED | 低 SNR Pd/AUC 明显落后教师 |
 | 当前学生达到传统连续 Doppler 精度 | NOT_SUPPORTED | 约 25–35 Hz 的高 SNR RMSE，仍显著落后传统估计器 |
 | 任务级学生有完整链速度优势 | INCONCLUSIVE | 既有测量输入边界和硬件不匹配 |
-| 时间池化导致 Doppler 瓶颈 | TESTING | 待 D1-R1 对表示、误差分解和任务梯度诊断 |
+| 时间池化导致 Doppler 瓶颈 | INCONCLUSIVE | R1 的高维池化前 probe 较差，但固定 ridge 与维数差异使因果未决 |
 
 ## 当前主要问题
 
