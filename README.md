@@ -8,7 +8,7 @@ RadarDistill 研究如何结合可信物理仿真真值和传统雷达教师，�
 
 D0-E001 仿真/教师子链正确性检查 12/12 通过。D1-E001 的阶段决定为 GO：学生从距离压缩三通道 IQ 学习了检测、距离和 Doppler，部分蒸馏策略改善最终联合指标，但未改善收敛速度。低 SNR 检测较弱，高 SNR Doppler RMSE 仍约 25–35 Hz，明显差于传统精估计器；完整链速度优势尚未证明。
 
-D1-R1 Doppler 误差诊断已完成；高 SNR 的预测距离门与 oracle 距离门误差相近，时间池化的因果作用尚未证实。D1-E002 已完成 CUDA pilot、入选 S1/S2 的三 seed formal 训练，并冻结 12 个基线/候选 checkpoint。独立 50,000-H0 calibration 已完成，14 种分数的校准经验 Pfa 均为 0.00998；final blind 尚未生成，暂不作正式效果结论。D1-E001 的阶段结论不会被新实验追改。
+D1-R1 Doppler 误差诊断已完成。D1-E002 已完成 CUDA pilot、S1/S2 三 seed formal、独立 calibration 和一次 final blind。S2 的高 SNR Doppler RMSE 相对 S0 改善 10.86%，但低 SNR 检测非劣门未通过；S1、S2 均远落后四倍 FFT 插值和 profile-ML。按冻结协议，D1-E002 决策为 **STOP / REDIRECT**，不再扩展本轮结构搜索。首次盲测的 profile-ML 配置读取错误已通过同一盲测缓存重放修正；没有重生成盲测数据。D1-E001 的阶段结论保持不变。详见 [D1-E002 阶段审查](docs/stage_reviews/D1-E002_review.md)。
 
 ## 研究主线
 
@@ -43,6 +43,10 @@ D1-R1 Doppler 误差诊断已完成；高 SNR 的预测距离门与 oracle 距�
 复核已有盲测预测（不生成新测试样本或改变阈值）：
 
     conda run --no-capture-output -n AISAR python scripts/evaluate_d1_e001.py --phase blind --replay-existing-predictions
+
+D1-E002 的盲测结果和保存预测位于 `experiments/D1-E002/blind/`。此前发生的单次失败重放命令如下；结果已完成，脚本会拒绝覆盖已有盲测产物：
+
+    conda run --no-capture-output -n AISAR python scripts/replay_d1_e002_blind.py --batch-size 64
 
 D0 的仿真与教师正确性复现：
 

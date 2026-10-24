@@ -269,4 +269,13 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 
 - **执行：** S1、S2 各按 seed_1/2/3 顺序完成 1600 次更新，共六个 CUDA 训练实例。AISAR、RTX 3050 Laptop GPU（4 GiB）、FP32、有效 batch 64；无 OOM、无预算缩减。S1 每 seed 约 148 秒、峰值已分配显存约 1080 MiB；S2 每 seed 约 138 秒、峰值约 1046 MiB。
 - **formal validation 诊断：** 每个 checkpoint 仅按协议选自对应验证集。三 seed 的高 SNR 平均 Doppler RMSE：S0 为 29.09/22.98/25.60 Hz；S1 为 26.22/28.92/26.74 Hz（仅 1/3 seed 点估计改善）；S2 为 21.30/26.27/24.32 Hz（2/3 seed 点估计改善）。这些验证数据用于 checkpoint 和训练诊断，不能替代独立盲测或正式区间结论。
-- **状态与下一步：** formal metrics 记为 `COMPLETED`，所有实例都满足更新预算；`formal/model_manifest.json` 已冻结 12 个 checkpoint（S0/S0_D/S1/S2 各 seed）及对应 Git blob。新 calibration 已使用 50,000 个 H0；12 个模型 checkpoint、APX15 和共享能量分数共 14 个校准分数，经验 `Pfa` 均为 0.00998。提交 calibration 阈值与 score 后，才生成一次 final blind；blind 尚未生成，未作 GO/STOP 最终阶段判断。
+- **状态与下一步：** formal metrics 记为 `COMPLETED`，所有实例都满足更新预算；`formal/model_manifest.json` 已冻结 12 个 checkpoint（S0/S0_D/S1/S2 各 seed）及对应 Git blob。新 calibration 已使用 50,000 个 H0；12 个模型 checkpoint、APX15 和共享能量分数共 14 个校准分数，经验 `Pfa` 均为 0.00998。该段记录为 blind 生成前的历史状态；最终盲测和阶段判断见下方更新。
+
+## 2026-10-25：D1-E002 独立盲测与阶段审查
+
+- **执行与审计：** 按冻结阈值运行一次新盲测：8 个 SNR，每点 4096 H0 + 1024 H1，共 32,768 H0、8,192 H1；未用于模型选择。首次评估已保存固定 blind cache 及除 profile-ML 外的全部预测，但因从 D1 而非 D0 读取 `waveform` 配置而中断。修复提交 `e7404f6` 仅更正评估器范围区间读取并增加重放入口；profile-ML 子集与所有指标均从原 blind IDs 计算，模型、校准阈值和门槛未变。原失败 run manifest 与 partial metrics 均保留，最终清单标记 `COMPLETED_AFTER_REPLAY`。
+- **阶段门：** S1 高 SNR 主 RMSE 为 28.30 Hz，对比 S0 26.20 Hz，改善 −8.02%，配对 hierarchical bootstrap 95% CI 为 `[0.378, 4.622]` Hz；Doppler 门未通过。S2 为 23.35 Hz，改善 10.86%，95% CI `[-6.338, -0.173]` Hz，三个 seed 均优于配对 S0；主 Doppler 门通过。S1/S2 高 SNR range RMSE 增量分别为 `0.0104/0.0155` cell，95% CI 上界均低于 `+0.05`，距离门通过。低 SNR Pd 差值区间下界 S1=`−0.0554`、S2=`−0.0939`，均未高于冻结的 `−0.05` 非劣界，因此检测保护门均失败；S2 在 seed_2、−5 dB 的 Pd 为 0.471，另两 seed 为 0.837/0.864，显示跨 seed 波动。
+- **传统基线：** 在 0/5/10/20 dB 等权平均的 Doppler RMSE（Hz）为：S0 26.20、S1 28.30、S2 23.35；原生 FFT peak 2.86、原生三点插值 1.49、四倍 FFT peak 0.738、四倍 FFT 三点插值 0.104、lag-one 非学习估计 3.74、APX15 0.122。profile-ML 在每个 SNR 预设的 128 个 H1 样本上为 0.100 Hz。高 SNR 条件 CRLB 平均约 0.098 Hz；S2 误差约为其 238 倍。S2 虽超过 S0 主指标门槛，但没有超过传统精估计器。
+- **物理一致性与误差：** 三 seed S2 对统一公共相位旋转 `2.83 rad` 的平均 Doppler 输出变化为 `11.17–14.62 Hz`。对 `±0.625 Hz` 频移的等变残差均值为 `2.94–4.18 Hz`；对 `±5 Hz` 为 `9.79–14.73 Hz`。这些结果显示 lag-one 输入没有令网络自动获得相位不变性或频移等变性。20 dB S2 各 seed RMSE 为 `22.65–28.58 Hz`，而 10 dB 为 `16.67–22.75 Hz`，高 SNR 表现非单调。完整 Doppler/距离四分位、正负频率、Nyquist 邻域、初相、幅度与 SNR 分组见 `blind/metrics.json`。
+- **决定：** 按冻结规则作 **STOP / REDIRECT**：S1 未通过主 Doppler 门；S2 虽通过 Doppler 和 range 门，但检测保护门失败，故没有纯 IQ 候选满足合取验收条件。不得据此声称 E002 纯 IQ 结构成功或推翻 D1-E001 结论。D1-E002 候选仅用 E1 仿真真值监督，没有执行新的 E2/E3 蒸馏对照；既有 S0_D 只是历史模型锚点，不能作为本实验新增蒸馏收益证据。
+- **环境与产物：** Formal 训练沿用 RTX 3050 Laptop GPU、CUDA FP32、batch 64 和固定 1600 update 预算；重放记录 RTX 3050 Laptop GPU、PyTorch 2.8.0+cu128、CUDA 12.8、batch 64、峰值分配显存约 169 MiB。指标表、全部保存预测、ROC/RMSE-SNR 图、初次失败及重放 provenance 均在 `experiments/D1-E002/blind/`；缓存数据未纳入 Git。审查见 `docs/stage_reviews/D1-E002_review.md`。

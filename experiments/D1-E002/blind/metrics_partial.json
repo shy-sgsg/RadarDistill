@@ -1,0 +1,8 @@
+{
+  "experiment_id": "D1-E002",
+  "phase": "blind",
+  "status": "FAILED",
+  "methods": {},
+  "gates": {},
+  "failure": "KeyError: 'waveform'"
+}

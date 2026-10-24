@@ -1,0 +1,13 @@
+{
+  "experiment_id": "D1-E002",
+  "phase": "blind",
+  "status": "FAILED",
+  "code_commit": "286c68869bf23a03f47ed804cd625a1499b5fd10",
+  "model_manifest_commit": "2390fb0a47dc08d7c6e4c3178f33d393bb01f1db",
+  "calibration_commit": "42fc79c12bd84783027d1dbd35975b9307fe34d0",
+  "blind_data_generated": true,
+  "batch_size": 64,
+  "blind_used_for_model_selection": false,
+  "blind_cache": "experiments/D1-E002/data/blind_cache",
+  "failure": "KeyError: 'waveform'"
+}

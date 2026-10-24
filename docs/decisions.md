@@ -134,3 +134,12 @@
 - **发现：** Pilot 已按配置对 S1/S2/S3 各完成 1600 次更新，但 pilot 汇总把实际次数写在 `training.completed_updates`；选择器误从顶层 `completed_updates` 读取，令三者都被错误标为预算未完成。
 - **处理：** 保留原始 pilot 的 `selection.json` 与 `metrics.json` 不变；修复选择器并新增只读原始 pilot metrics 的独立重选入口，另存 `selection_corrected.json`，并写入原因、来源提交和“未改门槛/未重生成数据”记录。没有重训模型或生成 blind 数据。formal 门会复算并核对更正选择；更正提交只允许冻结路径中的训练模块发生变化，学生与评价模块必须保持与 pilot 一致。
 - **重算结果：** 从已提交 pilot metrics 重算并生成独立更正 artifact：S1、S2 通过原定 pilot screen；S3 仍因相对匹配三点 FFT 增益、20 dB 单点和高 SNR range guard 未通过。此结果只选择 formal 候选，不作为效应证据。
+
+## 2026-10-25：D1-E002 盲测判定 STOP / REDIRECT
+
+- **证据：** 新盲测含 32,768 H0 和 8,192 H1，使用冻结的 50,000-H0 校准阈值和 2,000 次层级配对 bootstrap。S1 高 SNR Doppler RMSE 相对 S0 恶化 8.02%；S2 改善 10.86%，配对 95% CI 为 `[-6.338, -0.173] Hz` 且 3/3 seed 同向。两个候选的 range 非劣门均通过；低 SNR Pd 差值 95% CI 下界 S1=`−0.0554`、S2=`−0.0939`，均未达到 `>−0.05` 门槛。
+- **决定：** 按冻结合取条件作 **STOP / REDIRECT**，停止 D1-E002 本轮纯 IQ Doppler 读出结构搜索。S2 的主 Doppler 改善不抵消检测保护门失败；不得降低门槛、追加结构或用盲测进行调参。D1-E001 的 GO → D2、G1/G2/G3 结论保持不变。
+- **方法差距：** S2 在 0/5/10/20 dB 等权 Doppler RMSE 为 23.35 Hz，仍高于原生 FFT peak 2.86 Hz、四倍 FFT 插值 0.104 Hz、lag-one 非学习估计 3.74 Hz、APX15 0.122 Hz 和 128-H1/SNR profile-ML 0.100 Hz。S2 高 SNR 条件 CRLB 均值约 0.098 Hz。故本结果不支持学生达到传统精估计器性能。
+- **知识蒸馏边界：** E002 新候选只接受 E1 物理真值监督；没有训练 E2 或 E3，也没有新蒸馏消融。S0_D 是 D1-E001 的历史蒸馏 checkpoint，只作次要参考，不据此作 E002 蒸馏因果结论。
+- **盲测错误更正：** 首次统计前评估器在 profile-ML 读取范围区间时误从 D1 查找 `waveform`，导致 `KeyError: 'waveform'`。保留初次失败清单及 partial metrics；在提交 `e7404f6` 中改从冻结 D0 波形配置读取区间，并以保存的 blind cache / sample IDs 补算 profile-ML 和汇总。没有重新生成盲测、重训模型、改变校准阈值或成功门槛。审计见 `experiments/D1-E002/blind/run_manifest.json` 与 `run_manifest_initial_failure.json`。
+- **限制与后续：** 结论仅适用于本轮单目标三通道复 AWGN 条件；每个 SNR 盲测 H0=4096 不支撑 `Pfa=1e-6` 声明。新增 E2/E3 或架构实验须另立可证伪假设、预注册预算与独立盲测；当前不启动下一实验。
