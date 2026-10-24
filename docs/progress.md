@@ -256,4 +256,11 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 
 - **问题与证据：** D1-R1 显示高 SNR 残差在真值距离门下仍存在；池化前 probe 没有支持单纯扩大时间特征的说法；任务梯度诊断不支持直接改损失权重。S2 归一化 lag-one 相干统计因此作为优先纯 IQ 候选，S1 仅一次单 seed 反证，S3 作为 FFT 混合方法单独归因。
 - **冻结设计：** `experiments/D1-E002/protocol.md` 与 `config.yaml` 固定 S1/S2/S3 前向、参数量、E1 真值监督、1600 更新、有效 batch 64、train/validation/pilot/calibration/blind 种子、检测 `Pfa=1e-2` guardrail、高 SNR Doppler 主指标、range 非劣界、paired hierarchical bootstrap 与停止规则。protocol/config 测试展开 313 个数据流种子，确认无内部重复且不与登记 D0/D1 种子相撞。
-- **状态：** protocol/config 和配置测试先于候选训练准备；尚未生成 E002 数据、启动 pilot、calibration 或 blind。若无候选通过 pilot 屏选，不做 formal 或盲测。
+- **状态：** protocol/config 与实现已提交到 `main`；CUDA pilot 已完成，训练/验证仿真数据只存本地可重建缓存，尚未生成 E002 calibration 或 blind。
+
+## 2026-10-24：D1-E002 单 seed CUDA pilot 与筛选器更正
+
+- **执行：** RTX 3050 Laptop GPU（4 GiB）上按 S1→S2→S3 顺序运行，FP32、有效 batch 64，每模型 1600 更新；三者均完整完成。训练耗时分别 160.0、147.0、155.0 秒，峰值已分配显存约 1.09、1.10、1.16 GiB。原始 metrics、训练曲线和初始/最佳检查点已提交；训练与验证缓存未提交。
+- **原始 pilot 验证：** S0 高 SNR 平均 Doppler RMSE 为 27.129 Hz。S1 为 24.403 Hz（改善 10.05%），低 SNR 平均 AUC 0.658，range RMSE 0.0690 cell；S2 为 22.811 Hz（改善 15.92%），低 SNR 平均 AUC 0.652，range RMSE 0.0734 cell。二者通过原预注册 pilot screen。S3 为 68.110 Hz；匹配三点 FFT 为 67.963 Hz，未见混合学生增益；S3 另未通过 range guard 与 20 dB 回归门。
+- **审计修正：** 初始 `selection.json` 因选择器从顶层读取更新次数，把实际存于 `training.completed_updates` 的 `1600` 次误判为未完成。原 `selection.json` 和 `metrics.json` 保留不改；修复后的独立入口将只从已保存 pilot 验证指标重算，门槛、数据、模型和预算均不变，也不把 pilot 重标为 blind。测试已增加嵌套字段回归覆盖；更正 artifact 将在代码提交后生成。
+- **当前门：** 对已保存验证指标重算后，S1、S2 满足原定三 seed formal 候选筛选门；S3 停止。formal 尚未开始；新 calibration 与 final blind 均未生成。pilot 只用于候选筛选，不作为正式效应证据。

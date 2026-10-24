@@ -236,7 +236,11 @@ def select_formal_candidates(
             candidates[name] = {"eligible": False, "reasons": ["missing_pilot_metrics"]}
             continue
         expected_updates = int(config["models"][name]["optimizer_updates"])
-        if int(current.get("completed_updates", -1)) != expected_updates:
+        training_summary = current.get("training", {})
+        completed_updates = training_summary.get(
+            "completed_updates", current.get("completed_updates", -1)
+        )
+        if int(completed_updates) != expected_updates:
             reasons.append("pilot_update_budget_incomplete")
         if not current.get("finite_outputs", False):
             reasons.append("non_finite_outputs")
@@ -1310,24 +1314,149 @@ def _run_pilot(
         raise
 
 
-def _require_committed_pilot(root: Path, config: dict[str, Any]) -> tuple[dict[str, Any], str]:
+def reselect_d1_e002_pilot(root: Path, config_path: Path) -> Path:
+    """Recompute the pilot screen from committed validation metrics after a selector fix."""
+    root = root.resolve()
+    config_path = config_path.resolve()
+    registered_config = (root / "experiments" / "D1-E002" / "config.yaml").resolve()
+    if config_path != registered_config:
+        raise ValueError("D1-E002 reselection only accepts its registered config.yaml")
+    config = _load_committed_config(config_path)
+    assert_preregistered_files(root, config_path)
+    selector_code_commit = assert_committed_implementation(root)
+    selector_script = root / "scripts" / "reselect_d1_e002_pilot.py"
+    subprocess.run(
+        ["git", "-C", str(root), "ls-files", "--error-unmatch", "--", "scripts/reselect_d1_e002_pilot.py"],
+        check=True,
+        capture_output=True,
+    )
+    script_status = subprocess.run(
+        ["git", "-C", str(root), "status", "--porcelain", "--", "scripts/reselect_d1_e002_pilot.py"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if script_status or not selector_script.is_file():
+        raise RuntimeError("commit the clean D1-E002 pilot reselection utility before use")
+
     pilot_dir = root / "experiments" / "D1-E002" / "pilot"
+    metrics_path = pilot_dir / "metrics.json"
     selection_path = pilot_dir / "selection.json"
     manifest_path = pilot_dir / "run_manifest.json"
-    if not selection_path.is_file() or not manifest_path.is_file():
+    corrected_path = pilot_dir / "selection_corrected.json"
+    correction_path = pilot_dir / "selection_correction.json"
+    if corrected_path.exists() or correction_path.exists():
+        raise FileExistsError("a D1-E002 pilot reselection already exists; preserving existing artifacts")
+    for path in (metrics_path, selection_path, manifest_path):
+        relative = path.resolve().relative_to(root).as_posix()
+        status = subprocess.run(
+            ["git", "-C", str(root), "status", "--porcelain", "--", relative],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        if status:
+            raise RuntimeError(f"commit the original pilot artifact before reselection: {relative}")
+        subprocess.run(
+            ["git", "-C", str(root), "ls-files", "--error-unmatch", "--", relative],
+            check=True,
+            capture_output=True,
+        )
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    original_selection = json.loads(selection_path.read_text(encoding="utf-8"))
+    pilot_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    pilot_code_commit = str(pilot_manifest.get("code_commit", ""))
+    if (
+        metrics.get("status") != "COMPLETED"
+        or pilot_manifest.get("status") != "COMPLETED"
+        or metrics.get("selection") != original_selection
+        or original_selection.get("code_commit") != pilot_code_commit
+        or metrics.get("blind_data_generated", False)
+        or pilot_manifest.get("blind_data_generated", False)
+    ):
+        raise RuntimeError("reselection requires the original completed pilot with no blind data")
+
+    pilot_metrics = {
+        name: value
+        for name, value in metrics.get("candidates", {}).items()
+        if int(value.get("training", {}).get("completed_updates", -1))
+        == int(config["models"][name]["optimizer_updates"])
+    }
+    matched_fft = (
+        pilot_metrics.get("S3", {})
+        .get("matched_nonlearning_fft", {})
+        .get("three_point_log_parabolic", {})
+    )
+    selection = select_formal_candidates(
+        pilot_metrics,
+        metrics["baseline"]["S0"]["validation"],
+        matched_fft,
+        config,
+    )
+    correction = {
+        "status": "CORRECTED_FROM_PILOT_VALIDATION",
+        "reason": "pilot candidate summaries store completed_updates under training, while the original selector read the top-level field",
+        "pilot_code_commit": pilot_code_commit,
+        "selector_code_commit": selector_code_commit,
+        "source_metrics": "experiments/D1-E002/pilot/metrics.json",
+        "original_selection": "experiments/D1-E002/pilot/selection.json",
+        "corrected_selection": "experiments/D1-E002/pilot/selection_corrected.json",
+        "formal_candidates": selection["formal_candidates"],
+        "blind_data_generated": False,
+        "thresholds_changed": False,
+        "pilot_data_regenerated": False,
+    }
+    selection["pilot_screen"] = config["acceptance"]["pilot_screen"]
+    selection["code_commit"] = pilot_code_commit
+    selection["selection_correction"] = {
+        "pilot_code_commit": pilot_code_commit,
+        "selector_code_commit": selector_code_commit,
+        "reason": correction["reason"],
+    }
+    _write_json(corrected_path, selection)
+    _write_json(correction_path, correction)
+    return corrected_path
+
+
+def _require_committed_pilot(root: Path, config: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    pilot_dir = root / "experiments" / "D1-E002" / "pilot"
+    original_selection_path = pilot_dir / "selection.json"
+    corrected_selection_path = pilot_dir / "selection_corrected.json"
+    correction_path = pilot_dir / "selection_correction.json"
+    manifest_path = pilot_dir / "run_manifest.json"
+    if not original_selection_path.is_file() or not manifest_path.is_file():
         raise FileNotFoundError("formal training requires a completed, committed E002 pilot")
-    selection = json.loads(selection_path.read_text(encoding="utf-8"))
+    original_selection = json.loads(original_selection_path.read_text(encoding="utf-8"))
     pilot_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     frozen_code = str(pilot_manifest.get("code_commit", ""))
-    if pilot_manifest.get("status") != "COMPLETED" or selection.get("code_commit") != frozen_code:
+    if pilot_manifest.get("status") != "COMPLETED" or original_selection.get("code_commit") != frozen_code:
         raise RuntimeError("formal training requires a completed pilot with a matching frozen code commit")
+    corrected = corrected_selection_path.is_file() or correction_path.is_file()
+    if corrected_selection_path.is_file() != correction_path.is_file():
+        raise RuntimeError("pilot selection correction artifacts are incomplete")
+    selection = (
+        json.loads(corrected_selection_path.read_text(encoding="utf-8"))
+        if corrected
+        else original_selection
+    )
     required_paths = [
         Path("experiments/D1-E002/pilot/config_used.yaml"),
         Path("experiments/D1-E002/pilot/metrics.json"),
         Path("experiments/D1-E002/pilot/selection.json"),
         Path("experiments/D1-E002/pilot/run_manifest.json"),
     ]
+    if corrected:
+        required_paths.extend(
+            (
+                Path("experiments/D1-E002/pilot/selection_corrected.json"),
+                Path("experiments/D1-E002/pilot/selection_correction.json"),
+            )
+        )
     pilot_metrics = json.loads((pilot_dir / "metrics.json").read_text(encoding="utf-8"))
+    if pilot_metrics.get("status") != "COMPLETED":
+        raise RuntimeError("formal training requires completed pilot metrics")
+    if pilot_metrics.get("blind_data_generated", False) or pilot_manifest.get("blind_data_generated", False):
+        raise RuntimeError("pilot data must not include any blind evaluation")
     for candidate in ("S1", "S2", "S3"):
         candidate_result = pilot_metrics.get("candidates", {}).get(candidate, {})
         training_result = candidate_result.get("training", {})
@@ -1358,6 +1487,47 @@ def _require_committed_pilot(root: Path, config: dict[str, Any]) -> tuple[dict[s
             check=True,
             capture_output=True,
         )
+    if corrected:
+        correction = json.loads(correction_path.read_text(encoding="utf-8"))
+        metadata = selection.get("selection_correction", {})
+        if (
+            correction.get("status") != "CORRECTED_FROM_PILOT_VALIDATION"
+            or correction.get("pilot_code_commit") != frozen_code
+            or selection.get("code_commit") != frozen_code
+            or metadata.get("pilot_code_commit") != frozen_code
+            or metadata.get("selector_code_commit") != correction.get("selector_code_commit")
+            or correction.get("blind_data_generated", True)
+            or correction.get("thresholds_changed", True)
+            or correction.get("pilot_data_regenerated", True)
+            or correction.get("formal_candidates") != selection.get("formal_candidates")
+            or pilot_metrics.get("selection") != original_selection
+        ):
+            raise RuntimeError("pilot selection correction provenance is inconsistent")
+        pilot_candidates = {
+            name: value
+            for name, value in pilot_metrics.get("candidates", {}).items()
+            if int(value.get("training", {}).get("completed_updates", -1))
+            == int(config["models"][name]["optimizer_updates"])
+        }
+        matched_fft = (
+            pilot_candidates.get("S3", {})
+            .get("matched_nonlearning_fft", {})
+            .get("three_point_log_parabolic", {})
+        )
+        expected = select_formal_candidates(
+            pilot_candidates,
+            pilot_metrics["baseline"]["S0"]["validation"],
+            matched_fft,
+            config,
+        )
+        for key in ("selection_source", "blind_data_used", "formal_candidates", "candidates", "no_candidate_action"):
+            if selection.get(key) != expected.get(key):
+                raise RuntimeError(f"corrected pilot selection does not match saved metrics: {key}")
+        correction_code = str(correction.get("selector_code_commit", ""))
+        if not correction_code:
+            raise RuntimeError("pilot selection correction lacks its code commit")
+    else:
+        correction_code = frozen_code
     frozen_paths = [
         "experiments/D1-E002/config.yaml",
         "experiments/D1-E002/protocol.md",
@@ -1374,9 +1544,26 @@ def _require_committed_pilot(root: Path, config: dict[str, Any]) -> tuple[dict[s
         capture_output=True,
         text=True,
     ).stdout.splitlines()
-    if changed:
+    if corrected:
+        allowed = ["src/radardistill/training/d1_e002.py"]
+        if changed != allowed:
+            raise RuntimeError(f"pilot correction changed files outside the selector implementation: {changed}")
+        changed_after_correction = subprocess.run(
+            ["git", "-C", str(root), "diff", "--name-only", f"{correction_code}..HEAD", "--", *frozen_paths],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.splitlines()
+        if changed_after_correction:
+            raise RuntimeError(f"D1-E002 implementation changed after the recorded selector correction: {changed_after_correction}")
+        subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", correction_code, "HEAD"],
+            check=True,
+            capture_output=True,
+        )
+    elif changed:
         raise RuntimeError(f"D1-E002 frozen implementation changed after pilot: {changed}")
-    return selection, frozen_code
+    return selection, correction_code
 
 
 def _run_formal(
@@ -1401,7 +1588,11 @@ def _run_formal(
                 "status": "STOP_NO_PILOT_CANDIDATE_PASSED",
                 "formal_candidates": [],
                 "blind_data_generated": False,
-                "pilot_selection": "experiments/D1-E002/pilot/selection.json",
+                "pilot_selection": (
+                    "experiments/D1-E002/pilot/selection_corrected.json"
+                    if selection.get("selection_correction")
+                    else "experiments/D1-E002/pilot/selection.json"
+                ),
             },
         )
         return output_dir
@@ -1410,6 +1601,12 @@ def _run_formal(
         "phase": "formal",
         "status": "RUNNING",
         "code_commit": code_commit,
+        "pilot_code_commit": selection.get("code_commit"),
+        "pilot_selection_file": (
+            "experiments/D1-E002/pilot/selection_corrected.json"
+            if selection.get("selection_correction")
+            else "experiments/D1-E002/pilot/selection.json"
+        ),
         "formal_candidates": candidates,
         "environment": _environment(root, device),
         "blind_data_generated": False,

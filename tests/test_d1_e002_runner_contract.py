@@ -70,6 +70,23 @@ def test_candidate_selection_obeys_frozen_pilot_gates() -> None:
     assert selected["candidates"]["S3"]["eligible"] is False
 
 
+def test_candidate_selection_reads_completed_updates_from_pilot_training_summary() -> None:
+    config = _config()
+    candidate = _metrics(24.0)
+    candidate.pop("completed_updates")
+    candidate["training"] = {"completed_updates": 1600}
+
+    selected = select_formal_candidates(
+        {"S2": candidate},
+        _metrics(30.0),
+        _metrics(9.0),
+        config,
+    )
+
+    assert selected["candidates"]["S2"]["eligible"] is True
+    assert "pilot_update_budget_incomplete" not in selected["candidates"]["S2"]["reasons"]
+
+
 def test_seed_validation_rejects_reuse_of_existing_dataset_seed() -> None:
     config = _config()
     with pytest.raises(ValueError, match="overlap"):

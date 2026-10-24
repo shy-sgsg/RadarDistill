@@ -128,3 +128,9 @@
 - **触发：** 对 E002 执行器的预训练审阅发现，协议虽要求各方法校准检测阈值，却未定义 FFT/lag-one 频率基线的检测分数，也未写出流式盲测分块的派生 seed。
 - **决定：** 学生各用 presence logit，APX15 使用 D0 冻结检测分数；经典频率估计共用非相干峰值距离能量分数 `max_r sum_(c,n)|x[c,n,r]|²`，该检测结果不归因于频率估计器。profile-ML 维持固定 H1 参数子集，只报告估计。校准/盲测每 64 条用 `base + snr_index*1009 + chunk_index*1009*snr_count` 派生 seed。固定 Doppler/range 分组边界和 Nyquist 25 Hz 邻域。
 - **边界：** 这项协议澄清发生在 E002 train/validation、calibration 和 blind 数据生成之前，不依赖候选结果，不改变模型、预算或成功门槛；原 D1-E001 结论保持不变。
+
+## 2026-10-24：修正 D1-E002 pilot 的预算字段读取
+
+- **发现：** Pilot 已按配置对 S1/S2/S3 各完成 1600 次更新，但 pilot 汇总把实际次数写在 `training.completed_updates`；选择器误从顶层 `completed_updates` 读取，令三者都被错误标为预算未完成。
+- **处理：** 保留原始 pilot 的 `selection.json` 与 `metrics.json` 不变；修复选择器并新增只读原始 pilot metrics 的独立重选入口，输出另存为 `selection_corrected.json`，同时写入原因、来源提交和“未改门槛/未重生成数据”记录。没有重训模型或生成 blind 数据。formal 门将复算并核对更正选择；更正提交只允许冻结路径中的训练模块发生变化，学生与评价模块必须保持与 pilot 一致。
+- **重算结果：** 从已提交 pilot metrics 本地重算，S1、S2 通过原定 pilot screen；S3 仍因相对匹配三点 FFT 增益、20 dB 单点和高 SNR range guard 未通过。此结果只选择 formal 候选，不作为效应证据；独立更正 artifact 将在修复代码推送后生成并提交。
