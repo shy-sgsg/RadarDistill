@@ -1,10 +1,24 @@
 # 当前研究状态
 
-**更新：** 2026-10-25
-**D1-R1 诊断代码依据：** 4f50df0（metrics 中记录的诊断代码 SHA；诊断报告/表格在 70d4c6c 提交）。D1-E002 的训练提交、选择器修正和实验产物提交分别记录在对应 run manifest 与 Git 历史中。
-**最新完成阶段：** D1-E002 独立盲测与阶段审查完成；D1-E001 原阶段 GO → D2（G1/G2 PASS、G3 FAIL）保持不变。
-**最重要发现：** S2 lag-one 复相干读出相对 S0 的高 SNR Doppler RMSE 改善 10.86%，且 95% 区间低于零；但低 SNR 检测保护门未通过。S1 未改善主指标。两个学生都远落后四倍 FFT 插值、APX15 和有限网格 profile-ML。
-**主要瓶颈：** 频率误差和公共相位/频移一致性仍不足；D1-E002 按预注册协议为 **STOP / REDIRECT**，不继续增加本轮架构或训练变体。D1-E001 的既有结论不被覆盖。
-**当前状态：** D1-E002 使用了 50,000-H0 calibration、40,960 条新盲测（32,768 H0 + 8,192 H1），每个校准分数经验 Pfa=0.00998。首次盲测在 profile-ML 配置读取错误处中断，随后用同一 blind cache 和已保存预测完成重放；没有重生成数据、重训模型或重校准阈值。
-**关键证据：** experiments/D1-R1/analysis.md；experiments/D1-E002/protocol.md、config.yaml、pilot/、formal/、calibration/、blind/；docs/progress.md、docs/decisions.md；docs/stage_reviews/D1-E002_review.md；D1-E001 与 D0-D1 历史审查。
-**GPU：** AISAR / PyTorch 2.8.0+cu128，当前会话可见 RTX 3050 Laptop GPU（4 GiB）；模型训练不得 CPU 回退。
+**更新日期：** 2026-10-25
+**工作分支：** `main`
+**审查基线提交：** `1383289eae128c0215b111d136003c5e617da9ec`（`main`；当前文档提交 SHA 可用 `git rev-parse HEAD` 查询）
+**最新完成工作：** D1-E002 独立盲测与阶段审查；D1-R1 诊断审查已补齐。
+**阶段判断：** D1-E001 原 GO → D2 保持；D1-E002 的 AWGN Doppler 结构搜索 STOP / REDIRECT。
+
+## 主要发现
+
+E002 的 S2 lag-one 复相干学生在 0/5/10/20 dB 的等权 Doppler RMSE 为 23.352 Hz，较 S0 改善 10.86%，但低 SNR Pd 非劣门失败；四倍 FFT 抛物插值、APX15 和有限网格 profile-ML 为 0.104、0.122、0.100 Hz。S2 不具备已证明的传统估计竞争力，且未通过公共相位旋转/频移一致性检查。
+
+D1-E001 的 C/D 满足原冻结联合指标 G2；没有蒸馏收敛加速证据，多策略区间未作家族错误率调整，D 的效果量受 seed 1 影响。学生低 SNR 检测与高精度 Doppler 仍是主要问题。
+
+## 唯一优先任务
+
+准备 **D2-A 静止杂波单因素实验协议和传统基线/可辨识性验证**。先冻结 H0/H1 生成、静止杂波模型、目标条件、DPCA/杂波抑制与检测基线、校准 Pfa、预算、种子及独立盲测规则；协议未冻结前不训练、不生成新 blind。下一阶段设计状态：D1-E001 阶段门允许进入 D2，D2-A 具体协议尚未冻结。
+
+## 关键材料
+
+- 总纲/路线：[研究总纲](RESEARCH_CHARTER.md)、[动态路线图](RESEARCH_ROADMAP.md)、[假设登记](research/ASSUMPTION_REGISTER.md)
+- 审查：[D0/D1 E002 后总审查](stage_reviews/D0-D1_post_E002_review.md)、[D1-R1 Doppler 诊断](stage_reviews/D1_R1_doppler_diagnosis.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
+- 数据与结果：`experiments/D0-E001/`、`experiments/D1-E001/`、`experiments/D1-R1/`、`experiments/D1-E002/`
+- 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；正式训练必须使用可见 CUDA。

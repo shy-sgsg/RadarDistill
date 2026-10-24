@@ -18,4 +18,4 @@
 
 D0 先验收波形/匹配滤波、噪声、通道、频谱轴和教师标签正确性。D1 比较 APX15 频谱教师、FFT 峰值/插值、profile-ML 与 A/B/C/D。检测在独立 H0 校准后报告预注册虚警点，参数误差按 SNR、range、Doppler 边界分组，并区分无条件误差和正确检测条件误差。数据、教师、学生预测、损失和配置分别保存。
 
-当前 D0-E001 已通过 12 项仿真/教师正确性门，允许进入 D1。D1-E001 的三种子正式训练、独立校准和盲测已完成：G1 PASS、G2 PASS、G3 FAIL，阶段决定 GO → D2。C 联合训练和 D 渐进蒸馏的最终指标收益符合冻结规则，但没有收敛加速证据；学生仍明显落后于 APX15/profile-ML 的高 SNR 参数估计，且低 SNR 检测退化。下一阶段必须一次只增加一项复杂度。完整结论见 `experiments/D1-E001/analysis.md` 和 `docs/stage_reviews/D1-E001_review.md`。
+截至 2026-10-25，D0-E001 的 12 项仿真/教师正确性门通过。D1-E001 的三种子正式训练、独立校准和 blind 已完成：G1/G2 PASS、G3 FAIL，原阶段门 GO → D2 保持。其后 D1-R1 诊断完成；D1-E002 S2 虽较 S0 改善高 SNR Doppler RMSE 10.86%，但低 SNR Pd 保护门未通过，按其冻结协议 STOP / REDIRECT，停止当前 AWGN 结构搜索。下一项建议为 D2-A 静止杂波单因素协议和强基线/可辨识性验证，尚未冻结。详见 [`D0/D1 E002 后审查`](../stage_reviews/D0-D1_post_E002_review.md) 与 [`D1-E002 review`](../stage_reviews/D1-E002_review.md)。

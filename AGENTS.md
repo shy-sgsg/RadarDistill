@@ -1,32 +1,34 @@
 # RadarDistill 执行规则
 
-本仓库长期使命和科学边界以 docs/RESEARCH_CHARTER.md 为准。当前阶段以 docs/CURRENT_STATUS.md 和 docs/RESEARCH_ROADMAP.md 为准；详细历史与冻结阶段门见对应实验 protocol 和审查报告。不得用本文件取代研究总纲。
+项目核心研究使命、科学问题和边界以 [`docs/RESEARCH_CHARTER.md`](docs/RESEARCH_CHARTER.md) 为准；动态阶段以 [`docs/CURRENT_STATUS.md`](docs/CURRENT_STATUS.md) 和 [`docs/RESEARCH_ROADMAP.md`](docs/RESEARCH_ROADMAP.md) 为准；冻结指标与实验门以对应 protocol 和阶段审查为准。本文件是执行规则，不是研究历史。
 
 ## 开始任务前
 
-- 阅读 docs/RESEARCH_CHARTER.md、docs/CURRENT_STATUS.md、docs/RESEARCH_ROADMAP.md、docs/research/ASSUMPTION_REGISTER.md，以及当前任务相关的阶段报告、protocol、配置和 decisions.md。
-- 按 docs/governance/CODEX_TASK_PROTOCOL.md 完成研究主线对齐。常规且已批准的小范围实现无需暂停确认；改变核心使命或冻结的科学门槛须先获得用户批准。
-- 检查当前分支、提交、工作区修改、未跟踪数据和相关代码；保留用户文件，不以对话记忆代替仓库证据。
+- 对每项任务应用已安装的 `stop-that-shit` skill Stop Ladder；只做用户请求或完成请求所必需的工作。
+- 阅读研究总纲、当前状态、路线图、[`docs/research/ASSUMPTION_REGISTER.md`](docs/research/ASSUMPTION_REGISTER.md)、相关阶段报告/protocol/config/decisions。
+- 检查当前分支、提交、跟踪修改和未跟踪用户数据。保留用户数据和历史负结果。
+- 科研任务在 `docs/task_alignments/` 记录目标、问题/假设、证据、优先理由、决策影响、替代方案、成功/失败含义和停止条件。普通小修可将对齐简记在日志或提交说明。
+- 按 [`docs/governance/CODEX_TASK_PROTOCOL.md`](docs/governance/CODEX_TASK_PROTOCOL.md) 做研究主线对齐；正常且已批准的工作直接继续，不因例行实现反复要求架构选择确认。
 
-## 科研诚信与实验
+## 研究路线和阶段门
 
-- 先定义问题、可辨识条件、假设、强传统基线、数据切分、预算、指标和停止条件，再实现模型或生成盲测数据。
-- 区分物理真值、教师硬标签、软响应和学生输出；教师错误不能覆盖真值。
-- 训练、验证、校准和最终测试应独立。用于选架构的数据不能重标为最终盲测；冻结盲测前固定配置、模型、统计门和阈值。
-- 周期频率/相位使用回绕误差。报告样本量、独立种子、置信区间、失败结果和适用边界。
-- 不预设 AI 优于传统方法。FFT/CFAR 等混合前端必须与匹配非学习前端比较，并区分前端贡献和学生贡献。
-- 训练必须使用用户要求的可见 CUDA，禁止静默 CPU 回退；依序训练、控制显存，OOM 时先降低 microbatch 并维持有效 batch 和更新预算。
-- 速度结论必须比较同硬件、同输入边界的完整处理链。未测量的实时性能、未运行的实验不得写成结果。
-- 研究代码与既有生产 GMTI 算法隔离；没有必要证据和批准，不改生产处理链。
+- 历史阶段门约束其原协议和结论，不自动禁止提出有独立证据的新假设。新路线须明确问题、可辨识条件、强传统基线、数据划分、预算、指标、停止条件并另行冻结协议。
+- 若新证据与旧计划冲突，记录触发证据、影响和路线调整建议；不覆盖旧协议/负结果，也不把旧盲测重标为新盲测。
+- 研究使命、最终任务或对外承诺的重大改变须经用户批准。阶段协议冻结后不得按盲测结果改模型、门槛或阈值。
+- 不预设 AI 优于传统方法。物理真值、教师硬标签/软响应和学生预测分开保存；教师错误不得替代真值。
 
-## 代码、记录与 Git
+## 实验和工程
 
-- 只做用户请求或完成请求所必需的改动；不要覆盖历史负结果或未提交用户数据。
-- 实验放在 experiments/<阶段>-E编号/，保存 protocol、config、metrics、result 和 analysis；入口放 scripts/，代码放 src/radardistill/，行为/物理约束测试放 tests/。
-- 每完成一个可审查工作包建立小而清晰的提交。仅暂存检查过的路径；大型可重建缓存、外部源码包和无关二进制不得进入提交。提交前检查差异和文件大小。
-- 未获当前任务明确授权，不推送或重写共享分支历史。
-- 研究判断更新 docs/progress.md；路线或假设变化更新 docs/decisions.md、路线图和假设登记。
+- 仿真参数、波形、噪声、杂波、通道误差和可辨识假设必须可检查。复数相位/周期频率使用对应回绕误差。
+- 训练、验证、校准和最终测试独立；架构选择使用过的数据不能称为最终盲测。报告样本量、训练种子、不确定性、资源与适用范围。
+- CUDA 训练必须检查用户要求的实际设备并禁止静默 CPU 回退；模型顺序驻留、数据按 batch 搬运；OOM 时先降低 microbatch 并保持有效 batch/更新预算。
+- FFT/CFAR 等混合方法须与匹配的非学习物理前端比较并区分贡献。速度结论须同硬件、同输入边界、完整前后处理链；前向时间不等于系统时延。
+- 实验代码放 `src/radardistill/`，入口放 `scripts/`，行为/物理测试放 `tests/`；实验产物放 `experiments/<阶段>-E编号/`，包括 protocol、config、metrics、result 和 analysis。未运行的实验不得写成结果。
+- 不改生产 GMTI 处理链，除非用户明确请求且证据表明必要。
 
-## 审查和完成
+## Git 和交付
 
-所有有科研意义的阶段均需通过工程正确性、实验科学性和研究主线审查。按 docs/governance/CHATGPT_REVIEW_PROTOCOL.md 给出 CONTINUE、REFINE、REDIRECT 或 STOP，以及证据、结论边界、停止条件和唯一下一项优先任务。阶段门不因已写入旧计划而免于重新审视。
+- 每个可审查工作包建立小而清楚的提交；仅暂存已审阅的准确路径。训练缓存、可重建数据和外部生产源码包默认不提交。
+- 未获当前任务明确授权，不推送或重写共享分支历史。用户明确指定目标分支/推送时，按授权直接在目标分支完成并推送。
+- 研究判断更新 `docs/progress.md`；路线/假设变化更新 `docs/decisions.md`、路线图、当前状态和假设登记。
+- 有科研意义的阶段依照 [`docs/governance/CHATGPT_REVIEW_PROTOCOL.md`](docs/governance/CHATGPT_REVIEW_PROTOCOL.md) 给出工程、实验科学性、研究主线和创新性判断，明确 CONTINUE / REFINE / REDIRECT / STOP 及唯一下一项优先任务。

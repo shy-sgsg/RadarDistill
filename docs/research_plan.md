@@ -2,7 +2,7 @@
 
 P0/P1 是已经开展的历史先导实验，其档案及决定保留。2026-10-24 用户批准的新主线是 D0 → D1 → D2 → D3 → D4 → D5；它以最终任务为中心，不要求先通过单独相位读出实验。阶段通过门槛后才增加场景难度；每个实验都保留传统基线、物理真值/教师输出区分、统计结果和负结果。
 
-**当前状态（2026-10-24）：** E001–E005 已标为开发基准。P0-E006 的 STOP/REDIRECT 是保留的历史结论；P0-E007 在 RTX 3050 CUDA 完成新的预注册评估，G1、G2 通过、G3 未通过，P0 决策为 GO。随后完成 P1-A-E001 三通道相对相位实验，但 G1 为 0/3 种子通过，原 P1-A 相位路线决定 STOP/REDIRECT；不进入 P1-B 或相位蒸馏。新主线 D0/D1 由用户单独批准，不改变上述历史结论。详见 `experiments/P0-E007/analysis.md`、`docs/stage_reviews/P0_final_review.md`、`docs/stage_reviews/P0-E007_review.md` 和 `docs/stage_reviews/P1-A-E001_review.md`。
+**P0/P1 历史状态（更新于 2026-10-25）：** E001–E005 已标为开发基准。P0-E006 的 STOP/REDIRECT 是保留的历史结论；P0-E007 在 RTX 3050 CUDA 完成新的预注册评估，G1、G2 通过、G3 未通过，P0 决策为 GO。随后完成 P1-A-E001 三通道相对相位实验，但 G1 为 0/3 种子通过，原 P1-A 相位路线决定 STOP/REDIRECT；不进入 P1-B 或相位蒸馏。新主线 D0/D1 由用户单独批准，不改变上述历史结论。详见 `experiments/P0-E007/analysis.md`、`docs/stage_reviews/P0_final_review.md`、`docs/stage_reviews/P0-E007_review.md` 和 `docs/stage_reviews/P1-A-E001_review.md`。
 
 ## 当前任务级路线：D0 → D5
 
@@ -18,7 +18,7 @@ P0/P1 是已经开展的历史先导实验，其档案及决定保留。2026-10-
 
 ### D2：三通道参数与复杂场景
 
-只有 D1 阶段审查支持后才增加角度/速度可辨识分析、多目标、静止/强杂波、低速弱目标及通道误差；逐项增加困难，不把不可辨识参数交给网络猜测。
+D1-E001 原阶段门允许进入 D2，但须逐项增加复杂度。当前建议先设计 D2-A 静止杂波单因素实验：固定原有单目标/三通道任务，加入一种静止杂波模型；冻结 H0/H1、可辨识条件和强传统杂波抑制/检测基线后，才决定是否训练。多目标、通道误差、加速度和运动补偿误差不得同时加入。D2-A 协议尚未冻结。
 
 ### D3：原始回波渐进迁移
 
@@ -32,15 +32,15 @@ P0/P1 是已经开展的历史先导实验，其档案及决定保留。2026-10-
 
 在相同硬件、输入边界和完整前后处理范围下比较传统处理链、物理前端加学生及原始回波学生；报告 Pd/Pfa、参数误差、P95/P99 时延、吞吐、内存和功耗。达到样本量要求前不得声称 Pfa=1e-6。
 
-**当前执行阶段（2026-10-24）：** D0-E001 与 D1-E001 已完成冻结阶段审查；D1 原阶段门为 GO → D2（G1/G2 PASS，G3 FAIL），历史结论不变。用户另行批准在增加 D2 场景复杂度前开展有界 D1-R1 Doppler 诊断和 D1-E002 受控结构实验。D1-R1 已完成：高 SNR 误差不是由预测距离门主导，时间池化与多任务冲突仍未获因果支持。D1-E002 的候选、种子、训练预算、统计门和独立 blind 生成规则现已冻结；唯一下一项是依序完成 S1/S2/S3 单 seed pilot 和预设筛选。尚未生成 E002 数据或启动训练。两项实验不改变 D1-E001 盲测结论。D1 的 Pfa=1e-2/1e-3 结果不能外推为 Pfa=1e-6，仿真结果不能称为真实 GMTI 验证。动态状态见 docs/CURRENT_STATUS.md 和 docs/RESEARCH_ROADMAP.md。
+**当前执行阶段（动态状态更新于 2026-10-25）：** D1-E001 冻结阶段门 GO → D2（G1/G2 PASS、G3 FAIL）保持不变。D1-R1 已完成，D1-E002 的 pilot、三 seed formal、独立 calibration 和新 blind 均已完成。E002 的 S2 高 SNR RMSE 较 S0 改善 10.86%，但低 SNR Pd 保护门失败，因此停止本轮 AWGN Doppler 结构搜索；这不覆盖 E001 的阶段门。下一项唯一优先任务是准备 D2-A 静止杂波单因素协议及强基线/可辨识性验证；该协议尚未冻结，不启动训练或新 blind。D1 的 `Pfa=1e-2/1e-3` 不能外推为 `Pfa=1e-6`，仿真结果不能称为真实 GMTI 验证。权威动态状态见 [`docs/CURRENT_STATUS.md`](CURRENT_STATUS.md) 与 [`docs/RESEARCH_ROADMAP.md`](RESEARCH_ROADMAP.md)。
 
 ### D1-R1：任务级学生连续 Doppler 误差诊断（已完成）
 
 仅用 D1 训练缓存、验证缓存、正式训练历史和可复核 checkpoint；最终盲测结果不得用于诊断或模型选择。拆分检测、距离分类/偏移和 Doppler 误差；对照预测距离门和只用于诊断的真值距离门；按 SNR、真值频率、相位、幅度、距离、Nyquist 邻域和种子分组。用训练样本拟合池化前/后的低成本线性 probe，并在验证样本上评价；计算共享主干上的任务梯度范数和方向。若所需训练 checkpoint 或数据不存在，明确标为不可复算。分析见 experiments/D1-R1/analysis.md。
 
-### D1-E002：受控连续 Doppler 结构实验（协议已冻结，pilot 待执行）
+### D1-E002：受控连续 Doppler 结构实验（已完成阶段审查）
 
-继续三通道距离压缩复 IQ 输入及 H0/H1、距离、连续 Doppler 任务。S0 为冻结原 TCN；S1 为四段时间读出反证；S2 为归一化 lag-one 复相干特征主候选；S3 为固定 520 点 FFT 加局部残差 MLP，并与同 FFT/局部谱的非学习插值比较。协议见 `experiments/D1-E002/protocol.md`，数值见 `config.yaml`。按 S1/S2/S3 单 seed pilot 顺序筛选；只对过门候选开展至少三个独立训练种子、匹配预算和新独立盲测。门槛和种子均已冻结；尚未生成数据或训练。不得将 S3 归因为纯学习成功。
+继续三通道距离压缩复 IQ 输入及 H0/H1、距离、连续 Doppler 任务。S0 为冻结原 TCN；S1 为四段时间读出；S2 为归一化 lag-one 复相干特征；S3 为固定 520 点 FFT 加局部残差 MLP。S1/S2 已完成三 seed formal 与独立盲测，S3 未通过 pilot。S2 的高 SNR Doppler 改善没有通过低 SNR Pd 保护门，阶段 STOP / REDIRECT；不继续本轮结构搜索。协议、配置、盲测与限制见 `experiments/D1-E002/` 和 `docs/stage_reviews/D1-E002_review.md`。S3 是 FFT 辅助混合模型，不能作为纯端到端成功证据。
 
 ## 历史先导实验：P0/P1
 

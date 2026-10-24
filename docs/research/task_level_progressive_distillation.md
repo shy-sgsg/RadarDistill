@@ -43,4 +43,4 @@ D0 的仿真/教师正确性未通过时停止学生训练。D1 G1 未通过时�
 
 ## 当前状态
 
-2026-10-24 用户批准启用 D0/D1 新主线。D0 仿真与 APX15 慢时间 FFT 教师 12/12 冻结正确性门通过，阶段决定 GO → D1。D1 学生、匹配预算 A/B/C/D 训练、独立校准和最终盲测均已完成；G1 PASS、G2 PASS、G3 FAIL，阶段决定 GO → D2。C 联合训练与 D 渐进蒸馏通过最终任务指标收益规则，但没有蒸馏策略达到收敛加速规则；学生的传统参数估计竞争力仍不足。下一阶段须一次只增加一项复杂度。详细设置和审查见 `docs/superpowers/specs/2026-10-24-d0-d1-task-level-distillation-design.md`、`docs/stage_reviews/D0_review.md`、`docs/stage_reviews/D1-E001_review.md` 与 `experiments/D0-E001/`、`experiments/D1-E001/`。
+2026-10-24 用户批准启用 D0/D1 新主线。D0 仿真与 APX15 慢时间 FFT 教师 12/12 冻结正确性门通过，阶段决定 GO → D1。D1-E001 学生、匹配预算 A/B/C/D 训练、独立校准和 blind 已完成；G1/G2 PASS、G3 FAIL，原阶段决定 GO → D2 保持。C/D 在冻结联合指标上有协议内收益，但无蒸馏策略达到收敛加速门；D 的效果量受 seed 1 影响，低 SNR Pd 也未由 G2 保护。D1-R1 已完成，D1-E002 随后完成三 seed formal 和独立盲测；S2 高 SNR Doppler RMSE 改善 10.86%，但低 SNR Pd 保护门失败，故停止本轮 AWGN Doppler 结构搜索（该决定不覆盖 E001 的 GO → D2）。当前唯一优先任务是准备 D2-A 静止杂波单因素协议和传统基线/可辨识性验证；具体协议尚未冻结。详见 [`D1-R1 review`](../stage_reviews/D1_R1_doppler_diagnosis.md)、[`D1-E002 review`](../stage_reviews/D1-E002_review.md)、[`D0/D1 后审查`](../stage_reviews/D0-D1_post_E002_review.md) 与 `experiments/`。

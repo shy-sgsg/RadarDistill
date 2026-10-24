@@ -279,3 +279,10 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **物理一致性与误差：** 三 seed S2 对统一公共相位旋转 `2.83 rad` 的平均 Doppler 输出变化为 `11.17–14.62 Hz`。对 `±0.625 Hz` 频移的等变残差均值为 `2.94–4.18 Hz`；对 `±5 Hz` 为 `9.79–14.73 Hz`。这些结果显示 lag-one 输入没有令网络自动获得相位不变性或频移等变性。20 dB S2 各 seed RMSE 为 `22.65–28.58 Hz`，而 10 dB 为 `16.67–22.75 Hz`，高 SNR 表现非单调。完整 Doppler/距离四分位、正负频率、Nyquist 邻域、初相、幅度与 SNR 分组见 `blind/metrics.json`。
 - **决定：** 按冻结规则作 **STOP / REDIRECT**：S1 未通过主 Doppler 门；S2 虽通过 Doppler 和 range 门，但检测保护门失败，故没有纯 IQ 候选满足合取验收条件。不得据此声称 E002 纯 IQ 结构成功或推翻 D1-E001 结论。D1-E002 候选仅用 E1 仿真真值监督，没有执行新的 E2/E3 蒸馏对照；既有 S0_D 只是历史模型锚点，不能作为本实验新增蒸馏收益证据。
 - **环境与产物：** Formal 训练沿用 RTX 3050 Laptop GPU、CUDA FP32、batch 64 和固定 1600 update 预算；重放记录 RTX 3050 Laptop GPU、PyTorch 2.8.0+cu128、CUDA 12.8、batch 64、峰值分配显存约 169 MiB。指标表、全部保存预测、ROC/RMSE-SNR 图、初次失败及重放 provenance 均在 `experiments/D1-E002/blind/`；缓存数据未纳入 Git。审查见 `docs/stage_reviews/D1-E002_review.md`。
+
+## 2026-10-25：D0/D1 E002 后科研主线审查
+
+- **D1-R1 审查补齐：** 新建 `docs/stage_reviews/D1_R1_doppler_diagnosis.md`，记录工程边界、预测门/oracle 误差、probe/梯度证据和 E002 后判断。R1 未证明池化、梯度冲突或教师 KL 是 Doppler 瓶颈的因果来源。
+- **E001 统计复核：** 保留 D1-E001 原 G2 PASS。C 三个 seed 的联合指标方向稳定；D 的绝对改善量约 84.6% 来自 seed 1。B/C/D 多策略区间没有家族错误率调整；低 SNR Pd 不在原 G2 保护门内。因此主张范围限定为该协议结果，不称为普遍蒸馏优势。
+- **路线决定：** E002 STOP / REDIRECT 只停止本轮 AWGN Doppler 结构搜索，不覆盖 E001 的 GO → D2。推荐的唯一下一项是准备 D2-A 静止杂波单因素协议和强传统基线/可辨识性验证；尚不训练、不生成新 blind。
+- **同步文档：** 更新总纲、路线图、当前状态、假设登记、AGENTS/README、详细计划和历史审查索引；旧负结果、冻结门和既有 blind 产物保持原样。
