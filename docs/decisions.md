@@ -132,5 +132,5 @@
 ## 2026-10-24：修正 D1-E002 pilot 的预算字段读取
 
 - **发现：** Pilot 已按配置对 S1/S2/S3 各完成 1600 次更新，但 pilot 汇总把实际次数写在 `training.completed_updates`；选择器误从顶层 `completed_updates` 读取，令三者都被错误标为预算未完成。
-- **处理：** 保留原始 pilot 的 `selection.json` 与 `metrics.json` 不变；修复选择器并新增只读原始 pilot metrics 的独立重选入口，输出另存为 `selection_corrected.json`，同时写入原因、来源提交和“未改门槛/未重生成数据”记录。没有重训模型或生成 blind 数据。formal 门将复算并核对更正选择；更正提交只允许冻结路径中的训练模块发生变化，学生与评价模块必须保持与 pilot 一致。
-- **重算结果：** 从已提交 pilot metrics 本地重算，S1、S2 通过原定 pilot screen；S3 仍因相对匹配三点 FFT 增益、20 dB 单点和高 SNR range guard 未通过。此结果只选择 formal 候选，不作为效应证据；独立更正 artifact 将在修复代码推送后生成并提交。
+- **处理：** 保留原始 pilot 的 `selection.json` 与 `metrics.json` 不变；修复选择器并新增只读原始 pilot metrics 的独立重选入口，另存 `selection_corrected.json`，并写入原因、来源提交和“未改门槛/未重生成数据”记录。没有重训模型或生成 blind 数据。formal 门会复算并核对更正选择；更正提交只允许冻结路径中的训练模块发生变化，学生与评价模块必须保持与 pilot 一致。
+- **重算结果：** 从已提交 pilot metrics 重算并生成独立更正 artifact：S1、S2 通过原定 pilot screen；S3 仍因相对匹配三点 FFT 增益、20 dB 单点和高 SNR range guard 未通过。此结果只选择 formal 候选，不作为效应证据。

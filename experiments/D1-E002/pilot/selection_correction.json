@@ -1,0 +1,16 @@
+{
+  "status": "CORRECTED_FROM_PILOT_VALIDATION",
+  "reason": "pilot candidate summaries store completed_updates under training, while the original selector read the top-level field",
+  "pilot_code_commit": "90add1b9e06af7a16338222ba1ac1e819dd20730",
+  "selector_code_commit": "286c68869bf23a03f47ed804cd625a1499b5fd10",
+  "source_metrics": "experiments/D1-E002/pilot/metrics.json",
+  "original_selection": "experiments/D1-E002/pilot/selection.json",
+  "corrected_selection": "experiments/D1-E002/pilot/selection_corrected.json",
+  "formal_candidates": [
+    "S1",
+    "S2"
+  ],
+  "blind_data_generated": false,
+  "thresholds_changed": false,
+  "pilot_data_regenerated": false
+}

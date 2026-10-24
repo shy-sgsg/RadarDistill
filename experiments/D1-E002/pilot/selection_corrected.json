@@ -1,0 +1,59 @@
+{
+  "selection_source": "pilot_validation_only",
+  "blind_data_used": false,
+  "formal_candidates": [
+    "S1",
+    "S2"
+  ],
+  "candidates": {
+    "S1": {
+      "eligible": true,
+      "comparator": "S0",
+      "relative_gain": 0.10048925101497201,
+      "reasons": []
+    },
+    "S2": {
+      "eligible": true,
+      "comparator": "S0",
+      "relative_gain": 0.1591617954194494,
+      "reasons": []
+    },
+    "S3": {
+      "eligible": false,
+      "comparator": "matched_nonlearning_three_point_fft",
+      "relative_gain": -0.00215845451087429,
+      "reasons": [
+        "high_snr_range_guard_failed",
+        "primary_validation_gain_below_screen",
+        "primary_snr_20_regression"
+      ]
+    }
+  },
+  "no_candidate_action": null,
+  "pilot_screen": {
+    "uses_only_pilot_validation": true,
+    "s1_s2_comparator": "S0",
+    "s3_comparator": "matched_nonlearning_three_point_fft",
+    "s1_s2_minimum_gain_vs_s0": 0.1,
+    "s3_minimum_gain_vs_matched_nonlearning_fft": 0.1,
+    "all_candidates_must_pass_shared_guards": true,
+    "maximum_single_primary_snr_regression_fraction": 0.05,
+    "minimum_low_snr_auc_delta_vs_s0": -0.05,
+    "high_snr_range_snr_db": [
+      0,
+      5,
+      10,
+      20
+    ],
+    "maximum_high_snr_range_rmse_increase_cells_vs_s0": 0.05,
+    "requires_finite_outputs_and_wrapped_frequency_decode": true,
+    "no_candidate_pass_means_no_formal_training": true,
+    "no_candidate_pass_means_no_new_blind_generation": true
+  },
+  "code_commit": "90add1b9e06af7a16338222ba1ac1e819dd20730",
+  "selection_correction": {
+    "pilot_code_commit": "90add1b9e06af7a16338222ba1ac1e819dd20730",
+    "selector_code_commit": "286c68869bf23a03f47ed804cd625a1499b5fd10",
+    "reason": "pilot candidate summaries store completed_updates under training, while the original selector read the top-level field"
+  }
+}

@@ -262,5 +262,5 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 
 - **执行：** RTX 3050 Laptop GPU（4 GiB）上按 S1→S2→S3 顺序运行，FP32、有效 batch 64，每模型 1600 更新；三者均完整完成。训练耗时分别 160.0、147.0、155.0 秒，峰值已分配显存约 1.09、1.10、1.16 GiB。原始 metrics、训练曲线和初始/最佳检查点已提交；训练与验证缓存未提交。
 - **原始 pilot 验证：** S0 高 SNR 平均 Doppler RMSE 为 27.129 Hz。S1 为 24.403 Hz（改善 10.05%），低 SNR 平均 AUC 0.658，range RMSE 0.0690 cell；S2 为 22.811 Hz（改善 15.92%），低 SNR 平均 AUC 0.652，range RMSE 0.0734 cell。二者通过原预注册 pilot screen。S3 为 68.110 Hz；匹配三点 FFT 为 67.963 Hz，未见混合学生增益；S3 另未通过 range guard 与 20 dB 回归门。
-- **审计修正：** 初始 `selection.json` 因选择器从顶层读取更新次数，把实际存于 `training.completed_updates` 的 `1600` 次误判为未完成。原 `selection.json` 和 `metrics.json` 保留不改；修复后的独立入口将只从已保存 pilot 验证指标重算，门槛、数据、模型和预算均不变，也不把 pilot 重标为 blind。测试已增加嵌套字段回归覆盖；更正 artifact 将在代码提交后生成。
+- **审计修正：** 初始 `selection.json` 因选择器从顶层读取更新次数，把实际存于 `training.completed_updates` 的 `1600` 次误判为未完成。原 `selection.json` 和 `metrics.json` 保留不改；独立入口只从已保存 pilot 验证指标重算，门槛、数据、模型和预算均不变，也不把 pilot 重标为 blind。测试已增加嵌套字段回归覆盖；`selection_corrected.json` 与原因记录已生成并单独保存。
 - **当前门：** 对已保存验证指标重算后，S1、S2 满足原定三 seed formal 候选筛选门；S3 停止。formal 尚未开始；新 calibration 与 final blind 均未生成。pilot 只用于候选筛选，不作为正式效应证据。
