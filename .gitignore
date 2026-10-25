@@ -2,16 +2,9 @@ __pycache__/
 .pytest_cache/
 .aws
 
-# Generated experiment inputs stay in the local experiment folders; protocols and seeds reproduce them.
-experiments/P0-E006/datasets/*.npz
-!experiments/P0-E006/datasets/final_blind_test.npz
-experiments/P0-E006/attempts/attempt_1_invalid_evaluation/datasets/*.npz
-experiments/P0-E006/attempts/attempt_1_invalid_evaluation/predictions.npz
+# Generated experiment arrays stay local; configs, protocols, and seeds preserve reproducibility.
+experiments/**/*.npz
 experiments/P0-E006/attempts/attempt_1_invalid_evaluation/result.csv.gz
-experiments/P0-E007/datasets/*.npz
-!experiments/P0-E007/datasets/final_blind.npz
-experiments/P1-A-E001/data/*.npz
-!experiments/P1-A-E001/data/blind_snr_*.npz
 experiments/D1-E001/data/cache/*.npy
 experiments/D1-E001/data/cache/*.npz
 experiments/D1-E002/data/cache/
