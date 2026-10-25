@@ -2,8 +2,8 @@
 
 **更新日期：** 2026-10-25
 **工作分支：** `main`
-**最新完成工作：** D2-A-R3 独立 H0 阈值迁移、幅度 nuisance 与 T0/T1/T2 有界比较。
-**阶段判断：** D2-A-R3 **REFINE**；当前冻结 R2 truth-only pilot 前置门未通过，学生与蒸馏训练尚未启动。
+**最新完成工作：** D2-A-E002 独立 truth-only `TaskStudent` pilot 协议提案；仅完成设计，未运行训练。
+**阶段判断：** D2-A-R3 **REFINE** 保持不变；D2-A-E002 为 **CONDITIONAL GO（协议提案）**，不构成训练授权。学生与蒸馏训练仍未启动。
 
 ## 当前结论
 
@@ -17,14 +17,17 @@ D2-A-R3 使用新种子完成了三个独立 H0 主校准组、四个独立主�
 
 D1-E002 的 AWGN Doppler 结构搜索 **STOP / REDIRECT**；D1-E001 原决策 GO → D2 仅适用于其冻结实验范围，不覆盖 D2-A-R3 的失败门。D2-A-E001 冻结结果保持原样。
 
+E002 提出独立假设 H-LEARN-D2-001：冻结的 D1-E001 `TaskStudent` 能否只凭 IQ 和物理真值，在 A/B/C 静止杂波场景学习检测、距离及连续 Doppler。协议使用新 scene seed、学生自己的全局 H0 校准/验证和任务/物理门；不使用教师损失。它不改变 R3 未通过 G2 的历史结论、不批准 T1 为教师，也不重写原 R2 的 A-only E1 记录。当前没有 E002 代码入口、数据、指标或训练结果。
+
 ## 下一项唯一优先任务
 
-准备并提交一份**独立 truth-only 学生 pilot 协议提案**，评估任务级学生能否直接从三通道 IQ 学习检测、距离和 Doppler，并预注册学生自己的独立 H0 校准/验证及物理一致性门。提案要保留 R2 学生架构与已冻结预算，不使用教师损失、K1/K2 或 final blind；通过独立审查/批准前不训练。该路线提案回应传统教师 G2 未过的证据，并回到项目的学生任务目标。
+先将 E002 协议提交 ChatGPT 阶段审查，重点审查 IID 混合下的 Pfa 置信界、G2/G4/G5 门槛及其与总纲的关系；之后须取得用户对单 seed truth-only pilot 执行的明确批准。批准前不实现/运行训练入口、不生成 E002 数据、不训练、不开展蒸馏或 final blind。
 
 ## 关键材料
 
 - 总纲/路线：[研究总纲](RESEARCH_CHARTER.md)、[动态路线图](RESEARCH_ROADMAP.md)、[假设登记](research/ASSUMPTION_REGISTER.md)
 - 当前审查：[D2-A-R3](stage_reviews/D2-A-R3_review.md)、[D2-A-E001](stage_reviews/D2-A-E001_review.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
+- 当前提案：[D2-A-E002 对齐](task_alignments/D2-A-E002_alignment.md)、[E002 协议](../experiments/D2-A-E002/protocol.md)、[E002 协议审查](stage_reviews/D2-A-E002_protocol_review.md)
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，后续学生训练如获批准须使用可见 CUDA。

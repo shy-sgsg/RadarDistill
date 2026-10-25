@@ -314,3 +314,11 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **实现审计：** 发现原候选后处理的 G3 汇总漏掉预注册的受控尺度子门，且 complex64 乘复数因子会带来量化误差。`f81093e` 将相同场景提升到 complex128 进行尺度控制并纳入完整 G3 门；没有放宽容限或改变实验数据。修正后 T1/T2 受控 map 最大差分别为 `3.20×10⁻¹³` 和 `9.06×10⁻¹⁴`。修正后相关测试 45 项通过。
 - **决定：** 阶段决定 **REFINE**。冻结 R2 E1 前置条件未通过，未运行学生训练、E2/E3 蒸馏或 final blind。建议下一步独立提交一份 truth-only 学生 pilot 协议提案，预注册学生自己的 H0 校准/验证、任务与物理一致性门；需独立审查批准后执行。总纲、D2-A-E001 冻结结果与协议未修改。
 - **产物：** `experiments/D2-A-R3/` 下的协议、配置、metrics、逐场景 H0/H1 记录、指标表、图表和分析；阶段审查见 `docs/stage_reviews/D2-A-R3_review.md`。更新当前状态、动态路线图和假设登记表。
+
+## 2026-10-25：提出 D2-A-E002 独立 truth-only TaskStudent pilot 协议
+
+- **触发依据：** D2-A-R3 的 T0/T1/T2 均未通过固定阈值 G2，当前没有正式获准教师；但这不检验学生自己的真值监督分数。任务级学生仍是研究总纲的核心方向。
+- **完成内容：** 新增 E002 任务对齐、H-LEARN-D2-001、协议与配置草案、协议阶段自审。方案沿用 E001 三通道静止杂波和 D1-E001 `TaskStudent`，设置 50k train pairs、5k validation pairs、15k 独立 H0 calibration、15k H0 verification、5k A/B/C development pairs及 1,024 个 D 边界诊断 pairs；预注册一 seed 101、1,600 updates、有效 batch 64、FP32、RTX 3050 CUDA。
+- **虚警设计：** 以学生 presence logit 建立独立全局阈值，目标 Pfa=0.05、容许上限0.06；15,000 个独立验证 H0 使用单侧 exact 95% Clopper–Pearson 上限。样本分析说明不要求置信区间机械包含精确 0.05，也不加一个会使真实 5% 时通过率约减半的点估计硬门。
+- **状态与边界：** E002 自审为 **CONDITIONAL GO（协议提案）**，不是实验 GO。未实现 runner、未生成数据、未训练、未蒸馏、未生成 final blind；没有 E002 指标或科学结论。R3 的 REFINE 和所有 E001/R3 历史结论保持不变。
+- **下一步：** 将本提案送 ChatGPT 审查；用户明确批准后才实现 preflight 和运行一个 truth-only seed。不得自动启动三 seed、E2/E3 或 final blind。
