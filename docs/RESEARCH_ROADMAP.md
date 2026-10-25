@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001 与 D2-A-R3 已完成；R3 阶段决定为 REFINE。** R3 发现 T1/T2 可以稳定幅度 nuisance 并保护可辨识 H1，但都没有通过独立固定阈值 G2。D2-A-E002 truth-only `TaskStudent` pilot 协议提案已完成，尚无 runner、数据、训练或指标。E002 提出独立学生可学习性假设；它不覆盖 R3 结论、不批准传统教师，也不改写原 R2 A-only E1。须先经 ChatGPT 阶段审查并获用户明确执行批准，才考虑实现 preflight 与单 seed 训练。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
+**D2-A-E001 与 D2-A-R3 已完成；R3 阶段决定为 REFINE。** R3 发现 T1/T2 可以稳定幅度 nuisance 并保护可辨识 H1，但都没有通过独立固定阈值 G2。E002 v1 truth-only 提案从未执行；已由用户明确批准的 v2 课程学习 + K2 A/B/C pilot 取代。当前先完成实现、测试、数据与 CUDA preflight、K2 审计和微型过拟合；通过冻结门后执行三个匹配单 seed pilot。它不覆盖 R3 结论、不授予 T1 固定阈值教师资格，也不改变 Charter 或 D1/E001 历史门。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
 
 ## 已完成实验与证据
 
@@ -15,7 +15,7 @@
 - **D1-E002：** S1/S2 各三 seed、1600 更新，独立校准和 40,960 条 blind 完成。S2 高 SNR 等权 RMSE 23.352 Hz、较 S0 改善 10.86%，3/3 seed 同向；但低 SNR Pd 非劣区间未达门槛。S1 未改善。S3 未通过 pilot screen。总决策 **STOP / REDIRECT**。
 - **D2-A-E001：** 合成静止杂波、3 通道、N=130、32 距离单元；R0 T1–T12 全通过。B3 几何 DPCA 静止杂波抑制中位数 15.406 dB，目标差分功率比中位数 3.614；分离 A 和边缘 B 有强检测，部分重叠 C 退化，同流形 D 近随机。校准 H0 每条件 512 个，开发每条件 256 个配对场景；主条件 A 的开发 `Pfa_CPI=0.0898` 高于标定经验值 0.0508。条件 Range/Doppler RMSE 区间已修正为 RMSE 统计量并重新生成。未训练学生、未生成 final blind。决定 **CONDITIONAL GO**，先复核阈值迁移，再考虑 E1。
 - **D2-A-R3：** 新种子、3 个 4096 场景主校准组、4 个 4096 场景主 H0/H1 配对验证组，并含 CNR=0/20 dB 有界检查。原始 E001 B3 阈值在 16,384 个新主 H0 上得到 `Pfa=0.06464`（95% Wilson CI `[0.06097,0.06850]`）；有限样本可能解释 E001 `23/256` 的一部分，但层级 bootstrap 达到该点估计的比例为 0.0216。潜在目标参考幅度通过噪声/杂波生成尺度影响 H0，导致 B3 固定阈值的幅度箱 Pfa 极差达 0.169–0.216。T1 scene-wide B3 峰值/中位背景统计量与 T2 local median CFAR-like 分数均通过 G3/G4，但 T1 三次主合并验证 Pfa 为 0.0444–0.0462，T2 一次主验证 CI 不覆盖 0.05；因此都未过 G2，无方法完成全部门。T1 是未来候选，未被选为教师。无 E1、KD 或 final blind。阶段决定 **REFINE**。
-- **D2-A-E002：** 新登记 H-LEARN-D2-001，并完成独立 truth-only `TaskStudent` pilot 协议/配置提案；统计设计为独立 15k H0 校准、15k H0 verification、5k 配对 A/B/C development，单 seed 101、1600 updates、有效 batch64、RTX 3050 CUDA。协议建议全局目标 Pfa 5%、单侧 95% 上限 6%，以及检测、参数、联合任务和物理一致性门。**仅为设计，不是运行结果**；未实现 runner、未生成数据、未训练、未蒸馏、未生成 blind。等待 ChatGPT 审查和用户执行批准。
+- **D2-A-E002：** v2 已预注册并获用户批准：A 全难度直接真值、B 同样本/预算课程真值、C 同课程加 IQ-only K2；三个臂各 1600 updates、有效 batch64、单 seed，RTX 3050 CUDA 串行。协议另定新独立 train/validation、K2 audit、H0 calibration/verification 和 development split，且不生成 final blind。**截至本次更新仍只有协议/设计文档；代码、数据、测试、审计和训练结果尚未完成。**
 - **P0/P1 历史先导：** 按各自冻结阶段审查保留；不将旧开发测试重新称为盲测，也不把其结论扩大到 D0/D1。
 
 ## 当前支持、否定与未决判断
@@ -43,7 +43,7 @@
 
 ## 当前唯一优先任务
 
-将已完成的 E002 协议提案提交 ChatGPT 审查，并取得用户对执行单 seed truth-only pilot 的明确批准。审查如要求改变样本混合、置信区间或门槛，先修订并重新冻结协议；批准前不实现/运行训练、不生成数据、蒸馏或 final blind。若提案不获支持，暂停训练，避免继续扩展传统统计量搜索。
+完成 E002 v2 的可复现实现与前置质量门，然后顺序完成 A/B/C 单 seed pilot。按协议判定课程与 K2 的筛选信号；只有结果支持时再另行提出三 seed 确认，不生成 final blind。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md) 和 [`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

@@ -1,153 +1,144 @@
-# D2-A-E002：独立真值监督 TaskStudent 可行性 pilot
+# D2-A-E002：课程学习与教师辅助任务级学生 Pilot
 
-**协议版本：** 1.0-proposal
-**日期：** 2026-10-25
-**状态：** 方案已设计，待 ChatGPT 阶段审查与用户执行批准
-**当前修订范围：** 协议与配置设计；本提交不实现训练入口、不生成数据、不训练、不生成 final blind。
-**基准物理模型：** `experiments/D2-A-E001/config.yaml` 及其冻结协议；R3 结果和门槛保持不变。
+**英文：** *Curriculum Learning and Teacher-Guided Task Learning for Multichannel GMTI Detection and Parameter Estimation*
+**协议版本：** 2.0
+**冻结状态：** 2026-10-25；先于 E002 数据生成、K2 质量审查和训练。
+**执行授权：** 用户在本任务附件中明确批准调整动态路线并实施本轮 A/B/C 有界 pilot。
+**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.1；本协议不修改总纲。
+**旧版本：** Git 提交 `1e4300c` 中的 v1 truth-only 提案已被本版本取代；原协议审查作为历史记录保留。它未产生数据、训练或结果。
 
-## 1. 研究目标与任务对齐
+## 1. 研究目的与可证伪假设
 
-本实验只回答一个任务级问题：不使用教师硬标签、软频谱、DPCA 输出或教师阈值，已有 `TaskStudent` 能否只凭三通道复数慢时间 IQ 和物理真值，在静止杂波下联合学习 H0/H1 目标检测、距离及连续 Doppler？
+本轮以任务级检测、距离和连续 Doppler 为终点，同时比较学生架构的既有适用性、任务难度顺序及传统软响应辅助作用。它直接服务于研究总纲 Q1–Q4、Q6：物理真值与传统知识能否共同帮助学生从多通道复数 IQ 学习最终任务。R3 的固定阈值 G2 失败仍然成立；该门评价固定阈值教师资格，不等同于软响应质量。本实验不授予 T1 教师资格，也不把教师响应当作物理真值。
 
-该问题服务于 RadarDistill 的总体目标：先验证物理真值监督能否形成可用的 GMTI 任务学生，再判断可靠传统教师的知识是否能额外改善学生。它对应总纲 Q1、Q3，并为 Q2 的后续蒸馏研究建立基础。R3 的 T0/T1/T2 固定阈值 G2 未通过，因此当前没有获准的传统教师；这并不等于学生自身的 presence 分数无法校准。本协议以学生自己的独立 H0 校准/验证作为独立假设检验。
+- **H-LEARN-001（难度/课程）：** 在相同训练样本多重集、样本呈现次数、模型初始化和更新预算下，由易到难再综合的 C0→C1→C2→C3→C4 顺序，相对一开始就随机混合全难度分布，可能改善优化过程或最终任务指标。
+- **H-KD-D2-001（教师辅助）：** 在与 B 完全相同的课程和样本顺序上，加入始终由物理真值监督的 K2 软响应损失，可能进一步改善收敛或最终任务。
+- **H-ARCH-D2-001（架构）：** 当前普通实值 CNN/TCN 的跨通道相干归纳偏置可能不足；A/B/C 不直接比较架构，此假设只由失败诊断形成下一步依据，不视作本轮已检验。
+- **H-OPT-D2-001（多任务优化）：** range、Doppler 与 detection 的优化难度可能不同；训练在真值距离门上监督 Doppler、推理在预测距离门读取 Doppler 的不一致可能放大误差。本轮记录其发生率和误差影响，不事后改变损失。
 
-E002 不更改、重解释或豁免 D2-A-E001、D2-A-R3 的冻结结果与前置门；不代表 R3 通过，不把 T1 改称正式教师，也不以该 pilot 结果声称教师蒸馏有效。E002 提议在 A/B/C 可辨识场景上训练一个现有 `TaskStudent`；这是新的数据分布提案，不会覆盖原 R2 的 A-only E1 记录。
+单 seed 结果仅为筛选证据。A/B/C 的主干、任务头、同一初始权重、训练样本多重集、总样本呈现次数、总更新数、有效 batch、优化器和验证/开发集全部匹配。B 与 C 使用完全相同的课程 batch 顺序；其差别是 C 在 H1 上额外接收 K2 软响应损失。
 
-### 假设 H-LEARN-D2-001
+## 2. 物理模型与范围
 
-在 D2-A 当前物理可辨识的静止杂波条件下，D1-E001 的 `TaskStudent` 可只用物理真值监督，从三通道复数 IQ 学到目标存在、距离和连续 Doppler 的联合映射，并在独立开发数据上明显优于随机/常值与简单能量先验。
+沿用 `experiments/D2-A-E001/config.yaml` 的研究模型：3 通道，PRF=1300 Hz，N=130，32 个距离单元，距离压缩复 IQ，静止点杂波和圆对称复 AWGN；三通道理想标定、平地/点散射、共址 Tx 参考假设和既有波形/几何均保持不变。H0/H1 配对共享同一杂波、噪声及场景 nuisance，H1 只增加一目标。使用 A/B/C 可辨识速度条件；D exact-overlap 只作不可辨识边界描述。
 
-若数据生成、标签、输出编码、训练及 CUDA 执行检查通过，但 G2/G4 不通过，则本假设在本协议、单 seed 和所测仿真条件下不获支持；停止 E1 后续扩展和 KD，不以增大网络或加入教师损失补救。若 G2/G4 通过，只支持单 seed 的基础可学习性，不能据此声称跨种子稳定、优于强传统方法、具有真实数据有效性或已经具备蒸馏收益。
+课程条件固定如下；目标振幅、初相、距离和方位 nuisance 继续遵循 E001 生成器分布：
 
-## 2. 冻结条件与实验范围
+| 课程层 | SNR / CNR | 目标条件 | 含义 |
+|---|---|---|---|
+| C0 | 20 / -5 dB | A separated | 极弱杂波、高 SNR 基础相干学习 |
+| C1 | 15 / 0 dB | A、B 等量 | 弱杂波，加入近杂波边缘 |
+| C2 | 10 / 10 dB | A、B、C 尽量等量 | 中等杂波和谱边缘/部分重叠 |
+| C3 | SNR 0/10 dB 等量，CNR 20 dB | A、B、C 与两个 SNR 尽量等量 | 强杂波、低 SCNR 和部分重叠压力 |
+| C4 | C0–C3 各 25% | 继承各层的目标条件 | 综合混合，避免只适应最后困难层 |
 
-### 2.1 观测与信号模型
+每层 CNR/SNR 均处于 E001 配置范围内。A/B/C 只指 E001 冻结的速度/杂波关系；目标距离、方位等连续 nuisance 按原模型采样。除此之外不增加多目标、加速度、通道误差、真实数据或原始 ADC。
 
-- 沿用 E001：3 通道、PRF 1300 Hz、130 脉冲、32 距离单元、距离压缩复数 IQ。
-- 沿用三通道理想标定、静止地面点散射杂波、圆对称复高斯白噪声、E001 的目标与平台几何、波形和距离响应。
-- H0 不含目标；H1 含一个目标。每个配对 scene 的 H0/H1 共享完全相同的杂波、噪声和背景参数，只在 H1 中叠加目标分量。
-- SNR/CNR 使用 E001 的五个工作点：`(0,10)`、`(10,0)`、`(10,10)`、`(10,20)`、`(20,10)` dB。目标参考幅度范围为 `[-6,6] dB`，初相位均匀覆盖 `[0,2π)`。
-- A/B/C 对应 separated、near-clutter-edge、partial-overlap；D exact-overlap 仅做不可辨识边界诊断，不要求恢复唯一目标来源标签。
-- 不增加多目标、加速度、通道误差、原始 ADC、新杂波模型或真实数据条件。
+## 3. 学生、K2 教师与损失
 
-### 2.2 模型与监督
+### 3.1 学生架构
 
-使用 `src/radardistill/students/task_student.py` 中既有 D1-E001 `TaskStudent`，不读取 D1 checkpoint，不搜索宽度、深度或结构。输入为 `[B,6,130,32]`，通道排列固定为 `[I_ch0,I_ch1,I_ch2,Q_ch0,Q_ch1,Q_ch2]`。使用 width 32、时间 dilation `[1,2,4,8,16,32,64]` 和既有 K3 输出：presence logit、32 个距离单元 logits、单元内距离偏移、每个距离单元的单位 Doppler `(cos,sin)` 向量。
+复用 `src/radardistill/students/task_student.py` 的 D1-E001 `TaskStudent`：`[B,3,130,32]` 复 IQ 转为 `[B,6,130,32]` 的 I/Q 平面；width=32；时间 dilation `[1,2,4,8,16,32,64]`；K3 输出为 presence、32 距离 logits、距离单元内偏移及每个 range cell 的单位 Doppler `(cos,sin)`。时间理论感受野 255 脉冲，覆盖 N=130；网络先逐点混合六个实通道，再做实值时间卷积和时间均值池化。该结构能通过训练学习通道交互，但不具备显式复数线性等变、跨通道复乘或几何 DPCA 层；SiLU/GroupNorm 也不保证公共相位旋转等变。
 
-实例化时关闭 D1 的可选 spectrum head；这不改变骨干或 K3 推理头，只移除 E1 不使用的教师辅助输出。模型推理只读原始复 IQ 的 I/Q 平面，不调用 FFT、DPCA、CFAR 或教师输出。监督损失只用物理真值：presence BCE 对 H0/H1 都计算；range cell CE、offset SmoothL1 (`beta=0.1`) 和圆周 Doppler cosine loss 只对 H1 计算，四项权重均为 1。H0 参数占位符只在 loss 层屏蔽，不能拼入模型输入。
+全部 A/B/C 训练模型都实例化相同 K2 辅助 head，并从同一初始化 state 开始；A/B 不计算、不使用其输出，C 只在训练期间使用。所有最终推理 checkpoint 导出时移除辅助 head。学生推理只接收 IQ，不调用 DPCA、FFT、CFAR、硬阈值或教师图生成器。
 
-## 3. 数据拆分、样本量与防泄漏
+### 3.2 现有损失与预注册的限制
 
-所有 split 以 `base_scene_id` 为单位。配对 H0/H1、同场景派生量及反事实变换必须完整留在同一个 split。数据生成使用稳定的 background/noise/target nuisance 子随机流；每条样本保存 scene ID、拆分、SNR/CNR、目标幅度、目标真值和生成参数到独立 sidecar，不把这些 sidecar 字段传给 detector。
+沿用当前 task loss，不因预期结果增加模块：presence BCE 对 H0/H1；range-cell CE、真值 range cell 的 offset Smooth-L1 (`beta=0.1`) 和同一真值 cell 的圆周 Doppler cosine loss 只对 H1；四项权重均为 1。Doppler 误差按 1300 Hz 周期回绕。正常推理按模型预测的 range argmax 读取 offset/Doppler。故本轮明确诊断真值 range 索引和预测 range 索引不一致率及其 Doppler 误差；除非训练前诊断发现代码实现错误，否则 A/B/C 使用同一冻结损失，不在结果出来后修补。
 
-| 分组 | 数量 | 用途 | seed 范围 |
-|---|---:|---|---:|
-| Train | 50,000 对 H0/H1 base scenes | A/B/C、五个 SNR/CNR 点近似等权训练 | 17,000,000–17,049,999 |
-| Validation | 5,000 对 | 每 100 updates 选择 truth-task validation loss 最低 checkpoint | 17,100,000–17,104,999 |
-| 学生 H0 calibration | 15,000 个 H0 scene | 建立学生自己的一条全局阈值 | 17,200,000–17,214,999 |
-| 独立 H0 verification | 15,000 个 H0 scene | 只报告阈值迁移 Pfa，不调阈值 | 17,300,000–17,314,999 |
-| Development | 5,000 对 H0/H1 | A/B/C 检测、参数和联合任务指标 | 17,400,000–17,404,999 |
-| D 边界诊断 | 1,024 对 H0/H1 | 描述 exact-overlap 的不可辨识边界 | 17,500,000–17,501,023 |
+训练前记录初始小批次各项损失值和单任务梯度范数，训练中记录每项损失、总损失及非有限值。验证 checkpoint 只按共同 validation 的等权物理真值任务损失选择；K2 loss 不参与选模。
 
-Train、validation 和 development 在 A/B/C 与五个 SNR/CNR 点上按固定权重平衡采样，目标幅度从 E001 的均匀范围抽样；development 使用 3×5 平衡网格，按 scenario 顺序和配置中的工作点顺序排列，前五个格各 334 对，其余十格各 333 对。每次训练更新抽取 32 个不同 base scenes，每个贡献 H0/H1 一对，共 64 条 IQ；按固定打乱顺序遍历，数据集耗尽后重新洗牌。1600 updates 对应 51,200 对呈现，约为 50,000 对训练集的一次遍历加 1,200 对重复样本。
+### 3.3 K2 定义及信息隔离
 
-15,000 个 H0 calibration 与 15,000 个 H0 verification 各自按相同的固定 IID 混合分布独立抽样：五个 SNR/CNR 点等权，每个 scene 的幅度分箱 `[-6,-3),[-3,0),[0,3),[3,6] dB` 等权抽样。每个 scene 独立抽取混合层级，故总体 Pfa 的边际观测为 IID Bernoulli；实际各层样本数必须记录。该分布定义 E002 的全局运行工作点，不代表未知真实环境分布。
+K2 是**未阈值化 DPCA 杂波抑制响应图**：输入 IQ → E001 冻结 B3 几何分数时间对齐/通道差分 → N=130 居中慢时间 FFT → 非负 RD power `P[d,r]` → `q=P/(sum(P)+1e-12)`，形状 `[130,32]`。不作 T1/T2 检测阈值，不用真值裁剪、目标位置、场景标签、CNR/SNR sidecar 或教师 hard output。归一化和 map temperature 固定为 power/temperature=1。
 
-样本总量按观测记录计为约 152,048 个 CPI（约 15.18 GB 的未压缩 complex64 IQ；训练成对计入 H0 与 H1）。不得把全数据集载入 GPU 或提交重建数据。按 CPU 流式生成；每批只把当前 microbatch 放到 GPU。旧 E001/R3 数据不得用于训练、校准、阈值或 E002 开发模型选择。E002 development 是开发评估数据而非 final blind；看过结果后不能在同一开发集上进行无界调参。
+K2 质量审查可用物理真值作离线评价，但真实输入教师函数只接受 IQ。训练时 K2 KL 只在 H1 样本上计算，H0 仍参与 presence 真值任务；使用 `truth_presence` 仅作 loss mask，不参与 K2 生成或模型输入。这避免学生被要求复刻 H0 噪声/杂波的任意最高峰。教师/学生软图和物理真值分别保存。
 
-### 3.1 Pfa 样本量与验收数值
+预先冻结的严重误导判据：若 K2 数值/归一化/信息隔离任一检查失败，停止 C 并修复后重新冻结协议；或在独立 K2 audit 的 C3 合并 A/B/C 条件下，配对 target-window saliency mass lift（H1 减去同场景 H0）的 95% scene-bootstrap 区间上界 `≤0`，且 teacher 最大响应的 range `≤1 cell`、圆周 Doppler `≤20 Hz` 命中率 `≤5%`，则取消 C 臂。其余 K2 弱项逐条件报告，不因低速/重叠的预期风险隐瞒；A/B 仍可继续。
 
-目标校准工作点为全局 `Pfa_CPI=0.05`；工程容许上限预注册为 `0.06`。对 15,000 个独立 H0 verification scene 使用单侧 95% Clopper–Pearson 上限。通过 G3 的条件是：`Pfa` 点估计不高于 0.06，且单侧精确 95% 上限不高于 0.06。此规则检查“是否有证据把超限风险压到 6% 以下”，不要求双侧区间必须覆盖精确 0.05，也不把校准点估计误当验证结果。
+## 4. 数据、随机种子与公平性
 
-样本量核算（独立同分布二项参考）：n=15,000、真实 `p=0.05` 时，单侧 95% 精确上限规则 `U95≤0.06` 的通过概率约 99.99%；真实 `p=0.06` 时误通过概率约 4.68%。若额外要求观测 `p_hat≤0.05`，即使模型真实 `Pfa=0.05`，该点估计条件也只有约 50.97% 通过概率，故不将它设为硬门。n=15,000 时，`k=750` 对应 `p_hat=0.05`、CP 上限约 0.05303；`k=851` 是仍满足 `U95≤0.06` 的最大错误数（`p_hat≈0.05673`）。精确门限须由验证实现按 `beta.ppf(0.95,k+1,n-k)` 核对。
+所有 split 按 `base_scene_id` 隔离。任意 H0/H1 pair 及其教师 map 完整属于同一 split；没有 seed 或 pair ID 作为模型输入。训练数据、teacher audit、validation、H0 calibration、H0 verification、development、D boundary 使用互不重叠的新 seed 区间；均不复用 D1、E001、R3 数据，也不生成 final blind。
 
-校准 95th-percentile order statistic 的 rank 标准差约 `sqrt(15000×0.95×0.05)=26.7`，正态近似 95% rank 区间约 ±52 个顺序统计量，即约 ±0.35 个百分点的尾概率位置；分数单位上的阈值波动未知，运行后用 2,000 次 calibration bootstrap 另报阈值区间。此 bootstrap 仅描述阈值估计不确定性，不能替代独立 verification。
-
-这项计算假设独立 base scenes 和冻结的 IID 混合分布；若未来执行器未能实现 IID 混合抽样，必须在运行前修改协议并改用适合分层抽样的加权区间，不能事后沿用二项区间。另按五个 SNR/CNR 条件和四个幅度箱报告条件 Pfa、样本数及精确区间。任一二级分组若单侧 95% 上限超过 0.10，标为严重分组失稳并判 G3 未通过；这些分组门是边际诊断，不声称多重比较校正后的同时覆盖。不得按 SNR/CNR、幅度或目标真值在推理时选择阈值。
-
-## 4. 训练与运行预算
-
-- 单 seed `101`；新建初始化；不重用 D1/E001/R3 的权重。
-- AdamW，1600 optimizer updates；有效 batch 64；初始学习率 `1e-3`，余弦衰减至 `1e-4`；weight decay `1e-4`；全局梯度范数裁剪 1.0；FP32。
-- 默认 microbatch 16、梯度累积 4 次；若 OOM，microbatch 降到 8、累积 8 次，保持有效 batch 与 optimizer update 数不变。再次 OOM 即停止并记录；不得静默改 batch、训练步数、精度或 CPU 回退。
-- 每 100 updates 在 validation 计算四项物理真值任务损失的既定等权总和并选最低者。H0/H1 validation 同时用于 presence 与 H1 参数任务；不得查看 calibration、verification 或 development 后换 checkpoint。
-- AISAR/CUDA 必须可见；检查设备名为 RTX 3050 Laptop GPU，记录 PyTorch/CUDA/驱动、`nvidia-smi`、初末显存和峰值分配。没有 GPU 则 preflight 失败，不启动训练。一次只允许一个训练进程。
-- 先报告 CUDA preflight、数据接口、标签与 split 审计；执行授权后才训练。训练耗时没有本阶段实测值，不能预先声称运行时；实际运行另记录墙钟时间。
-
-## 5. 学生阈值与比较公平性
-
-最终 checkpoint 冻结后，学生 presence logit 是唯一学生检测分数。只用 15,000 个独立 H0 calibration scenes 计算全局经验 95th 百分位阈值（`higher` order-statistic），阈值应用于独立 H0 verification 和 development H0/H1。每种传统分数各自用相同 calibration scene IDs 形成自己的阈值；不借用 R3/B3/T1 阈值，不给学生传入教师阈值。
-
-所有方法使用相同 verification/development 场景与 H0/H1 配对；报告阈值、`Pfa_CPI`、单侧精确上限、ROC/AUC、固定阈值 Pd 和场景分层结果。阈值决策比较符冻结为 `score >= threshold`；同时列出 `score > threshold`、恰好平局数及平局比例。若量化/饱和造成大量平局，按 G1 失败停止评估并先修复评分/精度方案，不临时改比较符。
-
-传统比较至少包括：
-
-- **E0：** 简单三通道 CPI 功率先验，分数为 `max_r sum_(channel,pulse)|IQ|²`。
-- **B0：** E001 冻结的通道 0 FFT peak 检测。
-- **B1：** E001 冻结的三通道非相干 RD peak。
-- **B2：** E001 冻结的几何感知相干方位搜索基线。
-- **B3：** E001 冻结 raw DPCA。
-- **T1：** R3 冻结的 scene-wide 归一化 DPCA 研究候选；在正式教师批准前不得称作获准教师。
-
-参数估计统一从各方法自己的 RD peak/输出中解码 range、Doppler；学生用 K3 输出。Range error 报 cell 与米；Doppler error 按 PRF 周期回绕到 `[-PRF/2,PRF/2)`。同时报告各方法自身 calibration threshold 下的 Pfa/Pd，以及在 development ROC 上插值到相同经验 FPR=0.05 的 Pd；G2 的 Pd 非劣检查只比较共同经验 FPR=0.05 下的学生与 E0，不混用不同实际 Pfa。若某方法无法产生合法估计，记为失败，不丢样本。
-
-## 6. 指标与不确定性
-
-### 检测
-
-- H0 verification 总体 Pfa、精确单侧 95% 上限、阈值和 tied scores。
-- 五个 SNR/CNR、四个目标参考幅度箱、A/B/C 场景的条件 Pfa；开发集报告 AUC/ROC、固定阈值 Pd、共同 FPR=0.05 的 Pd。
-- 学生相对 E0 的 pooled A/B/C AUC 差及配对 95% base-scene bootstrap 区间；同时列 B0/B1/B3/T1，不以 T1 替代学生真值监督。
-
-### 参数与联合任务
-
-- A/B/C pooled 及分组的 Range RMSE/bias、圆周 Doppler RMSE/bias、错误输出率；分别报告所有 H1 输出及正确检测子集，不用命中子集掩盖漏检。
-- 仅从 train truth 得到比较先验：range 训练中位数、Doppler 训练圆周均值。禁止用 validation/development 真值选择常数。
-- `joint_success = detected AND |range_error|≤1 bin AND |wrapped_doppler_error|≤20 Hz`；所有漏检或非法估计均记失败。报告 A/B/C pooled 以及每条件成功率。
-- AUC、Pd 差、RMSE 差、joint success 使用 2,000 次配对 base-scene bootstrap；每次重采样完整 scene pair 并重新计算统计量，RMSE 每次对平方误差均值开方。Pfa 主区间用精确单侧二项区间。D exact-overlap 只描述，不纳入 G2/G4。
-
-## 7. 数据捷径与物理一致性诊断
-
-以下诊断使用 development 的固定样本生成受控副本，不重估检测阈值。真实物理标签、场景条件和 transformation 参数不进入模型输入。
-
-1. **H0/H1 一致性：** 同一 `base_scene_id` 的 H0/H1 输入除 H1 目标分量外须完全一致；校验噪声、杂波、形状、sidecar 标签屏蔽、无重复 scene IDs。批次采样不泄露成对关系标识。
-2. **输入审计：** detector 接受 IQ 张量；目标存在、range、Doppler、SNR、CNR、幅度、scenario、随机 seed 和 `base_scene_id` 只保存在目标端监督或分析 sidecar；不以真实 range 选取网络输入窗口。
-3. **公共复相位旋转：** 对整条 IQ 乘 `exp(jφ)`，至少 32 个预先生成随机相位。理论上 detection/range/Doppler 不变。G5 要求固定阈值决策一致率≥99%，range 改变量绝对值的 95 百分位≤0.25 bin，圆周 Doppler 改变量 95 百分位≤5 Hz，AUC 绝对改变量≤0.01。
-4. **整体复幅度缩放：** 对同一场景乘正实 `0.5` 和 `2.0`。不重新校准阈值，报告 Pfa、Pd、参数与分数变化。此为受控尺度扰动，不等同真实 AGC/幅相链路；若 H0 Pfa 点估计超过 0.10 或 H1 Pd 绝对下降超过 0.10，标记“幅度尺度敏感”。此标记限制尺度鲁棒性结论，不单独否定定义分布内的基础学习门。
-5. **目标慢时间相位斜率：** 只对已知 H1 target component 乘 `exp(j2πδn/PRF)`，`δ∈{-25,-10,10,25} Hz`，真值按 Doppler 周期同步平移。构造变换时使用真值仅为生成诊断样本，不作为模型输入。G5 要求 Doppler 平移残差 95 百分位≤10 Hz、range 中位变化≤0.25 bin，并报告固定阈值 presence 决策变化。
-6. **通道相干消融：** 每 CPI 对三个通道各乘独立常相位，保留单通道幅度但扰乱几何空间相位关系。报告 ROC/Pd/range/Doppler/joint 的配对变化，不要求输出不变。若表现无变化，则不能声称模型确实利用了跨通道相干信息；若大幅下降也需与输入分布偏移区分。
-
-公共相位与目标 Doppler 变换有明确物理对应；全局幅度和通道相位消融是受控干预。G5 的通过/失败只说明当前诊断，不外推到未建模硬件误差。
-
-## 8. 阶段门与停止规则
-
-| 门 | 预注册判据 | 失败时处理 |
+| Split | 数量与构成 | 用途 |
 |---|---|---|
-| G1 工程正确性 | E001 相关 T1–T12 与 split/配对检查通过；模型只读 IQ；loss/输出编码符合冻结实现；CUDA 设备有效；保存 seed/config/environment | 停止训练或评价，修复后另审；不解释为科学假设被否定 |
-| G2 检测学习 | pooled A/B/C 学生 AUC 的配对 bootstrap 95% 下界 `>0.5`；相对 E0 AUC 点增益至少 `0.02` 且差值区间下界 `>0`；共同经验 FPR=0.05 时 Pd 差值（学生−E0）配对区间下界 `>-0.05` | H-LEARN-D2-001 不获完整支持；停止 KD，不用 development 调参 |
-| G3 虚警约束 | 独立 15,000 H0 verification 上 `Pfa≤0.06` 且单侧 exact 95% CP 上限 `≤0.06`；五个 SNR/CNR 层及四个幅度层均报告；任一层 CP 上限 `>0.10` 视为严重失稳 | 学生不能作为当前工作点下可靠任务检测器；不套用教师阈值或事后修阈值 |
-| G4 参数学习 | pooled A/B/C 中 range 与 circular Doppler RMSE 均优于训练常值先验，配对 95% 区间上界均 `<0`；主 A/10/10 的 joint success 点估计 `≥0.50` 且单侧 95% bootstrap 下界 `>0.40` | 停止后续蒸馏；先检查可辨识性、标签、输出和损失 |
-| G5 物理信息 | 公共相位旋转与目标 Doppler 平移通过第 7 节数值门；幅度及通道相干干预完成并如实报告 | 精确对称/等变检查失败则不进入 KD；幅度标记限制尺度鲁棒性主张；相干消融无变化则不声称使用跨通道相干 |
+| Train | 51,200 对 H0/H1，每个 C0–C3 各 12,800 对 | 1600 updates × 32 对/update；每个 base pair 恰呈现一次 |
+| Validation | 5,000 对，C0–C3 各 1,250 对；C1 的 A/B 各 625，C2 的 A/B/C 为 417/417/416，C3 的 A/B/C × SNR 0/10 dB 为 209/208/208/209/208/208 | 每 100 updates 共同评价并选择真值任务损失最低 checkpoint |
+| K2 audit | 2,048 对，四个课程层各 512 对；C1 的 A/B 各 256，C2 为 171/171/170，C3 的 A/B/C × SNR 0/10 dB 为 86/85/85/86/85/85 | 只审教师 response，不用于训练或调参 |
+| H0 calibration | 15,000 scenes | 独立估计各学生/基线各自的全局 5% 阈值 |
+| H0 verification | 15,000 scenes | 独立评估固定阈值 Pfa，不调阈值 |
+| Development | 5,000 对；采用与 validation 相同的逐单元样本数和独立场景 seed | pilot 开发评价与有界阶段决策，不是盲测 |
+| D boundary | 1,024 对 exact-overlap | 仅说明同流形来源归因不可辨识，不纳入 A/B/C 门 |
 
-pilot 只有在 G1–G5 全通过时，才构成“该 seed / 该仿真条件下值得提出后续正式 E1 多 seed 方案”的证据；仍不能直接批准 E2/E3、final blind、教师选择或 P1 推进。若各网络任务能力仍明显落后传统基线但通过 G1/G3/G4，可在阶段审查中讨论学生路线是否有科研价值；不得把门槛事后降低。
+Train cohort 的 `base_scene_id` 预先固定。课程批次计划由固定 seed 生成：每次 update 取 32 个不同 base scenes，并同时包含各自 H0/H1，构成有效 batch 64。A 使用同一 51,200 对样本的固定随机排列，难度从第一步起是全分布混合。B/C 共享同一计划：C0–C3 各 256 updates（每层 8,192 对）；C4 为 576 updates，以均等数量交错使用四层各自未呈现的 4,608 对。故 A/B/C 使用完全相同的样本多重集、每对恰一次、总更新和有效 batch 完全相同；区别只有呈现顺序及 C 的 K2 loss。
 
-## 9. 复现与执行边界
+H0 calibration 与 verification 每个 scene 独立等概率抽取 C0–C3 nuisance 层；C3 内 SNR 0/10 dB 独立等概率。生成器对目标参考振幅继续从 `[-6,6] dB` 均匀抽样，所以总体混合是预注册的 IID scene mixture。校准/验证各 `n=15,000`。validation 与 development 的单元计数固定于 `config.yaml`；development 使用相同单元计数及新的 seed，逐组记录实际样本数。
 
-本次没有 E002 runner 或 E002 训练代码；以下是用户另行批准后实现并通过审查的命令草案，**当前不可执行**：
+Train/validation IQ 与 train K2 可存本机 CPU memmap 缓存，数据不放 GPU、不提交 Git；evaluation split 以流式 batch 或本地 CPU memmap 复用。预估存储：train complex IQ 约 10.2 GB、validation 约 1.0 GB、train K2 约 0.83 GB；开跑前检查实际磁盘余量。每次只把当前 microbatch 搬到 GPU。
+
+## 5. A/B/C 训练预算
+
+三个 pilot 臂各一个训练 seed `101`，相同 `TaskStudent` 初始权重/初始化 seed，均 1,600 次 AdamW optimizer updates、effective batch=64、FP32。每个臂单独顺序训练；GPU 任一时刻只驻留一个学生。
+
+| 臂 | 样本呈现顺序 | 监督 |
+|---|---|---|
+| A | 全 C0–C3 训练 pair 随机混合 | 物理真值任务损失 |
+| B | C0→C1→C2→C3→C4 | 物理真值任务损失 |
+| C | 与 B 完全相同的 course batch plan | 物理真值任务损失 + `lambda(u) × K2 KL` |
+
+AdamW 初始 lr `1e-3`，余弦降至 `1e-4`；weight decay `1e-4`；梯度范数裁剪 `1.0`。`lambda(u)` 从第 1 次更新的 `0.05` 线性降至第 1600 次更新的 `0`；任务真值监督在每一步始终存在。K2 map loss 使用 `KL(q_teacher || softmax(student_logits))`，对每个 H1 的 4160 cells 展平后计算，再对 H1 样本取均值。
+
+初始 microbatch=16，OOM 时按 8、4 依次重启该臂并从同一初始权重、固定 batch plan 重新训练；梯度累积相应调整为 4、8、16，保持 effective batch、样本多重集、scheduler 和更新数不变。microbatch=4 仍 OOM 即停止该臂并记录，不改成 CPU/AMP，不减少科学预算。训练过程每步写一条日志；每 100 updates 保存 progress/optimizer checkpoint 并评价共同 validation。报告 microbatch、CUDA 峰值 allocated/reserved memory、实测用时、生成和预处理耗时及学生参数量；不声称完整链速度优势。
+
+## 6. K2、任务及物理评价
+
+### 6.1 K2 质量 audit
+
+在训练前按 2,048 对独立 audit 评估：教师输入仅 IQ；map finite/nonnegative，形状正确，和为 1；H0/H1 均不崩溃；公共复幅度缩放 `X→aX`（`a=0.5,2.0,0.6+1.2j`）后归一化图最大绝对差 `≤1e-6`。离线使用真值计算 target window（range 误差 `≤1 cell` 且 circular Doppler 误差 `≤20 Hz`）概率质量、相对配对 H0 的 lift、教师 top-cell 命中率及配对区间。不得用这些结果调整 K2 定义或参数。
+
+### 6.2 H0 阈值与任务指标
+
+学生分数固定为 presence logit。每个学生和传统分数各自使用相同 H0 calibration scene IDs 的分数，按 `numpy.quantile(q=0.95, method="higher")` 定阈值，推理比较符固定 `score >= threshold`；记录 `>`、平局数与校准经验 Pfa。学生不借用教师阈值。验证/开发不得回调阈值。
+
+传统对照：E0 `max_r sum_(channel,pulse)|IQ|²`；E001 冻结 B0/B1/B2/B3；R3 冻结 T1。T1 只称 R3 research candidate，不是获准教师。各基线独立校准阈值。所有方法共用 H0 verification 和配对 development sample IDs。
+
+至少报告：
+
+- H0 verification 总 Pfa、单侧 95% Clopper–Pearson 上限和分层 Pfa；每个 SNR/CNR 层、四个幅度四分位及 A/B/C 均记录样本数。
+- development ROC/AUC；方法自己的校准阈值下 Pd；development ROC 共同经验 FPR=0.05 的 Pd。
+- 所有 H1 及命中子集的 range MAE/RMSE（cell 与米）、circular Doppler MAE/RMSE/bias、异常率；漏检作为 `joint_success` 失败。联合成功定义为 detected、range error `≤1 cell`、Doppler error `≤20 Hz`。
+- 按课程层、A/B/C、SNR/CNR、SCNR、range/Doppler、幅度、初相分组；训练集确定的 range 中位数和 circular Doppler 均值作为无输入预测常值基线。
+- 训练/验证各损失、AUC、range/Doppler RMSE、达到 A 组最佳 validation task loss 的更新数；报告 A–B 和 B–C 的 paired base-scene bootstrap 区间。
+- K2 teacher 原始 B3 score 与 T1 ROC/AUC/Pd、target-region mass lift、低速/重叠结果。教师 fixed threshold 仍按 R3 失败记录，不因软图可用而改判。
+
+采用 2,000 次按 `base_scene_id` 配对 bootstrap 计算 development AUC、Pd、RMSE、joint success 和组间差值区间；Pfa verification 主区间为精确单侧二项上限。由于只有一个训练种子，bootstrap 只反映场景抽样不确定性，不代表 seed 不确定性，也不据此声称统计显著蒸馏收益。
+
+### 6.3 物理一致性与数据捷径
+
+在固定 development 子集进行：32 个公共复相位旋转；整体幅度乘 `0.5/2.0` 且不重新校准；目标慢时间分量乘 `exp(j2πδn/PRF)`，`δ∈{-25,-10,10,25} Hz`；独立常相位扰乱各通道的相干消融。真值只用于生成受控诊断或事后分组，不输入模型。报告 phase decision agreement/range/Doppler changes/AUC、frequency-shift equivariance residual、scale Pfa/Pd 变化和通道相干消融变化。固定参考门：公共相位决策一致率 `≥99%`、range 变化 95 百分位 `≤0.25 bin`、Doppler 变化 95 百分位 `≤5 Hz`、AUC 绝对变化 `≤0.01`；频移残差 95 百分位 `≤10 Hz`、range 中位变化 `≤0.25 bin`。幅度缩放导致 Pfa `>0.10` 或 Pd 绝对下降 `>0.10` 时标记尺度敏感。通道相干消融报告为诊断，不要求输出不变。所有变换均使用原 calibration 阈值，不另行校准。
+
+## 7. 冻结阶段门与解释
+
+- **G1 工程正确性：** E001 T1–T12、split/seed/pair 检查通过；检测器只读 IQ；物理 truth、teacher map 和模型输入分离；A/B/C 参数/预算/初始化/样本多重集校验通过；模型/损失梯度有限；RTX 3050 CUDA 真机可见。未通过则不启动正式 1600-update pilot。
+- **G2 K2 质量：** 第 6.1 节数值/尺度/信息隔离通过，且严重误导规则未触发；未通过时停止 C，但 A/B 仍可继续。
+- **G3 H0 检测：** 对每个学生，15,000 个独立 verification H0 的 Pfa 点估计 `≤0.06` 且单侧 exact 95% 上限 `≤0.06`；任一预定 SNR/CNR 或幅度层上限 `>0.10` 记为分层失稳。不得用旧 R3 门“CI 必须覆盖精确 0.05”替代此门。
+- **G4 学生任务学习：** 对每一臂，在 pooled identifiable scenario A/B/C 上学生 AUC paired 95% CI 下界 `>0.5`；相对 E0 的 AUC 点增益 `≥0.02` 且差值区间下界 `>0`；共同 ROC FPR=0.05 下 Pd 差值下界 `>−0.05`；range 和 Doppler RMSE 均优于仅由 train truth 计算的常值基线且 paired 95% CI 上界 `<0`；主 A/10/10 dB joint success 点估计 `≥0.50`、单侧 95% bootstrap 下界 `>0.40`。这些指标逐臂报告，不以某臂掩盖另一臂失败。
+- **G5 课程/K2 筛选信号：** B−A、C−B 的 pilot 改善信号分别按预注册解释：joint success 增益至少 `0.05` 且 paired 95% 场景 bootstrap 区间下界 `>0`；或至少提前 `20%` 更新达到 A 的最佳 validation task loss，并且最终 joint success 差值区间下界 `>−0.05`。若不满足，记录未见清晰收益。该门只用于决定是否另提正式 3-seed 确认，不是跨 seed 推断。
+- **G6 物理诊断：** 第 6.3 节所有必做变换完成并如实报告。公共相位/频移数值门失败时，不声称当前学生已可靠利用相干物理量，也不启动 final blind；幅度/通道干预限定鲁棒性表述。
+
+结果解释：A 失败、B 成功则支持课程的初步价值；B/C 相近则没有教师增量证据；C 相对 B 达到 G5 才支持继续正式 K2 对照；A/B/C 都失败则先查正确性、range-index mismatch、梯度/损失和结构，再提出有界物理相干表示诊断，不直接扩大模型。C 独自成功时，因三个臂均实例化相同辅助 head 且样本/预算相同，排除了 head 参数量与额外 task updates；仍需在后续确认实验检验随机/非目标辅助 response 等替代解释。没有跨 seed 数据时不做“蒸馏已被证明”结论。
+
+无论 G2–G6 结果如何，R3 G2、E001、D1 和历史负结果保持原状。本轮不启动正式三种子、不生成 final blind、不把 R3 候选改称获准教师。若后续要做正式确认，先另行冻结三个独立训练种子、统计功效、模型选择和全新盲测。
+
+## 8. 复现和输出
+
+训练入口：
 
 ```bash
-python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage preflight
-python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage pilot --seed 101 --device cuda:0
+conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage preflight
+conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage k2-audit
+conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage pilot --device cuda:0
+conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage evaluate --device cuda:0
 ```
 
-runner 实现后须先检查完整 split seed 区间无重叠、固定 IID H0 混合、scene pair 相同背景/噪声、模型输入仅 IQ 和 CUDA 型号；preflight 失败时不得训练。训练完成后应额外保存 checkpoint、逐 update train/validation log、指标/阈值、bootstrap seed、系统/依赖信息、峰值 GPU memory、`nvidia-smi` 和 wall-clock。新场景 seed 区间 `17M` 系列仅供 E002 proposal；final blind 不分配、不生成。
-
-## 10. 本提案不授权的工作
-
-- 不运行训练或下载/生成本协议场景；不生成 final blind。
-- 不运行 E2/E3、K1/K2/K3 蒸馏或重新训练 D1 网络。
-- 不改 `docs/RESEARCH_CHARTER.md`、E001/R3 protocol/config、已有数据、结果或冻结阶段结论。
-- 不因单 seed pilot 通过而声称稳定性、真实回波泛化、教师有效或整体系统效率提升。
-
-执行前待审查并批准：统计门及 IID 混合实现；G2/G4/G5 定量门；新增 seed 命名空间；E002 runner/preflight 的实现与数据泄漏审计；用户对单 seed RTX 3050 truth-only pilot 的明确执行批准。
+必须保存 `config_used.yaml`、`environment.json`（PyTorch/CUDA/driver/GPU、磁盘余量、`nvidia-smi` 前后、代码 SHA）、K2 audit 指标/逐组 CSV、A/B/C 初始/最佳/最终 checkpoint、逐 update history、Pfa calibration/verification 指标、开发 `metrics.json`/`result.csv`、收敛和物理诊断、RMSE/ROC/课程图、`analysis.md` 与 `docs/stage_reviews/D2-A-E002_review.md`。训练 cache、memmap、可重建 H0/H1 IQ 默认不加入 Git。报告必须记录真实运行；未运行项清楚标注，不用计划替代结果。

@@ -10,6 +10,7 @@ experiments/D1-E001/data/cache/*.npz
 experiments/D1-E002/data/cache/
 experiments/D1-E002/data/calibration_cache/
 experiments/D1-E002/data/blind_cache/
+experiments/D2-A-E002/data/
 experiments/D1-E002/**/initial_inference.pt
 experiments/D1-E002/**/last_inference.pt
 experiments/D1-E002/**/latest_inference.pt

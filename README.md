@@ -24,7 +24,7 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 已完成合成静止杂波 R0/R1 开发验证，T1–T12 全通过，R2 已对齐 D1-E001 `TaskStudent` 并冻结预算；阶段结论为 **CONDITIONAL GO**。主条件的开发 Pfa 高于独立标定值，因此先做阈值迁移诊断，尚未训练学生或生成 final blind。条件 RMSE 区间已修正并重新生成。
 
-**下一项唯一优先任务：** 预注册并执行 D2-A 独立阈值迁移诊断；通过后才启动 E1 truth-only 学生 pilot。阶段依据见 [D2-A-E001 阶段审查](docs/stage_reviews/D2-A-E001_review.md)，协议和结果见 [`experiments/D2-A-E001/`](experiments/D2-A-E001/)。
+**当前工作：** D2-A-R3 阶段决定为 REFINE，T0/T1/T2 固定阈值门未全部通过，因此 T1 仍不是获准的固定阈值教师。D2-A-E002 v1 truth-only 提案未执行；用户已批准 v2 的 A/B/C 匹配 pilot（直接真值、课程真值、课程 + IQ-only K2）。当前在完成代码实现、测试、CUDA/数据 preflight 和 K2 审计，随后依冻结门顺序执行单 seed pilot；尚无 E002 运行结果，不生成 final blind。
 
 ## 复现入口
 

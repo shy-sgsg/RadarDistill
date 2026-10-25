@@ -1,5 +1,7 @@
 # D2-A-E002 任务对齐记录
 
+> **历史版本说明：** 本文记录 v1 truth-only 提案及其当时的审查/授权边界。v1 未执行；用户在 2026-10-25 明确批准的 v2 课程学习 + K2 A/B/C 路线见 [v2 任务对齐](D2-A-E002_curriculum_k2_alignment.md) 和 `experiments/D2-A-E002/protocol.md`。本文保留作历史记录，不代表当前执行约束。
+
 **日期：** 2026-10-25
 **任务 / 实验：** D2-A-E002 独立 truth-only TaskStudent 可行性 pilot 协议提案
 **基线提交：** `6bb4c25964f2ab18d1388aa476129c8d5d666c7a`（`main`，与 `origin/main` 一致）
