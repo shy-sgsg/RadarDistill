@@ -1,0 +1,5839 @@
+{
+  "experiment_id": "D2-A-R3",
+  "data_are_synthetic": true,
+  "phase_order": [
+    "raw T0 H0",
+    "review raw T0",
+    "T1/T2 candidates"
+  ],
+  "raw_phase": {
+    "completed": true,
+    "methods": [
+      "B0",
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "scenes_per_primary_calibration_group": 4096,
+    "scenes_per_primary_validation_group": 4096,
+    "thresholds_by_group": {
+      "primary_cal_1": {
+        "B0": {
+          "threshold": 189155.40648999743,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B1": {
+          "threshold": 567481.3052999284,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B2": {
+          "threshold": 189146.4805890688,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B3": {
+          "threshold": 1006.8662804785204,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        }
+      },
+      "primary_cal_2": {
+        "B0": {
+          "threshold": 189183.97179317003,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B1": {
+          "threshold": 563107.6112911955,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B2": {
+          "threshold": 187565.9144245832,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B3": {
+          "threshold": 1042.3503810624482,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        }
+      },
+      "primary_cal_3": {
+        "B0": {
+          "threshold": 188659.18140606963,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B1": {
+          "threshold": 566307.9292403106,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B2": {
+          "threshold": 188709.77685542707,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B3": {
+          "threshold": 997.104561140164,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        }
+      },
+      "cnr0_cal": {
+        "B0": {
+          "threshold": 19304.296281002786,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B1": {
+          "threshold": 57022.12586377265,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B2": {
+          "threshold": 18993.748330287926,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B3": {
+          "threshold": 814.4152402416046,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        }
+      },
+      "cnr20_cal": {
+        "B0": {
+          "threshold": 1941029.8656333142,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B1": {
+          "threshold": 5811664.799915146,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B2": {
+          "threshold": 1935570.893034455,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        },
+        "B3": {
+          "threshold": 3314.2890699012964,
+          "quantile_method": "higher",
+          "n": 4096,
+          "pfa_gt": 0.0498046875,
+          "pfa_ge": 0.050048828125,
+          "tie_count": 1,
+          "tie_fraction": 0.000244140625
+        }
+      }
+    },
+    "validation_threshold_results": [
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.046142578125,
+        "pfa_ge": 0.046142578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.040131960884305345,
+          0.053003703666618426
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.056396484375,
+        "pfa_ge": 0.056396484375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04973859724567345,
+          0.06388566444826334
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.04638671875,
+        "pfa_ge": 0.04638671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04035978058165303,
+          0.05326370771077105
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.0576171875,
+        "pfa_ge": 0.0576171875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.050886951311353915,
+          0.06517642909008442
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.04638671875,
+        "pfa_ge": 0.04638671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04035978058165303,
+          0.05326370771077105
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.05810546875,
+        "pfa_ge": 0.05810546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.051346545300830215,
+          0.06569248258360874
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.04736328125,
+        "pfa_ge": 0.04736328125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.041271542412079414,
+          0.054303240846345906
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.040771484375,
+        "pfa_ge": 0.040771484375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03513303518779802,
+          0.047270507050118926
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.051025390625,
+        "pfa_ge": 0.051025390625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04469721025882503,
+          0.058194929122104944
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_A_separated",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.063232421875,
+        "pfa_ge": 0.063232421875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05618053223329235,
+          0.07110279422265313
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.046875,
+        "pfa_ge": 0.046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04081556560417523,
+          0.05378357017124947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.046875,
+        "pfa_ge": 0.046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04081556560417523,
+          0.05378357017124947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.04736328125,
+        "pfa_ge": 0.04736328125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.041271542412079414,
+          0.054303240846345906
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.057373046875,
+        "pfa_ge": 0.057373046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.050657207964072304,
+          0.06491834869586573
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.048828125,
+        "pfa_ge": 0.048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.042640595911991576,
+          0.05586112979543561
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.05029296875,
+        "pfa_ge": 0.05029296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.044011278822729566,
+          0.05741738933369947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.04931640625,
+        "pfa_ge": 0.04931640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04309731256717877,
+          0.05638006062324904
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.060302734375,
+        "pfa_ge": 0.060302734375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.053416447740937595,
+          0.06801299381700415
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.048828125,
+        "pfa_ge": 0.048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.042640595911991576,
+          0.05586112979543561
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.050537109375,
+        "pfa_ge": 0.050537109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04423987963168519,
+          0.05767661226624416
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.049072265625,
+        "pfa_ge": 0.049072265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.042868931773833364,
+          0.056120617675094124
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.060302734375,
+        "pfa_ge": 0.060302734375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.053416447740937595,
+          0.06801299381700415
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.050048828125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04378272141038475,
+          0.05715812300454398
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.0419921875,
+        "pfa_ge": 0.0419921875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03626684581905941,
+          0.0485758151263591
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.053466796875,
+        "pfa_ge": 0.053466796875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04698636991961872,
+          0.06078400687631435
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_B_near_clutter_edge",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.064697265625,
+        "pfa_ge": 0.064697265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.057564292791484464,
+          0.07264597611346287
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.050537109375,
+        "pfa_ge": 0.050537109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04423987963168519,
+          0.05767661226624416
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.050537109375,
+        "pfa_ge": 0.050537109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04423987963168519,
+          0.05767661226624416
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.050537109375,
+        "pfa_ge": 0.050537109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04423987963168519,
+          0.05767661226624416
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.059814453125,
+        "pfa_ge": 0.059814453125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05295622907255078,
+          0.06749756500239035
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.050048828125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04378272141038475,
+          0.05715812300454398
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.051513671875,
+        "pfa_ge": 0.051513671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04515471096533265,
+          0.058713075898597936
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.05029296875,
+        "pfa_ge": 0.05029296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.044011278822729566,
+          0.05741738933369947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.062744140625,
+        "pfa_ge": 0.062744140625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05571952867508549,
+          0.07058815029785935
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.050048828125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04378272141038475,
+          0.05715812300454398
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.051513671875,
+        "pfa_ge": 0.051513671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04515471096533265,
+          0.058713075898597936
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.05029296875,
+        "pfa_ge": 0.05029296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.044011278822729566,
+          0.05741738933369947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.06298828125,
+        "pfa_ge": 0.06298828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.055950014635511774,
+          0.07084548807893337
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.0517578125,
+        "pfa_ge": 0.0517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04538352438622397,
+          0.05897208621920693
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.043701171875,
+        "pfa_ge": 0.043701171875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03785652333901029,
+          0.05040090379691039
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.054931640625,
+        "pfa_ge": 0.054931640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.048361793683114274,
+          0.06233552556182065
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_C_partial_overlap",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.06591796875,
+        "pfa_ge": 0.06591796875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05871826635659458,
+          0.0739311212558543
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.065673828125,
+        "pfa_ge": 0.065673828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05848741162895583,
+          0.07367415224199275
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.0556640625,
+        "pfa_ge": 0.0556640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.049050026197856186,
+          0.06311076427157968
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.06640625,
+        "pfa_ge": 0.06640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05918006475452955,
+          0.07444497034091994
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.0556640625,
+        "pfa_ge": 0.0556640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.049050026197856186,
+          0.06311076427157968
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.05517578125,
+        "pfa_ge": 0.05517578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04859116651805456,
+          0.06259397646838068
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.06640625,
+        "pfa_ge": 0.06640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05918006475452955,
+          0.07444497034091994
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_1",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.05029296875,
+        "pfa_ge": 0.05029296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.044011278822729566,
+          0.05741738933369947
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_2",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.040771484375,
+        "pfa_ge": 0.040771484375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03513303518779802,
+          0.047270507050118926
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_cal_3",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.054443359375,
+        "pfa_ge": 0.054443359375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04790316321435348,
+          0.061818508547580836
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "primary_D_exact_overlap",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.064697265625,
+        "pfa_ge": 0.064697265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.057564292791484464,
+          0.07264597611346287
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 19304.296281002786,
+        "n": 4096,
+        "pfa_gt": 0.04296875,
+        "pfa_ge": 0.04296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.037174906504792465,
+          0.04961904940662727
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 19878.86830508337,
+        "n": 4096,
+        "pfa_gt": 0.037109375,
+        "pfa_ge": 0.037109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.031740641817972134,
+          0.04334554429744017
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 57022.12586377265,
+        "n": 4096,
+        "pfa_gt": 0.044189453125,
+        "pfa_ge": 0.044189453125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.038311200120916086,
+          0.0509218744980052
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 61708.79747854282,
+        "n": 4096,
+        "pfa_gt": 0.0322265625,
+        "pfa_ge": 0.0322265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.027241336238722557,
+          0.03808837504668354
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 18993.748330287926,
+        "n": 4096,
+        "pfa_gt": 0.043701171875,
+        "pfa_ge": 0.043701171875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03785652333901029,
+          0.05040090379691039
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 20533.535646639222,
+        "n": 4096,
+        "pfa_gt": 0.031982421875,
+        "pfa_ge": 0.031982421875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.027017176833165794,
+          0.037824710710740006
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 814.4152402416046,
+        "n": 4096,
+        "pfa_gt": 0.047119140625,
+        "pfa_ge": 0.047119140625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04104353021153968,
+          0.05404342930538533
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 820.0358540472897,
+        "n": 4096,
+        "pfa_gt": 0.0458984375,
+        "pfa_ge": 0.0458984375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0399041902159216,
+          0.052743650593501855
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.010009765625,
+        "pfa_ge": 0.010009765625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.007387345719407724,
+          0.013550405089470172
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.00732421875,
+        "pfa_ge": 0.00732421875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0051352858767219015,
+          0.010436403775652584
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.0107421875,
+        "pfa_ge": 0.0107421875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.008012003642312426,
+          0.0143892183910664
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.0166015625,
+        "pfa_ge": 0.0166015625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.013117213150496155,
+          0.020991778678890113
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 19304.296281002786,
+        "n": 4096,
+        "pfa_gt": 0.044921875,
+        "pfa_ge": 0.044921875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03899360532121875,
+          0.05170294052220348
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 19878.86830508337,
+        "n": 4096,
+        "pfa_gt": 0.0390625,
+        "pfa_ge": 0.0390625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03354817131232753,
+          0.04544060473508725
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 57022.12586377265,
+        "n": 4096,
+        "pfa_gt": 0.046630859375,
+        "pfa_ge": 0.046630859375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04058764894201764,
+          0.05352366309190675
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 61708.79747854282,
+        "n": 4096,
+        "pfa_gt": 0.032470703125,
+        "pfa_ge": 0.032470703125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.02746557757278209,
+          0.03835195745412433
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 18993.748330287926,
+        "n": 4096,
+        "pfa_gt": 0.046630859375,
+        "pfa_ge": 0.046630859375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04058764894201764,
+          0.05352366309190675
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 20533.535646639222,
+        "n": 4096,
+        "pfa_gt": 0.03271484375,
+        "pfa_ge": 0.03271484375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.02768989995031263,
+          0.03861545881809409
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.0,
+        "pfa_ge": 0.0,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0,
+          0.0009369774073651879
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 814.4152402416046,
+        "n": 4096,
+        "pfa_gt": 0.0498046875,
+        "pfa_ge": 0.0498046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04355420769424661,
+          0.056898812979181805
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 820.0358540472897,
+        "n": 4096,
+        "pfa_gt": 0.04833984375,
+        "pfa_ge": 0.04833984375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04218406026026596,
+          0.055342017964160606
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.010986328125,
+        "pfa_ge": 0.010986328125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.008221047888752988,
+          0.014667997886126148
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.008544921875,
+        "pfa_ge": 0.008544921875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0061505786780966,
+          0.011860229681779438
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.011474609375,
+        "pfa_ge": 0.011474609375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.008640294920605456,
+          0.015224398337274302
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr0_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.014892578125,
+        "pfa_ge": 0.014892578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.011611768142410793,
+          0.019082457496473304
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1941029.8656333142,
+        "n": 4096,
+        "pfa_gt": 0.039306640625,
+        "pfa_ge": 0.039306640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03377439826763218,
+          0.04570220152128292
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1692210.4259929885,
+        "n": 4096,
+        "pfa_gt": 0.064453125,
+        "pfa_ge": 0.064453125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05733358888561596,
+          0.07238885627783107
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.838623046875,
+        "pfa_ge": 0.838623046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8270405095935828,
+          0.8495710198673471
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.838623046875,
+        "pfa_ge": 0.838623046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8270405095935828,
+          0.8495710198673471
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.84033203125,
+        "pfa_ge": 0.84033203125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8287962055079064,
+          0.8512300901435256
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.85205078125,
+        "pfa_ge": 0.85205078125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8408478125539957,
+          0.8625940226894514
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 5811664.799915146,
+        "n": 4096,
+        "pfa_gt": 0.040283203125,
+        "pfa_ge": 0.040283203125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03467991684721238,
+          0.04674797790770394
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 5076987.371500654,
+        "n": 4096,
+        "pfa_gt": 0.064697265625,
+        "pfa_ge": 0.064697265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.057564292791484464,
+          0.07264597611346287
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.8388671875,
+        "pfa_ge": 0.8388671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8272912957344869,
+          0.8498080574679434
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.841796875,
+        "pfa_ge": 0.841796875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.830301448676631,
+          0.8526517894238029
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.83935546875,
+        "pfa_ge": 0.83935546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8277928955098375,
+          0.8502821051755933
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.85498046875,
+        "pfa_ge": 0.85498046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8438642894424228,
+          0.865431430699028
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1935570.893034455,
+        "n": 4096,
+        "pfa_gt": 0.040283203125,
+        "pfa_ge": 0.040283203125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03467991684721238,
+          0.04674797790770394
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1691314.6765433096,
+        "n": 4096,
+        "pfa_gt": 0.064697265625,
+        "pfa_ge": 0.064697265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.057564292791484464,
+          0.07264597611346287
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.838623046875,
+        "pfa_ge": 0.838623046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8270405095935828,
+          0.8495710198673471
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.841796875,
+        "pfa_ge": 0.841796875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.830301448676631,
+          0.8526517894238029
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.83935546875,
+        "pfa_ge": 0.83935546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8277928955098375,
+          0.8502821051755933
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.85498046875,
+        "pfa_ge": 0.85498046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8438642894424228,
+          0.865431430699028
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 3314.2890699012964,
+        "n": 4096,
+        "pfa_gt": 0.048828125,
+        "pfa_ge": 0.048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.042640595911991576,
+          0.05586112979543561
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 3122.879716162107,
+        "n": 4096,
+        "pfa_gt": 0.061279296875,
+        "pfa_ge": 0.061279296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05433728703028498,
+          0.06904344949365801
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.4306640625,
+        "pfa_ge": 0.4306640625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.41557171761348594,
+          0.4458863398004261
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.416259765625,
+        "pfa_ge": 0.416259765625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.4012491586892243,
+          0.4314272979761694
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.43359375,
+        "pfa_ge": 0.43359375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.41848638481763867,
+          0.448825557494277
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_A_separated",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.44775390625,
+        "pfa_ge": 0.44775390625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.43258152187800986,
+          0.46302419744092377
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1941029.8656333142,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1692210.4259929885,
+        "n": 4096,
+        "pfa_gt": 0.079345703125,
+        "pfa_ge": 0.079345703125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.07145724362559759,
+          0.08802244976936834
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189155.40648999743,
+        "n": 4096,
+        "pfa_gt": 0.840576171875,
+        "pfa_ge": 0.840576171875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.829047056116625,
+          0.8514670632763075
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189183.97179317003,
+        "n": 4096,
+        "pfa_gt": 0.840576171875,
+        "pfa_ge": 0.840576171875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.829047056116625,
+          0.8514670632763075
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 188659.18140606963,
+        "n": 4096,
+        "pfa_gt": 0.841552734375,
+        "pfa_ge": 0.841552734375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8300505515045329,
+          0.8524148628544008
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B0",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 180598.23002948496,
+        "n": 4096,
+        "pfa_gt": 0.854736328125,
+        "pfa_ge": 0.854736328125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8436128595565577,
+          0.8651950368433927
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 5811664.799915146,
+        "n": 4096,
+        "pfa_gt": 0.04638671875,
+        "pfa_ge": 0.04638671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04035978058165303,
+          0.05326370771077105
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 5076987.371500654,
+        "n": 4096,
+        "pfa_gt": 0.079345703125,
+        "pfa_ge": 0.079345703125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.07145724362559759,
+          0.08802244976936834
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 567481.3052999284,
+        "n": 4096,
+        "pfa_gt": 0.842041015625,
+        "pfa_ge": 0.842041015625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8305523552137561,
+          0.8528887066281781
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 563107.6112911955,
+        "n": 4096,
+        "pfa_gt": 0.844482421875,
+        "pfa_ge": 0.844482421875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8330619395689436,
+          0.8552573596879938
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 566307.9292403106,
+        "n": 4096,
+        "pfa_gt": 0.8427734375,
+        "pfa_ge": 0.8427734375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.831305131191705,
+          0.8535994018747302
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B1",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 536397.2435161747,
+        "n": 4096,
+        "pfa_gt": 0.858154296875,
+        "pfa_ge": 0.858154296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8471338344820533,
+          0.8685035942989013
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1935570.893034455,
+        "n": 4096,
+        "pfa_gt": 0.04638671875,
+        "pfa_ge": 0.04638671875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04035978058165303,
+          0.05326370771077105
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1691314.6765433096,
+        "n": 4096,
+        "pfa_gt": 0.079345703125,
+        "pfa_ge": 0.079345703125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.07145724362559759,
+          0.08802244976936834
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 189146.4805890688,
+        "n": 4096,
+        "pfa_gt": 0.842041015625,
+        "pfa_ge": 0.842041015625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8305523552137561,
+          0.8528887066281781
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 187565.9144245832,
+        "n": 4096,
+        "pfa_gt": 0.8447265625,
+        "pfa_ge": 0.8447265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8333129502985477,
+          0.8554941726998899
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 188709.77685542707,
+        "n": 4096,
+        "pfa_gt": 0.8427734375,
+        "pfa_ge": 0.8427734375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.831305131191705,
+          0.8535994018747302
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B2",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 178629.93962331084,
+        "n": 4096,
+        "pfa_gt": 0.8583984375,
+        "pfa_ge": 0.8583984375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.8473854123100891,
+          0.8687398402123659
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 3314.2890699012964,
+        "n": 4096,
+        "pfa_gt": 0.045654296875,
+        "pfa_ge": 0.045654296875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039676468947259125,
+          0.052483548120664025
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_matched_CNR",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 3122.879716162107,
+        "n": 4096,
+        "pfa_gt": 0.055419921875,
+        "pfa_ge": 0.055419921875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04882057743485012,
+          0.06285238929308543
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_1",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1006.8662804785204,
+        "n": 4096,
+        "pfa_gt": 0.43505859375,
+        "pfa_ge": 0.43505859375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.41994392068376757,
+          0.45029496407715003
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_2",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1042.3503810624482,
+        "n": 4096,
+        "pfa_gt": 0.423583984375,
+        "pfa_ge": 0.423583984375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.4085301725412947,
+          0.43878099636910833
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "primary_10dB_primary_cal_3",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 997.104561140164,
+        "n": 4096,
+        "pfa_gt": 0.43896484375,
+        "pfa_ge": 0.43896484375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.42383134077035434,
+          0.4542127238545681
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "validation_group",
+        "method": "B3",
+        "threshold_source": "E001_frozen_primary_10dB",
+        "group_id": "cnr20_C_partial_overlap",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 961.397913450906,
+        "n": 4096,
+        "pfa_gt": 0.452392578125,
+        "pfa_ge": 0.452392578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.43720161125268187,
+          0.4676727591547577
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B0",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 19304.296281002786,
+        "n": 8192,
+        "pfa_gt": 0.0439453125,
+        "pfa_ge": 0.0439453125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039716315562906626,
+          0.048601822660919905
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B1",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 57022.12586377265,
+        "n": 8192,
+        "pfa_gt": 0.04541015625,
+        "pfa_ge": 0.04541015625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.041110688146943804,
+          0.05013576440806957
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B2",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 18993.748330287926,
+        "n": 8192,
+        "pfa_gt": 0.045166015625,
+        "pfa_ge": 0.045166015625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.0408782020694848,
+          0.04988019809699743
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B3",
+        "threshold_source": "cnr0_cal",
+        "group_id": "cnr0_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "threshold": 814.4152402416046,
+        "n": 8192,
+        "pfa_gt": 0.0484619140625,
+        "pfa_ge": 0.0484619140625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04401968392490223,
+          0.05332742348675043
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B0",
+        "threshold_source": "primary_cal_1",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189155.40648999743,
+        "n": 16384,
+        "pfa_gt": 0.049560546875,
+        "pfa_ge": 0.049560546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04634155520353789,
+          0.052990712741031135
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B0",
+        "threshold_source": "primary_cal_2",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189183.97179317003,
+        "n": 16384,
+        "pfa_gt": 0.049560546875,
+        "pfa_ge": 0.049560546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04634155520353789,
+          0.052990712741031135
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B0",
+        "threshold_source": "primary_cal_3",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188659.18140606963,
+        "n": 16384,
+        "pfa_gt": 0.0498046875,
+        "pfa_ge": 0.0498046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04657789773563551,
+          0.05324253700137547
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B1",
+        "threshold_source": "primary_cal_1",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 567481.3052999284,
+        "n": 16384,
+        "pfa_gt": 0.0499267578125,
+        "pfa_ge": 0.0499267578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04669607730715359,
+          0.05336844082607838
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B1",
+        "threshold_source": "primary_cal_2",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 563107.6112911955,
+        "n": 16384,
+        "pfa_gt": 0.05096435546875,
+        "pfa_ge": 0.05096435546875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.047700824280091265,
+          0.05443840272101907
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B1",
+        "threshold_source": "primary_cal_3",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 566307.9292403106,
+        "n": 16384,
+        "pfa_gt": 0.05010986328125,
+        "pfa_ge": 0.05010986328125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04687335699226784,
+          0.0535572862352956
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B2",
+        "threshold_source": "primary_cal_1",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 189146.4805890688,
+        "n": 16384,
+        "pfa_gt": 0.0499267578125,
+        "pfa_ge": 0.0499267578125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.04669607730715359,
+          0.05336844082607838
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B2",
+        "threshold_source": "primary_cal_2",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 187565.9144245832,
+        "n": 16384,
+        "pfa_gt": 0.051025390625,
+        "pfa_ge": 0.051025390625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.047759939197595344,
+          0.05450132950162548
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B2",
+        "threshold_source": "primary_cal_3",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 188709.77685542707,
+        "n": 16384,
+        "pfa_gt": 0.050048828125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.046814262390032085,
+          0.053494339139420866
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B3",
+        "threshold_source": "primary_cal_1",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1006.8662804785204,
+        "n": 16384,
+        "pfa_gt": 0.04986572265625,
+        "pfa_ge": 0.04986572265625,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.046636986831278156,
+          0.05330548960384333
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B3",
+        "threshold_source": "primary_cal_2",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 1042.3503810624482,
+        "n": 16384,
+        "pfa_gt": 0.04180908203125,
+        "pfa_ge": 0.04180908203125,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03885018264548837,
+          0.04498278963904817
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B3",
+        "threshold_source": "primary_cal_3",
+        "group_id": "cnr10_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "threshold": 997.104561140164,
+        "n": 16384,
+        "pfa_gt": 0.053466796875,
+        "pfa_ge": 0.053466796875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.05012560791664743,
+          0.05701732870699308
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B0",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1941029.8656333142,
+        "n": 8192,
+        "pfa_gt": 0.04248046875,
+        "pfa_ge": 0.04248046875,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.03832328670166759,
+          0.047066537190972084
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B1",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 5811664.799915146,
+        "n": 8192,
+        "pfa_gt": 0.0433349609375,
+        "pfa_ge": 0.0433349609375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039135719870463215,
+          0.04796228738203545
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B2",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 1935570.893034455,
+        "n": 8192,
+        "pfa_gt": 0.0433349609375,
+        "pfa_ge": 0.0433349609375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.039135719870463215,
+          0.04796228738203545
+        ]
+      },
+      {
+        "phase": "raw",
+        "record_type": "combined_validation",
+        "method": "B3",
+        "threshold_source": "cnr20_cal",
+        "group_id": "cnr20_all_validation",
+        "scope": "combined_independent_groups",
+        "scenario_id": "A_B_C_D_or_A_C_combined",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "threshold": 3314.2890699012964,
+        "n": 8192,
+        "pfa_gt": 0.0472412109375,
+        "pfa_ge": 0.0472412109375,
+        "tie_count": 0,
+        "tie_fraction": 0.0,
+        "pfa_wilson_ci95": [
+          0.042855450391365436,
+          0.052051395077631506
+        ]
+      }
+    ],
+    "legacy_b3_primary_validation": {
+      "n": 16384,
+      "pfa_gt": 0.06463623046875,
+      "pfa_ge": 0.06463623046875,
+      "tie_count": 0,
+      "tie_fraction": 0.0,
+      "pfa_wilson_ci95": [
+        0.0609723296342926,
+        0.06850423774356795
+      ],
+      "e001_historical_point_pfa": 0.08984375,
+      "e001_historical_validation_n": 256
+    },
+    "finite_sample_diagnostic": {
+      "threshold_q025_q50_q975": [
+        939.857102958637,
+        1014.4635492306136,
+        1092.720821012842
+      ],
+      "pfa_q025_q50_q975": [
+        0.01953125,
+        0.05078125,
+        0.0859375
+      ],
+      "probability_pfa_at_least_23_of_256": 0.0216,
+      "replicates": 10000,
+      "calibration_n": 512,
+      "validation_n": 256,
+      "threshold_method": "higher",
+      "decision_comparator": ">=",
+      "legacy_threshold_validation_pfa": 0.06463623046875,
+      "binomial_tail_validation_only_pr_23_of_256": 0.07018751652315139,
+      "legacy_threshold_pfa_wilson_ci95": [
+        0.0609723296342926,
+        0.06850423774356795
+      ]
+    },
+    "amplitude_and_component_power": {
+      "power_by_amplitude_bin": [
+        {
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "median_h0_total_power": 0.39123719459154527,
+          "median_noise_power": 0.03555830541323462,
+          "median_clutter_power": 0.3552109517000499
+        },
+        {
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "median_h0_total_power": 0.7792434701594035,
+          "median_noise_power": 0.07082560235425128,
+          "median_clutter_power": 0.708618831690403
+        },
+        {
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "median_h0_total_power": 1.558648846809139,
+          "median_noise_power": 0.14171451543422475,
+          "median_clutter_power": 1.4170111579801101
+        },
+        {
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "median_h0_total_power": 3.115642960128298,
+          "median_noise_power": 0.28342071251869544,
+          "median_clutter_power": 2.8339344948904683
+        }
+      ],
+      "pfa_by_amplitude_bin": [
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.0064679415073115865,
+          "pfa_wilson_ci95": [
+            0.0048528590319092575,
+            0.008615886635813629
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1931102086542501,
+          "pfa_wilson_ci95": [
+            0.1841207632688594,
+            0.20242965562266846
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1931102086542501
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.006327334083239595,
+          "pfa_wilson_ci95": [
+            0.004732336676798355,
+            0.008455345955502229
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1931102086542501,
+          "pfa_wilson_ci95": [
+            0.1841207632688594,
+            0.20242965562266846
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1931102086542501
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.006608548931383577,
+          "pfa_wilson_ci95": [
+            0.004973597559633909,
+            0.008776211143511277
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.19409046352051534,
+          "pfa_wilson_ci95": [
+            0.1850828775162638,
+            0.20342699703018507
+          ]
+        },
+        {
+          "method": "B0",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.19409046352051534
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.0064679415073115865,
+          "pfa_wilson_ci95": [
+            0.0048528590319092575,
+            0.008615886635813629
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1931102086542501,
+          "pfa_wilson_ci95": [
+            0.1841207632688594,
+            0.20242965562266846
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1931102086542501
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.00703037120359955,
+          "pfa_wilson_ci95": [
+            0.0053370450265435975,
+            0.009255952782868492
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1974513373477104,
+          "pfa_wilson_ci95": [
+            0.18838223466764878,
+            0.20684577355281478
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1974513373477104
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.006608548931383577,
+          "pfa_wilson_ci95": [
+            0.004973597559633909,
+            0.008776211143511277
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.19437053633944826,
+          "pfa_wilson_ci95": [
+            0.18535778384496274,
+            0.20371193517432065
+          ]
+        },
+        {
+          "method": "B1",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.19437053633944826
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.0064679415073115865,
+          "pfa_wilson_ci95": [
+            0.0048528590319092575,
+            0.008615886635813629
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1931102086542501,
+          "pfa_wilson_ci95": [
+            0.1841207632688594,
+            0.20242965562266846
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1931102086542501
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.00703037120359955,
+          "pfa_wilson_ci95": [
+            0.0053370450265435975,
+            0.009255952782868492
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.19759137375717686,
+          "pfa_wilson_ci95": [
+            0.18851973052560145,
+            0.20698819993127943
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.19759137375717686
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.006608548931383577,
+          "pfa_wilson_ci95": [
+            0.004973597559633909,
+            0.008776211143511277
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.19395042711104887,
+          "pfa_wilson_ci95": [
+            0.18494542710466885,
+            0.2032845252053627
+          ]
+        },
+        {
+          "method": "B2",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.19395042711104887
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.000421822272215973,
+          "pfa_wilson_ci95": [
+            0.00014346777489297497,
+            0.0012395673696709605
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.2031928301358353,
+          "pfa_wilson_ci95": [
+            0.1940210248120373,
+            0.2126837951015348
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_1",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.2031928301358353
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.000421822272215973,
+          "pfa_wilson_ci95": [
+            0.00014346777489297497,
+            0.0012395673696709605
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.1684638005881529,
+          "pfa_wilson_ci95": [
+            0.15996170220652897,
+            0.17732240307555733
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_2",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.1684638005881529
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 0,
+          "amplitude_low_db": -6.0,
+          "amplitude_high_db": -3.0,
+          "n_scenes": 7265,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            0.0,
+            0.0005284829559781549
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 1,
+          "amplitude_low_db": -3.0,
+          "amplitude_high_db": 0.0,
+          "n_scenes": 7154,
+          "pfa_cpi": 0.0,
+          "pfa_wilson_ci95": [
+            5.421010862427522e-20,
+            0.0005366783887005835
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 2,
+          "amplitude_low_db": 0.0,
+          "amplitude_high_db": 3.0,
+          "n_scenes": 7112,
+          "pfa_cpi": 0.000421822272215973,
+          "pfa_wilson_ci95": [
+            0.00014346777489297497,
+            0.0012395673696709605
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": 3,
+          "amplitude_low_db": 3.0,
+          "amplitude_high_db": 6.0,
+          "n_scenes": 7141,
+          "pfa_cpi": 0.21579610698781684,
+          "pfa_wilson_ci95": [
+            0.20640901086974006,
+            0.2254888103213874
+          ]
+        },
+        {
+          "method": "B3",
+          "threshold_source": "primary_cal_3",
+          "amplitude_bin_index": "range",
+          "max_minus_min_pfa": 0.21579610698781684
+        }
+      ],
+      "potential_amplitude_db_vs_h0_total_power_db_pearson_r": 0.9999891728128161,
+      "potential_amplitude_db_vs_B3_score_db_pearson_r": 0.9780154862079689,
+      "potential_amplitude_db_to_B3_score_db_linear_slope": 1.0018237237077772,
+      "interpretation": "Descriptive association only; latent amplitude and component powers are never detector inputs."
+    },
+    "controlled_scale": [
+      {
+        "factor": "real_0p5",
+        "method": "B0",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_0p5",
+        "method": "B1",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_0p5",
+        "method": "B2",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_0p5",
+        "method": "B3",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_2",
+        "method": "B0",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_2",
+        "method": "B1",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_2",
+        "method": "B2",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "real_2",
+        "method": "B3",
+        "max_relative_error_from_abs_a_squared": 0.0,
+        "mean_relative_error_from_abs_a_squared": 0.0,
+        "n_scenes": 128
+      },
+      {
+        "factor": "complex_0p6_1p2",
+        "method": "B0",
+        "max_relative_error_from_abs_a_squared": 9.103728492118865e-08,
+        "mean_relative_error_from_abs_a_squared": 8.01729459555771e-08,
+        "n_scenes": 128
+      },
+      {
+        "factor": "complex_0p6_1p2",
+        "method": "B1",
+        "max_relative_error_from_abs_a_squared": 9.194360420599087e-08,
+        "mean_relative_error_from_abs_a_squared": 8.013062864160307e-08,
+        "n_scenes": 128
+      },
+      {
+        "factor": "complex_0p6_1p2",
+        "method": "B2",
+        "max_relative_error_from_abs_a_squared": 9.198525914704148e-08,
+        "mean_relative_error_from_abs_a_squared": 8.012842197067494e-08,
+        "n_scenes": 128
+      },
+      {
+        "factor": "complex_0p6_1p2",
+        "method": "B3",
+        "max_relative_error_from_abs_a_squared": 3.3120286489818216e-07,
+        "mean_relative_error_from_abs_a_squared": 9.087291426724215e-08,
+        "n_scenes": 128
+      }
+    ],
+    "runtime_seconds": 615.2477536870283,
+    "seconds_per_scene_by_group_and_method": {
+      "primary_cal_1": {
+        "B0": 7.516185344513815e-05,
+        "B1": 0.00013851316430191218,
+        "B2": 0.0023541090786238783,
+        "B3": 0.0001919578793874166
+      },
+      "primary_cal_2": {
+        "B0": 7.156409688491294e-05,
+        "B1": 0.0001302397323996729,
+        "B2": 0.002274730339280495,
+        "B3": 0.00019107978687316063
+      },
+      "primary_cal_3": {
+        "B0": 7.913422125227498e-05,
+        "B1": 0.00015934509506365657,
+        "B2": 0.0031996187700471523,
+        "B3": 0.00022257596052810413
+      },
+      "primary_A_separated": {
+        "B0": 7.432277472929627e-05,
+        "B1": 0.00014367088019184848,
+        "B2": 0.0024961073466727157,
+        "B3": 0.00019726959441612735
+      },
+      "primary_B_near_clutter_edge": {
+        "B0": 7.327926687139552e-05,
+        "B1": 0.0001389226553456524,
+        "B2": 0.002637465272705697,
+        "B3": 0.00019431612939513343
+      },
+      "primary_C_partial_overlap": {
+        "B0": 7.268859222619994e-05,
+        "B1": 0.00014142201025180157,
+        "B2": 0.002589574922623683,
+        "B3": 0.0001943325632183246
+      },
+      "primary_D_exact_overlap": {
+        "B0": 7.108678633471754e-05,
+        "B1": 0.00013357145846981666,
+        "B2": 0.0023167911802346453,
+        "B3": 0.0001907731144541458
+      },
+      "cnr0_cal": {
+        "B0": 7.096115310645246e-05,
+        "B1": 0.00013339467606243716,
+        "B2": 0.0022784556919219767,
+        "B3": 0.00019203325533112547
+      },
+      "cnr0_A_separated": {
+        "B0": 6.955148907650255e-05,
+        "B1": 0.00013265831513820103,
+        "B2": 0.0023170017724112313,
+        "B3": 0.00018836455056003842
+      },
+      "cnr0_C_partial_overlap": {
+        "B0": 6.898233540653109e-05,
+        "B1": 0.0001375017418894231,
+        "B2": 0.0022985238605954805,
+        "B3": 0.00019014625950575237
+      },
+      "cnr20_cal": {
+        "B0": 6.991474195672254e-05,
+        "B1": 0.00013474413845671052,
+        "B2": 0.002255350362517561,
+        "B3": 0.00018980307620353187
+      },
+      "cnr20_A_separated": {
+        "B0": 7.120707470420484e-05,
+        "B1": 0.00013059107982371643,
+        "B2": 0.0022858671650993756,
+        "B3": 0.00019025160381147543
+      },
+      "cnr20_C_partial_overlap": {
+        "B0": 7.174935078779754e-05,
+        "B1": 0.0001398028171664123,
+        "B2": 0.002503287228989848,
+        "B3": 0.00019697013753727788
+      }
+    },
+    "score_quantiles_by_group": [
+      {
+        "group_id": "primary_cal_1",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48644.43843418915,
+        "q90": 150922.72197934234,
+        "q95": 189130.8904018733,
+        "q99": 266232.5870350876,
+        "max": 455805.0466112723
+      },
+      {
+        "group_id": "primary_cal_1",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 146671.60360340565,
+        "q90": 451284.6017175176,
+        "q95": 567388.003972702,
+        "q99": 794284.5243739187,
+        "max": 1369990.5303775773
+      },
+      {
+        "group_id": "primary_cal_1",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48848.815264460936,
+        "q90": 150367.1025725059,
+        "q95": 189079.5390620514,
+        "q99": 264726.3556001487,
+        "max": 456587.66656831553
+      },
+      {
+        "group_id": "primary_cal_1",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 284.7537157312761,
+        "q90": 851.1242252551579,
+        "q95": 1006.1648541597433,
+        "q99": 1289.2195228427313,
+        "max": 2098.2724537672975
+      },
+      {
+        "group_id": "primary_cal_2",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 50179.028934847156,
+        "q90": 155723.56084471435,
+        "q95": 188982.97364206368,
+        "q99": 263409.92814294476,
+        "max": 499702.3089748657
+      },
+      {
+        "group_id": "primary_cal_2",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 150581.62392540736,
+        "q90": 467428.0872257848,
+        "q95": 562853.4498382601,
+        "q99": 800947.5719928627,
+        "max": 1485135.2713794285
+      },
+      {
+        "group_id": "primary_cal_2",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 50169.3631162541,
+        "q90": 155787.8346762056,
+        "q95": 187447.3677315027,
+        "q99": 266908.4243148759,
+        "max": 494656.4445512313
+      },
+      {
+        "group_id": "primary_cal_2",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 290.79189854244316,
+        "q90": 864.9222550212273,
+        "q95": 1042.3335410804011,
+        "q99": 1330.0448979880603,
+        "max": 2094.6849743356106
+      },
+      {
+        "group_id": "primary_cal_3",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48395.050402296896,
+        "q90": 153548.57769858028,
+        "q95": 188572.938570423,
+        "q99": 272433.1336228186,
+        "max": 514194.3060309424
+      },
+      {
+        "group_id": "primary_cal_3",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 146124.974465138,
+        "q90": 462316.4638677564,
+        "q95": 565807.8752543364,
+        "q99": 811338.894243972,
+        "max": 1535156.8025294489
+      },
+      {
+        "group_id": "primary_cal_3",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48694.138194061816,
+        "q90": 154003.51537780243,
+        "q95": 188493.3606403496,
+        "q99": 270378.5200480908,
+        "max": 511710.4586961906
+      },
+      {
+        "group_id": "primary_cal_3",
+        "role": "calibration",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 287.9578985422802,
+        "q90": 860.5295209255701,
+        "q95": 996.8830257265615,
+        "q99": 1272.5987056351416,
+        "max": 1883.5711671195231
+      },
+      {
+        "group_id": "primary_A_separated",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48840.74952293429,
+        "q90": 151449.24893622645,
+        "q95": 184641.23380771145,
+        "q99": 275082.2314776334,
+        "max": 490702.6728663109
+      },
+      {
+        "group_id": "primary_A_separated",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 145852.1474737382,
+        "q90": 452216.0631047671,
+        "q95": 551637.0138317138,
+        "q99": 828569.3140160535,
+        "max": 1452355.1253582763
+      },
+      {
+        "group_id": "primary_A_separated",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48594.0114370803,
+        "q90": 150647.91728185464,
+        "q95": 183743.81533639945,
+        "q99": 276104.61896532436,
+        "max": 483909.2267027469
+      },
+      {
+        "group_id": "primary_A_separated",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 281.05151863513913,
+        "q90": 860.4428886240153,
+        "q95": 1000.2906919928207,
+        "q99": 1312.30420336565,
+        "max": 1657.572575335482
+      },
+      {
+        "group_id": "primary_B_near_clutter_edge",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48412.378403020295,
+        "q90": 152870.74832960695,
+        "q95": 187126.63115527335,
+        "q99": 280082.5872612624,
+        "max": 459964.22668929934
+      },
+      {
+        "group_id": "primary_B_near_clutter_edge",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 144015.41225191182,
+        "q90": 456087.6330596292,
+        "q95": 564600.1313110538,
+        "q99": 851597.7699113494,
+        "max": 1373492.8271690416
+      },
+      {
+        "group_id": "primary_B_near_clutter_edge",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 47989.03205355114,
+        "q90": 152009.89519736174,
+        "q95": 188104.29094010292,
+        "q99": 283668.0778240759,
+        "max": 457771.49474171177
+      },
+      {
+        "group_id": "primary_B_near_clutter_edge",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "near_clutter_edge",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 278.4905387838274,
+        "q90": 850.1957805116689,
+        "q95": 1006.7765386538972,
+        "q99": 1314.2522423928467,
+        "max": 2083.200799089957
+      },
+      {
+        "group_id": "primary_C_partial_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 48324.375284640075,
+        "q90": 151867.40960066125,
+        "q95": 189365.01283857555,
+        "q99": 275727.27573345054,
+        "max": 500732.71276810387
+      },
+      {
+        "group_id": "primary_C_partial_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 143836.00573445935,
+        "q90": 455188.1631787787,
+        "q95": 567152.3517840164,
+        "q99": 824097.2098789221,
+        "max": 1477070.9000662463
+      },
+      {
+        "group_id": "primary_C_partial_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 47917.6318697191,
+        "q90": 151605.23883055372,
+        "q95": 188998.90149827467,
+        "q99": 274612.8785256816,
+        "max": 492071.5220432897
+      },
+      {
+        "group_id": "primary_C_partial_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 278.88347460060857,
+        "q90": 851.1545924548833,
+        "q95": 1011.5305549687289,
+        "q99": 1348.5272171389863,
+        "max": 2436.4490840312087
+      },
+      {
+        "group_id": "primary_D_exact_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 46971.51887332645,
+        "q90": 154272.19799786666,
+        "q95": 193332.47289345515,
+        "q99": 268093.1052308707,
+        "max": 683739.0456548819
+      },
+      {
+        "group_id": "primary_D_exact_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 141424.67310346733,
+        "q90": 459963.01320679695,
+        "q95": 578269.889146142,
+        "q99": 802305.6766998557,
+        "max": 2021021.5032611694
+      },
+      {
+        "group_id": "primary_D_exact_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 47120.08392220175,
+        "q90": 153269.62503470798,
+        "q95": 192687.627568058,
+        "q99": 267207.3398783924,
+        "max": 673652.5480042297
+      },
+      {
+        "group_id": "primary_D_exact_overlap",
+        "role": "validation",
+        "scope": "primary",
+        "scenario_id": "exact_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 273.7916722372313,
+        "q90": 871.9853998956278,
+        "q95": 1007.6996447475558,
+        "q99": 1303.175237271372,
+        "max": 2080.5938790691616
+      },
+      {
+        "group_id": "cnr0_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 4969.051920524689,
+        "q90": 15641.536500234692,
+        "q95": 19300.267570175896,
+        "q99": 27420.453083580633,
+        "max": 46773.156882921736
+      },
+      {
+        "group_id": "cnr0_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 14908.026291182747,
+        "q90": 46204.950692067985,
+        "q95": 57019.205841311545,
+        "q99": 83304.40246983801,
+        "max": 138493.62931219596
+      },
+      {
+        "group_id": "cnr0_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 4959.913829839257,
+        "q90": 15387.300342427967,
+        "q95": 18976.28497893342,
+        "q99": 27735.319692758054,
+        "max": 46141.84264201189
+      },
+      {
+        "group_id": "cnr0_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 233.71701861909787,
+        "q90": 708.223773630887,
+        "q95": 814.074212383021,
+        "q99": 1002.1207683921617,
+        "max": 1291.3879633628362
+      },
+      {
+        "group_id": "cnr0_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 4772.25669401531,
+        "q90": 14906.783062467259,
+        "q95": 18412.556509064125,
+        "q99": 26436.480325731267,
+        "max": 59344.54087320945
+      },
+      {
+        "group_id": "cnr0_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 14312.832306290871,
+        "q90": 44893.12965809344,
+        "q95": 55685.39215915599,
+        "q99": 79686.09775516397,
+        "max": 177829.99480608874
+      },
+      {
+        "group_id": "cnr0_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 4766.517389160173,
+        "q90": 14933.038993703967,
+        "q95": 18528.990223367684,
+        "q99": 26552.483990241155,
+        "max": 59214.674529748896
+      },
+      {
+        "group_id": "cnr0_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 225.14650829831885,
+        "q90": 695.7889235271666,
+        "q95": 805.5269463215668,
+        "q99": 1002.2799471464059,
+        "max": 1266.7596401202482
+      },
+      {
+        "group_id": "cnr0_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 5084.422783270239,
+        "q90": 15327.750158160079,
+        "q95": 18771.926199913418,
+        "q99": 26351.36245175796,
+        "max": 52259.630701845876
+      },
+      {
+        "group_id": "cnr0_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 15201.055360443526,
+        "q90": 46261.67426478902,
+        "q95": 56009.672144065036,
+        "q99": 79179.10475617203,
+        "max": 154214.23444308655
+      },
+      {
+        "group_id": "cnr0_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 5063.4224476697,
+        "q90": 15393.440464232866,
+        "q95": 18653.29999212682,
+        "q99": 26367.31247807524,
+        "max": 51393.004960980885
+      },
+      {
+        "group_id": "cnr0_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 0.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 237.25321283873112,
+        "q90": 700.7212813319209,
+        "q95": 811.7239967754957,
+        "q99": 1018.6023320868459,
+        "max": 1361.4230529931338
+      },
+      {
+        "group_id": "cnr20_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 479735.0191200943,
+        "q90": 1521615.6269922368,
+        "q95": 1935664.76426343,
+        "q99": 2718462.08982176,
+        "max": 4778461.99248159
+      },
+      {
+        "group_id": "cnr20_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 1435232.7528360158,
+        "q90": 4576741.354073859,
+        "q95": 5800317.237754893,
+        "q99": 8127211.6118205525,
+        "max": 14258210.991040528
+      },
+      {
+        "group_id": "cnr20_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 478086.81896356645,
+        "q90": 1524796.5047688065,
+        "q95": 1931855.7391832147,
+        "q99": 2706875.695689395,
+        "max": 4752336.146190962
+      },
+      {
+        "group_id": "cnr20_cal",
+        "role": "calibration",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 844.9555466104205,
+        "q90": 2648.4957574549317,
+        "q95": 3311.4581488444096,
+        "q99": 4511.006969634231,
+        "max": 14164.55974600559
+      },
+      {
+        "group_id": "cnr20_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 478964.89085329784,
+        "q90": 1496022.5005663869,
+        "q95": 1836016.9747553598,
+        "q99": 2552861.3913324475,
+        "max": 4445512.100900425
+      },
+      {
+        "group_id": "cnr20_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 1438572.8640622897,
+        "q90": 4476350.087824953,
+        "q95": 5492016.863937271,
+        "q99": 7650674.701030514,
+        "max": 13320953.116014715
+      },
+      {
+        "group_id": "cnr20_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 479368.71794082783,
+        "q90": 1491304.4916910934,
+        "q95": 1829553.6394941153,
+        "q99": 2550127.785360115,
+        "max": 4435970.804437385
+      },
+      {
+        "group_id": "cnr20_A_separated",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 846.4920758953373,
+        "q90": 2614.2075401850707,
+        "q95": 3299.228412781397,
+        "q99": 4465.859185085971,
+        "max": 7832.835760935149
+      },
+      {
+        "group_id": "cnr20_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B0",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 498259.95542083215,
+        "q90": 1525481.0803256899,
+        "q95": 1899279.8167975098,
+        "q99": 2703122.8604977606,
+        "max": 4704434.058550398
+      },
+      {
+        "group_id": "cnr20_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B1",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 1493274.813006295,
+        "q90": 4567289.569983702,
+        "q95": 5708609.897482999,
+        "q99": 8085661.983560527,
+        "max": 14097130.30025728
+      },
+      {
+        "group_id": "cnr20_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B2",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 497502.6197347229,
+        "q90": 1521727.6907005692,
+        "q95": 1902678.0597464873,
+        "q99": 2694755.2781534246,
+        "max": 4698624.189522907
+      },
+      {
+        "group_id": "cnr20_C_partial_overlap",
+        "role": "validation",
+        "scope": "secondary",
+        "scenario_id": "partial_overlap",
+        "snr_db": 10.0,
+        "cnr_db": 20.0,
+        "method": "B3",
+        "n": 4096,
+        "quantile_method": "linear",
+        "q50": 841.075112002934,
+        "q90": 2678.5057052121983,
+        "q95": 3226.7882959767103,
+        "q99": 4634.177605189403,
+        "max": 7601.2461246306875
+      },
+      {
+        "group_id": "controlled_scale",
+        "role": "scale_diagnostic",
+        "scope": "scale_diagnostic",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B0",
+        "n": 128,
+        "quantile_method": "linear",
+        "q50": 59641.9952688108,
+        "q90": 145980.93048817723,
+        "q95": 196468.56848121574,
+        "q99": 300390.9984160437,
+        "max": 378096.9035119462
+      },
+      {
+        "group_id": "controlled_scale",
+        "role": "scale_diagnostic",
+        "scope": "scale_diagnostic",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B1",
+        "n": 128,
+        "quantile_method": "linear",
+        "q50": 177448.5738542904,
+        "q90": 444238.99245001154,
+        "q95": 603524.1907332741,
+        "q99": 893706.0384027233,
+        "max": 1129834.4145915573
+      },
+      {
+        "group_id": "controlled_scale",
+        "role": "scale_diagnostic",
+        "scope": "scale_diagnostic",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B2",
+        "n": 128,
+        "quantile_method": "linear",
+        "q50": 59106.15194779361,
+        "q90": 148039.89618173937,
+        "q95": 201118.5467787316,
+        "q99": 297771.58933946525,
+        "max": 376238.7428891953
+      },
+      {
+        "group_id": "controlled_scale",
+        "role": "scale_diagnostic",
+        "scope": "scale_diagnostic",
+        "scenario_id": "separated",
+        "snr_db": 10.0,
+        "cnr_db": 10.0,
+        "method": "B3",
+        "n": 128,
+        "quantile_method": "linear",
+        "q50": 287.22226136359603,
+        "q90": 900.2680850509773,
+        "q95": 1019.9727944631765,
+        "q99": 1288.9792561009513,
+        "max": 1751.0486987938984
+      }
+    ],
+    "score_quantile_analysis_git_sha": "02ae95f228983dc863a06f086b21c0edd393e91c"
+  }
+}
