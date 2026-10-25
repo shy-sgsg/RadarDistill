@@ -2,25 +2,29 @@
 
 **更新日期：** 2026-10-25
 **工作分支：** `main`
-**最新完成工作：** D2-A-E001 静止地杂波仿真、R0/R1 基线和阶段审查；修复并重跑 RMSE bootstrap 区间；R2 已对齐 D1-E001 学生架构，仍未执行训练。
-**阶段判断：** D1-E001 的 GO → D2 保持；D1-E002 的 AWGN Doppler 结构搜索 STOP / REDIRECT；D2-A 为 CONDITIONAL GO。
+**最新完成工作：** D2-A-R3 独立 H0 阈值迁移、幅度 nuisance 与 T0/T1/T2 有界比较。
+**阶段判断：** D2-A-R3 **REFINE**；当前冻结 R2 truth-only pilot 前置门未通过，学生与蒸馏训练尚未启动。
 
-## 主要发现
+## 当前结论
 
-在 D2-A 的合成静止杂波场景中，T1–T12 全部通过。B3 几何 DPCA 的分离目标杂波抑制中位数为 15.41 dB；A/B 检测明显，C 部分重叠时退化，D 的同流形源归因接近随机。开发主条件 A 的 B3 `Pfa_CPI=0.0898`，高于独立标定经验值 0.0508；不得据此宣称阈值已可靠迁移，也不得用开发 H0 回调阈值。
+RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
 
-Range/Doppler RMSE 置信区间已修正为对每次 scene-cluster bootstrap 样本重新计算 RMSE 后取 percentile；更新后的 `analysis.md` 同时报出两类条件 RMSE 区间。R2 固定采用 D1-E001 `TaskStudent`，匹配 1,600 次更新和有效 batch 64；K1/K2 仅为训练期辅助图，不改 K3 推理结构。
+D2-A-R3 使用新种子完成了三个独立 H0 主校准组、四个独立主验证场景组和预先规定的 CNR=0/20 dB 辅助组。H0 总体尺度随潜在目标参考幅度 `A` 变化，因为生成器用 `noise_power=A²×10^(-SNR/10)` 控制噪声，并按 CNR 设定杂波功率。该幅度变量不是 H0/H1 标签分支泄漏，但使绝对功率分数的跨尺度固定阈值不稳定。
 
-D1-E002 的 S2 lag-one 复相干学生在 0/5/10/20 dB 的等权 Doppler RMSE 为 23.352 Hz，较 S0 改善 10.86%，但低 SNR Pd 非劣门失败；四倍 FFT 抛物插值、APX15 和有限网格 profile-ML 为 0.104、0.122、0.100 Hz。D1-E001 的 C/D 满足原冻结联合指标 G2，但没有蒸馏收敛加速证据；旧阶段结论均保留。
+冻结 E001 的 B3 阈值在 R3 新主条件的 16,384 个 H0 上得到 `Pfa_CPI=0.06464`（95% Wilson CI `[0.06097,0.06850]`）。E001 的 `23/256=0.08984` 可受有限样本影响，但联合校准/验证 bootstrap 产生该值的比例为 0.0216，不能据此把问题完全归结为抽样波动。
 
-## 唯一优先任务
+归一化候选 T1/T2 都通过幅度/整体尺度 G3 与可辨识 H1 性能保护 G4；T1 在部分重叠 C 的检测、参数精度和背景稳健性方面整体更有前景。两者都未通过 G2 固定阈值迁移门，故目前没有获准的 D2-A 传统教师统计量。E1 truth-only pilot 依据现行 R2/R3 规则未运行。T0、T1、T2 结果和限制见 [阶段分析](../experiments/D2-A-R3/analysis.md) 与 [阶段审查](stage_reviews/D2-A-R3_review.md)。
 
-先预注册并解决 **D2-A 独立阈值迁移/虚警稳健性**：明确检验固定标定阈值在独立场景及幅度变化下的 `Pfa_CPI`，不得用当前开发集重新调参。通过后再启动 R2 的 E1 真值监督学生 pilot；E1 未证明基础任务学习前，不开展 E2/E3 蒸馏，也不生成最终 blind。
+D1-E002 的 AWGN Doppler 结构搜索 **STOP / REDIRECT**；D1-E001 原决策 GO → D2 仅适用于其冻结实验范围，不覆盖 D2-A-R3 的失败门。D2-A-E001 冻结结果保持原样。
+
+## 下一项唯一优先任务
+
+准备并提交一份**独立 truth-only 学生 pilot 协议提案**，评估任务级学生能否直接从三通道 IQ 学习检测、距离和 Doppler，并预注册学生自己的独立 H0 校准/验证及物理一致性门。提案要保留 R2 学生架构与已冻结预算，不使用教师损失、K1/K2 或 final blind；通过独立审查/批准前不训练。该路线提案回应传统教师 G2 未过的证据，并回到项目的学生任务目标。
 
 ## 关键材料
 
 - 总纲/路线：[研究总纲](RESEARCH_CHARTER.md)、[动态路线图](RESEARCH_ROADMAP.md)、[假设登记](research/ASSUMPTION_REGISTER.md)
-- 审查：[D2-A-E001](stage_reviews/D2-A-E001_review.md)、[D0/D1 E002 后总审查](stage_reviews/D0-D1_post_E002_review.md)、[D1-R1 Doppler 诊断](stage_reviews/D1_R1_doppler_diagnosis.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
-- 数据与结果：[`experiments/D2-A-E001/`](../experiments/D2-A-E001/)、`experiments/D0-E001/`、`experiments/D1-E001/`、`experiments/D1-R1/`、`experiments/D1-E002/`
-- D2-A 物理模型、可辨识性与传统基线审查：[`D2-A_physical_model.md`](research/D2-A_physical_model.md)、[`D2-A_identifiability.md`](research/D2-A_identifiability.md)、[`D2-A_baseline_review.md`](research/D2-A_baseline_review.md)
-- 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；正式训练必须使用可见 CUDA。
+- 当前审查：[D2-A-R3](stage_reviews/D2-A-R3_review.md)、[D2-A-E001](stage_reviews/D2-A-E001_review.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
+- R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
+- D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
+- 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，后续学生训练如获批准须使用可见 CUDA。

@@ -161,3 +161,10 @@
 - **证据：** 条件 Range/Doppler RMSE 点估计以 `sqrt(mean(squared_error))` 计算，但旧区间对 squared error 使用了均值 bootstrap，造成 MSE 单位与 RMSE 标签不一致。旧分析还未列出 Range RMSE 区间。当前代码、格式测试与完整开发重跑均已覆盖该错误。
 - **决定：** 对 cluster-bootstrap 重采样逐次计算 RMSE 后取 percentile 区间；分析表同时列 Range 与 Doppler 的命中条件 RMSE/95% CI，joint success 单独计入漏检失败。R2 使用 D1-E001 已验证 `TaskStudent` 和其 K3 推理头，K1/K2 只保留训练期软图辅助头；训练预算匹配为每 seed/组 1,600 updates、有效 batch 64。
 - **影响与边界：** 修正只改变区间计算/报告及尚未执行的 R2 协议；重跑点估计不变。没有启动学生、KD 或 final blind，阶段仍为 CONDITIONAL GO，阈值迁移诊断仍是唯一前置任务。
+
+## 2026-10-25：D2-A-R3 未通过固定阈值门，下一步回到 truth-only 学生协议评估
+
+- **证据：** 新的 16,384 个主 H0 上，E001 冻结 B3 阈值的 `Pfa_CPI=0.064636`（95% Wilson CI `[0.060972,0.068504]`）。T1/T2 通过幅度/整体尺度 G3 和可辨识 H1 保护 G4，但均未通过 G2。T1 在 C 条件表现优于 T2；T2 的 local median 背景被目标峰污染。候选 G3 控制量的精度修正已通过相关回归测试。
+- **阶段决定：** D2-A-R3 定为 **REFINE**。现行 R2 的 E1 truth-only pilot 前置条件不满足，不启动 E1、E2/E3、正式多 seed 训练或 final blind。保留 E001/D2-A 冻结结果及其原结论。
+- **路线建议：** 任务级学生是研究主线，且 R3 没有否定真值可辨识性或学生学习可行性。下一项唯一优先事项是准备独立 truth-only 学生 pilot 协议提案，为学生自己的分数预注册独立 H0 校准/验证、Pd/参数误差与物理一致性门，不依赖教师损失；须独立审查批准后才可运行。T1 仅作为未获准教师的候选。当前不继续扩展传统统计量或局部 CFAR 搜索。
+- **边界：** 此路线是动态研究建议，不修改 `docs/RESEARCH_CHARTER.md`，也不豁免现行 R2/R3 门；不改变研究主题、D1 学生配置或 E001 结果。当前证据只适用于合成三通道静止杂波、PRF 1300 Hz、N=130 与圆对称复 AWGN。
