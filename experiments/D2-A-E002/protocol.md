@@ -70,7 +70,7 @@ K2 质量审查可用物理真值作离线评价，但真实输入教师函数�
 | Development | 5,000 对；采用与 validation 相同的逐单元样本数和独立场景 seed | pilot 开发评价与有界阶段决策，不是盲测 |
 | D boundary | 1,024 对 exact-overlap | 仅说明同流形来源归因不可辨识，不纳入 A/B/C 门 |
 
-Train cohort 的 `base_scene_id` 预先固定。课程批次计划由固定 seed 生成：每次 update 取 32 个不同 base scenes，并同时包含各自 H0/H1，构成有效 batch 64。A 使用同一 51,200 对样本的固定随机排列，难度从第一步起是全分布混合。B/C 共享同一计划：C0–C3 各 256 updates（每层 8,192 对）；C4 为 576 updates，以均等数量交错使用四层各自未呈现的 4,608 对。故 A/B/C 使用完全相同的样本多重集、每对恰一次、总更新和有效 batch 完全相同；区别只有呈现顺序及 C 的 K2 loss。
+Train cohort 的 `base_scene_id` 预先固定。每个课程层内的训练 cell 次序由 config 中 `assignment_seed=2026102606` 洗牌；场景生成按各层固定 seed base、chunk 大小 16 和 seed stride 1009 顺序产生。课程批次计划由独立固定 seed `2026102603` 生成：每次 update 取 32 个不同 base scenes，并同时包含各自 H0/H1，构成有效 batch 64。A 使用同一 51,200 对样本的固定随机排列，难度从第一步起是全分布混合。B/C 共享同一计划：C0–C3 各 256 updates（每层 8,192 对）；C4 为 576 updates，以均等数量交错使用四层各自未呈现的 4,608 对。故 A/B/C 使用完全相同的样本多重集、每对恰一次、总更新和有效 batch 完全相同；区别只有呈现顺序及 C 的 K2 loss。Validation、K2 audit 与 development 各使用 config 中单独登记的 cell-assignment seed；所有场景 seed block 依次使用 1009 stride，并经 preflight 检查互不重叠。
 
 H0 calibration 与 verification 每个 scene 独立等概率抽取 C0–C3 nuisance 层；C3 内 SNR 0/10 dB 独立等概率。生成器对目标参考振幅继续从 `[-6,6] dB` 均匀抽样，所以总体混合是预注册的 IID scene mixture。校准/验证各 `n=15,000`。validation 与 development 的单元计数固定于 `config.yaml`；development 使用相同单元计数及新的 seed，逐组记录实际样本数。
 

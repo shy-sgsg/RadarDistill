@@ -28,6 +28,7 @@ physics:
 
 data:
   split_unit: base_scene_id
+  chunk_seed_stride: 1009
   model_inputs: iq_only_real_imag_planes
   paired_scene_sampling_per_update: 32
   course_levels:
@@ -63,8 +64,8 @@ data:
     paired_base_scenes: 51200
     pairs_per_course_level: 12800
     seed_bases_by_course: [18000000, 19000000, 20000000, 21000000]
+    assignment_seed: 2026102606
     generation_chunk_size: 16
-    chunk_seed_stride: 1009
     cache_root: experiments/D2-A-E002/data/cache
     cache_iq_on_cpu_memmap: true
     cache_full_iq_on_gpu: false
@@ -83,6 +84,7 @@ data:
         partial_overlap_0db: 208
         partial_overlap_10db: 208
     seed_bases_by_course: [22000000, 22100000, 22200000, 22300000]
+    assignment_seed: 2026102607
     generation_chunk_size: 16
   teacher_audit:
     paired_base_scenes: 2048
@@ -99,6 +101,7 @@ data:
         partial_overlap_0db: 85
         partial_overlap_10db: 85
     seed_bases_by_course: [23000000, 23100000, 23200000, 23300000]
+    assignment_seed: 2026102608
     generation_chunk_size: 16
     inspect_h0_and_h1_maps: true
   h0_calibration:
@@ -107,6 +110,7 @@ data:
     c3_snr_equal_mixture: [0.0, 10.0]
     amplitude_distribution: e001_uniform_reference_amplitude_db_minus6_to_plus6
     seed_base: 24000000
+    chunk_seed_stride: 1009
     mixture_assignment_seed: 2026102601
     generation_chunk_size: 16
   h0_verification:
@@ -114,13 +118,15 @@ data:
     same_iid_mixture_as_calibration: true
     independent_from_calibration: true
     seed_base: 25000000
+    chunk_seed_stride: 1009
     mixture_assignment_seed: 2026102602
     generation_chunk_size: 16
   development:
     paired_base_scenes: 5000
     course_level_counts: [1250, 1250, 1250, 1250]
     cell_counts_match_validation: true
-    seed_base: 26000000
+    seed_bases_by_course: [26000000, 26100000, 26200000, 26300000]
+    assignment_seed: 2026102609
     generation_chunk_size: 16
     threshold_selection: false
     hyperparameter_search: false
@@ -129,6 +135,7 @@ data:
     paired_base_scenes: 1024
     scenario: exact_overlap
     seed_base: 27000000
+    chunk_seed_stride: 1009
     descriptive_only: true
   training_seeds:
     initialization: 101
