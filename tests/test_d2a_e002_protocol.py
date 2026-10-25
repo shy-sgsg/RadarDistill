@@ -8,8 +8,10 @@ import yaml
 
 from radardistill.training.d2a_e002 import (
     build_matched_pair_plans,
+    e002_scene_seed_streams,
     validate_e002_config,
 )
+from radardistill.training.d2a_e002_data import estimate_cache_bytes
 
 
 @pytest.fixture
@@ -19,11 +21,12 @@ def e002_config():
 
 def test_frozen_e002_config_has_exact_counts_and_cuda_only(e002_config):
     validate_e002_config(e002_config)
-    assert e002_config["experiment"]["protocol_version"] == 2.0
+    assert e002_config["experiment"]["protocol_version"] == 2.1
     assert e002_config["training"]["cuda_required"] is True
     assert e002_config["training"]["cpu_fallback"] == "forbidden"
     assert e002_config["experiment"]["final_blind_generation_authorized"] is False
     assert e002_config["teacher"]["official_teacher_approved"] is False
+    assert e002_config["statistics"]["physical_diagnostic_pairs"] == 256
 
 
 def test_config_rejects_changed_update_or_course_budget(e002_config):
@@ -31,6 +34,38 @@ def test_config_rejects_changed_update_or_course_budget(e002_config):
     altered["training"]["optimizer_updates_per_arm"] = 1599
     with pytest.raises(ValueError, match="1600|update"):
         validate_e002_config(altered)
+
+
+def test_config_rejects_changed_physical_diagnostic_sample(e002_config):
+    altered = yaml.safe_load(Path("experiments/D2-A-E002/config.yaml").read_text())
+    altered["statistics"]["physical_diagnostic_pairs"] = 255
+    with pytest.raises(ValueError, match="physical diagnostic"):
+        validate_e002_config(altered)
+
+
+def test_config_rejects_unmatched_curriculum_level_update_counts(e002_config):
+    altered = yaml.safe_load(Path("experiments/D2-A-E002/config.yaml").read_text())
+    altered["training"]["curriculum_updates"]["C1"] = 257
+    altered["training"]["curriculum_updates"]["C2"] = 255
+    with pytest.raises(ValueError, match="C0-C3|curriculum update"):
+        validate_e002_config(altered)
+
+
+def test_scene_generation_seed_streams_are_disjoint_and_fully_expanded(e002_config):
+    streams = e002_scene_seed_streams(e002_config)
+    assert len(streams["train_C0"]) == 800
+    assert len(streams["validation_C0"]) == 79
+    assert len(streams["h0_calibration"]) == 938
+    all_seeds = [seed for values in streams.values() for seed in values]
+    assert len(all_seeds) == len(set(all_seeds))
+
+
+def test_pre_registered_cache_estimate_is_below_local_working_budget(e002_config):
+    estimate = estimate_cache_bytes(e002_config)
+    assert estimate["total"] > 12 * 1024**3
+    assert estimate["total"] < 20 * 1024**3
+    assert estimate["h0_calibration"] > 1 * 1024**3
+    assert estimate["h0_verification"] > 1 * 1024**3
 
 
 def test_matched_plans_use_each_pair_once_and_keep_b_c_order_identical():

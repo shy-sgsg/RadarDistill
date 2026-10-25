@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-E002
   title: Curriculum and K2 teacher-guided task learning for three-channel GMTI
-  protocol_version: 2.0
+  protocol_version: 2.1
   status: preregistered_user_authorized_pilot
   date: 2026-10-25
   data_are_synthetic: true
@@ -134,8 +134,11 @@ data:
   identifiability_boundary:
     paired_base_scenes: 1024
     scenario: exact_overlap
+    snr_db: 10.0
+    cnr_db: 10.0
     seed_base: 27000000
     chunk_seed_stride: 1009
+    generation_chunk_size: 16
     descriptive_only: true
   training_seeds:
     initialization: 101
@@ -227,6 +230,18 @@ training:
     parameter_loss_mask: H1_only
   stop_if_microbatch_4_oom: true
   simultaneous_gpu_models: 1
+  micro_overfit_sanity:
+    c0_pairs: 16
+    optimizer_updates: 100
+    effective_batch_size: 32
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    gradient_clip_norm: 1.0
+    final_truth_task_loss_ratio_max: 0.75
+    use_first_rows_after_fixed_c0_assignment: true
+    supervision: physical_truth_only
+    required_truth_gradient_groups: [stem, presence_head, range_head, range_offset_head, doppler_head]
+    require_nonzero_k2_head_gradient_when_cache_present: true
 
 detection:
   score: student_presence_logit
@@ -259,6 +274,7 @@ statistics:
   bootstrap_unit: paired_base_scene_id
   bootstrap_seed: 2026102605
   physical_diagnostic_seed: 2026102604
+  physical_diagnostic_pairs: 256
   bootstrap_intervals_are_not_seed_uncertainty: true
   rmse_recomputed_per_bootstrap_replicate: true
   joint_success_counts_misses_as_failure: true

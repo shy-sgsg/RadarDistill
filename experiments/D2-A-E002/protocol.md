@@ -1,11 +1,13 @@
 # D2-A-E002：课程学习与教师辅助任务级学生 Pilot
 
 **英文：** *Curriculum Learning and Teacher-Guided Task Learning for Multichannel GMTI Detection and Parameter Estimation*
-**协议版本：** 2.0
+**协议版本：** 2.1
 **冻结状态：** 2026-10-25；先于 E002 数据生成、K2 质量审查和训练。
 **执行授权：** 用户在本任务附件中明确批准调整动态路线并实施本轮 A/B/C 有界 pilot。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.1；本协议不修改总纲。
 **旧版本：** Git 提交 `1e4300c` 中的 v1 truth-only 提案已被本版本取代；原协议审查作为历史记录保留。它未产生数据、训练或结果。
+
+v2.1 在 v2.0 基础上量化 G1 中已要求的 micro-overfit/梯度工程检查，并固定 G6 开发诊断子集为每个课程层按缓存顺序取前 64 对、合计 256 对；A/B/C 处理、正式模型、数据划分、训练预算和科学验收门不变。本修订先于任何 E002 数据生成。
 
 ## 1. 研究目的与可证伪假设
 
@@ -68,7 +70,7 @@ K2 质量审查可用物理真值作离线评价，但真实输入教师函数�
 | H0 calibration | 15,000 scenes | 独立估计各学生/基线各自的全局 5% 阈值 |
 | H0 verification | 15,000 scenes | 独立评估固定阈值 Pfa，不调阈值 |
 | Development | 5,000 对；采用与 validation 相同的逐单元样本数和独立场景 seed | pilot 开发评价与有界阶段决策，不是盲测 |
-| D boundary | 1,024 对 exact-overlap | 仅说明同流形来源归因不可辨识，不纳入 A/B/C 门 |
+| D boundary | 1,024 对 exact-overlap，SNR/CNR=10/10 dB | 仅说明同流形来源归因不可辨识，不纳入 A/B/C 门 |
 
 Train cohort 的 `base_scene_id` 预先固定。每个课程层内的训练 cell 次序由 config 中 `assignment_seed=2026102606` 洗牌；场景生成按各层固定 seed base、chunk 大小 16 和 seed stride 1009 顺序产生。课程批次计划由独立固定 seed `2026102603` 生成：每次 update 取 32 个不同 base scenes，并同时包含各自 H0/H1，构成有效 batch 64。A 使用同一 51,200 对样本的固定随机排列，难度从第一步起是全分布混合。B/C 共享同一计划：C0–C3 各 256 updates（每层 8,192 对）；C4 为 576 updates，以均等数量交错使用四层各自未呈现的 4,608 对。故 A/B/C 使用完全相同的样本多重集、每对恰一次、总更新和有效 batch 完全相同；区别只有呈现顺序及 C 的 K2 loss。Validation、K2 audit 与 development 各使用 config 中单独登记的 cell-assignment seed；所有场景 seed block 依次使用 1009 stride，并经 preflight 检查互不重叠。
 
@@ -115,7 +117,7 @@ AdamW 初始 lr `1e-3`，余弦降至 `1e-4`；weight decay `1e-4`；梯度范�
 
 ### 6.3 物理一致性与数据捷径
 
-在固定 development 子集进行：32 个公共复相位旋转；整体幅度乘 `0.5/2.0` 且不重新校准；目标慢时间分量乘 `exp(j2πδn/PRF)`，`δ∈{-25,-10,10,25} Hz`；独立常相位扰乱各通道的相干消融。真值只用于生成受控诊断或事后分组，不输入模型。报告 phase decision agreement/range/Doppler changes/AUC、frequency-shift equivariance residual、scale Pfa/Pd 变化和通道相干消融变化。固定参考门：公共相位决策一致率 `≥99%`、range 变化 95 百分位 `≤0.25 bin`、Doppler 变化 95 百分位 `≤5 Hz`、AUC 绝对变化 `≤0.01`；频移残差 95 百分位 `≤10 Hz`、range 中位变化 `≤0.25 bin`。幅度缩放导致 Pfa `>0.10` 或 Pd 绝对下降 `>0.10` 时标记尺度敏感。通道相干消融报告为诊断，不要求输出不变。所有变换均使用原 calibration 阈值，不另行校准。
+在固定 development 子集进行：每个课程层按缓存顺序取前 64 对，合计 256 对；32 个公共复相位旋转；整体幅度乘 `0.5/2.0` 且不重新校准；目标慢时间分量乘 `exp(j2πδn/PRF)`，`δ∈{-25,-10,10,25} Hz`；独立常相位扰乱各通道的相干消融。真值只用于生成受控诊断或事后分组，不输入模型。报告 phase decision agreement/range/Doppler changes/AUC、frequency-shift equivariance residual、scale Pfa/Pd 变化和通道相干消融变化。固定参考门：公共相位决策一致率 `≥99%`、range 变化 95 百分位 `≤0.25 bin`、Doppler 变化 95 百分位 `≤5 Hz`、AUC 绝对变化 `≤0.01`；频移残差 95 百分位 `≤10 Hz`、range 中位变化 `≤0.25 bin`。幅度缩放导致 Pfa `>0.10` 或 Pd 绝对下降 `>0.10` 时标记尺度敏感。通道相干消融报告为诊断，不要求输出不变。所有变换均使用原 calibration 阈值，不另行校准。
 
 ## 7. 冻结阶段门与解释
 
@@ -125,6 +127,8 @@ AdamW 初始 lr `1e-3`，余弦降至 `1e-4`；weight decay `1e-4`；梯度范�
 - **G4 学生任务学习：** 对每一臂，在 pooled identifiable scenario A/B/C 上学生 AUC paired 95% CI 下界 `>0.5`；相对 E0 的 AUC 点增益 `≥0.02` 且差值区间下界 `>0`；共同 ROC FPR=0.05 下 Pd 差值下界 `>−0.05`；range 和 Doppler RMSE 均优于仅由 train truth 计算的常值基线且 paired 95% CI 上界 `<0`；主 A/10/10 dB joint success 点估计 `≥0.50`、单侧 95% bootstrap 下界 `>0.40`。这些指标逐臂报告，不以某臂掩盖另一臂失败。
 - **G5 课程/K2 筛选信号：** B−A、C−B 的 pilot 改善信号分别按预注册解释：joint success 增益至少 `0.05` 且 paired 95% 场景 bootstrap 区间下界 `>0`；或至少提前 `20%` 更新达到 A 的最佳 validation task loss，并且最终 joint success 差值区间下界 `>−0.05`。若不满足，记录未见清晰收益。该门只用于决定是否另提正式 3-seed 确认，不是跨 seed 推断。
 - **G6 物理诊断：** 第 6.3 节所有必做变换完成并如实报告。公共相位/频移数值门失败时，不声称当前学生已可靠利用相干物理量，也不启动 final blind；幅度/通道干预限定鲁棒性表述。
+
+G1 的固定 micro-overfit 检查从 C0 预注册随机分配后的前 16 对训练场景取 H0/H1，共 32 个 IQ 输入；相同初始化、FP32、AdamW `lr=1e-3`、`weight_decay=1e-4`、梯度裁剪 1.0，重复真值任务监督 100 次。末次 loss / 初始 loss 必须 `≤0.75`。初始真值总损失对 stem、presence、range、range-offset、Doppler 模块的梯度范数都必须有限且非零；训练 K2 缓存存在时，K2 KL 对 spectrum head 的梯度范数也必须有限且非零。该 sanity 拟合不计入 A/B/C 的 1,600 次更新、不用于选模型，也不通过改变结构/损失来满足门槛；失败时先定位实现或数据问题并停止正式 pilot。
 
 结果解释：A 失败、B 成功则支持课程的初步价值；B/C 相近则没有教师增量证据；C 相对 B 达到 G5 才支持继续正式 K2 对照；A/B/C 都失败则先查正确性、range-index mismatch、梯度/损失和结构，再提出有界物理相干表示诊断，不直接扩大模型。C 独自成功时，因三个臂均实例化相同辅助 head 且样本/预算相同，排除了 head 参数量与额外 task updates；仍需在后续确认实验检验随机/非目标辅助 response 等替代解释。没有跨 seed 数据时不做“蒸馏已被证明”结论。
 
@@ -136,6 +140,7 @@ AdamW 初始 lr `1e-3`，余弦降至 `1e-4`；weight decay `1e-4`；梯度范�
 
 ```bash
 conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage preflight
+conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage generate-data
 conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage k2-audit
 conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage pilot --device cuda:0
 conda run --no-capture-output -n AISAR python scripts/run_d2a_e002.py --config experiments/D2-A-E002/config.yaml --stage evaluate --device cuda:0

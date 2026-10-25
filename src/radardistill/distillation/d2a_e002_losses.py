@@ -56,7 +56,11 @@ def d2a_e002_loss(
     """Apply frozen physical task loss plus an optional H1-only K2 loss."""
     if teacher_weight < 0.0 or not torch.isfinite(torch.tensor(float(teacher_weight))):
         raise ValueError("teacher_weight must be finite and nonnegative")
-    terms = task_loss(outputs, truth, config, teacher_weight=0.0)
+    training_config = dict(config.get("training", {}))
+    if "losses" in training_config:
+        training_config["loss"] = training_config["losses"]
+    loss_config = {**config, "training": training_config}
+    terms = task_loss(outputs, truth, loss_config, teacher_weight=0.0)
     if teacher_response is None:
         kl = outputs["presence_logit"].sum() * 0.0
     else:

@@ -7,8 +7,10 @@ import pytest
 import yaml
 
 from radardistill.teachers.d2a_k2 import k2_response
+from radardistill.teachers.d2a_k2 import audit_k2_cache, summarize_k2_target_windows
 from radardistill.simulation.d2a import generate_d2a_paired_batch
 from radardistill.training.d2a_e002_data import (
+    materialize_identifiability_boundary,
     materialize_h0_mixture,
     materialize_paired_split,
     validate_disjoint_scene_ids,
@@ -77,10 +79,12 @@ def test_paired_split_cache_preserves_counterfactual_pairs_and_cell_metadata(tmp
         assignment_seed=31,
         chunk_size=1,
         include_k2=True,
+        include_k2_h0=True,
     )
     assert arrays["iq_h0"].shape == (4, 3, 130, 32)
     assert arrays["iq_h1"].shape == (4, 3, 130, 32)
     assert arrays["teacher_response"].shape == (4, 130, 32)
+    assert arrays["teacher_response_h0"].shape == (4, 130, 32)
     assert set(arrays["course_level"].astype(str)) == {"C0", "C1", "C2", "C3"}
     assert set(arrays["scenario_id"].astype(str)) == {
         "separated", "near_clutter_edge", "partial_overlap"
@@ -89,7 +93,9 @@ def test_paired_split_cache_preserves_counterfactual_pairs_and_cell_metadata(tmp
     assert np.all(np.isfinite(arrays["iq_h1"]))
     assert np.all(np.any(arrays["iq_h1"] != arrays["iq_h0"], axis=(1, 2, 3)))
     assert np.all(np.isfinite(arrays["teacher_response"]))
+    assert np.all(np.isfinite(arrays["teacher_response_h0"]))
     np.testing.assert_allclose(arrays["teacher_response"].sum(axis=(1, 2)), 1.0, atol=1e-6)
+    np.testing.assert_allclose(arrays["teacher_response_h0"].sum(axis=(1, 2)), 1.0, atol=1e-6)
     reopened = materialize_paired_split(
         tmp_path,
         "tiny_pairs",
@@ -100,6 +106,7 @@ def test_paired_split_cache_preserves_counterfactual_pairs_and_cell_metadata(tmp
         assignment_seed=31,
         chunk_size=1,
         include_k2=True,
+        include_k2_h0=True,
     )
     np.testing.assert_array_equal(arrays["iq_h0"], reopened["iq_h0"])
     validate_disjoint_scene_ids({"tiny_pairs": arrays})
@@ -135,3 +142,97 @@ def test_split_disjointness_rejects_shared_base_scene_id():
     second = {"base_scene_id": np.asarray(["scene-b", "scene-c"])}
     with pytest.raises(ValueError, match="overlaps"):
         validate_disjoint_scene_ids({"first": first, "second": second})
+
+
+def test_exact_overlap_boundary_cache_is_separate_and_descriptive(tmp_path, d2a_config):
+    arrays = materialize_identifiability_boundary(
+        tmp_path,
+        "tiny_boundary",
+        2,
+        d2a_config,
+        snr_db=10.0,
+        cnr_db=10.0,
+        seed_base=9900000,
+        chunk_size=1,
+    )
+    assert arrays["iq_h0"].shape == arrays["iq_h1"].shape == (2, 3, 130, 32)
+    assert arrays["truth_range_cell"].shape == arrays["truth_doppler_hz"].shape == (2,)
+    assert np.all(np.isfinite(arrays["iq_h0"]))
+    assert np.all(np.isfinite(arrays["iq_h1"]))
+
+
+def test_k2_target_window_summary_measures_paired_mass_lift():
+    frequency_axis = np.fft.fftshift(np.fft.fftfreq(130, d=1.0 / 1300.0))
+    h0 = np.full((2, 130, 32), 1.0 / (130 * 32), dtype=np.float32)
+    h1 = np.zeros((2, 130, 32), dtype=np.float32)
+    h1[:, 65, 6] = 1.0
+    result = summarize_k2_target_windows(
+        h0,
+        h1,
+        np.asarray([5.5, 5.5]),
+        np.asarray([frequency_axis[65], frequency_axis[65]]),
+        np.asarray(["s0", "s1"]),
+        prf_hz=1300.0,
+        bootstrap_replicates=20,
+        bootstrap_seed=2,
+    )
+    assert result["teacher_top_cell_localization_rate"] == 1.0
+    assert result["target_window_mass_lift_mean"] > 0.99
+
+
+def test_full_k2_audit_checks_both_h0_h1_and_scale_invariance(d2a_config):
+    with open("experiments/D2-A-E002/config.yaml", encoding="utf-8") as stream:
+        e002 = yaml.safe_load(stream)
+    d2a_config["teacher"] = e002["teacher"]
+    batch = generate_d2a_paired_batch(
+        2, 93100, 0.0, 20.0, d2a_config, scenario_id="near_clutter_edge"
+    )
+    arrays = {
+        "iq_h0": batch.iq_h0,
+        "iq_h1": batch.iq_h1,
+        "teacher_response_h0": k2_response(batch.iq_h0, d2a_config),
+        "teacher_response": k2_response(batch.iq_h1, d2a_config),
+        "truth_range_cell": batch.truth_target_range_cell,
+        "truth_doppler_hz": batch.truth_target_doppler_hz,
+        "base_scene_id": batch.base_scene_id,
+        "course_level": np.asarray(["C3", "C3"]),
+        "scenario_id": np.asarray(["near_clutter_edge", "near_clutter_edge"]),
+        "snr_db": batch.snr_db,
+    }
+    result = audit_k2_cache(
+        arrays,
+        d2a_config,
+        bootstrap_replicates=20,
+        chunk_size=1,
+    )
+    assert result["numeric_valid"] is True
+    assert result["scale_invariance_valid"] is True
+    assert result["information_isolation_valid"] is True
+
+
+def test_full_k2_audit_recomputes_unscaled_cached_response(d2a_config):
+    with open("experiments/D2-A-E002/config.yaml", encoding="utf-8") as stream:
+        e002 = yaml.safe_load(stream)
+    d2a_config["teacher"] = e002["teacher"]
+    batch = generate_d2a_paired_batch(
+        2, 93101, 0.0, 20.0, d2a_config, scenario_id="separated"
+    )
+    h0_response = k2_response(batch.iq_h0, d2a_config)
+    h1_response = k2_response(batch.iq_h1, d2a_config)
+    h1_response[0] = np.roll(h1_response[0], 1, axis=0)
+    arrays = {
+        "iq_h0": batch.iq_h0,
+        "iq_h1": batch.iq_h1,
+        "teacher_response_h0": h0_response,
+        "teacher_response": h1_response,
+        "truth_range_cell": batch.truth_target_range_cell,
+        "truth_doppler_hz": batch.truth_target_doppler_hz,
+        "base_scene_id": batch.base_scene_id,
+        "course_level": np.asarray(["C3", "C3"]),
+        "scenario_id": np.asarray(["separated", "separated"]),
+        "snr_db": batch.snr_db,
+    }
+    result = audit_k2_cache(arrays, d2a_config, bootstrap_replicates=20, chunk_size=1)
+    assert result["numeric_valid"] is True
+    assert result["scale_invariance_valid"] is False
+    assert result["allow_C_arm"] is False
