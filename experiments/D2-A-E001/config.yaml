@@ -140,11 +140,16 @@ data_split_seed_ranges:
 
 future_student_protocol:
   architecture_input: six_real_channels_IQ_shape_3x130x32
-  architecture: eight_residual_2d_convolution_blocks_width_32_group_norm_gelu
+  architecture: D1_E001_TaskStudent_temporal_residual_backbone_width_32_dilations_1_2_4_8_16_32_64
+  k3_inference_heads: D1_presence_range_logits_fractional_range_and_unit_vector_doppler
+  training_only_auxiliary_heads:
+    K1: normalized_three_channel_incoherent_RD_power_map_shape_130x32
+    K2: normalized_B3_DPCA_residual_RD_power_saliency_shape_130x32
+  remove_auxiliary_heads_at_inference: true
   outputs:
-    K1: per_channel_complex_range_doppler_response
+    K1: APX15_D1_centered_FFT_summed_channel_power_soft_response
     K2: clutter_suppressed_target_saliency_map
-    K3: detection_logit_fractional_range_and_doppler_estimate
+    K3: physical_truth_supervised_detection_range_and_Doppler
   paired_scene_counts:
     train: 50000
     validation: 5000
@@ -152,14 +157,20 @@ future_student_protocol:
     development_test: 5000
   independent_training_seeds: [101, 202, 303]
   optimizer: AdamW
-  learning_rate: 0.0003
-  batch_size: 32
-  epoch_budget: 120
+  learning_rate: 0.001
+  learning_rate_schedule: cosine_0.001_to_0.0001
+  weight_decay: 0.0001
+  max_gradient_norm: 1.0
+  effective_batch_size: 64
+  default_microbatch_size: 32
+  optimizer_updates_per_arm_seed: 1600
+  precision: FP32
+  epoch_budget: null
   schedule:
-    truth_only_A: 120_epochs
-    truth_plus_K1_B: K1_teacher_pretrain_40_then_joint_80
-    truth_plus_K2_C: K2_teacher_pretrain_40_then_joint_80
-    progressive_D: K1_K2_pretrain_40_joint_40_teacher_anneal_20_truth_finetune_20
+    truth_only_A: 1600_truth_updates
+    truth_plus_K1_B: K1_pretrain_400_then_K3_truth_plus_K1_joint_1200
+    truth_plus_K2_C: K2_pretrain_400_then_K3_truth_plus_K2_joint_1200
+    progressive_D: K1_K2_pretrain_320_joint_480_teacher_anneal_480_truth_finetune_320
   teacher_selection: best_R1_method_meeting_frozen_calibration_and_scenario_A_gate
   device: RTX_3050_Laptop_GPU_4_GiB_sequential_training_fp32_or_amp_after_support_check
   training_data_generation: on_demand_CPU_batches_no_full_cache_on_GPU

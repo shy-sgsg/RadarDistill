@@ -346,6 +346,61 @@ def _write_plot(rows: list[dict[str, Any]], output_dir: Path) -> None:
     plt.close(figure)
 
 
+def _format_estimate_ci(value: float | None, interval: list[float] | None, digits: int = 3) -> str:
+    """Format a point estimate and its confidence interval in matching units."""
+    if value is None or interval is None or len(interval) != 2:
+        return "n/a"
+    return (
+        f"{float(value):.{digits}f} "
+        f"[{float(interval[0]):.{digits}f}, {float(interval[1]):.{digits}f}]"
+    )
+
+
+def _write_analysis(metrics: dict[str, Any], output_dir: Path) -> None:
+    rows = metrics["condition_results"]
+    diagnostics = metrics["dpca_diagnostics"]
+    elapsed = float(metrics["elapsed_seconds"])
+    b3_eligible = bool(diagnostics["B3"]["eligible_under_preregistered_gate"])
+    primary = [row for row in rows if row["group"] == "primary"]
+    separated_primary = [row for row in primary if row["scenario_id"] == "separated"]
+    best = max(separated_primary, key=lambda row: row["roc_auc"])
+    analysis_lines = [
+        "# D2-A-E001 开发实验分析",
+        "",
+        f"运行耗时：{elapsed:.1f} s；全部数据为合成开发场景。正式学生训练和 final blind 均未运行。",
+        "",
+        f"分离场景 A 的主条件中最高点估计 ROC AUC：{best['method']}，AUC={best['roc_auc']:.4f}，Pd={best['pd']:.4f}，Pfa_CPI={best['pfa_cpi']:.4f}。此处仅作快速索引，按场景解读见下表和阶段审查。",
+        "",
+        f"DPCA 门：静止杂波中位抑制 {diagnostics['B3']['median_separated_clutter_suppression_db']:.2f} dB {diagnostics['B3']['median_separated_clutter_suppression_db_ci95']}；分离场景目标功率比中位数 {diagnostics['B3']['median_separated_target_retention']:.3f} {diagnostics['B3']['median_separated_target_retention_ci95']}；eligible={b3_eligible}。目标功率比相对单输入通道，未缩放差分可使其超过 1；几何仍依赖共址 Tx 假设。",
+        "",
+        "| 场景 | 方法 | SNR/CNR (dB) | Pd (95% CI) | Pfa_CPI (95% CI) | AUC (95% CI) | Range RMSE (cells, 95% CI) | Doppler RMSE (Hz, 95% CI) | joint success |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in primary:
+        analysis_lines.append(
+            f"| {row['scenario_id']} | {row['method']} | {row['snr_db_input']:.0f}/{row['cnr_db_requested']:.0f} | "
+            f"{row['pd']:.3f} {row['pd_ci95']} | {row['pfa_cpi']:.3f} {row['pfa_cpi_ci95']} | "
+            f"{row['roc_auc']:.3f} {row['roc_auc_ci95']} | "
+            f"{_format_estimate_ci(row['range_rmse_cells_detected'], row['range_rmse_cells_detected_ci95'])} | "
+            f"{_format_estimate_ci(row['doppler_rmse_hz_detected'], row['doppler_rmse_hz_detected_ci95'])} | "
+            f"{row['joint_success']:.3f} |"
+        )
+    analysis_lines.extend(
+        [
+            "",
+            "## 解释边界",
+            "",
+            "- 阈值由独立 H0 calibration scenes 按 Pfa_CPI=0.05 设定；开发 H0 未用于重校准。256 场景开发集不支持 1e-6 级 CUT 虚警结论。",
+            "- A-D 共享配对背景/噪声；D 的相同流形目标只能用于源归因不可辨识边界分析。",
+            "- 两个 RMSE 均为命中条件值：Range 单位为距离单元、Doppler 单位为 Hz；每次 scene-cluster 重采样先计算 RMSE，再取 percentile CI。漏检由 joint success 记为失败。",
+            "- SNR 输入采用 D0 连续 range-PSF 峰值定义；CNR/SCNR 同时从完整 CPI component mean 独立计算。",
+            "- B2 是显式几何相干前端；不能被描述为纯学习基线。B3 仅在所注明 Tx 参考假设下有效。",
+            "- 下一步阶段审查需要结合测试、bootstrap 区间、A-D 场景及物理参数未知项决定 GO / CONDITIONAL GO / STOP / REDIRECT；表中 AUC 点估计不能单独替代阶段门。",
+        ]
+    )
+    (output_dir / "analysis.md").write_text("\n".join(analysis_lines) + "\n", encoding="utf-8")
+
+
 def _environment_record() -> dict[str, Any]:
     gpu_info: str | None = None
     nvidia_smi = shutil.which("nvidia-smi")
@@ -423,46 +478,15 @@ def main() -> int:
         "joint_success_ci95", "mean_detector_seconds_per_cpi",
     ]
     with (output_dir / "result.csv").open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=csv_fields, extrasaction="ignore")
+        writer = csv.DictWriter(
+            stream, fieldnames=csv_fields, extrasaction="ignore", lineterminator="\n"
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow({key: json.dumps(_json_safe(row.get(key)), ensure_ascii=False) if key.endswith("ci95") else row.get(key) for key in csv_fields})
 
     _write_plot(rows, output_dir)
-    primary = [row for row in rows if row["group"] == "primary"]
-    separated_primary = [row for row in primary if row["scenario_id"] == "separated"]
-    best = max(separated_primary, key=lambda row: row["roc_auc"])
-    analysis_lines = [
-        "# D2-A-E001 开发实验分析",
-        "",
-        f"运行耗时：{elapsed:.1f} s；全部数据为合成开发场景。正式学生训练和 final blind 均未运行。",
-        "",
-        f"分离场景 A 的主条件中最高点估计 ROC AUC：{best['method']}，AUC={best['roc_auc']:.4f}，Pd={best['pd']:.4f}，Pfa_CPI={best['pfa_cpi']:.4f}。此处仅作快速索引，按场景解读见下表和阶段审查。",
-        "",
-        f"DPCA 门：静止杂波中位抑制 {diagnostics['B3']['median_separated_clutter_suppression_db']:.2f} dB {diagnostics['B3']['median_separated_clutter_suppression_db_ci95']}；分离场景目标功率比中位数 {diagnostics['B3']['median_separated_target_retention']:.3f} {diagnostics['B3']['median_separated_target_retention_ci95']}；eligible={b3_eligible}。目标功率比相对单输入通道，未归一化差分可使其超过 1；几何仍依赖共址 Tx 假设。",
-        "",
-        "| 场景 | 方法 | SNR/CNR (dB) | Pd (95% CI) | Pfa_CPI (95% CI) | AUC (95% CI) | Doppler RMSE (Hz) | joint success |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
-    ]
-    for row in primary:
-        analysis_lines.append(
-            f"| {row['scenario_id']} | {row['method']} | {row['snr_db_input']:.0f}/{row['cnr_db_requested']:.0f} | "
-            f"{row['pd']:.3f} {row['pd_ci95']} | {row['pfa_cpi']:.3f} {row['pfa_cpi_ci95']} | "
-            f"{row['roc_auc']:.3f} {row['roc_auc_ci95']} | {row['doppler_rmse_hz_detected']} | {row['joint_success']:.3f} |"
-        )
-    analysis_lines.extend(
-        [
-            "",
-            "## 解释边界",
-            "",
-            "- 阈值由独立 H0 calibration scenes 按 Pfa_CPI=0.05 设定；开发 H0 未用于重校准。256 场景开发集不支持 1e-6 级 CUT 虚警结论。",
-            "- A-D 共享配对背景/噪声；D 的相同流形目标只能用于源归因不可辨识边界分析。",
-            "- SNR 输入采用 D0 连续 range-PSF 峰值定义；CNR/SCNR 同时从完整 CPI component mean 独立计算。",
-            "- B2 是显式几何相干前端；不能被描述为纯学习基线。B3 仅在所注明 Tx 参考假设下有效。",
-            "- 下一步阶段审查需要结合测试、bootstrap 区间、A-D 场景及物理参数未知项决定 GO / CONDITIONAL GO / STOP / REDIRECT；表中 AUC 点估计不能单独替代阶段门。",
-        ]
-    )
-    (output_dir / "analysis.md").write_text("\n".join(analysis_lines) + "\n", encoding="utf-8")
+    _write_analysis(metrics, output_dir)
     print(f"Wrote D2-A results under {output_dir}; elapsed={elapsed:.1f}s; B3 eligible={b3_eligible}")
     return 0
 

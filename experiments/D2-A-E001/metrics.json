@@ -20,7 +20,7 @@
       },
       "B2": {
         "n_h0": 512,
-        "threshold": 1730159.888678236,
+        "threshold": 1730159.8886782355,
         "empirical_pfa_cpi": 0.05078125,
         "quantile_method": "higher"
       },
@@ -177,13 +177,13 @@
       ],
       "range_rmse_cells_detected": 7.022600483419553,
       "range_rmse_cells_detected_ci95": [
-        21.082458891945834,
-        88.08597522840378
+        4.591563818972795,
+        9.385412214232119
       ],
       "doppler_rmse_hz_detected": 436.974137042356,
       "doppler_rmse_hz_detected_ci95": [
-        147749.19671058186,
-        231845.46836651335
+        384.3815728685491,
+        481.50334183614865
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -199,7 +199,7 @@
       "mean_cpi_snr_db": -6.119127782518245,
       "mean_cpi_cnr_db": 10.004819713572672,
       "mean_cpi_scnr_db": -16.537450906988493,
-      "mean_detector_seconds_per_cpi": 6.663115613037007e-05,
+      "mean_detector_seconds_per_cpi": 7.230797268675815e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -226,13 +226,13 @@
       ],
       "range_rmse_cells_detected": 7.022600483419553,
       "range_rmse_cells_detected_ci95": [
-        19.451958954273124,
-        86.00821615794882
+        4.410436759305035,
+        9.274061022613617
       ],
       "doppler_rmse_hz_detected": 436.974137042356,
       "doppler_rmse_hz_detected_ci95": [
-        147969.95515050122,
-        234211.60658479913
+        384.6686285620841,
+        483.95413674185374
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -248,7 +248,7 @@
       "mean_cpi_snr_db": -6.119127782518245,
       "mean_cpi_cnr_db": 10.004819713572672,
       "mean_cpi_scnr_db": -16.537450906988493,
-      "mean_detector_seconds_per_cpi": 0.00014639678528283184,
+      "mean_detector_seconds_per_cpi": 0.0001569980623230549,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -275,13 +275,13 @@
       ],
       "range_rmse_cells_detected": 7.022600483419553,
       "range_rmse_cells_detected_ci95": [
-        19.352220108945748,
-        86.0014446252713
+        4.3991154851415555,
+        9.27369620419376
       ],
       "doppler_rmse_hz_detected": 436.974137042356,
       "doppler_rmse_hz_detected_ci95": [
-        147048.90824152998,
-        235328.69923571293
+        383.469566251801,
+        485.10688872468813
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -297,7 +297,7 @@
       "mean_cpi_snr_db": -6.119127782518245,
       "mean_cpi_cnr_db": 10.004819713572672,
       "mean_cpi_scnr_db": -16.537450906988493,
-      "mean_detector_seconds_per_cpi": 0.0020478015489402424,
+      "mean_detector_seconds_per_cpi": 0.002385666068335013,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -324,13 +324,13 @@
       ],
       "range_rmse_cells_detected": 0.28575785816886995,
       "range_rmse_cells_detected_ci95": [
-        0.07161485705317806,
-        0.0921389498225053
+        0.2676095229272992,
+        0.3035439814437492
       ],
       "doppler_rmse_hz_detected": 2.8282463245171576,
       "doppler_rmse_hz_detected_ci95": [
-        7.103196282911551,
-        8.912040254863332
+        2.665182221041188,
+        2.985304047306192
       ],
       "joint_success": 1.0,
       "joint_success_ci95": [
@@ -346,7 +346,7 @@
       "mean_cpi_snr_db": -6.119127782518245,
       "mean_cpi_cnr_db": 10.004819713572672,
       "mean_cpi_scnr_db": -16.537450906988493,
-      "mean_detector_seconds_per_cpi": 0.00015422465440906308,
+      "mean_detector_seconds_per_cpi": 0.00019460871067167318,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -373,13 +373,13 @@
       ],
       "range_rmse_cells_detected": 10.303836933522044,
       "range_rmse_cells_detected_ci95": [
-        47.49622040523002,
-        165.1935924677192
+        6.89175016419281,
+        12.852765942467132
       ],
       "doppler_rmse_hz_detected": 168.44877874190354,
       "doppler_rmse_hz_detected_ci95": [
-        14965.059426475753,
-        41666.00728860698
+        122.3317466355778,
+        204.12253002070034
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -395,7 +395,7 @@
       "mean_cpi_snr_db": -6.072806602016184,
       "mean_cpi_cnr_db": 10.002720364780728,
       "mean_cpi_scnr_db": -16.48922037295808,
-      "mean_detector_seconds_per_cpi": 6.498566017398844e-05,
+      "mean_detector_seconds_per_cpi": 7.680407611587725e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -422,13 +422,13 @@
       ],
       "range_rmse_cells_detected": 11.563957535093618,
       "range_rmse_cells_detected_ci95": [
-        61.67393206053531,
-        211.766687321926
+        7.853275244108082,
+        14.552204256128823
       ],
       "doppler_rmse_hz_detected": 161.71835741467928,
       "doppler_rmse_hz_detected_ci95": [
-        14103.600639498138,
-        39039.133664233974
+        118.75858129613081,
+        197.58323134324522
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -444,7 +444,7 @@
       "mean_cpi_snr_db": -6.072806602016184,
       "mean_cpi_cnr_db": 10.002720364780728,
       "mean_cpi_scnr_db": -16.48922037295808,
-      "mean_detector_seconds_per_cpi": 0.00013789130281338657,
+      "mean_detector_seconds_per_cpi": 0.0001653193906463457,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -471,13 +471,13 @@
       ],
       "range_rmse_cells_detected": 11.563957535093618,
       "range_rmse_cells_detected_ci95": [
-        65.00655494207062,
-        211.36125830301162
+        8.062663953910985,
+        14.538266185620243
       ],
       "doppler_rmse_hz_detected": 161.71835741467928,
       "doppler_rmse_hz_detected_ci95": [
-        14109.397307778467,
-        38439.8635041198
+        118.78290572815594,
+        196.06086108825866
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -493,7 +493,7 @@
       "mean_cpi_snr_db": -6.072806602016184,
       "mean_cpi_cnr_db": 10.002720364780728,
       "mean_cpi_scnr_db": -16.48922037295808,
-      "mean_detector_seconds_per_cpi": 0.001806239761492634,
+      "mean_detector_seconds_per_cpi": 0.002304944193213032,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -520,13 +520,13 @@
       ],
       "range_rmse_cells_detected": 0.28831475259958206,
       "range_rmse_cells_detected_ci95": [
-        0.0735976642131655,
-        0.09218918683800986
+        0.271288894336673,
+        0.30362672098440985
       ],
       "doppler_rmse_hz_detected": 2.9225274311537395,
       "doppler_rmse_hz_detected_ci95": [
-        7.632731464229661,
-        9.4745027790923
+        2.76273984705525,
+        3.0780680174884516
       ],
       "joint_success": 1.0,
       "joint_success_ci95": [
@@ -542,7 +542,7 @@
       "mean_cpi_snr_db": -6.072806602016184,
       "mean_cpi_cnr_db": 10.002720364780728,
       "mean_cpi_scnr_db": -16.48922037295808,
-      "mean_detector_seconds_per_cpi": 0.00014637005648410195,
+      "mean_detector_seconds_per_cpi": 0.00019783253139848966,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -569,13 +569,13 @@
       ],
       "range_rmse_cells_detected": 9.568336727284109,
       "range_rmse_cells_detected_ci95": [
-        54.810868707705204,
-        133.2389666124981
+        7.403436251429523,
+        11.542917252979423
       ],
       "doppler_rmse_hz_detected": 98.31525849772211,
       "doppler_rmse_hz_detected_ci95": [
-        3981.6142188816493,
-        16402.929029895295
+        63.10003310946595,
+        128.07391424568615
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -591,7 +591,7 @@
       "mean_cpi_snr_db": -6.093517395942648,
       "mean_cpi_cnr_db": 9.996082995366331,
       "mean_cpi_scnr_db": -16.503896944105882,
-      "mean_detector_seconds_per_cpi": 6.879546691607175e-05,
+      "mean_detector_seconds_per_cpi": 7.714130447311618e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -618,13 +618,13 @@
       ],
       "range_rmse_cells_detected": 9.568336727284109,
       "range_rmse_cells_detected_ci95": [
-        52.19817820258581,
-        131.40456790770773
+        7.224830331254894,
+        11.463183133800321
       ],
       "doppler_rmse_hz_detected": 98.31525849772211,
       "doppler_rmse_hz_detected_ci95": [
-        3783.2033165848243,
-        16416.21731105976
+        61.50774363742026,
+        128.125786872269
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -640,7 +640,7 @@
       "mean_cpi_snr_db": -6.093517395942648,
       "mean_cpi_cnr_db": 9.996082995366331,
       "mean_cpi_scnr_db": -16.503896944105882,
-      "mean_detector_seconds_per_cpi": 0.00014367526364367222,
+      "mean_detector_seconds_per_cpi": 0.00016422124406290095,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -667,13 +667,13 @@
       ],
       "range_rmse_cells_detected": 9.568336727284109,
       "range_rmse_cells_detected_ci95": [
-        52.505192830772124,
-        129.51416924561735
+        7.2460466164707595,
+        11.380428899170248
       ],
       "doppler_rmse_hz_detected": 98.31525849772211,
       "doppler_rmse_hz_detected_ci95": [
-        3891.641946842683,
-        16767.137831664873
+        62.383009446038685,
+        129.48797907100246
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -689,7 +689,7 @@
       "mean_cpi_snr_db": -6.093517395942648,
       "mean_cpi_cnr_db": 9.996082995366331,
       "mean_cpi_scnr_db": -16.503896944105882,
-      "mean_detector_seconds_per_cpi": 0.0018646399626618404,
+      "mean_detector_seconds_per_cpi": 0.002333499410440254,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -716,13 +716,13 @@
       ],
       "range_rmse_cells_detected": 0.25197891180320914,
       "range_rmse_cells_detected_ci95": [
-        0.05340707800137561,
-        0.07413547195463667
+        0.23109971346939137,
+        0.2722782986933695
       ],
       "doppler_rmse_hz_detected": 3.0020997827478197,
       "doppler_rmse_hz_detected_ci95": [
-        7.528414142675015,
-        10.556941231481874
+        2.7437954605082133,
+        3.2491446911985373
       ],
       "joint_success": 0.60546875,
       "joint_success_ci95": [
@@ -738,7 +738,7 @@
       "mean_cpi_snr_db": -6.093517395942648,
       "mean_cpi_cnr_db": 9.996082995366331,
       "mean_cpi_scnr_db": -16.503896944105882,
-      "mean_detector_seconds_per_cpi": 0.00015274851574531567,
+      "mean_detector_seconds_per_cpi": 0.00020172138295038167,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -765,13 +765,13 @@
       ],
       "range_rmse_cells_detected": 11.98052848052847,
       "range_rmse_cells_detected_ci95": [
-        42.357392251362974,
-        267.9099074314706
+        6.508255624000535,
+        16.367952567079843
       ],
       "doppler_rmse_hz_detected": 77.74267818874517,
       "doppler_rmse_hz_detected_ci95": [
-        2587.621333829785,
-        9633.026716137461
+        50.86866613206998,
+        98.14798341620035
       ],
       "joint_success": 0.0078125,
       "joint_success_ci95": [
@@ -785,9 +785,9 @@
       "snr_db_input": 10.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -6.084951597145832,
-      "mean_cpi_cnr_db": 10.00574428345721,
+      "mean_cpi_cnr_db": 10.005744283457208,
       "mean_cpi_scnr_db": -16.50411542120743,
-      "mean_detector_seconds_per_cpi": 6.95841969218236e-05,
+      "mean_detector_seconds_per_cpi": 7.630945896153207e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -814,13 +814,13 @@
       ],
       "range_rmse_cells_detected": 11.702061930708908,
       "range_rmse_cells_detected_ci95": [
-        39.04960886683325,
-        253.77956596266617
+        6.2489682606237995,
+        15.930460244153144
       ],
       "doppler_rmse_hz_detected": 80.65093762902151,
       "doppler_rmse_hz_detected_ci95": [
-        3433.321184035646,
-        9963.994691345553
+        58.594541682198034,
+        99.81980965436618
       ],
       "joint_success": 0.0078125,
       "joint_success_ci95": [
@@ -834,9 +834,9 @@
       "snr_db_input": 10.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -6.084951597145832,
-      "mean_cpi_cnr_db": 10.00574428345721,
+      "mean_cpi_cnr_db": 10.005744283457208,
       "mean_cpi_scnr_db": -16.50411542120743,
-      "mean_detector_seconds_per_cpi": 0.00014590107230105787,
+      "mean_detector_seconds_per_cpi": 0.00016587309545457174,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -863,13 +863,13 @@
       ],
       "range_rmse_cells_detected": 11.702061930708908,
       "range_rmse_cells_detected_ci95": [
-        45.65357217413096,
-        250.21165536896865
+        6.75674035990381,
+        15.818079774665954
       ],
       "doppler_rmse_hz_detected": 80.65093762902151,
       "doppler_rmse_hz_detected_ci95": [
-        3393.0222098549402,
-        10154.71946476478
+        58.24965341960701,
+        100.77062796277038
       ],
       "joint_success": 0.0078125,
       "joint_success_ci95": [
@@ -883,9 +883,9 @@
       "snr_db_input": 10.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -6.084951597145832,
-      "mean_cpi_cnr_db": 10.00574428345721,
+      "mean_cpi_cnr_db": 10.005744283457208,
       "mean_cpi_scnr_db": -16.50411542120743,
-      "mean_detector_seconds_per_cpi": 0.0019020008318193504,
+      "mean_detector_seconds_per_cpi": 0.002440652964708079,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -912,13 +912,13 @@
       ],
       "range_rmse_cells_detected": 11.217188992171593,
       "range_rmse_cells_detected_ci95": [
-        55.5124836294918,
-        206.62921899171178
+        7.450666826337581,
+        14.374603263798983
       ],
       "doppler_rmse_hz_detected": 218.72139866333956,
       "doppler_rmse_hz_detected_ci95": [
-        18677.38791687769,
-        82834.300132963
+        136.6652298846567,
+        287.8094792502316
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -932,9 +932,9 @@
       "snr_db_input": 10.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -6.084951597145832,
-      "mean_cpi_cnr_db": 10.00574428345721,
+      "mean_cpi_cnr_db": 10.005744283457208,
       "mean_cpi_scnr_db": -16.50411542120743,
-      "mean_detector_seconds_per_cpi": 0.0001552367950239386,
+      "mean_detector_seconds_per_cpi": 0.00020498696284221296,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -961,13 +961,13 @@
       ],
       "range_rmse_cells_detected": 5.490178318359343,
       "range_rmse_cells_detected_ci95": [
-        8.049595984126736,
-        57.31175030751932
+        2.8371799649159604,
+        7.5704524255063586
       ],
       "doppler_rmse_hz_detected": 179.07003153954093,
       "doppler_rmse_hz_detected_ci95": [
-        14910.602629000134,
-        51856.2916088042
+        122.10888923338727,
+        227.71976550252532
       ],
       "joint_success": 0.16015625,
       "joint_success_ci95": [
@@ -980,10 +980,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.081156151540762,
-      "mean_cpi_cnr_db": 0.005027986291193975,
+      "mean_cpi_snr_db": -6.081156151540761,
+      "mean_cpi_cnr_db": 0.005027986291194034,
       "mean_cpi_scnr_db": -9.094013894174001,
-      "mean_detector_seconds_per_cpi": 6.563034571627213e-05,
+      "mean_detector_seconds_per_cpi": 8.34941467360295e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1010,13 +1010,13 @@
       ],
       "range_rmse_cells_detected": 5.5988262741595864,
       "range_rmse_cells_detected_ci95": [
-        9.174752484872501,
-        60.05756384246934
+        3.028984846963311,
+        7.749681452925267
       ],
       "doppler_rmse_hz_detected": 182.61566682571433,
       "doppler_rmse_hz_detected_ci95": [
-        14277.359358873744,
-        54630.10579797977
+        119.48790396219225,
+        233.7308360476097
       ],
       "joint_success": 0.15234375,
       "joint_success_ci95": [
@@ -1029,10 +1029,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.081156151540762,
-      "mean_cpi_cnr_db": 0.005027986291193975,
+      "mean_cpi_snr_db": -6.081156151540761,
+      "mean_cpi_cnr_db": 0.005027986291194034,
       "mean_cpi_scnr_db": -9.094013894174001,
-      "mean_detector_seconds_per_cpi": 0.00013422270512819523,
+      "mean_detector_seconds_per_cpi": 0.00017601032834591024,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -1059,13 +1059,13 @@
       ],
       "range_rmse_cells_detected": 5.5988262741595864,
       "range_rmse_cells_detected_ci95": [
-        9.4817778309485,
-        60.56726391484453
+        3.079248696675984,
+        7.782497101721064
       ],
       "doppler_rmse_hz_detected": 182.61566682571433,
       "doppler_rmse_hz_detected_ci95": [
-        15254.789704830338,
-        53448.27809929666
+        123.51026069335386,
+        231.1888141172307
       ],
       "joint_success": 0.15234375,
       "joint_success_ci95": [
@@ -1078,10 +1078,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.081156151540762,
-      "mean_cpi_cnr_db": 0.005027986291193975,
+      "mean_cpi_snr_db": -6.081156151540761,
+      "mean_cpi_cnr_db": 0.005027986291194034,
       "mean_cpi_scnr_db": -9.094013894174001,
-      "mean_detector_seconds_per_cpi": 0.0018723013924386578,
+      "mean_detector_seconds_per_cpi": 0.0026624419257359477,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -1108,13 +1108,13 @@
       ],
       "range_rmse_cells_detected": 0.29277848409269164,
       "range_rmse_cells_detected_ci95": [
-        0.07499774719035172,
-        0.09721491453516151
+        0.27385716480794076,
+        0.31179306362680664
       ],
       "doppler_rmse_hz_detected": 2.89637132250185,
       "doppler_rmse_hz_detected_ci95": [
-        7.511221798815143,
-        9.251521314992157
+        2.740660832478663,
+        3.041631357148182
       ],
       "joint_success": 1.0,
       "joint_success_ci95": [
@@ -1127,10 +1127,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.081156151540762,
-      "mean_cpi_cnr_db": 0.005027986291193975,
+      "mean_cpi_snr_db": -6.081156151540761,
+      "mean_cpi_cnr_db": 0.005027986291194034,
       "mean_cpi_scnr_db": -9.094013894174001,
-      "mean_detector_seconds_per_cpi": 0.00014641551541672015,
+      "mean_detector_seconds_per_cpi": 0.00020932256649075498,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -1157,13 +1157,13 @@
       ],
       "range_rmse_cells_detected": 3.691255988921054,
       "range_rmse_cells_detected_ci95": [
-        1.6387918797702163,
-        28.67329940178053
+        1.2801492206174543,
+        5.354745498674971
       ],
       "doppler_rmse_hz_detected": 25.431555947547192,
       "doppler_rmse_hz_detected_ci95": [
-        75.55755537827618,
-        1379.7389417755983
+        8.692351624437846,
+        37.14483689649823
       ],
       "joint_success": 0.15625,
       "joint_success_ci95": [
@@ -1176,10 +1176,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.051606053588639,
-      "mean_cpi_cnr_db": 0.0019056122983286436,
+      "mean_cpi_snr_db": -6.051606053588637,
+      "mean_cpi_cnr_db": 0.0019056122983286596,
       "mean_cpi_scnr_db": -9.062903020112408,
-      "mean_detector_seconds_per_cpi": 6.642822660296588e-05,
+      "mean_detector_seconds_per_cpi": 7.777255689234153e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1206,13 +1206,13 @@
       ],
       "range_rmse_cells_detected": 3.9844019048291046,
       "range_rmse_cells_detected_ci95": [
-        1.472406013004979,
-        35.1819132769087
+        1.213423873283843,
+        5.931433621399344
       ],
       "doppler_rmse_hz_detected": 30.399153383518808,
       "doppler_rmse_hz_detected_ci95": [
-        147.98240118923732,
-        1951.2701177277133
+        12.164801016052172,
+        44.173172657400286
       ],
       "joint_success": 0.14453125,
       "joint_success_ci95": [
@@ -1225,10 +1225,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.051606053588639,
-      "mean_cpi_cnr_db": 0.0019056122983286436,
+      "mean_cpi_snr_db": -6.051606053588637,
+      "mean_cpi_cnr_db": 0.0019056122983286596,
       "mean_cpi_scnr_db": -9.062903020112408,
-      "mean_detector_seconds_per_cpi": 0.00014616356247643125,
+      "mean_detector_seconds_per_cpi": 0.00017407586130957498,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -1255,13 +1255,13 @@
       ],
       "range_rmse_cells_detected": 3.9844019048291046,
       "range_rmse_cells_detected_ci95": [
-        2.0484207856034535,
-        33.26703764528091
+        1.4312304421076891,
+        5.767758432701266
       ],
       "doppler_rmse_hz_detected": 30.399153383518808,
       "doppler_rmse_hz_detected_ci95": [
-        116.67742419784757,
-        1883.2104000829502
+        10.773507199630927,
+        43.39597200758401
       ],
       "joint_success": 0.14453125,
       "joint_success_ci95": [
@@ -1274,10 +1274,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.051606053588639,
-      "mean_cpi_cnr_db": 0.0019056122983286436,
+      "mean_cpi_snr_db": -6.051606053588637,
+      "mean_cpi_cnr_db": 0.0019056122983286596,
       "mean_cpi_scnr_db": -9.062903020112408,
-      "mean_detector_seconds_per_cpi": 0.0018208042088758702,
+      "mean_detector_seconds_per_cpi": 0.002544805478407852,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -1304,13 +1304,13 @@
       ],
       "range_rmse_cells_detected": 0.2842307517621159,
       "range_rmse_cells_detected_ci95": [
-        0.06843761685362942,
-        0.09388924459739287
+        0.2616058423892137,
+        0.3064135187807106
       ],
       "doppler_rmse_hz_detected": 2.7873250286154603,
       "doppler_rmse_hz_detected_ci95": [
-        6.305168270703115,
-        9.103448769630868
+        2.511009382351088,
+        3.0171921960796193
       ],
       "joint_success": 0.58203125,
       "joint_success_ci95": [
@@ -1323,10 +1323,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 0.0,
-      "mean_cpi_snr_db": -6.051606053588639,
-      "mean_cpi_cnr_db": 0.0019056122983286436,
+      "mean_cpi_snr_db": -6.051606053588637,
+      "mean_cpi_cnr_db": 0.0019056122983286596,
       "mean_cpi_scnr_db": -9.062903020112408,
-      "mean_detector_seconds_per_cpi": 0.00015030787511705057,
+      "mean_detector_seconds_per_cpi": 0.0002165406014000837,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -1353,13 +1353,13 @@
       ],
       "range_rmse_cells_detected": 8.200660062075462,
       "range_rmse_cells_detected_ci95": [
-        35.52959636189472,
-        106.89085171459716
+        5.960670795128841,
+        10.33880276951634
       ],
       "doppler_rmse_hz_detected": 378.0136718238388,
       "doppler_rmse_hz_detected_ci95": [
-        113503.83753806422,
-        181724.1143609223
+        336.9033045652053,
+        426.2911142163663
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1375,7 +1375,7 @@
       "mean_cpi_snr_db": -6.039598478320029,
       "mean_cpi_cnr_db": 19.997529955691302,
       "mean_cpi_scnr_db": -26.080368201279484,
-      "mean_detector_seconds_per_cpi": 6.6229644573923e-05,
+      "mean_detector_seconds_per_cpi": 8.086152558917092e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1402,13 +1402,13 @@
       ],
       "range_rmse_cells_detected": 8.191870627936161,
       "range_rmse_cells_detected_ci95": [
-        35.83030467447815,
-        105.95113856703992
+        5.985842017914153,
+        10.293256831783284
       ],
       "doppler_rmse_hz_detected": 378.5640721105123,
       "doppler_rmse_hz_detected_ci95": [
-        109793.89060783159,
-        185064.55121435286
+        331.35161174757457,
+        430.1912784234216
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1424,7 +1424,7 @@
       "mean_cpi_snr_db": -6.039598478320029,
       "mean_cpi_cnr_db": 19.997529955691302,
       "mean_cpi_scnr_db": -26.080368201279484,
-      "mean_detector_seconds_per_cpi": 0.00013475045511768258,
+      "mean_detector_seconds_per_cpi": 0.0001653856426173661,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -1451,13 +1451,13 @@
       ],
       "range_rmse_cells_detected": 8.191870627936161,
       "range_rmse_cells_detected_ci95": [
-        33.9939409662966,
-        104.91254125665213
+        5.830413274713061,
+        10.242682326412169
       ],
       "doppler_rmse_hz_detected": 378.5640721105123,
       "doppler_rmse_hz_detected_ci95": [
-        110991.44660359224,
-        183875.57518449362
+        333.1537882040557,
+        428.80715374018826
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1473,7 +1473,7 @@
       "mean_cpi_snr_db": -6.039598478320029,
       "mean_cpi_cnr_db": 19.997529955691302,
       "mean_cpi_scnr_db": -26.080368201279484,
-      "mean_detector_seconds_per_cpi": 0.0018093976719910643,
+      "mean_detector_seconds_per_cpi": 0.0026097853614146516,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -1500,13 +1500,13 @@
       ],
       "range_rmse_cells_detected": 0.2997436278499094,
       "range_rmse_cells_detected_ci95": [
-        0.07955255808784771,
-        0.09986207785713976
+        0.2820506302305949,
+        0.31600961639598235
       ],
       "doppler_rmse_hz_detected": 2.8776271870446672,
       "doppler_rmse_hz_detected_ci95": [
-        7.389282695690227,
-        9.18881311120462
+        2.71832350580573,
+        3.0313055118794154
       ],
       "joint_success": 0.99609375,
       "joint_success_ci95": [
@@ -1522,7 +1522,7 @@
       "mean_cpi_snr_db": -6.039598478320029,
       "mean_cpi_cnr_db": 19.997529955691302,
       "mean_cpi_scnr_db": -26.080368201279484,
-      "mean_detector_seconds_per_cpi": 0.00014648929868599225,
+      "mean_detector_seconds_per_cpi": 0.0002170860937553698,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -1549,13 +1549,13 @@
       ],
       "range_rmse_cells_detected": 9.80777776532007,
       "range_rmse_cells_detected_ci95": [
-        56.03661866394181,
-        139.94924766503462
+        7.485761060559079,
+        11.830014693674453
       ],
       "doppler_rmse_hz_detected": 84.68963494472358,
       "doppler_rmse_hz_detected_ci95": [
-        3642.1716700608204,
-        11339.497590531111
+        60.350406136460116,
+        106.48706803164298
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1568,10 +1568,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 20.0,
-      "mean_cpi_snr_db": -6.115505460554301,
+      "mean_cpi_snr_db": -6.115505460554302,
       "mean_cpi_cnr_db": 19.999624013057783,
       "mean_cpi_scnr_db": -26.15834876917345,
-      "mean_detector_seconds_per_cpi": 7.138835724163073e-05,
+      "mean_detector_seconds_per_cpi": 7.29183223597829e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1598,13 +1598,13 @@
       ],
       "range_rmse_cells_detected": 9.80777776532007,
       "range_rmse_cells_detected_ci95": [
-        57.05997829358749,
-        142.82802881328118
+        7.55380554657097,
+        11.95106810338775
       ],
       "doppler_rmse_hz_detected": 84.68963494472358,
       "doppler_rmse_hz_detected_ci95": [
-        3544.635969544708,
-        11329.475196177467
+        59.53684528403479,
+        106.44000672173125
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1617,10 +1617,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 20.0,
-      "mean_cpi_snr_db": -6.115505460554301,
+      "mean_cpi_snr_db": -6.115505460554302,
       "mean_cpi_cnr_db": 19.999624013057783,
       "mean_cpi_scnr_db": -26.15834876917345,
-      "mean_detector_seconds_per_cpi": 0.0001480803809954523,
+      "mean_detector_seconds_per_cpi": 0.00015537510950025535,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -1647,13 +1647,13 @@
       ],
       "range_rmse_cells_detected": 9.80777776532007,
       "range_rmse_cells_detected_ci95": [
-        56.874877886244654,
-        141.27933241895525
+        7.541543229952956,
+        11.886097955664336
       ],
       "doppler_rmse_hz_detected": 84.68963494472358,
       "doppler_rmse_hz_detected_ci95": [
-        3591.536552918087,
-        11581.077724325465
+        59.929429568736815,
+        107.61541474308007
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1666,10 +1666,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 20.0,
-      "mean_cpi_snr_db": -6.115505460554301,
+      "mean_cpi_snr_db": -6.115505460554302,
       "mean_cpi_cnr_db": 19.999624013057783,
       "mean_cpi_scnr_db": -26.15834876917345,
-      "mean_detector_seconds_per_cpi": 0.0018419672969116618,
+      "mean_detector_seconds_per_cpi": 0.0022076862521771545,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -1696,13 +1696,13 @@
       ],
       "range_rmse_cells_detected": 4.799291487627212,
       "range_rmse_cells_detected_ci95": [
-        6.75978984764222,
-        47.305287111874584
+        2.599959420842629,
+        6.87788389649354
       ],
       "doppler_rmse_hz_detected": 62.0953114630921,
       "doppler_rmse_hz_detected_ci95": [
-        1177.7733244670421,
-        7555.297332082627
+        34.31870208355254,
+        86.92121323170171
       ],
       "joint_success": 0.1953125,
       "joint_success_ci95": [
@@ -1715,10 +1715,10 @@
       "group": "cnr_sensitivity",
       "snr_db_input": 10.0,
       "cnr_db_requested": 20.0,
-      "mean_cpi_snr_db": -6.115505460554301,
+      "mean_cpi_snr_db": -6.115505460554302,
       "mean_cpi_cnr_db": 19.999624013057783,
       "mean_cpi_scnr_db": -26.15834876917345,
-      "mean_detector_seconds_per_cpi": 0.0001539786402986465,
+      "mean_detector_seconds_per_cpi": 0.00019029429296324452,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -1745,13 +1745,13 @@
       ],
       "range_rmse_cells_detected": 10.39313184725287,
       "range_rmse_cells_detected_ci95": [
-        64.55283527656886,
-        153.13523218697821
+        8.034477836779777,
+        12.37478196027948
       ],
       "doppler_rmse_hz_detected": 435.05708287627874,
       "doppler_rmse_hz_detected_ci95": [
-        153689.58072131342,
-        226491.0145954059
+        392.0326264179401,
+        475.91072111894687
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1766,8 +1766,8 @@
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.03683314316471,
       "mean_cpi_cnr_db": 10.001572981327424,
-      "mean_cpi_scnr_db": -26.452202836051473,
-      "mean_detector_seconds_per_cpi": 6.527693176394678e-05,
+      "mean_cpi_scnr_db": -26.452202836051477,
+      "mean_detector_seconds_per_cpi": 7.295056832390401e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1794,13 +1794,13 @@
       ],
       "range_rmse_cells_detected": 10.404705369475097,
       "range_rmse_cells_detected_ci95": [
-        64.69785603511268,
-        152.87195682922146
+        8.04349771332134,
+        12.36413948560053
       ],
       "doppler_rmse_hz_detected": 432.26623060720004,
       "doppler_rmse_hz_detected_ci95": [
-        150733.5511747189,
-        225556.31953924868
+        388.24418989064884,
+        474.92769884872234
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1815,13 +1815,13 @@
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.03683314316471,
       "mean_cpi_cnr_db": 10.001572981327424,
-      "mean_cpi_scnr_db": -26.452202836051473,
-      "mean_detector_seconds_per_cpi": 0.00014420166399986556,
+      "mean_cpi_scnr_db": -26.452202836051477,
+      "mean_detector_seconds_per_cpi": 0.00016652494315394506,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
     {
-      "threshold": 1730159.888678236,
+      "threshold": 1730159.8886782355,
       "n_scenes": 256,
       "pfa_cpi": 0.078125,
       "pfa_cpi_ci95": [
@@ -1843,13 +1843,13 @@
       ],
       "range_rmse_cells_detected": 10.404705369475097,
       "range_rmse_cells_detected_ci95": [
-        63.65224227295479,
-        154.61871704754716
+        7.978235420662253,
+        12.434577471414
       ],
       "doppler_rmse_hz_detected": 432.26623060720004,
       "doppler_rmse_hz_detected_ci95": [
-        151078.5065933292,
-        224375.12488126932
+        388.68818684552576,
+        473.6825143857232
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1864,8 +1864,8 @@
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.03683314316471,
       "mean_cpi_cnr_db": 10.001572981327424,
-      "mean_cpi_scnr_db": -26.452202836051473,
-      "mean_detector_seconds_per_cpi": 0.0018483910448026108,
+      "mean_cpi_scnr_db": -26.452202836051477,
+      "mean_detector_seconds_per_cpi": 0.002303997961064397,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -1892,13 +1892,13 @@
       ],
       "range_rmse_cells_detected": 0.28040378474760475,
       "range_rmse_cells_detected_ci95": [
-        0.06830992529432012,
-        0.08994912954570797
+        0.26136166309648495,
+        0.2999151993643505
       ],
       "doppler_rmse_hz_detected": 2.8159211121760603,
       "doppler_rmse_hz_detected_ci95": [
-        6.925658344546806,
-        9.067261751418984
+        2.6316645566290924,
+        3.011189424686644
       ],
       "joint_success": 0.8515625,
       "joint_success_ci95": [
@@ -1913,8 +1913,8 @@
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.03683314316471,
       "mean_cpi_cnr_db": 10.001572981327424,
-      "mean_cpi_scnr_db": -26.452202836051473,
-      "mean_detector_seconds_per_cpi": 0.00014532563847069468,
+      "mean_cpi_scnr_db": -26.452202836051477,
+      "mean_detector_seconds_per_cpi": 0.00020231359576428076,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -1941,13 +1941,13 @@
       ],
       "range_rmse_cells_detected": 13.124303125420312,
       "range_rmse_cells_detected_ci95": [
-        101.33965032099842,
-        250.68255669138068
+        10.066758609183843,
+        15.832957911151832
       ],
       "doppler_rmse_hz_detected": 119.71388593343615,
       "doppler_rmse_hz_detected_ci95": [
-        7917.740900162691,
-        21463.080836198245
+        88.98168855882322,
+        146.50283066768745
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -1961,9 +1961,9 @@
       "snr_db_input": 0.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.093264184567524,
-      "mean_cpi_cnr_db": 10.001052906759098,
+      "mean_cpi_cnr_db": 10.0010529067591,
       "mean_cpi_scnr_db": -26.50816153876069,
-      "mean_detector_seconds_per_cpi": 6.833857031551815e-05,
+      "mean_detector_seconds_per_cpi": 7.241751569608823e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -1990,13 +1990,13 @@
       ],
       "range_rmse_cells_detected": 13.124303125420312,
       "range_rmse_cells_detected_ci95": [
-        102.09295900647149,
-        250.38118415164257
+        10.104106039255317,
+        15.823437648965596
       ],
       "doppler_rmse_hz_detected": 119.71388593343615,
       "doppler_rmse_hz_detected_ci95": [
-        7848.71947321232,
-        21365.365039830533
+        88.59299885022413,
+        146.1689353402232
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -2010,14 +2010,14 @@
       "snr_db_input": 0.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.093264184567524,
-      "mean_cpi_cnr_db": 10.001052906759098,
+      "mean_cpi_cnr_db": 10.0010529067591,
       "mean_cpi_scnr_db": -26.50816153876069,
-      "mean_detector_seconds_per_cpi": 0.00014432479906645312,
+      "mean_detector_seconds_per_cpi": 0.00015637968556347914,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
     {
-      "threshold": 1730159.888678236,
+      "threshold": 1730159.8886782355,
       "n_scenes": 256,
       "pfa_cpi": 0.07421875,
       "pfa_cpi_ci95": [
@@ -2039,13 +2039,13 @@
       ],
       "range_rmse_cells_detected": 13.124303125420312,
       "range_rmse_cells_detected_ci95": [
-        105.75184690068069,
-        247.0081146114273
+        10.283571679530306,
+        15.716491803537034
       ],
       "doppler_rmse_hz_detected": 119.71388593343615,
       "doppler_rmse_hz_detected_ci95": [
-        7752.208019227811,
-        21022.83054673267
+        88.04662367063507,
+        144.99251855916168
       ],
       "joint_success": 0.0,
       "joint_success_ci95": [
@@ -2059,9 +2059,9 @@
       "snr_db_input": 0.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.093264184567524,
-      "mean_cpi_cnr_db": 10.001052906759098,
+      "mean_cpi_cnr_db": 10.0010529067591,
       "mean_cpi_scnr_db": -26.50816153876069,
-      "mean_detector_seconds_per_cpi": 0.001856216671853872,
+      "mean_detector_seconds_per_cpi": 0.0023554962108960353,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -2088,13 +2088,13 @@
       ],
       "range_rmse_cells_detected": 11.178407529700433,
       "range_rmse_cells_detected_ci95": [
-        58.570311116987014,
-        196.05622736946032
+        7.653123895691048,
+        14.002007975618401
       ],
       "doppler_rmse_hz_detected": 220.99973952107382,
       "doppler_rmse_hz_detected_ci95": [
-        20458.90181610936,
-        90149.50412391608
+        143.03460685177794,
+        300.24906083474895
       ],
       "joint_success": 0.01171875,
       "joint_success_ci95": [
@@ -2108,9 +2108,9 @@
       "snr_db_input": 0.0,
       "cnr_db_requested": 10.0,
       "mean_cpi_snr_db": -16.093264184567524,
-      "mean_cpi_cnr_db": 10.001052906759098,
+      "mean_cpi_cnr_db": 10.0010529067591,
       "mean_cpi_scnr_db": -26.50816153876069,
-      "mean_detector_seconds_per_cpi": 0.0001593938925452676,
+      "mean_detector_seconds_per_cpi": 0.00018961653677251888,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -2137,13 +2137,13 @@
       ],
       "range_rmse_cells_detected": 3.5858270618181676,
       "range_rmse_cells_detected_ci95": [
-        4.195595930278546,
-        23.442828306421983
+        2.0483144628843544,
+        4.84177938615518
       ],
       "doppler_rmse_hz_detected": 197.2378374699124,
       "doppler_rmse_hz_detected_ci95": [
-        13700.886220786468,
-        69099.47823284811
+        117.05064282517846,
+        262.86778761847444
       ],
       "joint_success": 0.15625,
       "joint_success_ci95": [
@@ -2159,7 +2159,7 @@
       "mean_cpi_snr_db": 3.816193190454552,
       "mean_cpi_cnr_db": 10.001149652806568,
       "mean_cpi_scnr_db": -6.598795733912238,
-      "mean_detector_seconds_per_cpi": 7.184849624763956e-05,
+      "mean_detector_seconds_per_cpi": 7.80642538416032e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -2186,13 +2186,13 @@
       ],
       "range_rmse_cells_detected": 3.5858270618181676,
       "range_rmse_cells_detected_ci95": [
-        3.924303331155018,
-        22.43113697582284
+        1.9809836392040008,
+        4.736151981238962
       ],
       "doppler_rmse_hz_detected": 197.2378374699124,
       "doppler_rmse_hz_detected_ci95": [
-        13665.522571164536,
-        68784.47447309105
+        116.8996110365358,
+        262.2679315040789
       ],
       "joint_success": 0.15625,
       "joint_success_ci95": [
@@ -2208,7 +2208,7 @@
       "mean_cpi_snr_db": 3.816193190454552,
       "mean_cpi_cnr_db": 10.001149652806568,
       "mean_cpi_scnr_db": -6.598795733912238,
-      "mean_detector_seconds_per_cpi": 0.00015251368165536405,
+      "mean_detector_seconds_per_cpi": 0.0001604811855600019,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -2235,13 +2235,13 @@
       ],
       "range_rmse_cells_detected": 3.5858270618181676,
       "range_rmse_cells_detected_ci95": [
-        4.006077263036607,
-        22.416540631423853
+        2.001518674994972,
+        4.734610884421753
       ],
       "doppler_rmse_hz_detected": 197.2378374699124,
       "doppler_rmse_hz_detected_ci95": [
-        14231.015584721285,
-        67420.197188116
+        119.29375110969801,
+        259.6539948340162
       ],
       "joint_success": 0.15625,
       "joint_success_ci95": [
@@ -2257,7 +2257,7 @@
       "mean_cpi_snr_db": 3.816193190454552,
       "mean_cpi_cnr_db": 10.001149652806568,
       "mean_cpi_scnr_db": -6.598795733912238,
-      "mean_detector_seconds_per_cpi": 0.0018620024745246155,
+      "mean_detector_seconds_per_cpi": 0.0024010985819131747,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -2284,13 +2284,13 @@
       ],
       "range_rmse_cells_detected": 0.2969697742634885,
       "range_rmse_cells_detected_ci95": [
-        0.07806422447831045,
-        0.09897880874942105
+        0.27939975743312206,
+        0.3146089773556115
       ],
       "doppler_rmse_hz_detected": 2.882717088020777,
       "doppler_rmse_hz_detected_ci95": [
-        7.41361479449621,
-        9.240290319445647
+        2.722795400317939,
+        3.0397845814894335
       ],
       "joint_success": 1.0,
       "joint_success_ci95": [
@@ -2306,7 +2306,7 @@
       "mean_cpi_snr_db": 3.816193190454552,
       "mean_cpi_cnr_db": 10.001149652806568,
       "mean_cpi_scnr_db": -6.598795733912238,
-      "mean_detector_seconds_per_cpi": 0.00015586779704790388,
+      "mean_detector_seconds_per_cpi": 0.00020652352372962923,
       "method": "B3",
       "method_eligible_for_ranking": true
     },
@@ -2333,13 +2333,13 @@
       ],
       "range_rmse_cells_detected": 0.8453167356037418,
       "range_rmse_cells_detected_ci95": [
-        0.03916527845107117,
-        1.659277730900561
+        0.1979021458273643,
+        1.2881295458561544
       ],
       "doppler_rmse_hz_detected": 28.633305664856422,
       "doppler_rmse_hz_detected_ci95": [
-        5.235167378165156,
-        2082.0033415277403
+        2.28804861309569,
+        45.62897432350593
       ],
       "joint_success": 0.1796875,
       "joint_success_ci95": [
@@ -2352,10 +2352,10 @@
       "group": "snr_sensitivity",
       "snr_db_input": 20.0,
       "cnr_db_requested": 10.0,
-      "mean_cpi_snr_db": 3.9260591096764763,
+      "mean_cpi_snr_db": 3.926059109676476,
       "mean_cpi_cnr_db": 10.003448388192126,
       "mean_cpi_scnr_db": -6.491016583077012,
-      "mean_detector_seconds_per_cpi": 6.974055492037223e-05,
+      "mean_detector_seconds_per_cpi": 7.429111735746119e-05,
       "method": "B0",
       "method_eligible_for_ranking": true
     },
@@ -2382,13 +2382,13 @@
       ],
       "range_rmse_cells_detected": 0.8699800170352221,
       "range_rmse_cells_detected_ci95": [
-        0.038875736251719785,
-        1.8329198524641155
+        0.1971693009168886,
+        1.3538537004991398
       ],
       "doppler_rmse_hz_detected": 29.54767211428725,
       "doppler_rmse_hz_detected_ci95": [
-        5.38719648018623,
-        2133.1699388020384
+        2.3210334216934063,
+        46.18621885751649
       ],
       "joint_success": 0.16796875,
       "joint_success_ci95": [
@@ -2401,10 +2401,10 @@
       "group": "snr_sensitivity",
       "snr_db_input": 20.0,
       "cnr_db_requested": 10.0,
-      "mean_cpi_snr_db": 3.9260591096764763,
+      "mean_cpi_snr_db": 3.926059109676476,
       "mean_cpi_cnr_db": 10.003448388192126,
       "mean_cpi_scnr_db": -6.491016583077012,
-      "mean_detector_seconds_per_cpi": 0.0001490073987042706,
+      "mean_detector_seconds_per_cpi": 0.00016355753132302198,
       "method": "B1",
       "method_eligible_for_ranking": true
     },
@@ -2431,13 +2431,13 @@
       ],
       "range_rmse_cells_detected": 0.8699800170352221,
       "range_rmse_cells_detected_ci95": [
-        0.04009516740512542,
-        1.8136056887224687
+        0.2002376953163444,
+        1.3467017793397356
       ],
       "doppler_rmse_hz_detected": 29.54767211428725,
       "doppler_rmse_hz_detected_ci95": [
-        5.105249623461323,
-        2281.2472833142006
+        2.259477883620067,
+        47.76240389924288
       ],
       "joint_success": 0.16796875,
       "joint_success_ci95": [
@@ -2450,10 +2450,10 @@
       "group": "snr_sensitivity",
       "snr_db_input": 20.0,
       "cnr_db_requested": 10.0,
-      "mean_cpi_snr_db": 3.9260591096764763,
+      "mean_cpi_snr_db": 3.926059109676476,
       "mean_cpi_cnr_db": 10.003448388192126,
       "mean_cpi_scnr_db": -6.491016583077012,
-      "mean_detector_seconds_per_cpi": 0.001864947273531925,
+      "mean_detector_seconds_per_cpi": 0.002358357171829084,
       "method": "B2",
       "method_eligible_for_ranking": true
     },
@@ -2480,13 +2480,13 @@
       ],
       "range_rmse_cells_detected": 0.2924220914167323,
       "range_rmse_cells_detected_ci95": [
-        0.07613121202323249,
-        0.094850104928408
+        0.27591885039289676,
+        0.30797744194759946
       ],
       "doppler_rmse_hz_detected": 2.7694569021718,
       "doppler_rmse_hz_detected_ci95": [
-        6.756645256033676,
-        8.617371398970045
+        2.599354772116448,
+        2.935535964236137
       ],
       "joint_success": 1.0,
       "joint_success_ci95": [
@@ -2499,14 +2499,14 @@
       "group": "snr_sensitivity",
       "snr_db_input": 20.0,
       "cnr_db_requested": 10.0,
-      "mean_cpi_snr_db": 3.9260591096764763,
+      "mean_cpi_snr_db": 3.926059109676476,
       "mean_cpi_cnr_db": 10.003448388192126,
       "mean_cpi_scnr_db": -6.491016583077012,
-      "mean_detector_seconds_per_cpi": 0.00015219018945344942,
+      "mean_detector_seconds_per_cpi": 0.0002038737461589335,
       "method": "B3",
       "method_eligible_for_ranking": true
     }
   ],
-  "elapsed_seconds": 160.63690675399266,
+  "elapsed_seconds": 173.2908449509996,
   "bootstrap_replicates": 2000
 }

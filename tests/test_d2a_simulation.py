@@ -82,6 +82,18 @@ def test_t2_noiseless_static_scatterer_preserves_range_phase_doppler_and_coheren
         ) / wavelength
         assert abs(np.angle(np.exp(1j * (phase_step - expected_step)))) < 2e-4
 
+    pulse = 25
+    common_bin = int(round(float(np.mean(response.range_cell[:, pulse, scatterer]))))
+    for ch in (1, 2):
+        measured_cross_phase = np.angle(
+            response.iq[ch, pulse, common_bin] * np.conj(response.iq[0, pulse, common_bin])
+        )
+        expected_cross_phase = -2.0 * np.pi * (
+            response.path_length_m[ch, pulse, scatterer]
+            - response.path_length_m[0, pulse, scatterer]
+        ) / wavelength
+        assert abs(np.angle(np.exp(1j * (measured_cross_phase - expected_cross_phase)))) < 2e-4
+
 
 def test_t3_stationary_scatterer_doppler_tracks_platform_speed(d2a_config):
     slow = _response(d2a_config, azimuth_deg=88.9, platform_speed_mps=20.0)
@@ -131,6 +143,22 @@ def test_t7_power_metrics_use_explicit_snr_cnr_and_scnr_definitions():
     assert metrics["scnr_linear"] == pytest.approx(16.0 / 5.0)
     assert metrics["scnr_linear"] == pytest.approx(
         metrics["snr_linear"] / (1.0 + metrics["cnr_linear"])
+    )
+
+
+def test_t7_generated_scene_cnr_matches_configured_component_power(d2a_config):
+    batch = generate_d2a_paired_batch(
+        16, 81070, 10.0, 7.0, d2a_config, scenario_id="separated"
+    )
+    metrics = compute_scene_power_metrics(
+        batch.target_signal_iq, batch.clutter_iq, batch.noise_iq
+    )
+    assert np.max(np.abs(metrics["cnr_db"] - 7.0)) < 0.1
+    assert float(np.mean(metrics["cnr_db"])) == pytest.approx(7.0, abs=0.02)
+    np.testing.assert_allclose(
+        metrics["scnr_linear"],
+        metrics["snr_linear"] / (1.0 + metrics["cnr_linear"]),
+        rtol=1e-6,
     )
 
 

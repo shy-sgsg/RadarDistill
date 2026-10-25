@@ -155,3 +155,9 @@
 - **证据：** D2-A-E001 的 R0 T1–T12 全通过。B3 DPCA 在当前合成几何下的静止杂波抑制中位数为 15.406 dB；A/B 可分目标检测表现强，C 部分重叠时退化，D 同流形目标不可稳定归因。独立 H0 calibration 的经验 `Pfa_CPI` 为 0.0508，但主开发 A 条件 B3 的 `Pfa_CPI=0.0898`（95% CI `[0.0586,0.125]`）。
 - **决定：** D2-A 评为 **CONDITIONAL GO**。保留已冻结 R2 student/KD protocol，但先不运行学生训练或生成 final blind。下一项唯一任务是使用新场景种子预注册和诊断阈值迁移/虚警稳健性；不得用已看过的开发 H0 回调阈值。
 - **边界：** 结论只适用于当前合成平地静止点杂波、共址 Tx 参考假设和 3×130×32 观测。B2/B3 包含显式物理前端，不是纯学习证据；D 体现源归因不可辨识边界。R2 的 E2/E3 仅在 E1 truth-only pilot 证明基础学习后考虑。
+
+## 2026-10-25：修正 D2-A RMSE 区间并匹配既有学生架构
+
+- **证据：** 条件 Range/Doppler RMSE 点估计以 `sqrt(mean(squared_error))` 计算，但旧区间对 squared error 使用了均值 bootstrap，造成 MSE 单位与 RMSE 标签不一致。旧分析还未列出 Range RMSE 区间。当前代码、格式测试与完整开发重跑均已覆盖该错误。
+- **决定：** 对 cluster-bootstrap 重采样逐次计算 RMSE 后取 percentile 区间；分析表同时列 Range 与 Doppler 的命中条件 RMSE/95% CI，joint success 单独计入漏检失败。R2 使用 D1-E001 已验证 `TaskStudent` 和其 K3 推理头，K1/K2 只保留训练期软图辅助头；训练预算匹配为每 seed/组 1,600 updates、有效 batch 64。
+- **影响与边界：** 修正只改变区间计算/报告及尚未执行的 R2 协议；重跑点估计不变。没有启动学生、KD 或 final blind，阶段仍为 CONDITIONAL GO，阈值迁移诊断仍是唯一前置任务。

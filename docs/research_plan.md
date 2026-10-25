@@ -18,7 +18,7 @@ P0/P1 是已经开展的历史先导实验，其档案及决定保留。2026-10-
 
 ### D2：三通道参数与复杂场景
 
-D1-E001 原阶段门允许进入 D2，但须逐项增加复杂度。当前建议先设计 D2-A 静止杂波单因素实验：固定原有单目标/三通道任务，加入一种静止杂波模型；冻结 H0/H1、可辨识条件和强传统杂波抑制/检测基线后，才决定是否训练。多目标、通道误差、加速度和运动补偿误差不得同时加入。D2-A 协议尚未冻结。
+D1-E001 原阶段门允许进入 D2，但须逐项增加复杂度。D2-A 静止杂波单因素 R0/R1 开发协议已冻结并完成；R2 使用 D1-E001 已验证的直接 IQ `TaskStudent`，而非启动新网络搜索。多目标、通道误差、加速度和运动补偿误差不与静止杂波同时加入。D2-A 仍为 CONDITIONAL GO，正式学生训练要先通过独立阈值迁移前门。
 
 ### D3：原始回波渐进迁移
 
@@ -32,7 +32,7 @@ D1-E001 原阶段门允许进入 D2，但须逐项增加复杂度。当前建议
 
 在相同硬件、输入边界和完整前后处理范围下比较传统处理链、物理前端加学生及原始回波学生；报告 Pd/Pfa、参数误差、P95/P99 时延、吞吐、内存和功耗。达到样本量要求前不得声称 Pfa=1e-6。
 
-**当前执行阶段（动态状态更新于 2026-10-25）：** D1-E001 冻结阶段门 GO → D2（G1/G2 PASS、G3 FAIL）保持不变。D1-R1 已完成，D1-E002 的 pilot、三 seed formal、独立 calibration 和新 blind 均已完成。E002 的 S2 高 SNR RMSE 较 S0 改善 10.86%，但低 SNR Pd 保护门失败，因此停止本轮 AWGN Doppler 结构搜索；这不覆盖 E001 的阶段门。下一项唯一优先任务是准备 D2-A 静止杂波单因素协议及强基线/可辨识性验证；该协议尚未冻结，不启动训练或新 blind。D1 的 `Pfa=1e-2/1e-3` 不能外推为 `Pfa=1e-6`，仿真结果不能称为真实 GMTI 验证。权威动态状态见 [`docs/CURRENT_STATUS.md`](CURRENT_STATUS.md) 与 [`docs/RESEARCH_ROADMAP.md`](RESEARCH_ROADMAP.md)。
+**当前执行阶段（动态状态更新于 2026-10-25）：** D1-E001 冻结阶段门 GO → D2（G1/G2 PASS、G3 FAIL）保持不变。D1-R1 已完成，D1-E002 的 pilot、三 seed formal、独立 calibration 和新 blind 均已完成。E002 的 S2 高 SNR RMSE 较 S0 改善 10.86%，但低 SNR Pd 保护门失败，因此停止本轮 AWGN Doppler 结构搜索；这不覆盖 E001 的阶段门。D2-A-E001 的 R0/R1 开发验证和 R2 协议已完成，D2-A 决策为 CONDITIONAL GO：主 A/10/10 dB 固定阈值迁移尚未通过，唯一优先任务是用新的场景 seeds 预注册并独立诊断阈值迁移/幅度 nuisance；通过后先做一 seed truth-only pilot。条件 RMSE bootstrap 区间已改为以 RMSE 为统计量并重新生成结果。学生架构沿用 D1-E001 `TaskStudent`；当前不训练学生、不生成 final blind。D1 的 `Pfa=1e-2/1e-3` 不能外推为 `Pfa=1e-6`，仿真结果不能称为真实 GMTI 验证。权威动态状态见 [`docs/CURRENT_STATUS.md`](CURRENT_STATUS.md) 与 [`docs/RESEARCH_ROADMAP.md`](RESEARCH_ROADMAP.md)。
 
 ### D1-R1：任务级学生连续 Doppler 误差诊断（已完成）
 

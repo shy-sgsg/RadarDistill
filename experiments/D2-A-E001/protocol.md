@@ -106,20 +106,39 @@ B3 `clutter_rejection_db` 定义为 `10log10(Pc_channel0_before/Pc_difference_af
 
 ## 8. R2 学生与蒸馏协议（冻结设计，尚未执行）
 
-学生输入是原始 `[3,130,32]` complex IQ，拆为 6 个实值 I/Q 通道。固定一个小型 2D CNN：8 个残差卷积块、宽度 32、GroupNorm+GELU；所有消融架构完全相同。三个头为：K1 每接收通道 complex RD response；K2 clutter-suppressed target saliency map；K3 detection logit、fractional range 和 Doppler。模型参数、优化器步数和数据预算不得按实验臂改变。
+### 学生结构与输出
 
-训练集 50,000 scenes，validation 5,000，独立 H0 calibration 5,000，开发评估 5,000，按 base scene 分割。正式训练种子 `[101,202,303]`；RTX 3050 Laptop 4 GiB 顺序训练，batch=32，从 CPU on-demand 读取，不把训练集缓存到 GPU。AdamW、lr=3e-4、120 epoch；FP32 为默认，只有实际支持并记录数值差异后才用 AMP。保存配置、环境、种子、训练历史和最优/最终权重。
+第一轮沿用 D1-E001 已验证的 `TaskStudent`，不另做 CNN/Transformer 架构搜索。输入为原始 `[B,3,130,32]` complex IQ，转换为 `[B,6,130,32]` 实数张量（先三个通道 I，再三个通道 Q）。固定结构为：`6→32` 的 `(1,3)` 距离向 stem、GroupNorm(8)+SiLU、7 个时间向 depthwise residual blocks，dilation=`[1,2,4,8,16,32,64]`，每块后接 pointwise convolution、GroupNorm(8)+SiLU；沿慢时间求均值后接 D1 的 K3 heads。K3 推理输出为 presence logit、32 个距离单元 logits、距离单元内偏移，以及每个距离单元的归一化 Doppler `(cos,sin)`。推理图不调用 FFT、DPCA、CFAR 或 teacher。
 
-监督臂：
+训练时保留 D1 的 `[B,130,32]` 频谱辅助头作为 K1 head，并增加一个同形状的 K2 saliency auxiliary head；两者只读同一 D1 backbone 的 pooled features，且在推理导出时移除。K1/K2 头属于受任务约束的训练辅助头，不改变 D1 backbone 或 K3 inference heads，也不构成架构搜索。A/B/C/D 均使用同一训练图和参数初始化规则；最终推理模型结构相同。
 
-- **A truth-only：** 120 epoch，物理真值监督 K3 和适用的物理可计算辅助量，不使用 teacher。
-- **B truth + K1：** K1 teacher soft response 预训练 40 epoch，再与真值 K3 联合 80 epoch。
-- **C truth + K2：** K2 teacher saliency 预训练 40 epoch，再与真值 K3 联合 80 epoch。
-- **D progressive：** K1/K2 teacher 预训练 40 → truth 与任务联合 40 → teacher loss 线性退火 20 → truth-only finetune 20。
+### 三种教师信息与真值分离
 
-Teacher hard labels、teacher soft map、physical truth 分别保存；teacher 不覆盖真值，不可用真值构造 teacher prediction。Teacher 固定为 R1 中满足协议门槛的最强已验证方法及其输出；若没有方法过 R1 门，则取消 B/C/D，不训练。K1/K2 teacher maps 每个 scene 保存 source method、阈值/归一化和置信度；A/B/C/D 使用相同场景、同预算和相同随机训练种子。
+- **K1 soft RD response：** 使用 APX15 D1 teacher 的 centered slow-time FFT，经三个接收通道功率求和形成 `[130,32]` 非负响应，再按整图总和归一化。它是传统频谱响应软图，不保留通道间复相位；不能称为复数相干 teacher。K1 head 使用 D1 的全图 KL 目标。
+- **K2 soft clutter-suppressed saliency：** 由 R1 中通过固定前门的 B3 DPCA 处理产生，保存未阈值化 `[130,32]` RD power，并使用冻结的整图归一化生成 soft target。阈值化候选与置信度另存，不回填物理标签。DPCA 可能压制近零 Doppler、部分重叠或失配几何下的真实目标，必须按 A/B/C/D 报告 teacher 对物理真值的漏检/误检。
+- **K3 teacher hard output：** 每 CPI 检测结果、估计距离和 Doppler 单独保存作教师诊断/上限参照；A/B/C/D 的 K3 监督仍来自物理真值。硬 teacher label 不替代 target presence/range/Doppler truth。本轮不增加独立 K3 imitation loss，以免把教师错误当真值。
+- **Physical truth：** H0/H1、目标是否存在、连续距离、Doppler 和场景身份只由模拟器记录。teacher 接口只接收 IQ，不接收 truth、场景标签或配对匹配信息。所有 teacher maps、hard labels 和 truth 分字段保存。
 
-E1 任务学习 gate：A 必须在独立 validation 高 SNR 分层上高于常值预测器，且 range/Doppler error 与 H0 false detection 不出现严重退化；若失败，不启动 KD。E2 仅比较 B/C teacher transfer；E3 评价 D progressive 是否在独立开发集、三个训练种子上重复优于 A。最终性能只在模型/协议/门槛冻结后使用新的 final blind seed 范围评估。
+正式教师臂须等独立阈值迁移前门通过后才可启用；无合格 R1 teacher 时取消 B/C/D。当前主开发条件的阈值迁移尚未通过，因此学生训练仍未授权。
+
+### 训练分组与预算
+
+数据按 `base_scene_id` 分组：50,000 个训练 base scenes、5,000 个 validation scenes、5,000 个独立 H0 calibration scenes 和 5,000 个 development scenes；H0/H1 反事实样本共享各自 base scene，绝不跨 split。正式训练种子为 `[101,202,303]`，同 seed 下 A/B/C/D 共用相同 scene IDs、batch 顺序、初始化及验证集。
+
+为和 D1-E001 已验证模型匹配，预算改为每组每 seed **1,600 次 AdamW optimizer updates、有效 batch 64**，不使用原未执行的 120 epoch 预算。AdamW，初始 lr `1e-3`，cosine decay 到 `1e-4`，weight decay `1e-4`，梯度范数裁剪 `1.0`；FP32。RTX 3050 Laptop 4 GiB 顺序训练；训练 IQ 从 CPU 按 batch 生成/读取，默认 microbatch 16 或 32，通过梯度累积保持有效 batch 64。只在 CUDA 可见时启动，不回退 CPU；发生 OOM 先降低 microbatch，若仍失败则停止并记录。
+
+监督阶段均计入 1,600 次更新：
+
+| 组 | 固定更新阶段 | 监督信号 |
+|---|---|---|
+| A | 1,600 truth updates | K3 物理真值；无 teacher loss |
+| B | 400 K1 warm-up + 1,200 joint | K1 soft RD KL；后 1,200 步叠加 K3 truth |
+| C | 400 K2 warm-up + 1,200 joint | K2 soft saliency KL；后 1,200 步叠加 K3 truth |
+| D | 320 teacher pretrain + 480 joint + 480 teacher anneal + 320 truth-only | 先用 K1/K2 软图预训练；联合 K3 truth；teacher loss 固定线性退火至零；最后只用 truth |
+
+K1/K2 KL 的权重沿用 D1-E001 `0.05`；训练前冻结 K2 标准化和 map 温度/置信度规则，不得使用 target truth 调整 teacher weight。每 100 update 用公共 validation task loss 选 checkpoint；不得根据 teacher loss 选模型。训练中保存初始/最佳/最终 checkpoint、seed、配置、依赖、GPU/CUDA、峰值显存和完整训练历史。
+
+E1 先以单 seed、A truth-only、相同 1,600 update 预算做可行性 pilot。只有 A 在独立高 SNR validation 分层中优于常值预测器，且 H0 false detection、range/Doppler error 无严重退化，才准许进入三 seed 正式 A；E1 失败则停止，不跑 B/C/D。E2 在 E1 通过后比较 B 与 C 各自相对 A 的 teacher transfer；E3 评价 D progressive 是否在独立 development set、三个训练种子上重复优于 A。模型、预算、门槛冻结后才生成新的 final blind seed 范围。
 
 ## 9. 外部算法依据
 
