@@ -32,6 +32,7 @@ from radardistill.evaluation.d2a_r3 import (
     independent_mean_difference_interval,
     paired_mean_difference_interval,
     summarize_r3_scores,
+    summarize_score_distribution,
     summarize_threshold,
     validate_disjoint_seed_groups,
     wilson_interval,
@@ -323,6 +324,33 @@ def _run_t0_methods(iq: np.ndarray, config: dict[str, Any]) -> tuple[dict[str, D
 
 def _score_vector(output: DetectionOutput | R3DetectionOutput, attribute: str = "score") -> np.ndarray:
     return np.asarray(getattr(output, attribute), dtype=np.float64).reshape(-1)
+
+
+def _raw_score_quantile_rows(
+    scene_rows: list[dict[str, Any]], groups: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    for group in groups:
+        subset = [row for row in scene_rows if row["group_id"] == group["group_id"]]
+        if len(subset) != int(group["scene_count"]):
+            raise ValueError(f"raw score quantile scene count mismatch for {group['group_id']}")
+        for method in METHODS_T0:
+            summary = summarize_score_distribution(
+                np.asarray([float(row[f"score_{method}"]) for row in subset], dtype=np.float64)
+            )
+            output.append(
+                {
+                    "group_id": group["group_id"],
+                    "role": group["role"],
+                    "scope": group["scope"],
+                    "scenario_id": group["scenario_id"],
+                    "snr_db": group["snr_db"],
+                    "cnr_db": group["cnr_db"],
+                    "method": method,
+                    **summary,
+                }
+            )
+    return output
 
 
 def _legacy_threshold(config: dict[str, Any], cnr_db: float, method: str) -> float:
@@ -681,6 +709,7 @@ def run_raw_phase(r3_config: dict[str, Any], output_dir: Path) -> dict[str, Any]
     scale_group = next(group for group in group_specs if group["role"] == "scale_diagnostic")
     scale_summary, scale_rows = _collect_raw_scale_diagnostic(scale_group, simulation_config, r3_config)
     rows.extend(scale_rows)
+    score_quantiles = _raw_score_quantile_rows(rows, group_specs)
     amplitude_summary = _raw_amplitude_diagnostics(
         rows, thresholds_by_group, evaluation_groups, r3_config
     )
@@ -694,6 +723,7 @@ def run_raw_phase(r3_config: dict[str, Any], output_dir: Path) -> dict[str, Any]
             "scenes_per_primary_calibration_group": int(r3_config["sampling"]["scenes_per_group"]),
             "scenes_per_primary_validation_group": int(r3_config["sampling"]["scenes_per_group"]),
             "thresholds_by_group": thresholds_by_group,
+            "score_quantiles_by_group": score_quantiles,
             "validation_threshold_results": validation_rows,
             "legacy_b3_primary_validation": {
                 **legacy_summary,
@@ -710,6 +740,7 @@ def run_raw_phase(r3_config: dict[str, Any], output_dir: Path) -> dict[str, Any]
     }
     output_dir.mkdir(parents=True, exist_ok=True)
     _write_csv(output_dir / "h0_scene_diagnostics.csv", rows)
+    _write_csv(output_dir / "raw_score_quantiles.csv", score_quantiles)
     _write_csv(output_dir / "result.csv", validation_rows)
     _write_json(output_dir / "metrics.json", metric)
     (output_dir / "config_used.yaml").write_text(yaml.safe_dump(r3_config, sort_keys=False), encoding="utf-8")
@@ -732,6 +763,7 @@ def _write_raw_phase_analysis(output_dir: Path, metrics: dict[str, Any]) -> None
         f"- E001 的 23/256 在固定该新估计率时的验证抽样尾概率：{finite['binomial_tail_validation_only_pr_23_of_256']:.6g}。",
         f"- 联合 n=512 calibration / n=256 validation 层级 bootstrap 中，Pfa≥23/256 的比例：{finite['probability_pfa_at_least_23_of_256']:.6g}。",
         "- 按固定潜在目标幅度箱的组件功率与原始分数关系见 `metrics.json` 和 `h0_scene_diagnostics.csv`。",
+        "- 各组 B0–B3 的 score q50/q90/q95/q99/max 见 `raw_score_quantiles.csv`。",
         "",
         "## T0 原始分数复核结果",
         "",

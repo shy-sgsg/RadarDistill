@@ -38,6 +38,25 @@ def summarize_threshold(scores: np.ndarray, threshold: float) -> dict[str, Any]:
     }
 
 
+def summarize_score_distribution(scores: np.ndarray) -> dict[str, Any]:
+    """Summarize frozen H0 CPI-score quantiles with an explicit interpolation rule."""
+    values = np.asarray(scores, dtype=np.float64).reshape(-1)
+    if values.size == 0 or np.any(~np.isfinite(values)):
+        raise ValueError("scores must be nonempty and finite")
+    q50, q90, q95, q99, maximum = np.quantile(
+        values, [0.50, 0.90, 0.95, 0.99, 1.0], method="linear"
+    )
+    return {
+        "n": int(values.size),
+        "quantile_method": "linear",
+        "q50": float(q50),
+        "q90": float(q90),
+        "q95": float(q95),
+        "q99": float(q99),
+        "max": float(maximum),
+    }
+
+
 def calibrate_empirical_threshold(
     scores: np.ndarray,
     target_pfa: float = 0.05,

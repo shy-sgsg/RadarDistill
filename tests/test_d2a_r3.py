@@ -8,6 +8,7 @@ from scripts.run_d2a_r3 import (
     assert_raw_phase_reviewed,
     assert_replayed_scene_coverage,
     build_scene_group_specs,
+    _raw_score_quantile_rows,
     _validate_r3_groups,
 )
 from radardistill.d2a_baselines import run_b3
@@ -21,6 +22,7 @@ from radardistill.evaluation.d2a_r3 import (
     paired_mean_difference_interval,
     calibrate_empirical_threshold,
     summarize_r3_scores,
+    summarize_score_distribution,
     binomial_upper_tail,
     independent_mean_difference_interval,
     summarize_r3_detector,
@@ -220,6 +222,39 @@ def test_score_summary_reports_pd_pfa_auc_and_joint_success():
     assert result["joint_success"] == pytest.approx(0.75)
     assert result["range_rmse_cells_detected"] == 0.0
     assert result["doppler_rmse_hz_detected"] == 0.0
+
+
+def test_score_distribution_summary_reports_preregistered_quantiles():
+    result = summarize_score_distribution(np.asarray([1.0, 2.0, 3.0, 4.0]))
+    assert result["n"] == 4
+    assert result["quantile_method"] == "linear"
+    assert result["q50"] == pytest.approx(2.5)
+    assert result["q90"] == pytest.approx(3.7)
+    assert result["q95"] == pytest.approx(3.85)
+    assert result["q99"] == pytest.approx(3.97)
+    assert result["max"] == 4.0
+
+
+def test_raw_score_quantiles_are_kept_separate_by_scene_group():
+    groups = [
+        {
+            "group_id": "cal",
+            "role": "calibration",
+            "scope": "primary",
+            "scenario_id": "separated",
+            "snr_db": 10.0,
+            "cnr_db": 10.0,
+            "scene_count": 2,
+        }
+    ]
+    rows = [
+        {"group_id": "cal", **{f"score_{method}": float(value) for method in ("B0", "B1", "B2", "B3")}}
+        for value in (1.0, 3.0)
+    ]
+    summaries = _raw_score_quantile_rows(rows, groups)
+    assert len(summaries) == 4
+    assert {row["group_id"] for row in summaries} == {"cal"}
+    assert {row["q50"] for row in summaries} == {2.0}
 
 
 def test_binomial_tail_quantifies_observed_e001_false_alarm_count():
