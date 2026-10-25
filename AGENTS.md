@@ -30,5 +30,6 @@
 
 - 每个可审查工作包建立小而清楚的提交；仅暂存已审阅的准确路径。训练缓存、可重建数据和外部生产源码包默认不提交。
 - 未获当前任务明确授权，不推送或重写共享分支历史。用户明确指定目标分支/推送时，按授权直接在目标分支完成并推送。
+- 用户要求的任务完成后默认提交；若用户指定目标分支，应直接在该分支提交，不自动创建新分支。推送仅按本轮明确授权执行。
 - 研究判断更新 `docs/progress.md`；路线/假设变化更新 `docs/decisions.md`、路线图、当前状态和假设登记。
 - 有科研意义的阶段依照 [`docs/governance/CHATGPT_REVIEW_PROTOCOL.md`](docs/governance/CHATGPT_REVIEW_PROTOCOL.md) 给出工程、实验科学性、研究主线和创新性判断，明确 CONTINUE / REFINE / REDIRECT / STOP 及唯一下一项优先任务。

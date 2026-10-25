@@ -1,0 +1,166 @@
+experiment:
+  id: D2-A-E001
+  title: Three-channel stationary ground clutter, paired detection baselines, and identifiability
+  status: preregistered_development
+  date: 2026-10-25
+  data_are_synthetic: true
+  formal_student_training_authorized: false
+  final_blind_generation_authorized: false
+
+radar:
+  prf_hz: 1300.0
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+
+waveform:
+  carrier_hz: 15800000000.0
+  bandwidth_hz: 50000000.0
+  sample_rate_hz: 60000000.0
+  pulse_width_s: 0.000130
+  propagation_speed_mps: 299792458.0
+  range_cell_m: 2.99792458 # c/(2B), D0-compatible research grid; product nominal is 5 m
+  phase_model: exp(-j*2*pi*(R_tx+R_rx)/wavelength)
+
+range_grid:
+  axis_start_m: 73149.4
+  count: 32
+  response: centered_rectangular_bandwidth_sinc
+
+platform:
+  initial_position_xyz_m: [0.0, 0.0, 6000.0]
+  velocity_xyz_mps: [60.0, 0.0, 0.0]
+  coordinate_axes: [north, east, up]
+  heading: +x_north
+
+transmitter:
+  phase_center_offset_xyz_m: [0.0, 0.0, 0.0]
+  status: unverified_monostatic_equivalent_assumption
+
+channels:
+  geometry_source: GMTI_APX15_CoreX_Int16_20261014/gmti_corex_actual_scene.xml
+  geometry_interpretation: first three receive centers from four-channel config, simulation subset only
+  positions_xyz_m:
+    - [-0.085, 0.0, 0.085]
+    - [0.085, 0.0, 0.085]
+    - [-0.085, 0.0, -0.085]
+  calibration: ideal_in_simulation_actual_calibration_unknown
+
+beam:
+  center_azimuth_deg: 90.0
+  center_elevation_deg: -4.70
+  azimuth_beamwidth_deg: 2.28
+  amplitude_pattern: exp(-2*ln(2)*(azimuth_offset/beamwidth)^2)
+  interpretation: assumed_gaussian_azimuth_only_mainlobe_no_sidelobes
+
+clutter:
+  scatterer_count: 32
+  scatterer_distribution: iid_circular_complex_gaussian_point_scatterers_on_flat_ground
+  azimuth_interval_deg: [88.86, 91.14]
+  range_cell_interval: [0.0, 32.0]
+  desired_cnr_db: [-5.0, 20.0]
+  power_normalization: scene_mean_clutter_power_over_full_CPI
+
+noise:
+  distribution: circular_complex_gaussian
+  real_imag_variance: noise_power/2_each
+  channel_covariance: identity
+
+target:
+  range_cell_interval: [4.0, 28.0]
+  azimuth_interval_deg: [88.86, 91.14]
+  reference_amplitude_db_interval: [-6.0, 6.0]
+  initial_phase_interval_rad: [0.0, 6.283185307179586]
+  nominal_snr_definition: reference_amplitude_squared_over_complex_noise_power_at_continuous_range_psf_peak
+  target_radial_velocity_positive: away_from_platform
+  scenario_radial_velocity_mps:
+    separated: 4.0
+    near_clutter_edge: 1.2
+    partial_overlap: 0.4
+    exact_overlap: 0.0
+
+identifiability_scenarios:
+  A_separated:
+    scenario_id: separated
+    description: target Doppler is outside the modeled stationary-clutter Doppler support
+  B_near_edge:
+    scenario_id: near_clutter_edge
+    description: target Doppler is close to the beam-limited stationary-clutter edge
+  C_partial_overlap:
+    scenario_id: partial_overlap
+    description: target Doppler overlaps while range/angle support remains distinguishable
+  D_exact_overlap:
+    scenario_id: exact_overlap
+    description: target shares one clutter point's range-angle-slow-time manifold; source attribution is non-identifiable
+
+baselines:
+  B0_single_channel: channel_0_rectangular_Doppler_FFT_max
+  B1_three_channel_noncoherent: sum_channel_RD_power_then_max
+  B2_geometry_aware_coherent: azimuth_manifold_grid_search_then_RD_max
+  B2_azimuth_grid_count: 17
+  B3_dpca: fractional_slow_time_alignment_of_channels_0_1_then_difference
+  B3_status_gate: only_report_if_static_clutter_suppression_and_target_retention_tests_pass
+  full_STAP: excluded_390_space_time_dof_exceeds_32_range_training_cells
+
+development_evaluation:
+  target_false_alarm_probability_per_cpi: 0.05
+  calibration_h0_scenes_per_snr_cnr_condition: 512
+  evaluation_paired_scenes_per_condition: 256
+  conditions:
+    - {scenario_id: separated, snr_db: 10.0, cnr_db: 10.0, group: primary}
+    - {scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 10.0, group: primary}
+    - {scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 10.0, group: primary}
+    - {scenario_id: exact_overlap, snr_db: 10.0, cnr_db: 10.0, group: primary}
+    - {scenario_id: separated, snr_db: 10.0, cnr_db: 0.0, group: cnr_sensitivity}
+    - {scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 0.0, group: cnr_sensitivity}
+    - {scenario_id: separated, snr_db: 10.0, cnr_db: 20.0, group: cnr_sensitivity}
+    - {scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 20.0, group: cnr_sensitivity}
+    - {scenario_id: separated, snr_db: 0.0, cnr_db: 10.0, group: snr_sensitivity}
+    - {scenario_id: partial_overlap, snr_db: 0.0, cnr_db: 10.0, group: snr_sensitivity}
+    - {scenario_id: separated, snr_db: 20.0, cnr_db: 10.0, group: snr_sensitivity}
+    - {scenario_id: partial_overlap, snr_db: 20.0, cnr_db: 10.0, group: snr_sensitivity}
+  unique_h0_calibration_conditions:
+    - {snr_db: 0.0, cnr_db: 10.0}
+    - {snr_db: 10.0, cnr_db: 0.0}
+    - {snr_db: 10.0, cnr_db: 10.0}
+    - {snr_db: 10.0, cnr_db: 20.0}
+    - {snr_db: 20.0, cnr_db: 10.0}
+  calibration_scene_seed_start: 3000000
+  evaluation_scene_seed_start: 4000000
+  cluster_bootstrap_replicates: 2000
+  cluster_bootstrap_seed: 2026102501
+  no_final_blind_generation: true
+
+data_split_seed_ranges:
+  future_student_train: [1000000, 1999999]
+  future_student_validation: [2000000, 2499999]
+  future_h0_calibration: [3000000, 3099999]
+  future_development_test: [4000000, 4099999]
+  final_blind_reserved_not_materialized: [9000000, 9999999]
+
+future_student_protocol:
+  architecture_input: six_real_channels_IQ_shape_3x130x32
+  architecture: eight_residual_2d_convolution_blocks_width_32_group_norm_gelu
+  outputs:
+    K1: per_channel_complex_range_doppler_response
+    K2: clutter_suppressed_target_saliency_map
+    K3: detection_logit_fractional_range_and_doppler_estimate
+  paired_scene_counts:
+    train: 50000
+    validation: 5000
+    h0_calibration: 5000
+    development_test: 5000
+  independent_training_seeds: [101, 202, 303]
+  optimizer: AdamW
+  learning_rate: 0.0003
+  batch_size: 32
+  epoch_budget: 120
+  schedule:
+    truth_only_A: 120_epochs
+    truth_plus_K1_B: K1_teacher_pretrain_40_then_joint_80
+    truth_plus_K2_C: K2_teacher_pretrain_40_then_joint_80
+    progressive_D: K1_K2_pretrain_40_joint_40_teacher_anneal_20_truth_finetune_20
+  teacher_selection: best_R1_method_meeting_frozen_calibration_and_scenario_A_gate
+  device: RTX_3050_Laptop_GPU_4_GiB_sequential_training_fp32_or_amp_after_support_check
+  training_data_generation: on_demand_CPU_batches_no_full_cache_on_GPU
+  final_blind: create_new_scene_seed_range_only_after_model_and_gates_frozen
