@@ -1,6 +1,6 @@
 # D2-A-E002 学生架构、损失与教师设计审查
 
-**状态：** 训练前结构审查；本文件不报告 E002 pilot 结果。
+**状态：** 训练前静态审查与 pilot 后证据审查；第 1–5 节保留冻结前判断，第 6 节记录实际运行结果。
 **基线提交：** `1e4300c9b81dbc500216d1b355bbcb618d35f253`。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.1。
 **冻结输入/模型来源：** D2-A-E001 的三通道静止杂波物理模型；D1-E001 `TaskStudent` 和 `task_loss`。
@@ -29,6 +29,28 @@ K2 是 E001 B3 DPCA 残差的完整非阈值 RD power 图，按全图和归一�
 
 已知风险来自 D2-A 的可辨识性：A 与静止杂波频带分离，B 靠近谱边缘，C 部分重叠，D 同流形不能唯一归因。B3/K2 可能削弱低速 C 的响应，教师审查用配对 H0/H1 和目标邻域质量量化；H0 map 只作诊断。K2 loss 只作用于 H1，并与始终存在的物理真值 task loss 联合，权重固定从 0.05 退火至 0。
 
-## 5. 执行前需要取得的经验诊断
+## 5. 执行前冻结的经验诊断
 
-本次静态审查没有生成数据或训练模型。数据生成后、pilot 训练前，执行器将用新 validation scene 和 D1 frozen A checkpoints 对比真实 range 索引与预测 range 索引的 Doppler 输出；也将完成极小固定 H0/H1 过拟合、损失梯度、K2 H0/H1/尺度与 target-window audit。预注册门失败则先修复工程错误；只有 K2 严重误导时取消 C，其他情况保留 A/B/C 完成匹配对照。实测项随后写入本报告和阶段分析，避免把结构推论写成运行结果。
+协议冻结后完成了极小固定 H0/H1 过拟合、真值损失梯度、K2 H0/H1/尺度与目标窗口 audit，以及验证集上的真实 range cell 与预测 range cell Doppler 对照。A/B/C 训练和评价按 v2.1 执行；本节原先列出的诊断计划由第 6 节中的实际记录取代。没有重构输出结构或修改冻结损失。
+
+## 6. Pilot 后架构、损失与门控诊断
+
+### 6.1 实现和训练有效性
+
+三臂均使用同一个 13,383 参数训练版 `TaskStudent`、相同初始化和数据多重集；inference export 移除 spectrum/K2 辅助头。训练损失按冻结方案对 presence、range cell、offset 和 Doppler 等权；C 的 H1-only K2 权重从 0.05 线性降至 0。RTX 3050 Laptop GPU 上顺序运行，microbatch 16、有效 batch 64、FP32，每臂 1,600 updates，无 CPU 回退或 OOM。
+
+G1 micro-overfit 的真值任务损失从 7.1634 降至 0.02834（100 updates），各冻结任务分支梯度检查通过。K2 的 H0/H1 图均为有限、非负且归一化；最大尺度变换图差为 0，信息隔离检查通过。因此本轮 Doppler 与阶段门失败不能归因于训练入口未运行、K2 数值异常或基础梯度缺失。
+
+### 6.2 K2 的条件性质量
+
+按冻结规则 K2 audit 允许运行 C：C3 可辨识 A/B/C 合并的目标窗口质量 lift 均值为 0.03623，95% 区间 `[0.03200, 0.04073]`，teacher top-cell localization 为 0.7227，未触发取消 C 的预注册严重误导规则。但分条件看，C3 的 partial-overlap / SNR=0 dB top-cell localization 仅 0.0471，target-window lift 为 0.000673（95% 区间 `[0.000544, 0.000796]`），表明这类输入的 K2 位置知识很弱。此结果支持“允许一次有界 C 臂”，不支持 K2 对所有困难目标都可靠，也不改变 R3 固定阈值教师资格。
+
+### 6.3 训练 range 门与推理 range 门
+
+冻结损失在真实 range cell 监督 Doppler，解码在预测 range argmax 读取 Doppler。选中的 validation checkpoint 上，预测 cell 与真实 cell 的不一致率为 A/B/C=`10.30%/11.14%/10.96%`。同一 checkpoint、同一 validation H1 上，用真实 cell 读取的 Doppler RMSE 与正常预测 cell 解码 RMSE 分别为：A `40.95/46.66 Hz`，B `56.03/58.55 Hz`，C `59.55/60.03 Hz`。在独立 development 逐场景记录中，按 `floor(range_estimate_cell)` 恢复预测分类门后，不一致数为 A `502/5000`、B `551/5000`、C `565/5000`（`10.04%/11.02%/11.30%`）。
+
+这组同模型反事实读数说明错误 range 门会额外增大 Doppler 误差，A 臂差值最大约 5.71 Hz；但即使使用真实 range cell，RMSE 仍为约 41–60 Hz。因此该门不一致是可测的次要误差来源，现有证据不支持它解释大部分 Doppler 误差。比较只有一个训练 seed，验证聚合值也没有逐场景 bootstrap 区间；不据此作因果强度或跨 seed 推断。冻结的训练损失保持不变。
+
+### 6.4 阶段解释
+
+TaskStudent 在可辨识仿真开发分布上能够学习检测和联合任务（G4 通过），且通道独立相位扰乱会使 AUC 下降，说明任务表现会利用通道相干；但公共相位与频率平移等变门失败，课程/K2 也没有预注册增益。range 门诊断没有揭示足以解释整体 Doppler 误差的训练—推理错配。现阶段应保留普通实值 TaskStudent 作为比较锚点；由于本实验没有比较替代架构，不能据此认定复数/几何网络更优。阶段决定仍为 REFINE，不启动正式三 seed、后续蒸馏确认或 final blind。

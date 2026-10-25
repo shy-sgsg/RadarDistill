@@ -50,3 +50,9 @@
 方法分组、阈值平局、固定阈值 H0 verification、相位/频移/尺度/通道物理诊断及逐场景预测分别见 CSV、JSON 和 `figures/`。
 
 数据生成 IQ/memmap 缓存已在评价完成后按项目容量要求清理；所有 split manifests、生成记录、训练记录、checkpoint、逐场景评价、图表和审计结果均保留。缓存可按冻结配置与种子重建，清理明细见 [`CACHE_CLEANUP_2026-10-25.md`](../../docs/maintenance/CACHE_CLEANUP_2026-10-25.md)。
+
+## 训练—推理 range 门与 Doppler 损失诊断
+
+TaskStudent 的训练损失在真实 range cell 监督 Doppler，而实际推理按 range argmax 选取 Doppler 向量。该错配已在每个 validation checkpoint 记录，并在选定 checkpoint 的 H1 上比较两种读门：预测/真实 cell 不一致率 A/B/C 为 `10.30%/11.14%/10.96%`；正常预测门 Doppler RMSE 为 `46.66/58.55/60.03 Hz`，同模型改读真实 cell 后为 `40.95/56.03/59.55 Hz`。因此 range 门错误会增加部分 Doppler 误差，尤其 A，但真实门下仍保留约 `41–60 Hz` RMSE，不能把它视为主要瓶颈。
+
+在 development 的 `development_per_scene.csv` 中以 `floor(range_estimate_cell)` 还原 argmax 门，并与 `floor(truth_range_cell)` 比较，错门数为 A `502/5000`、B `551/5000`、C `565/5000`。这些逐场景数据只用于当前 pilot 诊断；没有多训练 seed，且本次未为 true-cell 反事实差值另外计算场景区间。该结果不改变协议、模型选择、训练损失或阶段门。架构/损失细节见 [`architecture_and_loss_review.md`](architecture_and_loss_review.md)。
