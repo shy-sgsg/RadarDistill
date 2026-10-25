@@ -11,7 +11,12 @@ from radardistill.training.d2a_e002 import (
     e002_scene_seed_streams,
     validate_e002_config,
 )
-from radardistill.training.d2a_e002_data import estimate_cache_bytes
+from radardistill.training.d2a_e002_data import (
+    H0_ARRAYS,
+    _paired_shapes,
+    check_cache_disk_space,
+    estimate_cache_bytes,
+)
 
 
 @pytest.fixture
@@ -66,6 +71,44 @@ def test_pre_registered_cache_estimate_is_below_local_working_budget(e002_config
     assert estimate["total"] < 20 * 1024**3
     assert estimate["h0_calibration"] > 1 * 1024**3
     assert estimate["h0_verification"] > 1 * 1024**3
+
+
+def test_disk_check_accepts_complete_cache_when_only_rerun_space_is_needed(
+    e002_config, tmp_path, monkeypatch
+):
+    cache_root = tmp_path / "cache"
+    data = e002_config["data"]
+    paired = (
+        ("train", data["train"]["paired_base_scenes"], True, False),
+        ("validation", data["validation"]["paired_base_scenes"], False, False),
+        ("teacher_audit", data["teacher_audit"]["paired_base_scenes"], True, True),
+        ("development", data["development"]["paired_base_scenes"], False, False),
+    )
+    for name, count, include_k2, include_k2_h0 in paired:
+        split = cache_root / name
+        split.mkdir(parents=True)
+        (split / "manifest.json").write_text("{}", encoding="utf-8")
+        for array_name in _paired_shapes(count, include_k2, include_k2_h0):
+            (split / f"{array_name}.npy").touch()
+    for name in ("h0_calibration", "h0_verification"):
+        split = cache_root / name
+        split.mkdir(parents=True)
+        (split / "manifest.json").write_text("{}", encoding="utf-8")
+        for array_name in H0_ARRAYS:
+            (split / f"{array_name}.npy").touch()
+    boundary = cache_root / "identifiability_boundary"
+    boundary.mkdir(parents=True)
+    (boundary / "manifest.json").write_text("{}", encoding="utf-8")
+    for array_name in ("iq_h0", "iq_h1", "base_scene_id", "truth_range_cell", "truth_doppler_hz"):
+        (boundary / f"{array_name}.npy").touch()
+
+    monkeypatch.setattr(
+        "radardistill.training.d2a_e002_data.shutil.disk_usage",
+        lambda _: type("Usage", (), {"free": 1024**3})(),
+    )
+    result = check_cache_disk_space(cache_root, e002_config, reserve_gib=3.0)
+    assert result["cache_is_complete"] is True
+    assert result["cache_bytes_remaining"] == 0
 
 
 def test_matched_plans_use_each_pair_once_and_keep_b_c_order_identical():

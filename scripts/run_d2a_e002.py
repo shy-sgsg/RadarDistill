@@ -1390,6 +1390,7 @@ def _write_stage_review(metrics: dict[str, Any], pilot: dict[str, Any]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=Path("experiments/D2-A-E002/config.yaml"))
+    parser.add_argument("--device", choices=("cuda:0",), default="cuda:0")
     parser.add_argument(
         "--stage",
         choices=("preflight", "generate-data", "k2-audit", "pilot", "evaluate", "all"),

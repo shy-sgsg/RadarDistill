@@ -110,19 +110,42 @@ def check_cache_disk_space(
         probe = probe.parent
     usage = shutil.disk_usage(probe)
     required = estimate_cache_bytes(e002_config)["total"]
-    reserve_bytes = int(reserve_gib * (1024**3))
-    if usage.free < required + reserve_bytes:
-        required_gib = (required + reserve_bytes) / 1024**3
+    data = e002_config["data"]
+    expected_files: dict[str, tuple[str, ...]] = {
+        "train": tuple(_paired_shapes(data["train"]["paired_base_scenes"], True, False)),
+        "validation": tuple(_paired_shapes(data["validation"]["paired_base_scenes"], False, False)),
+        "teacher_audit": tuple(
+            _paired_shapes(data["teacher_audit"]["paired_base_scenes"], True, True)
+        ),
+        "development": tuple(_paired_shapes(data["development"]["paired_base_scenes"], False, False)),
+        "h0_calibration": H0_ARRAYS,
+        "h0_verification": H0_ARRAYS,
+        "identifiability_boundary": (
+            "iq_h0", "iq_h1", "base_scene_id", "truth_range_cell", "truth_doppler_hz"
+        ),
+    }
+    cache_complete = all(
+        (Path(cache_root) / split / "manifest.json").is_file()
+        and all((Path(cache_root) / split / f"{name}.npy").is_file() for name in names)
+        for split, names in expected_files.items()
+    )
+    remaining = 0 if cache_complete else required
+    effective_reserve_gib = min(reserve_gib, 1.0) if cache_complete else reserve_gib
+    reserve_bytes = int(effective_reserve_gib * (1024**3))
+    if usage.free < remaining + reserve_bytes:
+        required_gib = (remaining + reserve_bytes) / 1024**3
         free_gib = usage.free / 1024**3
         raise RuntimeError(
-            f"insufficient local disk for preregistered E002 caches: need {required_gib:.2f} GiB "
+            f"insufficient local disk for remaining E002 caches: need {required_gib:.2f} GiB "
             f"including reserve, have {free_gib:.2f} GiB"
         )
     return {
         "free_bytes_before_generation": int(usage.free),
         "cache_bytes_estimated": int(required),
-        "reserve_gib": float(reserve_gib),
-        "cache_bytes_including_reserve": int(required + reserve_bytes),
+        "cache_bytes_remaining": int(remaining),
+        "cache_is_complete": bool(cache_complete),
+        "reserve_gib": float(effective_reserve_gib),
+        "cache_bytes_including_reserve": int(remaining + reserve_bytes),
     }
 
 
