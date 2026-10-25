@@ -53,3 +53,37 @@ def test_summarize_detector_counts_misses_in_joint_success():
     assert result["pfa_cpi"] == 0.0
     assert result["pd"] == 0.75
     assert result["joint_success"] == 0.5
+
+
+def test_conditional_rmse_intervals_are_reported_in_rmse_units():
+    h0 = DetectionOutput(
+        score=np.zeros(4),
+        doppler_hz=np.zeros(4),
+        range_cell=np.zeros(4),
+        angle_deg=None,
+        rd_power=np.zeros((4, 4, 1)),
+    )
+    h1 = DetectionOutput(
+        score=np.full(4, 2.0),
+        doppler_hz=np.asarray([0.0, 100.0, 200.0, 400.0]),
+        range_cell=np.asarray([0.0, 1.0, 2.0, 4.0]),
+        angle_deg=None,
+        rd_power=np.ones((4, 4, 1)),
+    )
+
+    result = summarize_detector(
+        h0,
+        h1,
+        threshold=1.0,
+        truth_range_cell=np.zeros(4),
+        truth_doppler_hz=np.zeros(4),
+        cluster_ids=np.asarray(["a", "b", "c", "d"]),
+        prf_hz=1300.0,
+        bootstrap_replicates=2000,
+        bootstrap_seed=31,
+    )
+
+    range_ci = result["range_rmse_cells_detected_ci95"]
+    doppler_ci = result["doppler_rmse_hz_detected_ci95"]
+    assert range_ci[1] <= 4.0
+    assert doppler_ci[1] <= 400.0

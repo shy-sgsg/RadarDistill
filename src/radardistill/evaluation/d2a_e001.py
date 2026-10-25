@@ -164,6 +164,17 @@ def summarize_detector(
         valid = np.isfinite(values)
         return float(np.sqrt(np.mean(values[valid]))) if np.any(valid) else float("nan")
 
+    def rmse_ci(values: np.ndarray, label: str) -> list[float]:
+        return list(
+            cluster_bootstrap_interval(
+                values,
+                cluster_ids,
+                statistic=rmse_stat,
+                replicates=bootstrap_replicates,
+                seed=bootstrap_seed + sum(label.encode("utf-8")),
+            )
+        )
+
     conditional_range_sq = np.where(h1_detected, range_error**2, np.nan)
     conditional_doppler_sq = np.where(h1_detected, doppler_error**2, np.nan)
     conditional_range_rmse = rmse_stat(conditional_range_sq)
@@ -191,9 +202,9 @@ def summarize_detector(
         "roc_auc": auc,
         "roc_auc_ci95": [float(auc_ci[0]), float(auc_ci[1])],
         "range_rmse_cells_detected": conditional_range_rmse,
-        "range_rmse_cells_detected_ci95": mean_ci(conditional_range_sq, "range_rmse"),
+        "range_rmse_cells_detected_ci95": rmse_ci(conditional_range_sq, "range_rmse"),
         "doppler_rmse_hz_detected": conditional_doppler_rmse,
-        "doppler_rmse_hz_detected_ci95": mean_ci(conditional_doppler_sq, "doppler_rmse"),
+        "doppler_rmse_hz_detected_ci95": rmse_ci(conditional_doppler_sq, "doppler_rmse"),
         "joint_success": float(np.mean(joint)),
         "joint_success_ci95": mean_ci(joint.astype(np.float64), "joint_success"),
         "range_gate_bins": float(range_gate_bins),
