@@ -250,6 +250,8 @@ def _environment_record() -> dict[str, Any]:
         except (OSError, subprocess.CalledProcessError):
             return "unavailable"
 
+    git_status = git_value("status", "--porcelain=v1")
+
     cpu_name = "unknown"
     try:
         for line in Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines():
@@ -273,7 +275,7 @@ def _environment_record() -> dict[str, Any]:
         numpy_version = "unavailable"
     return {
         "git_sha": git_value("rev-parse", "HEAD"),
-        "git_status_porcelain": git_value("status", "--porcelain=v1"),
+        "git_worktree_dirty_at_run": git_status not in ("", "unavailable"),
         "python": sys.version,
         "platform": platform.platform(),
         "cpu": cpu_name,
