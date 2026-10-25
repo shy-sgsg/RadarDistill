@@ -1,0 +1,19 @@
+{
+  "protocol_version": 2.1,
+  "git_sha": "1f822470b906c733706c1a10f031e7a627e140a8",
+  "branch": "main",
+  "pushed_to_origin_main": true,
+  "cuda_device": "cuda:0",
+  "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "disk": {
+    "free_bytes_before_generation": 3172626432,
+    "cache_bytes_estimated": 16797724672,
+    "cache_bytes_remaining": 0,
+    "cache_is_complete": true,
+    "reserve_gib": 1.0,
+    "cache_bytes_including_reserve": 1073741824
+  },
+  "estimated_cache_gib": 15.644100189208984,
+  "environment_record": "experiments/D2-A-E002/environment.json",
+  "passed": true
+}

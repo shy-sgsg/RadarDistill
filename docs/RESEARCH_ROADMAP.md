@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001 与 D2-A-R3 已完成；R3 阶段决定为 REFINE。** R3 发现 T1/T2 可以稳定幅度 nuisance 并保护可辨识 H1，但都没有通过独立固定阈值 G2。E002 v1 truth-only 提案从未执行；已由用户明确批准的 v2 课程学习 + K2 A/B/C pilot 取代。当前先完成实现、测试、数据与 CUDA preflight、K2 审计和微型过拟合；通过冻结门后执行三个匹配单 seed pilot。它不覆盖 R3 结论、不授予 T1 固定阈值教师资格，也不改变 Charter 或 D1/E001 历史门。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
+**D2-A-E001、R3 与 E002 v2.1 pilot 已完成；R3 和 E002 阶段决定均为 REFINE。** R3 的 T1/T2 没有通过独立固定阈值 G2。E002 v2.1 的 A/B/C CUDA pilot 表明三臂能在当前可辨识开发分布学习任务，但 G3 分层 H0 门和 G6 相位/频移等变门失败；G5 没有课程或 K2 增益。此结果不覆盖 R3 结论、不授予 T1 固定阈值教师资格、不改变 Charter 或 D1/E001 历史门。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
 
 ## 已完成实验与证据
 
@@ -15,7 +15,7 @@
 - **D1-E002：** S1/S2 各三 seed、1600 更新，独立校准和 40,960 条 blind 完成。S2 高 SNR 等权 RMSE 23.352 Hz、较 S0 改善 10.86%，3/3 seed 同向；但低 SNR Pd 非劣区间未达门槛。S1 未改善。S3 未通过 pilot screen。总决策 **STOP / REDIRECT**。
 - **D2-A-E001：** 合成静止杂波、3 通道、N=130、32 距离单元；R0 T1–T12 全通过。B3 几何 DPCA 静止杂波抑制中位数 15.406 dB，目标差分功率比中位数 3.614；分离 A 和边缘 B 有强检测，部分重叠 C 退化，同流形 D 近随机。校准 H0 每条件 512 个，开发每条件 256 个配对场景；主条件 A 的开发 `Pfa_CPI=0.0898` 高于标定经验值 0.0508。条件 Range/Doppler RMSE 区间已修正为 RMSE 统计量并重新生成。未训练学生、未生成 final blind。决定 **CONDITIONAL GO**，先复核阈值迁移，再考虑 E1。
 - **D2-A-R3：** 新种子、3 个 4096 场景主校准组、4 个 4096 场景主 H0/H1 配对验证组，并含 CNR=0/20 dB 有界检查。原始 E001 B3 阈值在 16,384 个新主 H0 上得到 `Pfa=0.06464`（95% Wilson CI `[0.06097,0.06850]`）；有限样本可能解释 E001 `23/256` 的一部分，但层级 bootstrap 达到该点估计的比例为 0.0216。潜在目标参考幅度通过噪声/杂波生成尺度影响 H0，导致 B3 固定阈值的幅度箱 Pfa 极差达 0.169–0.216。T1 scene-wide B3 峰值/中位背景统计量与 T2 local median CFAR-like 分数均通过 G3/G4，但 T1 三次主合并验证 Pfa 为 0.0444–0.0462，T2 一次主验证 CI 不覆盖 0.05；因此都未过 G2，无方法完成全部门。T1 是未来候选，未被选为教师。无 E1、KD 或 final blind。阶段决定 **REFINE**。
-- **D2-A-E002：** v2 已预注册并获用户批准：A 全难度直接真值、B 同样本/预算课程真值、C 同课程加 IQ-only K2；三个臂各 1600 updates、有效 batch64、单 seed，RTX 3050 CUDA 串行。协议另定新独立 train/validation、K2 audit、H0 calibration/verification 和 development split，且不生成 final blind。**截至本次更新仍只有协议/设计文档；代码、数据、测试、审计和训练结果尚未完成。**
+- **D2-A-E002：** v2.1 A/B/C 已按相同 1,600 updates、有效 batch64、单 seed 101 使用 RTX 3050 CUDA 顺序训练。K2 audit 通过，G4 三臂通过；development AUC 为 A/B/C `0.9846/0.9787/0.9815`，Pd `0.9158/0.8996/0.9000`。学生整体 Pfa 与精确上限门通过，但 C3/SNR0 最差分层上限达 `0.195–0.204`，G3 分层门失败。G5 B−A joint-success gain `−0.1254`（95% CI `[−0.1386,−0.1122]`），C−B `+0.0036`（`[−0.0088,+0.0162]`）；课程和 K2 均无预注册 pilot signal。G6 phase agreement `0.943–0.950`、频移 residual p95 最大 `73.4 Hz`，等变门失败。阶段为 **REFINE**，没有 formal three-seed 或 final blind。
 - **P0/P1 历史先导：** 按各自冻结阶段审查保留；不将旧开发测试重新称为盲测，也不把其结论扩大到 D0/D1。
 
 ## 当前支持、否定与未决判断
@@ -34,16 +34,20 @@
 | D2-A 固定 5% H0 阈值可稳定跨独立主场景迁移 | NOT_SUPPORTED（当前仿真协议） | R3 冻结 B3 阈值 Pfa=0.06464；三次校准及新验证仍未使 T0/T1/T2 全部通过 G2 |
 | 归一化可消除 H0 整体幅度尺度敏感性 | SUPPORTED（当前仿真内） | T1/T2 通过 G3 幅度分层与受控 `X,aX` 尺度检查；G2 未通过，因此不等于可靠固定阈值 |
 | T1 可作为后续稳定传统教师 | INCONCLUSIVE | G3/G4 通过且 H1 能力强，但 G2 失败；保留候选，不进入教师选择 |
+| D2-A-E002 学生能在可辨识开发场景学习任务 | SUPPORTED（当前单 seed 仿真 pilot） | 三臂 G4 通过，A AUC=0.9846、Pd=0.9158；未验证跨 seed 或盲测 |
+| 课程顺序提高 joint success | NOT_SUPPORTED（当前 pilot） | B−A 差 −0.1254，配对 CI `[−0.1386,−0.1122]`；未见收敛提前 |
+| K2 软响应在课程之外带来增益 | NOT_SUPPORTED（当前 pilot） | C−B 差 +0.0036，配对 CI `[−0.0088,+0.0162]`；未见收敛提前 |
+| 当前 TaskStudent 满足所需公共相位/频移等变性 | NOT_SUPPORTED（当前 pilot） | G6 phase agreement 0.943–0.950；最大 frequency-shift residual p95 73.4 Hz |
 
 ## 当前主要问题
 
 1. 当前 D2-A 教师候选的独立 H0 固定阈值门仍未通过；不能用 T1/T2 的 G3/G4 通过替代 G2。
-2. 静止杂波下任务级学生仍未训练；D1 的网络和蒸馏结论不能直接回答三通道复 IQ 的 D2-A 学习可行性。
+2. 单 seed 学生可学习当前开发任务，但 C3 分层 H0 虚警不稳定，公共相位/频移等变性未通过；D1 与 E002 单 seed 结果均不能替代独立盲测和跨 seed 确认。
 3. 真实 GMTI、系统级虚警率 `1e-6` 和完整链成本均未验证。
 
 ## 当前唯一优先任务
 
-完成 E002 v2 的可复现实现与前置质量门，然后顺序完成 A/B/C 单 seed pilot。按协议判定课程与 K2 的筛选信号；只有结果支持时再另行提出三 seed 确认，不生成 final blind。
+准备一个有界的后续诊断协议，明确检查 C3 子组虚警失稳和相位/频移等变失败，并先定位现有表示/损失是否能解释两者；协议冻结和审查前不启动三 seed 确认或 final blind。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md) 和 [`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

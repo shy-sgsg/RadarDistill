@@ -1,0 +1,10 @@
+{
+  "split": "identifiability_boundary",
+  "scenes": 1024,
+  "scenario": "exact_overlap",
+  "snr_db": 10.0,
+  "cnr_db": 10.0,
+  "seed_base": 27000000,
+  "chunk_size": 16,
+  "chunk_seed_stride": 1009
+}

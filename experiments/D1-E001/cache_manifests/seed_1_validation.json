@@ -1,0 +1,39 @@
+{
+  "tag": "seed_1_validation",
+  "base_seed": 2026120102,
+  "examples_per_class": 128,
+  "snr_spec": [
+    -20,
+    -15,
+    -10,
+    -5,
+    0,
+    5,
+    10,
+    20
+  ],
+  "validation_snr": [
+    -20,
+    -15,
+    -10,
+    -5,
+    0,
+    5,
+    10,
+    20
+  ],
+  "validation_seed_stride": 1009,
+  "snr_count": 8,
+  "total_examples": 2048,
+  "shape": [
+    2048,
+    3,
+    130,
+    32
+  ],
+  "teacher_response_shape": [
+    2048,
+    130,
+    32
+  ]
+}

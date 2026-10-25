@@ -1,0 +1,24 @@
+{
+  "tag": "seed_3_train",
+  "base_seed": 2026120301,
+  "examples_per_class": 4096,
+  "snr_spec": [
+    -20.0,
+    20.0
+  ],
+  "validation_snr": null,
+  "validation_seed_stride": 1009,
+  "snr_count": 1,
+  "total_examples": 8192,
+  "shape": [
+    8192,
+    3,
+    130,
+    32
+  ],
+  "teacher_response_shape": [
+    8192,
+    130,
+    32
+  ]
+}

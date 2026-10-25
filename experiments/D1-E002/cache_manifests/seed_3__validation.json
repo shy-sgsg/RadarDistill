@@ -1,0 +1,19 @@
+{
+  "experiment_id": "D1-E002",
+  "split_id": "seed_3",
+  "kind": "validation",
+  "validation_seed": 2026220302,
+  "stream_stride": 1009,
+  "examples_per_class_per_snr": 128,
+  "snr_db": [
+    -20.0,
+    -15.0,
+    -10.0,
+    -5.0,
+    0.0,
+    5.0,
+    10.0,
+    20.0
+  ],
+  "class_layout": "all_H0_then_all_H1_stratified_by_snr"
+}

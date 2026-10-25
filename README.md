@@ -22,9 +22,9 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 ## 当前状态
 
-D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 已完成合成静止杂波 R0/R1 开发验证，T1–T12 全通过，R2 已对齐 D1-E001 `TaskStudent` 并冻结预算；阶段结论为 **CONDITIONAL GO**。主条件的开发 Pfa 高于独立标定值，因此先做阈值迁移诊断，尚未训练学生或生成 final blind。条件 RMSE 区间已修正并重新生成。
+D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 的 R0 T1–T12 全通过；后续 R3 固定阈值迁移决定为 **REFINE**，T1 未获固定阈值教师资格。
 
-**当前工作：** D2-A-R3 阶段决定为 REFINE，T0/T1/T2 固定阈值门未全部通过，因此 T1 仍不是获准的固定阈值教师。D2-A-E002 v1 truth-only 提案未执行；用户已批准 v2 的 A/B/C 匹配 pilot（直接真值、课程真值、课程 + IQ-only K2）。当前在完成代码实现、测试、CUDA/数据 preflight 和 K2 审计，随后依冻结门顺序执行单 seed pilot；尚无 E002 运行结果，不生成 final blind。
+**当前状态：** D2-A-E002 v2.1 的 A/B/C 单 seed pilot 已完成，使用 RTX 3050 Laptop GPU CUDA 顺序训练。三个学生臂均通过 G4 任务学习门，但 G3 分层虚警门、G6 公共相位/频移一致性门失败，课程与 K2 未达到 G5 增益；阶段决定 **REFINE**。没有开展正式三 seed，也没有生成 final blind。原始生成缓存已清理，配置、manifests、检查点、训练日志、审计与高价值结果保留。
 
 ## 复现入口
 
@@ -46,8 +46,10 @@ conda run --no-capture-output -n AISAR python scripts/evaluate_d1_e001.py --phas
 - 当前与路线：[CURRENT_STATUS](docs/CURRENT_STATUS.md)、[RESEARCH_ROADMAP](docs/RESEARCH_ROADMAP.md)、[假设登记](docs/research/ASSUMPTION_REGISTER.md)
 - 阶段审查：[D2-A-E001](docs/stage_reviews/D2-A-E001_review.md)、[D0/D1 E002 后总审查](docs/stage_reviews/D0-D1_post_E002_review.md)、[D1-R1](docs/stage_reviews/D1_R1_doppler_diagnosis.md)、[D1-E001](docs/stage_reviews/D1-E001_review.md)、[D1-E002](docs/stage_reviews/D1-E002_review.md)
 - 实验档案：`experiments/D0-E001/`、`experiments/D1-E001/`、`experiments/D1-R1/`、`experiments/D1-E002/`
+- D2-A-E002 阶段：[协议](experiments/D2-A-E002/protocol.md)、[分析](experiments/D2-A-E002/analysis.md)、[指标](experiments/D2-A-E002/metrics.json)、[审查](docs/stage_reviews/D2-A-E002_review.md)
 - D2-A 复现：`python scripts/run_d2a_e001.py --config experiments/D2-A-E001/config.yaml --output-dir experiments/D2-A-E001 --batch-size 16`
 - D2-A 物理模型、可辨识性与基线审查：[物理模型](docs/research/D2-A_physical_model.md)、[可辨识性](docs/research/D2-A_identifiability.md)、[基线审查](docs/research/D2-A_baseline_review.md)
 - D2-A 测试：`pytest -q tests/test_d2a_simulation.py tests/test_d2a_baselines.py tests/test_d2a_evaluation.py tests/test_d0_simulation.py`
+- E002 全套测试：`conda run --no-capture-output -n AISAR python -m pytest -q`（本次清理后 250 passed）
 - 科研治理、任务执行与审查模板：[`docs/governance/`](docs/governance/)
 - 详细历史计划：[research_plan.md](docs/research_plan.md)、[progress.md](docs/progress.md)、[decisions.md](docs/decisions.md)

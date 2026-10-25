@@ -1,0 +1,23 @@
+{
+  "experiment_id": "D1-E002",
+  "kind": "calibration",
+  "stream_stride": 1009,
+  "chunk_size": 64,
+  "snr_db": [
+    -20.0,
+    -15.0,
+    -10.0,
+    -5.0,
+    0.0,
+    5.0,
+    10.0,
+    20.0
+  ],
+  "classes_per_snr": {
+    "0": 6250
+  },
+  "class_order": [
+    0
+  ],
+  "sample_order": "snr_then_class_then_chunk"
+}

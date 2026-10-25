@@ -14,6 +14,32 @@ from radardistill.simulation.d2a import generate_d2a_paired_batch
 from radardistill.students.task_student import TaskStudent
 
 
+def test_g5_gate_summary_preserves_numeric_course_comparisons():
+    course_signal = {
+        "B_minus_A": {
+            "joint_success_gain": 0.06,
+            "joint_success_gain_ci95": [0.01, 0.10],
+        },
+        "C_minus_B": {
+            "joint_success_gain": 0.01,
+            "joint_success_gain_ci95": [-0.01, 0.03],
+        },
+        "convergence": {
+            "B": {"update_saving_fraction_vs_A_best_update": None},
+            "C": {"update_saving_fraction_vs_A_best_update": 0.25},
+        },
+    }
+
+    gates = runner._g5_gate_summary(course_signal)
+
+    assert gates["B_minus_A"]["pilot_signal_present"] is True
+    assert gates["C_minus_B"]["pilot_signal_present"] is True
+    assert course_signal["B_minus_A"]["joint_success_gain"] == 0.06
+    assert course_signal["B_minus_A"]["joint_success_gain_ci95"] == [0.01, 0.10]
+    assert course_signal["C_minus_B"]["joint_success_gain"] == 0.01
+    assert course_signal["C_minus_B"]["joint_success_gain_ci95"] == [-0.01, 0.03]
+
+
 def test_e002_physical_diagnostic_runs_on_fixed_paired_subset():
     with Path("experiments/D2-A-E001/config.yaml").open(encoding="utf-8") as stream:
         physics = yaml.safe_load(stream)

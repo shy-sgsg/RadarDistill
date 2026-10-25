@@ -330,3 +330,14 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **执行状态：** 已完成 v2 protocol/config、总纲映射、架构/损失静态审查和路线/假设状态更新。**本记录时尚未实现 runner、生成 E002 数据、运行测试、K2 审计或训练；没有 pilot 结果。** 实验缓存路径已加入 `.gitignore`。
 - **提交：** 本预注册与状态更新将作为独立小提交推送到 `main`；代码、测试和实测结果分开提交，外部 GMTI 用户文件与现有实验缓存不纳入。
 - **下一步：** 按 TDD 实现 seed/split/配对数据、IQ-only K2、A/B/C matched sampler、CUDA trainer 和评估器；完成物理回归、边界/标签/梯度/小样本过拟合及 K2 audit，再按门控顺序运行。
+
+## 2026-10-25：D2-A-E002 v2.1 单 seed CUDA pilot 完成与缓存归档
+
+- **执行范围：** 按冻结 v2.1 协议运行 A（直接真值）、B（课程真值）、C（课程 + IQ-only K2），各 1600 updates、有效 batch64、seed 101；在 NVIDIA GeForce RTX 3050 Laptop GPU 上顺序训练，FP32，无 OOM。生成的独立 train/validation、teacher audit、H0 calibration/verification、development 和 exact-overlap boundary split IDs 不重叠。K2 审计通过，G1 micro-overfit loss 从 7.1634 降至 0.02834（100 updates），梯度检查通过。
+- **任务证据：** development AUC A/B/C=`0.9846/0.9787/0.9815`，Pd=`0.9158/0.8996/0.9000`。三臂均通过 G4 并优于 E0/AUC=0.6103；A 的主 A/10/10 dB joint success=`0.8489`（单侧下限 `0.8201`）。T1 AUC=`0.9863`、Pd=`0.9206`、joint success=`0.9010`，仍不是获准的固定阈值教师。
+- **虚警与方法比较：** 学生总体 H0 verification Pfa A/B/C=`0.04573/0.04953/0.04693`，精确单侧 95% 上限=`0.04864/0.05255/0.04987`；总体子门通过，但 C3/SNR0 分层上限达 `0.1953/0.2045/0.2022`，G3 失败。G5 B−A joint-success 差=`−0.1254`（paired 95% CI `[−0.1386,−0.1122]`）；C−B=`+0.0036`（`[−0.0088,+0.0162]`）；B/C 均未达到 A 的最佳 validation loss，无课程或 K2 pilot signal。
+- **物理一致性：** 公共相位决策一致率 A/B/C=`0.950/0.947/0.943`；Doppler 变化 p95=`61.7/71.9/62.4 Hz`；目标频移等变残差 p95 最大=`59.6/73.2/73.4 Hz`，G6 失败。独立通道相位扰乱的 AUC 下降约 `0.176–0.208`，说明模型利用了通道相干，但输出的公共相位与频移变换不稳定。整体幅度 0.5/2.0 诊断未见尺度敏感。
+- **决定：** 阶段结论 **REFINE**。保留所有冻结门；不做正式三 seed、知识蒸馏确认或 final blind。下一优先项为预注册一个有界诊断协议，定位 C3 虚警失稳与相位/频移等变失败；未经新协议审查不启动后续训练。
+- **复现与审计：** 运行/模型代码 SHA=`1f822470b906c733706c1a10f031e7a627e140a8`；原始数据首次生成耗时 `1195.4 s`，完整缓存复用验证 `0.2 s`，评价 `973.3 s`。G5 数值从保留的 `development_per_scene.csv` 按冻结 base-scene bootstrap seed 和 2000 次重采样重算；没有重新训练或重新生成实验数据。完整指标、CSV、checkpoint、逐 update history 和图见 `experiments/D2-A-E002/`，阶段审查见 `docs/stage_reviews/D2-A-E002_review.md`。
+- **缓存清理：** 评价完成后删除 D1-E001/D1-E002 可再生成训练/校准缓存及 D2-A-E002 IQ 缓存，共释放 `30,657,060,864` 字节分配空间；24 份缓存 manifest 已归档。D1-E002 独立 blind cache 和本地 GMTI 源码/验收包未变。项目清理前约 `40.03 GB`，清理后约 `8.73 GiB`；审计见 `docs/maintenance/CACHE_CLEANUP_2026-10-25.md`。
+- **验证：** `conda run --no-capture-output -n AISAR python -m pytest -q`：**250 passed**。定向 E002 runner 测试：2 passed。

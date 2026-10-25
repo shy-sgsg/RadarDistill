@@ -588,6 +588,34 @@ def _one_sided_cluster_lower(
     return float(np.quantile(estimates, 0.05))
 
 
+def _g5_gate_summary(course_signal: dict[str, Any]) -> dict[str, Any]:
+    """Derive G5 gate booleans while leaving numeric comparisons intact."""
+    summaries: dict[str, Any] = {}
+    convergence = course_signal.get("convergence", {})
+    for comparison_name, right_arm in (("B_minus_A", "B"), ("C_minus_B", "C")):
+        if comparison_name not in course_signal:
+            continue
+        signal = course_signal[comparison_name]
+        saving = convergence.get(right_arm, {}).get("update_saving_fraction_vs_A_best_update")
+        joint_signal = (
+            signal["joint_success_gain"] >= 0.05
+            and signal["joint_success_gain_ci95"][0] > 0.0
+        )
+        convergence_signal = (
+            saving is not None
+            and saving >= 0.20
+            and signal["joint_success_gain_ci95"][0] > -0.05
+        )
+        summaries[comparison_name] = {
+            "joint_success_gain_point_ge_0_05_and_ci_lower_gt_0": bool(joint_signal),
+            "update_saving_ge_0_20_and_joint_noninferiority_ci_lower_gt_minus_0_05": bool(
+                convergence_signal
+            ),
+            "pilot_signal_present": bool(joint_signal or convergence_signal),
+        }
+    return summaries
+
+
 def _wrap_hz(values: np.ndarray, prf_hz: float) -> np.ndarray:
     return (np.asarray(values, dtype=np.float64) + prf_hz / 2.0) % prf_hz - prf_hz / 2.0
 
@@ -1084,23 +1112,7 @@ def _evaluate_pilot() -> dict[str, Any]:
             "primary_joint_success_ge_0_50": comparison["primary_A_10_10_joint_success"] >= 0.50,
             "primary_joint_success_lower_gt_0_40": comparison["primary_A_10_10_joint_success_one_sided_ci95_lower"] > 0.40,
         }
-    g5_comparisons: dict[str, Any] = {}
-    for comparison_name, right_arm in (("B_minus_A", "B"), ("C_minus_B", "C")):
-        if comparison_name not in course_signal:
-            continue
-        signal = course_signal[comparison_name]
-        saving = course_signal.get("convergence", {}).get(right_arm, {}).get("update_saving_fraction_vs_A_best_update")
-        joint_signal = signal["joint_success_gain"] >= 0.05 and signal["joint_success_gain_ci95"][0] > 0.0
-        convergence_signal = (
-            saving is not None
-            and saving >= 0.20
-            and signal["joint_success_gain_ci95"][0] > -0.05
-        )
-        g5_comparisons[comparison_name] = {
-            "joint_success_gain_point_ge_0_05_and_ci_lower_gt_0": bool(joint_signal),
-            "update_saving_ge_0_20_and_joint_noninferiority_ci_lower_gt_minus_0_05": bool(convergence_signal),
-            "pilot_signal_present": bool(joint_signal or convergence_signal),
-        }
+    g5_comparisons = _g5_gate_summary(course_signal)
     gates["G5_course_k2_signal"] = g5_comparisons
     gates["G6_physical_diagnostics"] = {
         arm: {
@@ -1203,6 +1215,7 @@ def _evaluate_pilot() -> dict[str, Any]:
         "development_subgroups": development_group_rows,
         "train_constant_parameter_baseline": constant_baseline,
         "paired_comparisons": paired_comparisons,
+        "course_comparison_estimates": course_signal,
         "k2_audit": json.loads((root / "k2_audit.json").read_text(encoding="utf-8")),
         "gates": gates,
         "stage_decision": stage_decision,

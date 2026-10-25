@@ -1,0 +1,14 @@
+{
+  "experiment_id": "D1-E002",
+  "split_id": "seed_3",
+  "kind": "train",
+  "train_seed": 2026220301,
+  "stream_stride": 1009,
+  "examples_per_class": 4096,
+  "examples_per_chunk": 64,
+  "snr_interval_db": [
+    -20.0,
+    20.0
+  ],
+  "class_layout": "all_H0_then_all_H1_with_paired_chunk_sample_ids"
+}

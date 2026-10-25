@@ -1,0 +1,49 @@
+{
+  "n_paired_scenes": 16,
+  "n_truth_task_examples": 32,
+  "optimizer_updates": 100,
+  "initial_truth_loss_components": {
+    "presence": 0.9159504175186157,
+    "range_cell": 4.983710289001465,
+    "range_offset": 0.3610449433326721,
+    "doppler": 0.9026609659194946,
+    "teacher_kl": 13.151060104370117
+  },
+  "initial_truth_task_loss": 7.163366317749023,
+  "final_truth_task_loss": 0.028344880789518356,
+  "truth_task_final_to_initial_loss_ratio": 0.0039569218621818706,
+  "truth_task_loss_ratio_max": 0.75,
+  "truth_loss_reduction_passed": true,
+  "truth_gradient_norms": {
+    "stem": 5.08377296701682,
+    "presence_head": 4.55430550374743,
+    "range_head": 38.85140141733202,
+    "range_offset_head": 1.8241531473994625,
+    "doppler_head": 13.91333232755532
+  },
+  "single_task_gradient_norms": {
+    "presence": {
+      "stem": 0.30816184378051553,
+      "head": 4.55430550374743
+    },
+    "range_cell": {
+      "stem": 4.349162773799755,
+      "head": 38.85140141733202
+    },
+    "range_offset": {
+      "stem": 0.3564607076996648,
+      "head": 1.8241531473994625
+    },
+    "doppler": {
+      "stem": 1.719546452552223,
+      "head": 13.91333232755532
+    }
+  },
+  "truth_gradient_groups_passed": true,
+  "k2_gradient_norm": 38.62612818437344,
+  "k2_gradient_passed": true,
+  "last_training_gradient_norm": 5.524100303649902,
+  "passed": true,
+  "not_part_of_formal_arm_updates": true,
+  "git_sha": "1f822470b906c733706c1a10f031e7a627e140a8"
+}

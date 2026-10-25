@@ -1,0 +1,72 @@
+{
+  "split": "validation",
+  "total_paired_scenes": 5000,
+  "cell_counts": {
+    "C0": {
+      "separated": 1250
+    },
+    "C1": {
+      "separated": 625,
+      "near_clutter_edge": 625
+    },
+    "C2": {
+      "separated": 417,
+      "near_clutter_edge": 417,
+      "partial_overlap": 416
+    },
+    "C3": {
+      "separated_0db": 209,
+      "separated_10db": 208,
+      "near_clutter_edge_0db": 208,
+      "near_clutter_edge_10db": 209,
+      "partial_overlap_0db": 208,
+      "partial_overlap_10db": 208
+    }
+  },
+  "course_conditions": {
+    "C0": {
+      "snr_db": [
+        20.0
+      ],
+      "cnr_db": -5.0
+    },
+    "C1": {
+      "snr_db": [
+        15.0
+      ],
+      "cnr_db": 0.0
+    },
+    "C2": {
+      "snr_db": [
+        10.0
+      ],
+      "cnr_db": 10.0
+    },
+    "C3": {
+      "snr_db": [
+        0.0,
+        10.0
+      ],
+      "cnr_db": 20.0
+    }
+  },
+  "seed_bases_by_course": [
+    22000000,
+    22100000,
+    22200000,
+    22300000
+  ],
+  "assignment_seed": 2026102607,
+  "chunk_size": 16,
+  "chunk_seed_stride": 1009,
+  "k2_cached": false,
+  "k2_h0_cached": false,
+  "iq_shape": [
+    5000,
+    3,
+    130,
+    32
+  ],
+  "iq_dtype": "complex64",
+  "physics_config": "experiments/D2-A-E001/config.yaml"
+}

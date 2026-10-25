@@ -1,0 +1,199 @@
+{
+  "experiment": "D2-A-E002",
+  "protocol_version": 2.1,
+  "training_seed": 101,
+  "plan_seed": 2026102603,
+  "initialization_seed": 101,
+  "arms": {
+    "A": {
+      "arm": "A",
+      "optimizer_updates": 1600,
+      "best_update": 1500,
+      "updates_to_A_best_validation_loss": null,
+      "initial_validation": {
+        "task_loss": 6.154112845516205,
+        "presence_loss": 1.1479105670928955,
+        "range_cell_loss": 4.177179648590088,
+        "range_offset_loss": 0.29938438215255736,
+        "doppler_loss": 0.529638247680664,
+        "auc": 0.85897638,
+        "range_rmse_all_h1_cells": 14.692822456359863,
+        "doppler_rmse_all_h1_hz": 224.10369873046875,
+        "true_cell_doppler_rmse_hz": 239.15304565429688,
+        "predicted_range_cell_mismatch_rate": 0.993
+      },
+      "best_validation": {
+        "task_loss": 0.6259589296584439,
+        "presence_loss": 0.14022144760228694,
+        "range_cell_loss": 0.38172047806470205,
+        "range_offset_loss": 0.0855127343915403,
+        "doppler_loss": 0.018504269599914552,
+        "auc": 0.9850494,
+        "range_rmse_all_h1_cells": 3.218637228012085,
+        "doppler_rmse_all_h1_hz": 46.660091400146484,
+        "true_cell_doppler_rmse_hz": 40.94883728027344,
+        "predicted_range_cell_mismatch_rate": 0.103
+      },
+      "best_validation_task_loss": 0.6259589296584439,
+      "train_seconds": 292.6973121209885,
+      "effective_examples_per_second": 349.849471653748,
+      "microbatch_size": 16,
+      "effective_batch_size": 64,
+      "parameter_count_training_model": 13383,
+      "cuda_peak_allocated_bytes": 274702848,
+      "cuda_peak_reserved_bytes": 1178599424,
+      "training_history": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/A/microbatch_16/training_history.csv",
+      "best_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_checkpoint.pt",
+      "best_inference_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_inference.pt"
+    },
+    "B": {
+      "arm": "B",
+      "optimizer_updates": 1600,
+      "best_update": 1600,
+      "updates_to_A_best_validation_loss": null,
+      "initial_validation": {
+        "task_loss": 6.154112845516205,
+        "presence_loss": 1.1479105670928955,
+        "range_cell_loss": 4.177179648590088,
+        "range_offset_loss": 0.29938438215255736,
+        "doppler_loss": 0.529638247680664,
+        "auc": 0.85897638,
+        "range_rmse_all_h1_cells": 14.692822456359863,
+        "doppler_rmse_all_h1_hz": 224.10369873046875,
+        "true_cell_doppler_rmse_hz": 239.15304565429688,
+        "predicted_range_cell_mismatch_rate": 0.993
+      },
+      "best_validation": {
+        "task_loss": 0.7375616713526041,
+        "presence_loss": 0.1940648921340704,
+        "range_cell_loss": 0.42016546756758705,
+        "range_offset_loss": 0.09006159543581307,
+        "doppler_loss": 0.033269716215133666,
+        "auc": 0.97931326,
+        "range_rmse_all_h1_cells": 3.169858932495117,
+        "doppler_rmse_all_h1_hz": 58.54595947265625,
+        "true_cell_doppler_rmse_hz": 56.027488708496094,
+        "predicted_range_cell_mismatch_rate": 0.1114
+      },
+      "best_validation_task_loss": 0.7375616713526041,
+      "train_seconds": 273.22132223300287,
+      "effective_examples_per_second": 374.7877331208923,
+      "microbatch_size": 16,
+      "effective_batch_size": 64,
+      "parameter_count_training_model": 13383,
+      "cuda_peak_allocated_bytes": 275202560,
+      "cuda_peak_reserved_bytes": 337641472,
+      "training_history": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/B/microbatch_16/training_history.csv",
+      "best_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/B/microbatch_16/best_checkpoint.pt",
+      "best_inference_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/B/microbatch_16/best_inference.pt"
+    },
+    "C": {
+      "arm": "C",
+      "optimizer_updates": 1600,
+      "best_update": 1600,
+      "updates_to_A_best_validation_loss": null,
+      "initial_validation": {
+        "task_loss": 6.154112845516205,
+        "presence_loss": 1.1479105670928955,
+        "range_cell_loss": 4.177179648590088,
+        "range_offset_loss": 0.29938438215255736,
+        "doppler_loss": 0.529638247680664,
+        "auc": 0.85897638,
+        "range_rmse_all_h1_cells": 14.692822456359863,
+        "doppler_rmse_all_h1_hz": 224.10369873046875,
+        "true_cell_doppler_rmse_hz": 239.15304565429688,
+        "predicted_range_cell_mismatch_rate": 0.993
+      },
+      "best_validation": {
+        "task_loss": 0.7424316121689641,
+        "presence_loss": 0.1893209420233965,
+        "range_cell_loss": 0.42632974850941835,
+        "range_offset_loss": 0.08940736782364547,
+        "doppler_loss": 0.03737355381250382,
+        "auc": 0.98176084,
+        "range_rmse_all_h1_cells": 3.2128968238830566,
+        "doppler_rmse_all_h1_hz": 60.03016662597656,
+        "true_cell_doppler_rmse_hz": 59.54502487182617,
+        "predicted_range_cell_mismatch_rate": 0.1096
+      },
+      "best_validation_task_loss": 0.7424316121689641,
+      "train_seconds": 283.8363786949776,
+      "effective_examples_per_second": 360.7712319006272,
+      "microbatch_size": 16,
+      "effective_batch_size": 64,
+      "parameter_count_training_model": 13383,
+      "cuda_peak_allocated_bytes": 275788800,
+      "cuda_peak_reserved_bytes": 339738624,
+      "training_history": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/C/microbatch_16/training_history.csv",
+      "best_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/C/microbatch_16/best_checkpoint.pt",
+      "best_inference_checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-E002/runs/seed_101/C/microbatch_16/best_inference.pt"
+    }
+  },
+  "git_sha": "1f822470b906c733706c1a10f031e7a627e140a8",
+  "arms_run": [
+    "A",
+    "B",
+    "C"
+  ],
+  "micro_overfit_sanity": {
+    "n_paired_scenes": 16,
+    "n_truth_task_examples": 32,
+    "optimizer_updates": 100,
+    "initial_truth_loss_components": {
+      "presence": 0.9159504175186157,
+      "range_cell": 4.983710289001465,
+      "range_offset": 0.3610449433326721,
+      "doppler": 0.9026609659194946,
+      "teacher_kl": 13.151060104370117
+    },
+    "initial_truth_task_loss": 7.163366317749023,
+    "final_truth_task_loss": 0.028344880789518356,
+    "truth_task_final_to_initial_loss_ratio": 0.0039569218621818706,
+    "truth_task_loss_ratio_max": 0.75,
+    "truth_loss_reduction_passed": true,
+    "truth_gradient_norms": {
+      "stem": 5.08377296701682,
+      "presence_head": 4.55430550374743,
+      "range_head": 38.85140141733202,
+      "range_offset_head": 1.8241531473994625,
+      "doppler_head": 13.91333232755532
+    },
+    "single_task_gradient_norms": {
+      "presence": {
+        "stem": 0.30816184378051553,
+        "head": 4.55430550374743
+      },
+      "range_cell": {
+        "stem": 4.349162773799755,
+        "head": 38.85140141733202
+      },
+      "range_offset": {
+        "stem": 0.3564607076996648,
+        "head": 1.8241531473994625
+      },
+      "doppler": {
+        "stem": 1.719546452552223,
+        "head": 13.91333232755532
+      }
+    },
+    "truth_gradient_groups_passed": true,
+    "k2_gradient_norm": 38.62612818437344,
+    "k2_gradient_passed": true,
+    "last_training_gradient_norm": 5.524100303649902,
+    "passed": true,
+    "not_part_of_formal_arm_updates": true,
+    "git_sha": "1f822470b906c733706c1a10f031e7a627e140a8"
+  },
+  "nvidia_smi_before": {
+    "returncode": 0,
+    "query": "NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 1824 MiB, 580.178.04",
+    "stderr": "",
+    "full": "Sun Oct 25 18:29:40 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3050 ...    Off |   00000000:01:00.0  On |                  N/A |\n| N/A   52C    P0             62W /   95W |    1936MiB /   4096MiB |     91%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            4369      G   /usr/bin/gnome-shell                    142MiB |\n|    0   N/A  N/A            4848      G   /usr/bin/Xwayland                         7MiB |\n|    0   N/A  N/A            6954    C+G   /usr/bin/nautilus                        87MiB |\n|    0   N/A  N/A            6966      G   .../9036/usr/lib/firefox/firefox        214MiB |\n|    0   N/A  N/A            8162    C+G   /usr/bin/resources                       29MiB |\n|    0   N/A  N/A          583987      C   python                                 1214MiB |\n+-----------------------------------------------------------------------------------------+"
+  },
+  "nvidia_smi_after": {
+    "returncode": 0,
+    "query": "NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 2956 MiB, 580.178.04",
+    "stderr": "",
+    "full": "Sun Oct 25 18:43:50 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3050 ...    Off |   00000000:01:00.0  On |                  N/A |\n| N/A   64C    P0             51W /   95W |     805MiB /   4096MiB |     78%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            4369      G   /usr/bin/gnome-shell                    143MiB |\n|    0   N/A  N/A            4848      G   /usr/bin/Xwayland                         6MiB |\n|    0   N/A  N/A            6954    C+G   /usr/bin/nautilus                        87MiB |\n|    0   N/A  N/A            6966      G   .../9036/usr/lib/firefox/firefox        213MiB |\n|    0   N/A  N/A            8162    C+G   /usr/bin/resources                       29MiB |\n|    0   N/A  N/A          583987      C   python                                   92MiB |\n+-----------------------------------------------------------------------------------------+"
+  }
+}

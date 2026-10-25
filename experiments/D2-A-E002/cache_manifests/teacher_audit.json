@@ -1,0 +1,72 @@
+{
+  "split": "teacher_audit",
+  "total_paired_scenes": 2048,
+  "cell_counts": {
+    "C0": {
+      "separated": 512
+    },
+    "C1": {
+      "separated": 256,
+      "near_clutter_edge": 256
+    },
+    "C2": {
+      "separated": 171,
+      "near_clutter_edge": 171,
+      "partial_overlap": 170
+    },
+    "C3": {
+      "separated_0db": 86,
+      "separated_10db": 85,
+      "near_clutter_edge_0db": 85,
+      "near_clutter_edge_10db": 86,
+      "partial_overlap_0db": 85,
+      "partial_overlap_10db": 85
+    }
+  },
+  "course_conditions": {
+    "C0": {
+      "snr_db": [
+        20.0
+      ],
+      "cnr_db": -5.0
+    },
+    "C1": {
+      "snr_db": [
+        15.0
+      ],
+      "cnr_db": 0.0
+    },
+    "C2": {
+      "snr_db": [
+        10.0
+      ],
+      "cnr_db": 10.0
+    },
+    "C3": {
+      "snr_db": [
+        0.0,
+        10.0
+      ],
+      "cnr_db": 20.0
+    }
+  },
+  "seed_bases_by_course": [
+    23000000,
+    23100000,
+    23200000,
+    23300000
+  ],
+  "assignment_seed": 2026102608,
+  "chunk_size": 16,
+  "chunk_seed_stride": 1009,
+  "k2_cached": true,
+  "k2_h0_cached": true,
+  "iq_shape": [
+    2048,
+    3,
+    130,
+    32
+  ],
+  "iq_dtype": "complex64",
+  "physics_config": "experiments/D2-A-E001/config.yaml"
+}
