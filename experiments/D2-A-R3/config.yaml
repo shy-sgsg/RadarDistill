@@ -1,0 +1,140 @@
+experiment:
+  id: D2-A-R3
+  title: Independent false-alarm threshold migration and scene-scale nuisance diagnostics
+  status: preregistered
+  date: 2026-10-25
+  data_are_synthetic: true
+  baseline_experiment: D2-A-E001
+  baseline_protocol_immutable: true
+  student_pilot_authorized_only_if_G1_G2_G3_G4_pass: true
+  final_blind_generation_authorized: false
+
+radar:
+  prf_hz: 1300.0
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+
+sampling:
+  batch_size: 16
+  scenes_per_group: 4096
+  primary_condition:
+    snr_db: 10.0
+    cnr_db: 10.0
+    calibration_seed_starts: [10000000, 10010000, 10020000]
+    validation_groups:
+      - {name: A_separated, scenario_id: separated, seed_start: 11000000}
+      - {name: B_near_clutter_edge, scenario_id: near_clutter_edge, seed_start: 11010000}
+      - {name: C_partial_overlap, scenario_id: partial_overlap, seed_start: 11020000}
+      - {name: D_exact_overlap, scenario_id: exact_overlap, seed_start: 11030000}
+  secondary_conditions:
+    - cnr_db: 0.0
+      snr_db: 10.0
+      calibration_seed_start: 12000000
+      validation_groups:
+        - {name: A_separated, scenario_id: separated, seed_start: 13000000}
+        - {name: C_partial_overlap, scenario_id: partial_overlap, seed_start: 13010000}
+    - cnr_db: 20.0
+      snr_db: 10.0
+      calibration_seed_start: 14000000
+      validation_groups:
+        - {name: A_separated, scenario_id: separated, seed_start: 15000000}
+        - {name: C_partial_overlap, scenario_id: partial_overlap, seed_start: 15010000}
+  scale_diagnostic:
+    seed_start: 16000000
+    scene_count: 128
+    factors:
+      - {real: 0.5, imag: 0.0}
+      - {real: 2.0, imag: 0.0}
+      - {real: 0.6, imag: 1.2}
+
+detection:
+  target_pfa_cpi: 0.05
+  quantile_probability: 0.95
+  quantile_method: higher
+  decision_comparator: ">="
+  also_report_strict_greater: true
+  confidence_level: 0.95
+  pfa_ci: wilson_score
+  bootstrap_replicates: 2000
+  finite_sample_bootstrap_replicates: 10000
+  finite_sample_calibration_n: 512
+  finite_sample_validation_n: 256
+  old_e001_observed_false_alarms_of_256: 23
+  amplitude_bins_db: [-6.0, -3.0, 0.0, 3.0, 6.0]
+  primary_method: B3
+  frozen_legacy_thresholds:
+    snr_10_cnr_0:
+      B0: 19878.86830508337
+      B1: 61708.79747854282
+      B2: 20533.535646639222
+      B3: 820.0358540472897
+    snr_10_cnr_10:
+      B0: 180598.23002948496
+      B1: 536397.2435161747
+      B2: 178629.93962331084
+      B3: 961.397913450906
+    snr_10_cnr_20:
+      B0: 1692210.4259929885
+      B1: 5076987.371500654
+      B2: 1691314.6765433096
+      B3: 3122.879716162107
+  t1_global_robust_background:
+    enabled: true
+    peak_guard_doppler_radius_cells: 2
+    peak_guard_range_radius_cells: 2
+    doppler_boundary: circular
+    range_boundary: clipped
+    background_estimator: median
+  t2_local_cfar_like:
+    enabled: true
+    doppler_window_width_cells: 9
+    range_window_width_cells: 7
+    doppler_guard_width_cells: 3
+    range_guard_width_cells: 3
+    doppler_boundary: circular
+    range_boundary: clipped
+    background_estimator: median
+    min_reference_cells: 10
+
+gates:
+  G1:
+    require_r3_tests: true
+    require_disjoint_seed_groups: true
+    require_paired_h0_h1_and_truth_isolation: true
+    require_frozen_t0_score_reproduction: true
+  G2:
+    calibration_pfa_interval: [0.04, 0.06]
+    validation_pfa_interval: [0.04, 0.06]
+    validation_wilson_ci_must_cover_target: true
+    each_primary_validation_ci_must_intersect_interval: [0.04, 0.06]
+  G3:
+    min_calibration_replicates_passing: 2
+    extreme_amplitude_bin_pfa_difference_equivalence_ci: [-0.02, 0.02]
+    max_amplitude_bin_pfa_point_range: 0.03
+    normalized_scale_max_abs_difference: 1.0e-6
+    raw_scale_max_relative_error: 1.0e-5
+  G4:
+    identifiable_scenarios: [separated, near_clutter_edge, partial_overlap]
+    max_allowed_pd_regression: 0.05
+    max_allowed_joint_success_regression: 0.05
+    paired_ci: 0.95
+    exact_overlap_is_descriptive_only: true
+  E1_pilot:
+    enabled_only_after_all_front_gates: true
+    arms: [truth_only_A]
+    seeds: [101]
+    optimizer_updates: 1600
+    effective_batch_size: 64
+    cuda_required: true
+    cuda_device_name: NVIDIA GeForce RTX 3050 Laptop GPU
+    e2_e3_authorized: false
+    final_blind_authorized: false
+
+resources:
+  r3_simulation_device: CPU
+  stream_full_iq: true
+  cache_full_iq: false
+  expected_walltime_hours: [1.0, 2.0]
+  max_walltime_hours_before_resume: 2.0
+  student_pilot_gpu_memory_gib: 4
