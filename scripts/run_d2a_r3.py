@@ -1101,6 +1101,43 @@ def _candidate_gates(
     }
 
 
+def _apply_g3_controlled_scale_gate(
+    amplitude_gates: dict[str, dict[str, Any]],
+    controlled_scale: list[dict[str, Any]],
+    r3_config: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Combine amplitude-bin equivalence with the preregistered X/aX check."""
+    expected_factors = {"real_0p5", "real_2", "complex_0p6_1p2"}
+    output: dict[str, dict[str, Any]] = {}
+    for method in METHODS_ALL:
+        method_rows = [row for row in controlled_scale if row["method"] == method]
+        factors = {str(row["factor"]) for row in method_rows}
+        if factors != expected_factors or len(method_rows) != len(expected_factors):
+            raise ValueError(f"G3 controlled scale rows are incomplete for {method}")
+        if method in METHODS_T0:
+            metric = "max_relative_error_from_abs_a_squared"
+            limit = float(r3_config["gates"]["G3"]["raw_scale_max_relative_error"])
+        else:
+            metric = "max_abs_difference_normalized_map"
+            limit = float(r3_config["gates"]["G3"]["normalized_scale_max_abs_difference"])
+        maximum = max(float(row[metric]) for row in method_rows)
+        scale_passed = maximum <= limit
+        amplitude_passed = bool(amplitude_gates[method]["passed"])
+        output[method] = {
+            **amplitude_gates[method],
+            "amplitude_gate_passed": amplitude_passed,
+            "controlled_scale_gate": {
+                "metric": metric,
+                "max_observed": maximum,
+                "limit": limit,
+                "passed": scale_passed,
+                "factor_results": method_rows,
+            },
+            "passed": amplitude_passed and scale_passed,
+        }
+    return output
+
+
 def _candidate_scale_diagnostic(
     group: dict[str, Any],
     simulation_config: dict[str, Any],
@@ -1122,7 +1159,8 @@ def _candidate_scale_diagnostic(
     ):
         original = _run_all_methods(batch.iq_h0, simulation_config, r3_config)
         for factor_name, factor in zip(factor_names, SCALE_FACTORS, strict=True):
-            scaled = _run_all_methods(factor * batch.iq_h0, simulation_config, r3_config)
+            scaled_iq = factor * batch.iq_h0.astype(np.complex128)
+            scaled = _run_all_methods(scaled_iq, simulation_config, r3_config)
             for method in METHODS_T0:
                 base_score = _score_vector(original[method])
                 actual = _score_vector(scaled[method])
@@ -1302,6 +1340,9 @@ def run_candidate_phase(r3_config: dict[str, Any], output_dir: Path) -> dict[str
     amplitude_rows, g3 = _candidate_amplitude_diagnostics(
         h0_rows, groups, thresholds_by_group, r3_config
     )
+    control_group = next(group for group in groups if group["role"] == "scale_diagnostic")
+    controlled_scale = _candidate_scale_diagnostic(control_group, simulation_config, r3_config)
+    g3 = _apply_g3_controlled_scale_gate(g3, controlled_scale, r3_config)
     g2 = _candidate_g2(thresholds_by_group, candidate_h0_rows, groups, r3_config)
     paired_effect_rows, g4 = _candidate_g4(group_data, groups, thresholds_by_group, r3_config)
     gates = _candidate_gates(candidate_h0_rows, g2, g3, g4)
@@ -1359,8 +1400,6 @@ def run_candidate_phase(r3_config: dict[str, Any], output_dir: Path) -> dict[str
                     }
                 )
 
-    control_group = next(group for group in groups if group["role"] == "scale_diagnostic")
-    controlled_scale = _candidate_scale_diagnostic(control_group, simulation_config, r3_config)
     contamination_summary = {
         group_id: {
             method: {

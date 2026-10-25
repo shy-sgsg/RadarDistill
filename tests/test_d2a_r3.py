@@ -9,6 +9,7 @@ from scripts.run_d2a_r3 import (
     assert_replayed_scene_coverage,
     build_scene_group_specs,
     _raw_score_quantile_rows,
+    _apply_g3_controlled_scale_gate,
     _validate_r3_groups,
 )
 from radardistill.d2a_baselines import run_b3
@@ -73,8 +74,8 @@ def test_normalized_b3_statistic_is_invariant_to_global_complex_scale(
     factor = 0.6 + 1.2j
     options = r3_config["detection"][option_key]
     original = detector(iq, 1300.0, d2a_config, options)
-    scaled = detector(factor * iq, 1300.0, d2a_config, options)
-    np.testing.assert_allclose(scaled.score_map, original.score_map, rtol=1e-6, atol=1e-8)
+    scaled = detector(factor * iq.astype(np.complex128), 1300.0, d2a_config, options)
+    assert np.max(np.abs(scaled.score_map - original.score_map)) <= 1e-6
     assert scaled.score == pytest.approx(original.score, rel=1e-6)
 
 
@@ -255,6 +256,31 @@ def test_raw_score_quantiles_are_kept_separate_by_scene_group():
     assert len(summaries) == 4
     assert {row["group_id"] for row in summaries} == {"cal"}
     assert {row["q50"] for row in summaries} == {2.0}
+
+
+def test_g3_requires_both_amplitude_stability_and_controlled_scale_gate(r3_config):
+    amplitude_gates = {
+        method: {"passed": method in {"T1", "T2"}, "threshold_replicates_passing": 3}
+        for method in ("B0", "B1", "B2", "B3", "T1", "T2")
+    }
+    scale_rows = []
+    for method in ("B0", "B1", "B2", "B3"):
+        for factor in ("real_0p5", "real_2", "complex_0p6_1p2"):
+            scale_rows.append(
+                {"method": method, "factor": factor, "max_relative_error_from_abs_a_squared": 1e-7}
+            )
+    for method in ("T1", "T2"):
+        for factor, error in (("real_0p5", 0.0), ("real_2", 0.0), ("complex_0p6_1p2", 1.1e-6)):
+            scale_rows.append(
+                {"method": method, "factor": factor, "max_abs_difference_normalized_map": error}
+            )
+
+    result = _apply_g3_controlled_scale_gate(amplitude_gates, scale_rows, r3_config)
+    assert result["T1"]["amplitude_gate_passed"] is True
+    assert result["T1"]["controlled_scale_gate"]["passed"] is False
+    assert result["T1"]["passed"] is False
+    assert result["B3"]["controlled_scale_gate"]["passed"] is True
+    assert result["B3"]["passed"] is False
 
 
 def test_binomial_tail_quantifies_observed_e001_false_alarm_count():
