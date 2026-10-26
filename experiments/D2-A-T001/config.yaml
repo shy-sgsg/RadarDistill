@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-T001
   title: Post-Doppler ACE/AMF teacher enhancement and knowledge transferability
-  protocol_version: 1.1
+  protocol_version: 1.2
   status: preregistered
   date: 2026-10-26
   synthetic_data: true
@@ -24,6 +24,15 @@ radar:
   pulse_count: 130
   prf_hz: 1300.0
   range_bin_count: 32
+
+execution:
+  teacher_device: cuda:0
+  minimum_free_cuda_memory_bytes: 1073741824
+  teacher_batch_size: 16
+  teacher_precision: complex64
+  cuda_required: true
+  cpu_fallback: false
+  final_project_size_cap_gib: 20
 
 teacher:
   selected_candidate: model_assisted_post_doppler_three_channel_ACE_AMF

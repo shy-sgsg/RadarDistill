@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
 import yaml
 
 from radardistill.d2a_baselines import steering_vector
@@ -161,6 +162,7 @@ def test_teacher_functions_do_not_accept_truth_or_scene_metadata():
         "h0_iq_batches",
         "oversampling_factor",
         "eigenvalue_floor_relative_trace",
+        "device",
     )
     assert fit_signature.parameters["oversampling_factor"].kind is inspect.Parameter.KEYWORD_ONLY
     assert tuple(inspect.signature(post_doppler_ace_amf).parameters) == (
@@ -168,4 +170,47 @@ def test_teacher_functions_do_not_accept_truth_or_scene_metadata():
         "covariance_bank",
         "physics_config",
         "teacher_config",
+        "device",
     )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA comparison requires an available GPU")
+def test_cuda_teacher_backend_matches_cpu_outputs(physics_config, teacher_config):
+    paired = generate_d2a_paired_batch(16, 22004, 10.0, 10.0, physics_config)
+    h0_batches = [paired.iq_h0]
+    cpu_bank = fit_post_doppler_covariance(h0_batches)
+    cuda_bank = fit_post_doppler_covariance(h0_batches, device="cuda:0")
+
+    np.testing.assert_allclose(cuda_bank.covariance, cpu_bank.covariance, rtol=2e-4, atol=2e-5)
+    np.testing.assert_allclose(cuda_bank.inverse, cpu_bank.inverse, rtol=3e-4, atol=2e-4)
+
+    cpu_output = post_doppler_ace_amf(
+        paired.iq_h1, cpu_bank, physics_config, teacher_config
+    )
+    cuda_output = post_doppler_ace_amf(
+        paired.iq_h1, cuda_bank, physics_config, teacher_config, device="cuda:0"
+    )
+    np.testing.assert_allclose(cuda_output.score, cpu_output.score, rtol=3e-4, atol=2e-6)
+    np.testing.assert_allclose(cuda_output.score_map, cpu_output.score_map, rtol=3e-3, atol=2e-5)
+    np.testing.assert_allclose(
+        cuda_output.spatial_coherence_map,
+        cpu_output.spatial_coherence_map,
+        rtol=3e-3,
+        atol=2e-5,
+    )
+    np.testing.assert_allclose(cuda_output.soft_response, cpu_output.soft_response, rtol=3e-3, atol=2e-5)
+    np.testing.assert_allclose(cuda_output.doppler_hz, cpu_output.doppler_hz, atol=0.1)
+    np.testing.assert_allclose(cuda_output.range_cell, cpu_output.range_cell, atol=0.02)
+    source = paired.iq_h1.astype(np.complex128)
+    for scale in (0.5 + 0.0j, 2.0 + 0.0j, 0.6 + 1.2j):
+        scaled_output = post_doppler_ace_amf(
+            source * scale, cuda_bank, physics_config, teacher_config, device="cuda:0"
+        )
+        assert np.max(np.abs(scaled_output.score - cuda_output.score)) <= 1e-6
+        assert np.max(np.abs(scaled_output.score_map - cuda_output.score_map)) <= 1e-6
+        assert np.max(np.abs(scaled_output.soft_response - cuda_output.soft_response)) <= 1e-6
+    phase = np.exp(0.731j)
+    rotated_output = post_doppler_ace_amf(
+        source * phase, cuda_bank, physics_config, teacher_config, device="cuda:0"
+    )
+    assert np.max(np.abs(rotated_output.score_map - cuda_output.score_map)) <= 1e-6

@@ -52,7 +52,12 @@ class ACEAMFOutput:
     soft_response: np.ndarray
 
 
-def _as_iq_batch(iq: np.ndarray, *, expected_channels: int | None = None) -> tuple[np.ndarray, bool]:
+def _as_iq_batch(
+    iq: np.ndarray,
+    *,
+    expected_channels: int | None = None,
+    dtype: Any = np.complex128,
+) -> tuple[np.ndarray, bool]:
     values = np.asarray(iq)
     scalar = values.ndim == 3
     if scalar:
@@ -63,7 +68,103 @@ def _as_iq_batch(iq: np.ndarray, *, expected_channels: int | None = None) -> tup
         raise ValueError("IQ channel count does not match the covariance bank")
     if not np.iscomplexobj(values) or np.any(~np.isfinite(values)):
         raise ValueError("iq must contain finite complex samples")
-    return values.astype(np.complex128, copy=False), scalar
+    return values.astype(dtype, copy=False), scalar
+
+
+def _require_cuda_device(device: str):
+    """Return Torch and a validated CUDA device; never silently fall back."""
+    import torch
+
+    try:
+        selected = torch.device(device)
+    except (TypeError, RuntimeError) as error:
+        raise ValueError(f"invalid CUDA device {device!r}") from error
+    if selected.type != "cuda":
+        raise ValueError("the accelerated teacher backend requires a CUDA device")
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA teacher execution was requested but CUDA is unavailable")
+    if selected.index is not None and selected.index >= torch.cuda.device_count():
+        raise RuntimeError(f"requested CUDA device {selected} is not visible")
+    torch.cuda.set_device(selected)
+    return torch, selected
+
+
+def _fit_post_doppler_covariance_cuda(
+    h0_iq_batches: Iterable[np.ndarray],
+    *,
+    oversampling_factor: int,
+    eigenvalue_floor_relative_trace: float,
+    device: str,
+) -> CovarianceBank:
+    torch, selected = _require_cuda_device(device)
+    covariance_sum: Any | None = None
+    scene_count = 0
+    expected_shape: tuple[int, int, int] | None = None
+    for raw_batch in h0_iq_batches:
+        values, _ = _as_iq_batch(raw_batch, expected_channels=3, dtype=np.complex64)
+        _, channels, pulse_count, range_count = values.shape
+        if expected_shape is None:
+            expected_shape = (channels, pulse_count, range_count)
+            covariance_sum = torch.zeros(
+                (pulse_count * oversampling_factor, channels, channels),
+                dtype=torch.complex128,
+                device=selected,
+            )
+        elif expected_shape != (channels, pulse_count, range_count):
+            raise ValueError("all H0 IQ batches must have the same (C,N,R) shape")
+
+        samples = torch.as_tensor(values, dtype=torch.complex64, device=selected)
+        scene_energy = torch.mean(torch.abs(samples) ** 2, dim=(1, 2, 3))
+        if not bool(torch.all(torch.isfinite(scene_energy))) or not bool(torch.all(scene_energy > 0.0)):
+            raise ValueError("each covariance-training CPI must have positive finite observable power")
+        spectrum = torch.fft.fftshift(
+            torch.fft.fft(samples, n=pulse_count * oversampling_factor, dim=2), dim=2
+        )
+        normalized = spectrum / torch.sqrt(scene_energy)[:, None, None, None]
+        assert covariance_sum is not None
+        batch_covariance = torch.einsum(
+            "bckr,bdkr->kcd", normalized, normalized.conj()
+        ) / range_count
+        covariance_sum += batch_covariance.to(torch.complex128)
+        scene_count += int(values.shape[0])
+
+    if scene_count == 0 or expected_shape is None or covariance_sum is None:
+        raise ValueError("at least one nonempty H0 IQ batch is required")
+
+    channels, pulse_count, _ = expected_shape
+    covariance = covariance_sum / scene_count
+    covariance = 0.5 * (covariance + covariance.mH)
+    eigenvalues, eigenvectors = torch.linalg.eigh(covariance)
+    trace = torch.diagonal(covariance, dim1=-2, dim2=-1).real.sum(dim=-1)
+    if not bool(torch.all(torch.isfinite(trace))) or not bool(torch.all(trace > 0.0)):
+        raise ValueError("every Doppler covariance bin must have positive finite trace")
+    floor = eigenvalue_floor_relative_trace * trace / channels
+    floored_values = torch.maximum(eigenvalues, floor[:, None])
+    floor_fraction = torch.mean((eigenvalues < floor[:, None]).to(torch.float64), dim=1)
+    covariance_regularized = torch.einsum(
+        "kci,ki,kdi->kcd", eigenvectors, floored_values, eigenvectors.conj()
+    )
+    inverse = torch.einsum(
+        "kci,ki,kdi->kcd", eigenvectors, torch.reciprocal(floored_values), eigenvectors.conj()
+    )
+    covariance_regularized = 0.5 * (covariance_regularized + covariance_regularized.mH)
+    inverse = 0.5 * (inverse + inverse.mH)
+    condition_number = floored_values.amax(dim=1) / floored_values.amin(dim=1)
+    diagnostics = (covariance_regularized, inverse, floored_values, condition_number)
+    if any(not bool(torch.all(torch.isfinite(item))) for item in diagnostics):
+        raise FloatingPointError("CUDA covariance fitting produced a non-finite matrix or diagnostic")
+    torch.cuda.synchronize(selected)
+    return CovarianceBank(
+        covariance=covariance_regularized.cpu().numpy(),
+        inverse=inverse.cpu().numpy(),
+        eigenvalues=floored_values.cpu().numpy(),
+        condition_number=condition_number.cpu().numpy(),
+        eigenvalue_floor_fraction=floor_fraction.cpu().numpy(),
+        scene_count=scene_count,
+        pulse_count=pulse_count,
+        channel_count=channels,
+        oversampling_factor=oversampling_factor,
+    )
 
 
 def fit_post_doppler_covariance(
@@ -71,6 +172,7 @@ def fit_post_doppler_covariance(
     *,
     oversampling_factor: int = 4,
     eigenvalue_floor_relative_trace: float = 1e-8,
+    device: str = "cpu",
 ) -> CovarianceBank:
     """Fit a per-Doppler 3-channel covariance from streamed H0 IQ batches.
 
@@ -82,6 +184,13 @@ def fit_post_doppler_covariance(
         raise ValueError("oversampling_factor must be positive")
     if not np.isfinite(eigenvalue_floor_relative_trace) or eigenvalue_floor_relative_trace <= 0.0:
         raise ValueError("eigenvalue_floor_relative_trace must be positive and finite")
+    if device != "cpu":
+        return _fit_post_doppler_covariance_cuda(
+            h0_iq_batches,
+            oversampling_factor=oversampling_factor,
+            eigenvalue_floor_relative_trace=eigenvalue_floor_relative_trace,
+            device=device,
+        )
 
     covariance_sum: np.ndarray | None = None
     scene_count = 0
@@ -198,14 +307,143 @@ def _parameter_estimates(
     return peak_score, doppler, range_values, angle
 
 
+def _post_doppler_ace_amf_cuda(
+    values: np.ndarray,
+    scalar: bool,
+    covariance_bank: CovarianceBank,
+    physics_config: dict[str, Any],
+    teacher_config: dict[str, Any],
+    device: str,
+) -> ACEAMFOutput:
+    torch, selected = _require_cuda_device(device)
+    batch_count, channels, pulse_count, range_count = values.shape
+    oversampling_factor = int(teacher_config["frequency_oversampling_factor"])
+    frequency_count = pulse_count * oversampling_factor
+    # Remove the observable CPI magnitude and common phase before quantizing to
+    # complex64. This is algebraically equivalent to dividing the final AMF
+    # score by CPI power, while keeping the CUDA implementation scale stable.
+    flat = values.reshape(batch_count, -1)
+    reference_indices = np.argmax(np.abs(flat), axis=1)
+    references = flat[np.arange(batch_count), reference_indices]
+    reference_magnitudes = np.abs(references)
+    phases = np.divide(
+        references,
+        reference_magnitudes,
+        out=np.ones_like(references),
+        where=reference_magnitudes > 0.0,
+    )
+    observable_power = np.mean(np.abs(values) ** 2, axis=(1, 2, 3))
+    normalized_values = np.divide(
+        values,
+        np.sqrt(observable_power)[:, None, None, None] * phases[:, None, None, None],
+        out=np.zeros_like(values),
+        where=observable_power[:, None, None, None] > 0.0,
+    )
+    samples = torch.as_tensor(normalized_values, dtype=torch.complex64, device=selected)
+    inverse = torch.as_tensor(
+        covariance_bank.inverse, dtype=torch.complex64, device=selected
+    )
+    spectrum = torch.fft.fftshift(
+        torch.fft.fft(samples, n=frequency_count, dim=2), dim=2
+    ).permute(0, 2, 3, 1).contiguous()
+    inverse_y = torch.einsum("kcd,bkrd->bkrc", inverse, spectrum)
+    whitened_energy = torch.sum(spectrum.conj() * inverse_y, dim=-1).real.clamp_min(0.0)
+
+    angle_grid = np.asarray(teacher_config["angle_grid_deg"], dtype=np.float64)
+    manifolds_np = np.stack(
+        [
+            steering_vector(
+                float(azimuth),
+                float(physics_config["beam"]["center_elevation_deg"]),
+                physics_config,
+            )
+            for azimuth in angle_grid
+        ],
+        axis=0,
+    )
+    manifolds = torch.as_tensor(manifolds_np, dtype=torch.complex64, device=selected)
+    matched_steering = torch.einsum("ac,kcd->akd", manifolds.conj(), inverse)
+    numerator = torch.einsum("akd,bkrd->bakr", matched_steering, spectrum)
+    steering_energy = torch.sum(matched_steering * manifolds[:, None, :], dim=-1).real
+    epsilon = float(teacher_config["ace_denominator_epsilon"])
+    numerator_power = torch.abs(numerator) ** 2
+    valid_steering = steering_energy > epsilon
+    valid_energy = whitened_energy > epsilon
+    denominator = (
+        steering_energy.clamp_min(epsilon)[None, :, :, None]
+        * whitened_energy.clamp_min(epsilon)[:, None, :, :]
+    )
+    spatial_ace = torch.where(
+        valid_steering[None, :, :, None] & valid_energy[:, None, :, :],
+        numerator_power / denominator,
+        torch.zeros_like(numerator_power),
+    )
+    diagnostic_clip = teacher_config.get("ace_diagnostic_clip", [0.0, 1.0])
+    spatial_ace = torch.clamp(spatial_ace, float(diagnostic_clip[0]), float(diagnostic_clip[1]))
+    normalized_energy = torch.where(
+        valid_steering[None, :, :, None],
+        numerator_power
+        / steering_energy.clamp_min(epsilon)[None, :, :, None],
+        torch.zeros_like(numerator_power),
+    )
+    normalized_energy = normalized_energy.clamp_min(0.0)
+    score_maps = normalized_energy.amax(dim=1)
+    coherence_maps = spatial_ace.amax(dim=1)
+    native_map = score_maps[:, ::oversampling_factor, :].clone()
+    totals = native_map.sum(dim=(1, 2), keepdim=True)
+    soft_response = torch.where(
+        totals > 0.0,
+        native_map / totals.clamp_min(torch.finfo(native_map.dtype).tiny),
+        torch.zeros_like(native_map),
+    )
+    torch.cuda.synchronize(selected)
+    score_map_np = score_maps.detach().cpu().numpy().astype(np.float64)
+    angle_scores_np = normalized_energy.detach().cpu().numpy().astype(np.float64)
+    coherence_np = coherence_maps.detach().cpu().numpy().astype(np.float64)
+    soft_np = soft_response.detach().cpu().numpy().astype(np.float64)
+    peak_score, doppler, range_cell, angle = _parameter_estimates(
+        score_map_np,
+        angle_scores_np,
+        angle_grid,
+        float(physics_config["radar"]["prf_hz"]),
+        oversampling_factor,
+    )
+    if scalar:
+        return ACEAMFOutput(
+            score=float(peak_score[0]),
+            doppler_hz=float(doppler[0]),
+            range_cell=float(range_cell[0]),
+            angle_deg=float(angle[0]),
+            score_map=score_map_np[0],
+            spatial_coherence_map=coherence_np[0],
+            soft_response=soft_np[0],
+        )
+    return ACEAMFOutput(
+        score=peak_score,
+        doppler_hz=doppler,
+        range_cell=range_cell,
+        angle_deg=angle,
+        score_map=score_map_np,
+        spatial_coherence_map=coherence_np,
+        soft_response=soft_np,
+    )
+
+
 def post_doppler_ace_amf(
     iq: np.ndarray,
     covariance_bank: CovarianceBank,
     physics_config: dict[str, Any],
     teacher_config: dict[str, Any],
+    *,
+    device: str = "cpu",
 ) -> ACEAMFOutput:
     """Return scale-normalized post-Doppler ACE×AMF score and K2-shaped map."""
-    values, scalar = _as_iq_batch(iq, expected_channels=covariance_bank.channel_count)
+    input_dtype = np.complex128
+    values, scalar = _as_iq_batch(
+        iq,
+        expected_channels=covariance_bank.channel_count,
+        dtype=input_dtype,
+    )
     batch_count, channels, pulse_count, range_count = values.shape
     oversampling_factor = int(teacher_config["frequency_oversampling_factor"])
     frequency_count = pulse_count * oversampling_factor
@@ -225,6 +463,16 @@ def post_doppler_ace_amf(
         raise ValueError("teacher angle grid must match its frozen finite grid count")
     if np.any(~np.isfinite(covariance_bank.inverse)):
         raise ValueError("covariance bank inverse must be finite")
+
+    if device != "cpu":
+        return _post_doppler_ace_amf_cuda(
+            values,
+            scalar,
+            covariance_bank,
+            physics_config,
+            teacher_config,
+            device,
+        )
 
     observable_power = np.mean(np.abs(values) ** 2, axis=(1, 2, 3))
     spectrum = np.fft.fftshift(

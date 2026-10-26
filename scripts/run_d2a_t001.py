@@ -200,17 +200,47 @@ def _environment(git_sha: str, free_bytes: int) -> dict[str, Any]:
         "nvidia_smi": _nvidia_smi(),
         "disk_free_bytes": int(free_bytes),
         "project_size_bytes_before_run": int(_repo_size_bytes()),
-        "project_size_limit_bytes": int(20 * 1024**3),
+        "final_project_size_cap_bytes": int(20 * 1024**3),
     }
 
 
-def _preflight(config_path: Path) -> dict[str, Any]:
+def _cuda_device_status(device: str, minimum_free_bytes: int) -> dict[str, Any]:
+    import torch
+
+    try:
+        selected = torch.device(device)
+    except (TypeError, RuntimeError) as error:
+        raise ValueError(f"invalid teacher CUDA device {device!r}") from error
+    if selected.type != "cuda":
+        raise ValueError("T001 teacher execution requires CUDA; CPU fallback is disabled")
+    if not torch.cuda.is_available():
+        raise RuntimeError("T001 teacher execution requires an available CUDA device")
+    if selected.index is not None and selected.index >= torch.cuda.device_count():
+        raise RuntimeError(f"T001 requested CUDA device {selected} is not visible")
+    torch.cuda.set_device(selected)
+    free_bytes, total_bytes = torch.cuda.mem_get_info(selected)
+    if free_bytes < int(minimum_free_bytes):
+        raise RuntimeError(
+            f"T001 requires at least {minimum_free_bytes / 1024**3:.2f} GiB free CUDA memory; "
+            f"available={free_bytes / 1024**3:.2f} GiB"
+        )
+    return {
+        "device": str(selected),
+        "name": torch.cuda.get_device_name(selected),
+        "free_memory_bytes": int(free_bytes),
+        "total_memory_bytes": int(total_bytes),
+        "minimum_free_memory_bytes": int(minimum_free_bytes),
+        "precision": "complex64 compute after observable double-precision scale/phase normalization",
+    }
+
+
+def _preflight(config_path: Path, device: str) -> dict[str, Any]:
     config = _read_yaml(config_path)
     physics = _read_yaml(ROOT / config["physics"]["source_config"])
     e002 = _read_yaml(ROOT / "experiments/D2-A-E002/config.yaml")
     r3 = _read_yaml(ROOT / "experiments/D2-A-R3/config.yaml")
-    if config["experiment"]["id"] != "D2-A-T001" or float(config["experiment"]["protocol_version"]) != 1.1:
-        raise RuntimeError("T001 config must match preregistered protocol v1.1")
+    if config["experiment"]["id"] != "D2-A-T001" or float(config["experiment"]["protocol_version"]) != 1.2:
+        raise RuntimeError("T001 config must match preregistered protocol v1.2")
     if config["experiment"].get("final_blind") is not False:
         raise RuntimeError("T001 does not authorize final blind generation")
     if int(physics["radar"]["channel_count"]) != 3 or int(physics["radar"]["pulse_count"]) != 130 or float(physics["radar"]["prf_hz"]) != 1300.0:
@@ -219,27 +249,42 @@ def _preflight(config_path: Path) -> dict[str, Any]:
         raise RuntimeError("frozen E002 student anchor config version changed")
     if config["teacher"].get("amf_score_clip") is not None:
         raise RuntimeError("T001 AMF score must remain unclipped")
+    execution = config["execution"]
+    if str(device) != str(execution["teacher_device"]):
+        raise RuntimeError(
+            f"T001 teacher device is frozen as {execution['teacher_device']}, got {device}"
+        )
+    if (
+        int(execution["teacher_batch_size"]) != int(config["teacher"]["training_batch_size"])
+        or int(execution["teacher_batch_size"]) != int(config["data"]["generation_batch_size"])
+        or int(execution["teacher_batch_size"]) > 16
+    ):
+        raise RuntimeError("T001 CUDA teacher batch size must match the frozen <=16-CPI stream size")
+    cuda_status = _cuda_device_status(
+        device,
+        int(execution["minimum_free_cuda_memory_bytes"]),
+    )
     git_sha = _require_frozen_commit(config)
     size_bytes = _repo_size_bytes()
-    if size_bytes >= 20 * 1024**3:
-        raise RuntimeError(f"project already exceeds the user limit: {size_bytes / 1024**3:.2f} GiB")
     disk = os.statvfs(ROOT)
     free_bytes = int(disk.f_bavail * disk.f_frsize)
     if free_bytes < 2 * 1024**3:
         raise RuntimeError(f"T001 requires at least 2 GiB working-space reserve; available={free_bytes / 1024**3:.2f} GiB")
     environment = _environment(git_sha, free_bytes)
+    environment["teacher_cuda"] = cuda_status
     root = ROOT / config["outputs"]["directory"]
     root.mkdir(parents=True, exist_ok=True)
     (root / "config_used.yaml").write_text(config_path.read_text(encoding="utf-8"), encoding="utf-8")
     _write_json(root / "environment.json", environment)
     result = {
-        "protocol_version": 1.1,
+        "protocol_version": 1.2,
         "git_sha": git_sha,
         "branch": "main",
         "pushed_to_origin_main": True,
+        "teacher_cuda": cuda_status,
         "physics_config": config["physics"]["source_config"],
         "project_size_bytes_before_run": size_bytes,
-        "project_size_limit_bytes": 20 * 1024**3,
+        "final_project_size_cap_bytes": 20 * 1024**3,
         "disk_free_bytes": free_bytes,
         "estimated_persistent_t001_output_bytes_max": 500 * 1024**2,
         "passed": True,
@@ -248,14 +293,19 @@ def _preflight(config_path: Path) -> dict[str, Any]:
     return result
 
 
-def _require_preflight(config: dict[str, Any]) -> dict[str, Any]:
+def _require_preflight(config: dict[str, Any], device: str) -> dict[str, Any]:
     root = ROOT / config["outputs"]["directory"]
     preflight_path = root / "preflight.json"
     if not preflight_path.is_file():
         raise RuntimeError("run the T001 preflight before generating scenes")
     result = json.loads(preflight_path.read_text(encoding="utf-8"))
-    if not result.get("passed") or result.get("git_sha") != _require_frozen_commit(config):
+    if (
+        not result.get("passed")
+        or result.get("git_sha") != _require_frozen_commit(config)
+        or result.get("teacher_cuda", {}).get("device") != device
+    ):
         raise RuntimeError("T001 preflight no longer matches the pushed frozen code and protocol")
+    _cuda_device_status(device, int(config["execution"]["minimum_free_cuda_memory_bytes"]))
     return result
 
 
@@ -349,11 +399,14 @@ def _method_outputs(
     physics: dict[str, Any],
     config: dict[str, Any],
     t1_options: dict[str, Any],
+    device: str = "cpu",
 ) -> dict[str, dict[str, np.ndarray]]:
     prf_hz = float(physics["radar"]["prf_hz"])
     b3 = run_b3(iq, prf_hz, physics)
     t1 = run_t1_global_normalized(iq, prf_hz, physics, t1_options)
-    ace = post_doppler_ace_amf(iq, covariance, physics, config["teacher"])
+    ace = post_doppler_ace_amf(
+        iq, covariance, physics, config["teacher"], device=device
+    )
     return {
         "B3": {
             "score": np.atleast_1d(np.asarray(b3.score, dtype=np.float64)),
@@ -382,6 +435,7 @@ def _score_h0_split(
     physics: dict[str, Any],
     covariance: CovarianceBank,
     t1_options: dict[str, Any],
+    device: str = "cpu",
 ) -> tuple[list[dict[str, Any]], set[str], np.ndarray]:
     rows: list[dict[str, Any]] = []
     ids: set[str] = set()
@@ -390,7 +444,7 @@ def _score_h0_split(
     for iq, metadata in _iter_h0_split(split_config, config, physics):
         if first_batch is None:
             first_batch = np.asarray(iq[: min(16, len(iq))]).copy()
-        outputs = _method_outputs(iq, covariance, physics, config, t1_options)
+        outputs = _method_outputs(iq, covariance, physics, config, t1_options, device)
         ids.update(str(value) for value in metadata["base_scene_id"])
         for method in METHODS:
             methods[method].extend(outputs[method]["score"].tolist())
@@ -447,6 +501,7 @@ def _collect_development(
     e002: dict[str, Any],
     covariance: CovarianceBank,
     t1_options: dict[str, Any],
+    device: str = "cpu",
 ) -> tuple[list[dict[str, Any]], dict[str, np.ndarray], set[str], dict[str, np.ndarray]]:
     assignments = build_development_assignments(config, e002["data"]["course_levels"])
     development = config["data"]["development"]
@@ -494,8 +549,8 @@ def _collect_development(
                 scenario_id="separated",
                 target_radial_velocity_mps=velocity,
             )
-            h0_outputs = _method_outputs(batch.iq_h0, covariance, physics, config, t1_options)
-            h1_outputs = _method_outputs(batch.iq_h1, covariance, physics, config, t1_options)
+            h0_outputs = _method_outputs(batch.iq_h0, covariance, physics, config, t1_options, device)
+            h1_outputs = _method_outputs(batch.iq_h1, covariance, physics, config, t1_options, device)
             if timing_iq is None:
                 timing_iq = np.asarray(batch.iq_h1[: min(16, len(batch.iq_h1))]).copy()
             _append_method_rows(
@@ -867,24 +922,26 @@ def _evaluate_development(
     )
 
     soft = data["soft"]
-    soft_summaries: dict[str, Any] = {}
-    c3 = course == "C3"
-    hard_soft = hard
-    for name in ("ACE_AMF", "K2"):
-        soft_summaries[name] = {
-            "hard_condition": summarize_soft_response(
-                {key: value[hard_soft] for key, value in soft[name].items()},
-                ids[hard_soft],
-                bootstrap_replicates=replicates,
-                bootstrap_seed=seed + 61000 + int(name == "K2"),
-            ),
-            "pooled_C3": summarize_soft_response(
-                {key: value[c3] for key, value in soft[name].items()},
-                ids[c3],
-                bootstrap_replicates=replicates,
-                bootstrap_seed=seed + 62000 + int(name == "K2"),
-            ),
-        }
+    soft_summaries: dict[str, Any] = {"evaluated": bool(g2["passed"])}
+    if g2["passed"]:
+        c3 = course == "C3"
+        for name in ("ACE_AMF", "K2"):
+            soft_summaries[name] = {
+                "hard_condition": summarize_soft_response(
+                    {key: value[hard] for key, value in soft[name].items()},
+                    ids[hard],
+                    bootstrap_replicates=replicates,
+                    bootstrap_seed=seed + 61000 + int(name == "K2"),
+                ),
+                "pooled_C3": summarize_soft_response(
+                    {key: value[c3] for key, value in soft[name].items()},
+                    ids[c3],
+                    bootstrap_replicates=replicates,
+                    bootstrap_seed=seed + 62000 + int(name == "K2"),
+                ),
+            }
+    else:
+        soft_summaries["reason"] = "G2 failed; preregistered soft-response review is not performed"
     g3 = _adjudicate_g3(
         g2_passed=bool(g2["passed"]),
         soft_summaries=soft_summaries,
@@ -902,17 +959,18 @@ def _evaluate_development(
     summaries["bootstrap_seed"] = seed
 
     soft_rows: list[dict[str, Any]] = []
-    for method_name, per_scene in soft.items():
-        for index, scene_id in enumerate(ids):
-            soft_rows.append({
-                "base_scene_id": scene_id,
-                "method": method_name,
-                "course_level": course[index],
-                "scenario_id": scenario[index],
-                "snr_db": snr[index],
-                "cnr_db": cnr[index],
-                **{key: value[index] for key, value in per_scene.items()},
-            })
+    if soft_summaries["evaluated"]:
+        for method_name, per_scene in soft.items():
+            for index, scene_id in enumerate(ids):
+                soft_rows.append({
+                    "base_scene_id": scene_id,
+                    "method": method_name,
+                    "course_level": course[index],
+                    "scenario_id": scenario[index],
+                    "snr_db": snr[index],
+                    "cnr_db": cnr[index],
+                    **{key: value[index] for key, value in per_scene.items()},
+                })
     summaries["physical_edges"] = {
         "azimuth_edge_definition_deg_from_beam_center": 0.9,
         "azimuth_edge_count": int(np.sum(np.abs(azimuth - float(physics["beam"]["center_azimuth_deg"])) >= 0.9)),
@@ -935,6 +993,7 @@ def _physical_diagnostics(
     physics: dict[str, Any],
     covariance: CovarianceBank,
     threshold: float,
+    device: str = "cpu",
 ) -> dict[str, Any]:
     iq0 = np.asarray(dev["physical_iq_h0"], dtype=np.complex64)
     target = np.asarray(dev["physical_target_iq"], dtype=np.complex64)
@@ -942,7 +1001,7 @@ def _physical_diagnostics(
         return {"completed": False, "reason": "no frozen hard-condition physical subset"}
     iq1 = iq0 + target
     teacher_config = config["teacher"]
-    baseline = post_doppler_ace_amf(iq1, covariance, physics, teacher_config)
+    baseline = post_doppler_ace_amf(iq1, covariance, physics, teacher_config, device=device)
     prf = float(physics["radar"]["prf_hz"])
     results: dict[str, Any] = {
         "completed": True,
@@ -951,7 +1010,7 @@ def _physical_diagnostics(
         "original_threshold": float(threshold),
     }
     phase = np.exp(0.731j)
-    rotated = post_doppler_ace_amf(iq1 * phase, covariance, physics, teacher_config)
+    rotated = post_doppler_ace_amf(iq1 * phase, covariance, physics, teacher_config, device=device)
     results["common_phase_rotation"] = {
         "factor": [float(phase.real), float(phase.imag)],
         "max_abs_score_difference": float(np.max(np.abs(np.asarray(rotated.score) - np.asarray(baseline.score)))),
@@ -960,7 +1019,7 @@ def _physical_diagnostics(
     }
     scale_results: dict[str, Any] = {}
     for factor in (0.5 + 0.0j, 2.0 + 0.0j, 0.6 + 1.2j):
-        scaled = post_doppler_ace_amf(iq1 * factor, covariance, physics, teacher_config)
+        scaled = post_doppler_ace_amf(iq1 * factor, covariance, physics, teacher_config, device=device)
         scale_results[str(factor)] = {
             "max_abs_score_difference": float(np.max(np.abs(np.asarray(scaled.score) - np.asarray(baseline.score)))),
             "max_abs_map_difference": float(np.max(np.abs(scaled.score_map - baseline.score_map))),
@@ -975,7 +1034,7 @@ def _physical_diagnostics(
     for delta_hz in (-25.0, -10.0, 10.0, 25.0):
         modulation = np.exp(2j * np.pi * delta_hz * time_axis)[None, None, :, None]
         shifted_iq = iq0 + target * modulation
-        shifted = post_doppler_ace_amf(shifted_iq, covariance, physics, teacher_config)
+        shifted = post_doppler_ace_amf(shifted_iq, covariance, physics, teacher_config, device=device)
         shift_error = np.asarray(wrap_frequency(
             np.asarray(shifted.doppler_hz) - np.asarray(baseline.doppler_hz) - delta_hz,
             prf,
@@ -992,7 +1051,7 @@ def _physical_diagnostics(
     rng = np.random.default_rng(int(config["data"]["bootstrap"]["seed"]) + 3)
     phases = rng.uniform(0.0, 2.0 * np.pi, size=(iq1.shape[0], iq1.shape[1], 1, 1))
     channel_phase_iq = iq1 * np.exp(1j * phases)
-    channel_phase = post_doppler_ace_amf(channel_phase_iq, covariance, physics, teacher_config)
+    channel_phase = post_doppler_ace_amf(channel_phase_iq, covariance, physics, teacher_config, device=device)
     results["independent_channel_phase_perturbation"] = {
         "score_ratio_mean": float(np.mean(np.asarray(channel_phase.score) / np.maximum(np.asarray(baseline.score), 1e-12))),
         "detection_fraction_at_original_threshold": float(np.mean(np.asarray(channel_phase.score) >= threshold)),
@@ -1003,26 +1062,53 @@ def _physical_diagnostics(
     return results
 
 
-def _benchmark_candidate(iq: np.ndarray, config: dict[str, Any], physics: dict[str, Any], covariance: CovarianceBank) -> dict[str, Any]:
+def _benchmark_candidate(
+    iq: np.ndarray,
+    config: dict[str, Any],
+    physics: dict[str, Any],
+    covariance: CovarianceBank,
+    device: str,
+    repetitions: int = 1000,
+) -> dict[str, Any]:
     sample = np.asarray(iq[:16], dtype=np.complex64)
-    if sample.shape[0] == 0:
+    if sample.shape[0] == 0 or repetitions <= 0:
         return {"completed": False}
-    result: dict[str, Any] = {"completed": True, "unique_cpis": int(sample.shape[0]), "repetitions": 1000, "reuses_same_cpis": True}
-    singles = time.perf_counter()
-    for index in range(1000):
-        post_doppler_ace_amf(sample[index % len(sample)], covariance, physics, config["teacher"])
-    result["batch_1_seconds"] = time.perf_counter() - singles
-    multi_count = 0
-    multi = time.perf_counter()
-    while multi_count < 1000:
-        current = sample[np.arange(16) % len(sample)]
-        post_doppler_ace_amf(current, covariance, physics, config["teacher"])
-        multi_count += len(current)
-    result["batch_16_scenes"] = multi_count
-    result["batch_16_seconds"] = time.perf_counter() - multi
-    result["batch_1_seconds_per_cpi"] = result["batch_1_seconds"] / 1000.0
-    result["batch_16_seconds_per_cpi"] = result["batch_16_seconds"] / multi_count
-    return result
+    backends: dict[str, Any] = {}
+    for backend in dict.fromkeys(("cpu", device)):
+        singles = time.perf_counter()
+        for index in range(repetitions):
+            post_doppler_ace_amf(
+                sample[index % len(sample)],
+                covariance,
+                physics,
+                config["teacher"],
+                device=backend,
+            )
+        batch_1_seconds = time.perf_counter() - singles
+        multi_count = 0
+        multi = time.perf_counter()
+        while multi_count < repetitions:
+            current = sample[np.arange(16) % len(sample)]
+            post_doppler_ace_amf(
+                current, covariance, physics, config["teacher"], device=backend
+            )
+            multi_count += len(current)
+        batch_16_seconds = time.perf_counter() - multi
+        backends[backend] = {
+            "batch_1_cpi_count": repetitions,
+            "batch_1_seconds": batch_1_seconds,
+            "batch_1_seconds_per_cpi": batch_1_seconds / repetitions,
+            "batch_16_cpi_count": multi_count,
+            "batch_16_seconds": batch_16_seconds,
+            "batch_16_seconds_per_cpi": batch_16_seconds / multi_count,
+        }
+    return {
+        "completed": True,
+        "unique_cpis": int(sample.shape[0]),
+        "repetitions": repetitions,
+        "reuses_same_cpis": True,
+        "backends": backends,
+    }
 
 
 def _write_figures(metrics: dict[str, Any], output_dir: Path) -> list[str]:
@@ -1094,6 +1180,7 @@ def _write_analysis(metrics: dict[str, Any], output_dir: Path, git_sha: str) -> 
         "**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2（T001 未修改总纲）  ",
         "**数据：** 新生成的合成 H0/H1 开发数据；不是实测，也不是 final blind。  ",
         "**候选：** 唯一模型辅助三通道 post-Doppler ACE×AMF。  ",
+        f"**候选设备：** `{metrics['compute']['teacher_device']}`；B3/T1/K2 对照：{metrics['compute']['comparison_baselines_device']}。  ",
         "",
         "## 冻结阶段门",
         "",
@@ -1119,8 +1206,15 @@ def _write_analysis(metrics: dict[str, Any], output_dir: Path, git_sha: str) -> 
         "## 主要困难条件与知识质量",
         "",
         f"主要困难条件：`{hard_key}`。ACE×AMF 相对最佳旧教师 `{metrics['best_old_baseline_in_hard_condition']}` 的 joint-success 差及 bootstrap CI：`{metrics['gates']['G2']['primary_hard_condition']['ACE_AMF_minus_best_old_joint_success']}`。",
-        f"ACE×AMF hard target-mass lift：`{metrics['soft_response']['ACE_AMF']['hard_condition']['target_window_mass_lift_mean']:.5f}`, 95% CI `{metrics['soft_response']['ACE_AMF']['hard_condition']['target_window_mass_lift_ci95']}`；top-cell localization `{metrics['soft_response']['ACE_AMF']['hard_condition']['teacher_top_cell_localization_rate']:.4f}`。",
-        f"K2 hard target-mass lift：`{metrics['soft_response']['K2']['hard_condition']['target_window_mass_lift_mean']:.5f}`, 95% CI `{metrics['soft_response']['K2']['hard_condition']['target_window_mass_lift_ci95']}`；top-cell localization `{metrics['soft_response']['K2']['hard_condition']['teacher_top_cell_localization_rate']:.4f}`。",
+    ]
+    if metrics["soft_response"].get("evaluated", False):
+        lines += [
+            f"ACE×AMF hard target-mass lift：`{metrics['soft_response']['ACE_AMF']['hard_condition']['target_window_mass_lift_mean']:.5f}`, 95% CI `{metrics['soft_response']['ACE_AMF']['hard_condition']['target_window_mass_lift_ci95']}`；top-cell localization `{metrics['soft_response']['ACE_AMF']['hard_condition']['teacher_top_cell_localization_rate']:.4f}`。",
+            f"K2 hard target-mass lift：`{metrics['soft_response']['K2']['hard_condition']['target_window_mass_lift_mean']:.5f}`, 95% CI `{metrics['soft_response']['K2']['hard_condition']['target_window_mass_lift_ci95']}`；top-cell localization `{metrics['soft_response']['K2']['hard_condition']['teacher_top_cell_localization_rate']:.4f}`。",
+        ]
+    else:
+        lines.append("G2 未通过；按预注册协议不评价 soft response 质量，G3 记为 NOT EVALUATED。")
+    lines += [
         "",
         "## 解释边界",
         "",
@@ -1132,9 +1226,12 @@ def _write_analysis(metrics: dict[str, Any], output_dir: Path, git_sha: str) -> 
     (output_dir / "analysis.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def _run_teacher(config_path: Path) -> dict[str, Any]:
+def _run_teacher(config_path: Path, device: str) -> dict[str, Any]:
     config = _read_yaml(config_path)
-    preflight = _require_preflight(config)
+    preflight = _require_preflight(config, device)
+    import torch
+
+    torch.cuda.reset_peak_memory_stats(torch.device(device))
     physics = _read_yaml(ROOT / config["physics"]["source_config"])
     e002 = _read_yaml(ROOT / "experiments/D2-A-E002/config.yaml")
     r3 = _read_yaml(ROOT / "experiments/D2-A-R3/config.yaml")
@@ -1150,6 +1247,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         covariance_batches,
         oversampling_factor=int(config["teacher"]["frequency_oversampling_factor"]),
         eigenvalue_floor_relative_trace=float(config["teacher"]["covariance_eigenvalue_floor_relative_trace"]),
+        device=device,
     )
     covariance_seconds = time.perf_counter() - covariance_started
     covariance_cpu_seconds = time.process_time() - covariance_cpu_started
@@ -1171,6 +1269,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         physics,
         covariance,
         t1_options,
+        device,
     )
     verification_rows, verification_ids, _ = _score_h0_split(
         "h0_verification",
@@ -1179,6 +1278,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         physics,
         covariance,
         t1_options,
+        device,
     )
     _write_csv(output_dir / "calibration_scores.csv", calibration_rows)
     _write_csv(output_dir / "verification_scores.csv", verification_rows)
@@ -1192,7 +1292,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
     }
 
     development_rows, dev, development_ids, _ = _collect_development(
-        config, physics, e002, covariance, t1_options
+        config, physics, e002, covariance, t1_options, device
     )
     _write_csv(output_dir / "development_per_scene.csv", development_rows)
 
@@ -1219,6 +1319,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         physics,
         covariance,
         float(thresholds["ACE_AMF"]["threshold"]),
+        device,
     )
     maximum_scale_map_difference = max(
         item["max_abs_map_difference"] for item in scale_diagnostic["common_complex_scale"].values()
@@ -1253,11 +1354,18 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         thresholds,
         g1_runtime=g1_runtime,
     )
+    candidate_timing = _benchmark_candidate(
+        timing_iq, config, physics, covariance, device
+    )
     stage_wall = time.perf_counter() - started
     stage_cpu = time.process_time() - cpu_started
     rss_end = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     compute = {
-        "teacher_device": "CPU",
+        "teacher_device": str(torch.device(device)),
+        "comparison_baselines_device": "CPU NumPy (B3, T1, and K2)",
+        "teacher_precision": "complex64 CUDA compute with double-precision observable scale/phase normalization",
+        "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(torch.device(device))),
+        "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(torch.device(device))),
         "covariance_fit_wall_seconds": covariance_seconds,
         "covariance_fit_cpu_seconds": covariance_cpu_seconds,
         "covariance_fit_scenes_per_second": covariance.scene_count / max(covariance_seconds, 1e-12),
@@ -1268,7 +1376,7 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
         "covariance_bank_compressed_bytes": int((output_dir / "covariance_bank.npz").stat().st_size),
         "peak_rss_platform_units": int(max(memory_start, rss_end)),
         "peak_rss_unit": "KiB on Linux",
-        "candidate_inference_timing": _benchmark_candidate(timing_iq, config, physics, covariance),
+        "candidate_inference_timing": candidate_timing,
         "teacher_stage_wall_seconds": stage_wall,
         "teacher_stage_cpu_seconds": stage_cpu,
     }
@@ -1293,13 +1401,13 @@ def _run_teacher(config_path: Path) -> dict[str, Any]:
     _write_analysis(metrics, output_dir, preflight["git_sha"])
 
     size_bytes = _repo_size_bytes()
-    if size_bytes >= 20 * 1024**3:
-        raise RuntimeError(f"project output exceeds the requested 20 GiB final limit: {size_bytes / 1024**3:.2f} GiB")
+    metrics["project_size_bytes_after_teacher_stage"] = size_bytes
+    _write_json(output_dir / "metrics.json", metrics)
     return {
         "git_sha": preflight["git_sha"],
         "gates": gate_values,
         "student_pilot_eligible": metrics["gates"]["student_pilot_eligible"],
-        "project_size_gib_after_teacher": size_bytes / 1024**3,
+        "project_size_gib_after_teacher_stage": size_bytes / 1024**3,
         "teacher_stage_wall_seconds": stage_wall,
         "metrics": str((output_dir / "metrics.json").relative_to(ROOT)),
     }
@@ -1313,13 +1421,13 @@ def main() -> int:
     args = parser.parse_args()
     config_path = (ROOT / args.config).resolve() if not args.config.is_absolute() else args.config.resolve()
     if args.stage in ("preflight", "all"):
-        print(json.dumps(_json_safe(_preflight(config_path)), ensure_ascii=False, indent=2), flush=True)
+        print(json.dumps(_json_safe(_preflight(config_path, args.device)), ensure_ascii=False, indent=2), flush=True)
     if args.stage in ("teacher", "all"):
-        result = _run_teacher(config_path)
+        result = _run_teacher(config_path, args.device)
         print(json.dumps(_json_safe(result), ensure_ascii=False, indent=2), flush=True)
     if args.stage == "student":
         config = _read_yaml(config_path)
-        _require_preflight(config)
+        _require_preflight(config, args.device)
         metrics_path = ROOT / config["outputs"]["directory"] / "metrics.json"
         if not metrics_path.is_file():
             raise RuntimeError("complete teacher evaluation before requesting the gated student pilot")

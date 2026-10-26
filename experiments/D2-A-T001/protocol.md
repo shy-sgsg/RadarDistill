@@ -1,10 +1,16 @@
 # D2-A-T001 预注册协议：三通道 post-Doppler ACE/AMF 教师与软知识可迁移性
 
-**协议版本：** 1.1
-**状态：** 2026-10-26 v1.1 冻结，先于 T001 新场景生成、covariance 拟合、实现结果筛选与训练。v1.1 是数据生成前的方法学勘误，保留唯一候选、种子、分组、门槛和预算不变。
+**协议版本：** 1.2
+**状态：** 2026-10-26 v1.2 执行后端修订；研究问题、候选公式、样本种子/分组、训练预算、阈值和阶段门与 v1.1 完全一致。
 **用户授权：** 用户已明确批准 D2-A-T001、单个先进教师候选、阶段门和必要学生 pilot；本协议将其预先量化。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2；本任务不修改研究总纲。
 **实验性质：** 合成仿真开发筛选；不生成 final blind，不等于实测或生产系统结论。
+
+### 协议修订记录
+
+- **v1.1（数据前数学勘误）：** 纯空间 ACE 会消除单目标 Doppler-bin 的能量差，故唯一候选改为保留空间相干项、并恢复白化 Doppler 能量的 ACE×AMF；其他研究设计不变。
+- **v1.2（用户要求的计算后端修订）：** covariance 拟合和 ACE×AMF 批处理改为强制 CUDA `cuda:0`，使用批量不超过16 CPI的 PyTorch complex64 计算；公共尺度/相位规范化在 double precision 完成，目标公式与指标门限不变，CPU fallback 禁止。修订前曾短暂完成一次 4,096 场景 CPU covariance 拟合，但尚未评分 calibration、verification 或 development；该临时 covariance bank 不作为实验结果，重启时以同一冻结 covariance seed block 在 CUDA 上重拟合并覆盖。没有保存原始 IQ 或依据这次尝试筛选方法。
+- **体积要求：** 项目占用只在本阶段结束、清理不需要的大型可重建文件后核验小于20 GiB；运行中间态不设20 GiB硬中止。原始 IQ 和全量训练软图仍不落盘。
 
 ## 1. 研究目标、主线与问题
 
@@ -27,7 +33,7 @@ T001 只选择一个主要先进教师：**模型辅助 post-Doppler 三通道 A
 
 1. H0 covariance training 输入只用 `iq_h0`。逐场景计算所有通道/脉冲/range 的可观测平均功率 `e_i`；对 IQ 做四倍零填充慢时间 FFT，得到 `Y_i[k,r]∈C^3`。
 2. 对每个 Doppler bin，拟合 population covariance 形状：
-   `R[k] = mean_i( mean_r( Y_i[k,r] Y_i[k,r]^H ) / e_i )`；跨 scene 等权，去除生成器参考幅度造成的全 CPI 整体尺度权重。所有数据在 CPU 分批流式处理，不保存完整 IQ。
+   `R[k] = mean_i( mean_r( Y_i[k,r] Y_i[k,r]^H ) / e_i )`；跨 scene 等权，去除生成器参考幅度造成的全 CPI 整体尺度权重。IQ 在 CPU 分批生成，协方差频谱及批量累加在 CUDA 上执行；不保存完整 IQ。
 3. 仅为数值求逆，Hermitianize 后将最小特征值下限固定为 `1e-8 × trace(R[k])/3`；不搜索收缩系数、rank 或温度。记录每个 bin 的条件数、特征值和地板触发比例。
 4. 由 E001 公开几何计算 17 点冻结接收 steering grid `a(θ)`。定义 CPI 可观测平均功率 `e_CPI=mean(|X[c,n,r]|²)`，以免固定阈值分数随公共复尺度变化。对每个 `(k,r,θ)` 计算空间相干度
    `ACE[k,r,θ]=|aᴴ R[k]⁻¹Y[k,r]|² / ((aᴴR[k]⁻¹a)(Y[k,r]ᴴR[k]⁻¹Y[k,r]))`，并计算白化匹配能量 `W[k,r,θ]=|aᴴR[k]⁻¹Y[k,r]|²/(aᴴR[k]⁻¹a)`。分母为零时两者均为0；诊断 ACE 裁剪到 `[0,1]` 仅限浮点容差。
@@ -71,7 +77,7 @@ B3、T1、PD-ACE/AMF 每个 detector 用 calibration H0 自己的 `numpy.quantil
 2. Estimation：所有H1及detected H1的range MAE/RMSE（cells、m）、周期 Doppler MAE/RMSE/bias；misses-as-failures joint success (`detected`, `|range error|≤1 cell`, `|circular Doppler error|≤20 Hz`)。
 3. Soft knowledge：H0/H1 score和map响应分布；target-window probability mass（range≤1 cell 且 Doppler≤20Hz）、配对 H1−H0 mass lift、teacher max cell localization、错误峰类型、map normalized entropy、target/false peak margin；重点报告 C3 A/B/C与主要困难条件。
 4. Physical behavior：公共复相位、复尺度`0.5, 2.0, 0.6+1.2j`不变性；对叠加目标单独频移`−25,−10,+10,+25 Hz`的响应移位；独立通道相位破坏诊断；方向/频率边界和参数周期误差。所有转换用原始冻结模型/阈值；不做重校准。
-5. Compute：covariance拟合 CPU时间、样本吞吐、peak RSS；每 CPI CPU时间（batch=1/16，1000 CPI运行，仅作为实际成本记录，不称为实时验证）；协方差和模型大小；如果 student运行则CUDA/GPU、训练时间、peak allocated/reserved。
+5. Compute：covariance拟合 CUDA时间、样本吞吐、CPU peak RSS及CUDA峰值 allocated/reserved；在相同复用的16个校准 IQ上比较候选的 CPU 与 CUDA 推理时间（batch=1/16、各1000 CPI，仅作实际成本记录，不称实时验证）；报告协方差和模型大小。B3/T1/K2基线保留现有 CPU NumPy实现。若运行 student，则记录CUDA/GPU、训练时间、peak allocated/reserved。
 
 区间使用2,000次`base_scene_id`配对 bootstrap（固定 seed `2026102702`）；H0 Pfa使用精确二项区间。ROC/AUC、RMSE、Pd和joint success的对照使用场景配对bootstrap。D不参与可辨识性能门。
 
@@ -103,7 +109,7 @@ PD-ACE/AMF 独立 H0 verification的总Pfa点估计`≤0.06`且单侧95% exact�
 - **S1 old teacher：** 复用 E002 v2.1 C 臂 checkpoint（B同课程/初始化/训练数据，加旧K2 H1-only软监督）。
 - **S2 new teacher：** 仅新增训练一次；沿用同 E002 训练 split/batch计划/模型/初始化，在H1真值任务损失外使用新PD-ACE/AMF `[130,32]` map；软loss格式与K2完全一致，H1-only，lambda按 E002 `0.05→0` 线性退火；H0仍只有真值presence监督。
 
-S0/S1以冻结 checkpoint 作为相同种子 pilot锚点，不重训练；三组均在新T001 H0 calibration/verification和paired development上评价。S2训练IQ按E002冻结scene seeds/batch plan确定性分批生成，CPU流式处理，不将全训练IQ缓存到GPU/仓库。new-teacher maps只保存必要的训练中间缓存并按既有项目忽略规则处理；项目总量需小于20 GiB。
+S0/S1以冻结 checkpoint 作为相同种子 pilot锚点，不重训练；三组均在新T001 H0 calibration/verification和paired development上评价。S2训练IQ按E002冻结scene seeds/batch plan确定性分批生成，CPU流式处理，不将全训练IQ缓存到GPU/仓库。new-teacher maps只保存必要的训练中间缓存并按既有项目忽略规则处理；阶段收尾清理后项目总量需小于20 GiB，中间体积不设该限制。
 
 评估每臂Pfa/AUC/Pd/range/Doppler/joint success、主要困难子组、配对`S2−S1`与`S2−S0`区间、物理变换和训练/资源成本。**pilot signal**需S2相对S1在困难条件 joint success至少`+0.05`且paired95%区间下限`>0`，并且S2相对S0 joint-success CI下限`>−0.05`，全局verification H0门通过且无超`+10Hz` Doppler RMSE退化。单seed只决定是否值得独立预注册正式多seed，不证明一般性收益。
 
@@ -111,11 +117,12 @@ S0/S1以冻结 checkpoint 作为相同种子 pilot锚点，不重训练；三组
 
 ## 7. 资源、复现和交付
 
-- Teacher端CPU；batch≤16 CPI；不缓存IQ或全量训练输出图。`R[k]` covariance bank、校准/验证分数及逐场景指标可保存；文件需保持可审查且项目占用<20 GiB。
+- Teacher covariance拟合和ACE×AMF推理强制运行在配置指定的CUDA设备`cuda:0`；CUDA不可用或空闲显存低于配置下限时停止，不回退CPU。输入分批且batch≤16 CPI；double precision完成公共复尺度/相位规范化，频谱和协方差大批运算使用complex64 CUDA；每阶段记录峰值显存和运行时间。不缓存IQ或全量训练输出图。`R[k]` covariance bank、校准/验证分数及逐场景指标可保存。
+- 20 GiB是阶段结束清理后的项目最终体积上限，不限制中间运行体积。Preflight和实验阶段只记录当前体积；结束后仅清理可重建且不需审计的大型缓存，再实测项目总占用并确保小于20 GiB。
 - 若运行student，必须确认 `AISAR` 的 RTX 3050 Laptop CUDA可见；仅S2新训练、顺序单模型驻留GPU，不CPU回退；OOM遵照 E002 microbatch/梯度累计规则。
 - `environment.json` 记录当前git SHA、Python/NumPy/Torch、CUDA、GPU、CPU/内存、disk free、代码版本、配置、各阶段运行时间；teacher阶段不作实时测试主张。
 - 复现：
-  `conda run --no-capture-output -n AISAR python scripts/run_d2a_t001.py --config experiments/D2-A-T001/config.yaml --stage preflight`
-  `conda run --no-capture-output -n AISAR python scripts/run_d2a_t001.py --config experiments/D2-A-T001/config.yaml --stage teacher`
+  `conda run --no-capture-output -n AISAR python scripts/run_d2a_t001.py --config experiments/D2-A-T001/config.yaml --stage preflight --device cuda:0`
+  `conda run --no-capture-output -n AISAR python scripts/run_d2a_t001.py --config experiments/D2-A-T001/config.yaml --stage teacher --device cuda:0`
   仅G1–G3通过：`conda run --no-capture-output -n AISAR python scripts/run_d2a_t001.py --config experiments/D2-A-T001/config.yaml --stage student --device cuda:0`
 - 保留 `protocol.md`、`config.yaml`、`config_used.yaml`、environment、covariance bank、metrics/result CSV、配对逐场景 score/estimates、图表、analysis、软知识 audit 和 stage review；不提交原始 IQ、cache、或本地 GMTI 用户文件。

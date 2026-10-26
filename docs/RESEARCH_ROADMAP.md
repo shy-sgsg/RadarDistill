@@ -1,11 +1,13 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-10-25
+**更新时间：** 2026-10-26
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
 **D2-A-E001、R3 与 E002 v2.1 pilot 已完成；R3 和 E002 阶段决定均为 REFINE。** R3 的 T1/T2 没有通过独立固定阈值 G2。E002 v2.1 的 A/B/C CUDA pilot 表明三臂能在当前可辨识开发分布学习任务，但 G3 分层 H0 门和 G6 相位/频移等变门失败；G5 没有课程或 K2 增益。此结果不覆盖 R3 结论、不授予 T1 固定阈值教师资格、不改变 Charter 或 D1/E001 历史门。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
+
+**当前执行：D2-A-T001 v1.2。** 唯一 post-Doppler ACE×AMF 教师候选、样本种子/分组、指标和 G1–G3 门保持冻结；按用户最新要求，协方差拟合和候选推理使用 RTX 3050 CUDA，旧 B3/T1/K2 CPU 基线不改。一次 CPU covariance试跑仅生成和拟合了4,096个H0场景，未评分校准/验证/开发集，已中止且临时 bank 将由同种子 CUDA拟合覆盖。CUDA 实现整仓 270 项测试通过；新的 preflight/教师阶段尚待推送代码后重新启动，不能据此预判候选通过。最终项目体积需在阶段收尾清理后小于20 GiB，中间体积不设此限制。
 
 ## 已完成实验与证据
 
@@ -47,7 +49,7 @@
 
 ## 当前唯一优先任务
 
-准备一个有界的后续诊断协议，明确检查 C3 子组虚警失稳和相位/频移等变失败，并先定位现有表示/损失是否能解释两者；协议冻结和审查前不启动三 seed 确认或 final blind。
+推送 T001 v1.2 CUDA 执行修订并重跑 preflight，再依冻结 seed block运行教师阶段。只在 G1/G2/G3 全通过时评审和执行一个预先冻结的 S2 student pilot；否则保留负结果并停止该分支。旧 E002 分层虚警与相位/频移问题仍登记为后续研究问题，不在 T001 中改动其冻结结论。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md) 和 [`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

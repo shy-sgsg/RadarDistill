@@ -5,8 +5,9 @@
 - **总纲映射与授权：** 根据 `RESEARCH_CHARTER.md` v1.2 的 Q1/Q2/Q3/Q4/Q9 与任务级学生目标，用户批准开展一项有界教师增强实验；不修改总纲、历史冻结结果或最终盲测。
 - **设计冻结：** 唯一先进候选为模型辅助三通道 post-Doppler ACE×AMF；实现前的代数检查发现纯空间 ACE 会消掉单目标 Doppler-bin 能量，故在数据生成前发布 v1.1 勘误：保留 ACE 空间相干项，以白化能量乘回并除以可观测 CPI 总功率；其余候选数、分组、种子、预算与门槛不变。协方差仅用新的 H0 IQ 拟合。协议固定 4,096 covariance scenes、各 15,000 H0 校准/验证 scenes、12,000 配对开发场景、独立 seed blocks、B3/T1/K2 对照、配对 bootstrap 和教师 G1–G3 门。理论边界及文献审查见 `docs/research/D2-A_teacher_candidate_selection.md`、`D2-A_teacher_literature_review.md` 和 `D2-A_teacher_bottleneck_analysis.md`。
 - **停止/分流：** 只有教师 G1/G2/G3 全通过才运行一个固定预算 S2 pilot；否则保留负结果并停止该教师分支，不再追加教师复杂度，也不生成 final blind。
-- **实现与验证：** 已实现 H0-only post-Doppler covariance、ACE×AMF 检测/参数/软响应、分层配对评价和 CPU 流式运行器。整仓 `AISAR` 环境测试 265 项通过；定向 ACE/AMF、评价与运行器测试通过。审查中发现并修正 G2 失败时应将 G3 报告为“未评估”的门控逻辑，未改变冻结门槛或候选。
-- **当前执行状态：** 代码尚待提交推送并执行冻结 preflight；尚未生成 T001 场景、拟合 covariance、训练学生或产生新实验指标。当前工作区约 8.8 GiB，项目最终占用上限按用户最新指示为 20 GiB；不会触碰未授权 GMTI 用户文件。
+- **v1.2 后端修订：** 按用户要求，covariance 拟合和 ACE×AMF 批量推理改为强制 CUDA `cuda:0`，complex64 GPU 运算前以 double precision 做可观测 CPI 尺度/公共相位规范化；科学公式、样本种子/分组、预算和门槛不变。项目20 GiB只按阶段结束清理后的最终体积核验，中间体积不设硬上限。
+- **实现与验证：** 已实现 H0-only CUDA post-Doppler covariance、CUDA ACE×AMF 检测/参数/软响应、分层配对评价和运行器。`AISAR` 整仓测试 270 项通过。一个独立、非分析用的 16 CPI smoke batch（seed 41,001,001；同一批重复15次）中，候选 CPU 推理 3.839 s、CUDA 推理 0.271 s（约14.1倍）；该计时只验证实现路径，不是 T001 结果或实时性能结论。G2 失败时 G3 报为“未评估”且不输出软图质量审查的门控已测试。
+- **当前执行状态：** 用户看到 CPU 评分耗时后要求 CUDA；CPU 试跑已中止。它只流式生成冻结 covariance seed block 的 4,096 个 H0 场景并拟合临时 CPU bank，未评分 calibration、verification 或 development，也未落盘 IQ。v1.2 GPU 代码尚待提交推送和重新 preflight；正式 covariance bank 将从同一冻结种子在 CUDA 重拟合。尚未有 T001 性能指标、学生训练或 final blind。当前工作区约 8.8 GiB；阶段结束清理后最终须小于20 GiB，不触碰未授权 GMTI 用户文件。
 
 ## 2026-10-25：D2-A-E001 静止地杂波 R0/R1 开发验证与阶段审查
 
