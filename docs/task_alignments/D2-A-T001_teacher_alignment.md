@@ -1,7 +1,7 @@
 # D2-A-T001 教师增强与知识迁移任务对齐
 
 **日期：** 2026-10-26
-**状态：** 用户明确批准；协议 v1.2 已记录 CUDA 执行后端修订，科学设计和门槛不变。CUDA 教师代码及整仓测试通过；一次 CPU 试跑仅完成 covariance 拟合后中止，没有形成评分结果。CUDA 版本尚待提交推送和重新 preflight。
+**状态：** 已完成。运行代码 SHA `91dfb81673e45cad3f3330d90adc707a0cdf859d`；协议 v1.2 的科学设计、样本和门槛未变。整仓 270 项测试通过，CUDA 教师阶段完成；G1/G2未通过、G3未评估，按冻结门 STOP 本候选，不运行 S2。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2，提交 `289b812e8bc93fbdabca0cfb3722ad24f045351b`。本任务未修改总纲。
 **对应协议：** `experiments/D2-A-T001/protocol.md`；配置 `config.yaml`。
 
@@ -17,13 +17,13 @@
 
 | 阶段 | 冻结设计 | 当前实况 |
 |---|---|---|
-| 文献与瓶颈 | 参见教师文献、瓶颈与候选选择三个研究文件 | 已完成文献/旧结果核验；未运行 T001 新数据 |
-| 候选 | 唯一先进候选为 3维 post-Doppler ACE×AMF；训练 covariance 只用独立 H0 IQ | 代码已实现；ACE/AMF、评价和运行器定向测试通过 |
-| 协议 | 4096 H0 covariance scenes；15k calibration + 15k verification；12k paired development；困难主条件 C3/C/SNR0/CNR20、n=500；固定 B3/T1/K2 比较 | v1.2 只把 covariance 与候选评分设为 CUDA `cuda:0`；样本、公式、阈值和门槛保持冻结 |
-| 实现/正确性 | G1：公式、几何、尺度/相位不变、配对、split、基线逐样本一致 | CUDA covariance/ACE×AMF、逐场景指标和运行器已实现；`AISAR` 整仓测试 270 项通过；运行时 G1 仍待正式 T001 数据验证 |
-| Teacher G2/G3 | Pfa/任务增益/保护；target-window mass、localization 和错误知识 | 尚未有结果 |
-| 学生 | 只有 Teacher G1–G3 全通过才运行单 S2 seed；S0=E002 B、S1=E002 C、S2=新 ACE/AMF，同课程、init、数据、1600 updates | 仅作为冻结条件分支，未开训 |
-| Blind/部署 | 不生成 final blind；GPU teacher成本仅作实测记录，不作实时主张 | 未生成/未测；单批实现核验显示 CUDA 快于 CPU，但不是阶段正式性能结论 |
+| 文献与瓶颈 | 参见教师文献、瓶颈与候选选择三个研究文件 | 文献/旧结果审查完成；按唯一候选和停止门执行完一轮新数据比较 |
+| 候选 | 唯一先进候选为3维 post-Doppler ACE×AMF；训练 covariance只用独立H0 IQ | 完成CUDA covariance与评分；没有增加备选或调参 |
+| 协议 | 4096 H0 covariance；15k calibration +15k verification；12k paired development；困难主条件 C3/C/SNR0/CNR20、n=500；固定B3/T1/K2比较 | v1.2种子、分组、公式、阈值、bootstrap数和阶段门按冻结设置运行 |
+| 实现/正确性 | G1：公式、几何、尺度/相位不变、配对、split、基线逐样本一致 | split、有限性、协方差正定和公共相位诊断通过；公共复尺度最大差4.58e−5超过1e−6，故G1 FAIL；运行代码 CUDA阶段正常完成 |
+| Teacher G2/G3 | 独立H0 Pfa/分层、困难条件任务增益/保护；只在G2通过后审查soft-map | G2 FAIL：整体Pfa=0.05007但C3/SNR0/CNR20大组上限0.125–0.127；主困难joint为0，A/B/C性能明显劣于T1；G3 NOT EVALUATED |
+| 学生 | 只有Teacher G1–G3全通过才运行单S2 seed | 前置门未通过，未训练S2，也未运行蒸馏 |
+| Blind/部署 | 不生成final blind；GPU teacher成本仅作实测记录，不作实时主张 | 未生成blind；候选内核CUDA batch1约7.40×、batch16约15.63×于CPU，全阶段约3539.7秒；仅报告计算路径，不主张实时优势 |
 
 ## 保留的既有证据
 
@@ -32,6 +32,8 @@
 - E002 K2 audit：pooled C3 mass lift `0.03623`、top localization `0.7227`；C3/C/SNR0 mass lift `0.000673`，top localization `0.0471`。这组难例启发 T001 主条件，但旧样本不进入新分析。
 - T001 不改变 D2-A-E001/R3/E002 frozen protocols、指标或历史结论，也不修改 `RESEARCH_CHARTER.md`。
 
-## 当前唯一下一步
+## 阶段结论与下一步
 
-下一步为推送 v1.2 代码后执行 CUDA preflight，并从冻结 covariance seed block 在 GPU 重拟合，再开始 H0 评分。先前 CPU 尝试生成过 covariance H0 场景并拟合临时 bank，但在 calibration/verification/development 评分前已中止；该 bank 将被覆盖，不作为结果。G3 仅在 G2 通过后裁定；若 G1–G3 不满足，则停止教师/学生该分支并保留失败结果，不追加第二个 advanced teacher。尚未训练学生或生成 final blind。
+总体ACE×AMF verification Pfa达到总量门，但3个大H0子组失败；C3 partial-overlap/SNR0/CNR20困难组joint success为0，对B3的差值为−0.010（95% CI `[−0.018,−0.002]`）。A/B/C pooled Pd、joint success和参数RMSE均明显劣于T1。尺度一致性超过冻结门，目标单独频移诊断也未表现出峰值跟随。结果支持停止这一候选，而不是增加新的教师或放宽门槛。阶段决定 **STOP（限T001教师候选分支）**。
+
+下一步只进行独立 ChatGPT 阶段审查，判断后续研究是否应转向新的学生/物理一致性问题；未经新协议和批准，不运行 S2、正式蒸馏或 blind。CPU covariance试跑历史已在协议中披露，其临时bank由正式CUDA拟合覆盖，不作为科学结果。

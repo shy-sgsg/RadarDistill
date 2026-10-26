@@ -1,5 +1,13 @@
 # 技术决策记录
 
+## 2026-10-26：D2-A-T001 教师候选按预注册门 STOP
+
+- **实验版本：** 协议 v1.2；数据与CUDA教师评分运行于提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`。未修改 `docs/RESEARCH_CHARTER.md`、候选公式、种子、门槛或历史结果。
+- **证据：** 4096 H0 covariance、15,000 calibration H0、15,000 verification H0、12,000 paired development scenes 全部完成。候选CUDA covariance拟合47.95秒；候选推理相对CPU batch=1快7.40×、batch=16快15.63×，但整阶段因场景仿真/CPU旧基线/CPU bootstrap共用时3539.7秒。总体Pfa为0.05007、exact单侧95%上限0.05309，但C3、SNR0、CNR20三个大组上限为0.125–0.127。C3 partial-overlap/SNR0/CNR20中ACE×AMF joint success=0、B3=0.01、T1=0.004；A/B/C pooled Pd、joint相对T1差分别为−0.2267和−0.2441，区间均完全低于0，Range/Doppler RMSE差分别+3.353 cells、+93.822 Hz。G1公共尺度最大误差4.58e−5，高于1e−6冻结门；目标单独频移诊断的峰值未跟随四种注入频移。
+- **决定：** G1/G2未通过，G3按协议未评估；T001候选分支 **STOP**，不运行S2、不做正式蒸馏、不生成final blind、不追加第二个post-Doppler候选，不降低门槛。该决定只针对T001候选，不自动否定整个RadarDistill或其他独立真值监督研究。
+- **研究含义：** 当前失败支持“先证明教师任务可靠性，再研究软知识迁移”的执行顺序；它不说明ACE/AMF在其他统计设置均无效。T001软图质量未被测试，H-KD-D2-002保持INCONCLUSIVE。对学生/物理一致性研究的任何路线调整，先提交整体方向审查和新协议。
+- **资源与保存：** RTX 3050 Laptop CUDA峰值allocated/reserved约1233/1582 MiB；阶段后项目9,379,091,889 bytes（8.735 GiB），低于最终20 GiB限制。保留小型covariance、环境、逐场景分数、metrics、诊断和图表；未保存原始IQ或大型模型文件。报告见 `docs/stage_reviews/D2-A-T001_review.md`。
+
 ## 2026-10-26：D2-A-T001 改用 CUDA 执行并按最终体积清理
 
 - **触发：** 用户指出 T001 教师流程应使用已可用的 RTX 3050 CUDA，并澄清 20 GiB 约束仅适用于阶段收尾清理后的最终项目体积，不是运行中间态上限。

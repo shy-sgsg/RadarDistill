@@ -1,13 +1,15 @@
 # 研究进度
 
-## 2026-10-26：预注册 D2-A-T001 post-Doppler ACE 教师增强与知识迁移
+## 2026-10-26：完成 D2-A-T001 CUDA 教师比较并按门 STOP
 
 - **总纲映射与授权：** 根据 `RESEARCH_CHARTER.md` v1.2 的 Q1/Q2/Q3/Q4/Q9 与任务级学生目标，用户批准开展一项有界教师增强实验；不修改总纲、历史冻结结果或最终盲测。
 - **设计冻结：** 唯一先进候选为模型辅助三通道 post-Doppler ACE×AMF；实现前的代数检查发现纯空间 ACE 会消掉单目标 Doppler-bin 能量，故在数据生成前发布 v1.1 勘误：保留 ACE 空间相干项，以白化能量乘回并除以可观测 CPI 总功率；其余候选数、分组、种子、预算与门槛不变。协方差仅用新的 H0 IQ 拟合。协议固定 4,096 covariance scenes、各 15,000 H0 校准/验证 scenes、12,000 配对开发场景、独立 seed blocks、B3/T1/K2 对照、配对 bootstrap 和教师 G1–G3 门。理论边界及文献审查见 `docs/research/D2-A_teacher_candidate_selection.md`、`D2-A_teacher_literature_review.md` 和 `D2-A_teacher_bottleneck_analysis.md`。
 - **停止/分流：** 只有教师 G1/G2/G3 全通过才运行一个固定预算 S2 pilot；否则保留负结果并停止该教师分支，不再追加教师复杂度，也不生成 final blind。
 - **v1.2 后端修订：** 按用户要求，covariance 拟合和 ACE×AMF 批量推理改为强制 CUDA `cuda:0`，complex64 GPU 运算前以 double precision 做可观测 CPI 尺度/公共相位规范化；科学公式、样本种子/分组、预算和门槛不变。项目20 GiB只按阶段结束清理后的最终体积核验，中间体积不设硬上限。
-- **实现与验证：** 已实现 H0-only CUDA post-Doppler covariance、CUDA ACE×AMF 检测/参数/软响应、分层配对评价和运行器。`AISAR` 整仓测试 270 项通过。一个独立、非分析用的 16 CPI smoke batch（seed 41,001,001；同一批重复15次）中，候选 CPU 推理 3.839 s、CUDA 推理 0.271 s（约14.1倍）；该计时只验证实现路径，不是 T001 结果或实时性能结论。G2 失败时 G3 报为“未评估”且不输出软图质量审查的门控已测试。
-- **当前执行状态：** 用户看到 CPU 评分耗时后要求 CUDA；CPU 试跑已中止。它只流式生成冻结 covariance seed block 的 4,096 个 H0 场景并拟合临时 CPU bank，未评分 calibration、verification 或 development，也未落盘 IQ。v1.2 GPU 代码尚待提交推送和重新 preflight；正式 covariance bank 将从同一冻结种子在 CUDA 重拟合。尚未有 T001 性能指标、学生训练或 final blind。当前工作区约 8.8 GiB；阶段结束清理后最终须小于20 GiB，不触碰未授权 GMTI 用户文件。
+- **正式运行：** 代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d` 已推送至 `main` 并通过 CUDA preflight；RTX 3050 Laptop，CUDA `cuda:0`，正式CUDA covariance拟合与ACE×AMF评分完成。4096 H0用于covariance、15,000 H0 calibration、15,000 H0 verification、12,000 paired development。运行用时3539.7 s；CUDA covariance拟合47.95 s、85.42 scenes/s；峰值allocated/reserved 1233/1582 MiB。候选复用16 CPI内核的CUDA相对CPU吞吐为batch1 7.40×、batch16 15.63×；此为内核计时，不是端到端实时性能。结果提交前整仓回归 `AISAR pytest -q` 为270 passed。
+- **结果/停止：** G1因最大公共复尺度 score/map误差4.58e−5超过1e−6失败；split互斥、finite和covariance正定检查通过。总体H0验证Pfa=0.05007、exact单侧95%上限0.05309，但C3、SNR0、CNR20三大组上限0.125–0.127，G2分层门失败。困难C3 partial-overlap/SNR0/CNR20下ACE×AMF/B3/T1 joint分别为0/0.01/0.004。A/B/C pooled候选相对T1的Pd差−0.2267、joint差−0.2441，区间均完全低于0；Range/Doppler RMSE差+3.353 cells/+93.822 Hz。目标单独频移残差约等于注入频移的相反数；频移峰定位未跟随。G3因G2失败未评估，S2学生和final blind均未运行。T001教师候选按冻结规则 **STOP**。
+- **数据与体积：** 保存`metrics.json`、`result.csv`、逐场景calibration/verification/development分数、covariance bank与诊断、物理诊断、环境、图表和分析；不保存完整IQ或模型权重。阶段后项目9,379,091,889 bytes（8.735 GiB），低于最终20 GiB上限；不清理或提交未跟踪的 GMTI 用户目录。阶段分析与审查见 `experiments/D2-A-T001/analysis.md`、`docs/stage_reviews/D2-A-T001_review.md`。
+- **研究后续：** T001 negative result 不验证其软图是否可蒸馏，H-KD-D2-002维持INCONCLUSIVE。下一步只做独立研究方向审查；不继续T001教师搜索，不运行S2或蒸馏，除非另有明确科学论证与新协议。
 
 ## 2026-10-25：D2-A-E001 静止地杂波 R0/R1 开发验证与阶段审查
 

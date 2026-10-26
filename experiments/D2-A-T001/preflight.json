@@ -1,0 +1,20 @@
+{
+  "protocol_version": 1.2,
+  "git_sha": "91dfb81673e45cad3f3330d90adc707a0cdf859d",
+  "branch": "main",
+  "pushed_to_origin_main": true,
+  "teacher_cuda": {
+    "device": "cuda:0",
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "free_memory_bytes": 2788687872,
+    "total_memory_bytes": 3942383616,
+    "minimum_free_memory_bytes": 1073741824,
+    "precision": "complex64 compute after observable double-precision scale/phase normalization"
+  },
+  "physics_config": "experiments/D2-A-E001/config.yaml",
+  "project_size_bytes_before_run": 9371011060,
+  "final_project_size_cap_bytes": 21474836480,
+  "disk_free_bytes": 68982538240,
+  "estimated_persistent_t001_output_bytes_max": 524288000,
+  "passed": true
+}

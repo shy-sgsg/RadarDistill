@@ -231,12 +231,23 @@ def test_analysis_does_not_report_g3_soft_quality_when_g2_fails(tmp_path):
     }
     metrics = {
         "gates": {
-            "G1": {"passed": True},
+            "G1": {"passed": False, "scale_invariance_gate": False},
             "G2": {
                 "passed": False,
+                "h0": {
+                    "large_subgroups_upper_at_most_0_10": False,
+                    "large_subgroup_count": 12,
+                },
                 "primary_hard_condition": {
                     "ACE_AMF_minus_best_old_joint_success": {"candidate_minus_reference": 0.0, "ci95": [-0.1, 0.1]}
                 },
+                "identifiable_protection_vs_T1": {
+                    "pd": {"candidate_minus_reference": -0.2, "ci95": [-0.3, -0.1]},
+                    "joint_success": {"candidate_minus_reference": -0.2, "ci95": [-0.3, -0.1]},
+                    "range_rmse_cells": {"candidate_minus_T1": 3.0, "ci95": [2.0, 4.0]},
+                    "doppler_rmse_hz": {"candidate_minus_T1": 90.0, "ci95": [80.0, 100.0]},
+                },
+                "protection_gates": {"pd_ci_lower": False},
             },
             "G3": {"passed": False, "evaluated": False},
             "student_pilot_eligible": False,
@@ -251,6 +262,39 @@ def test_analysis_does_not_report_g3_soft_quality_when_g2_fails(tmp_path):
         "compute": {
             "teacher_device": "cuda:0",
             "comparison_baselines_device": "CPU NumPy",
+            "teacher_stage_wall_seconds": 3539.7,
+            "covariance_fit_wall_seconds": 47.95,
+            "covariance_fit_scenes_per_second": 85.42,
+            "cuda_peak_allocated_bytes": 1293192704,
+            "cuda_peak_reserved_bytes": 1658847232,
+            "candidate_inference_timing": {
+                "backends": {
+                    "cpu": {
+                        "batch_1_seconds_per_cpi": 0.01693,
+                        "batch_16_seconds_per_cpi": 0.01901,
+                    },
+                    "cuda:0": {
+                        "batch_1_seconds_per_cpi": 0.002288,
+                        "batch_16_seconds_per_cpi": 0.001217,
+                    },
+                }
+            },
+        },
+        "physical_diagnostics": {
+            "common_phase_rotation": {"max_abs_score_difference": 0.0, "max_abs_map_difference": 0.0},
+            "common_complex_scale": {
+                "(0.6+1.2j)": {
+                    "max_abs_score_difference": 4.57763671875e-05,
+                    "max_abs_map_difference": 4.57763671875e-05,
+                }
+            },
+            "target_only_doppler_shift": {
+                "10.0": {
+                    "mean_circular_shift_residual_hz": -10.00008,
+                    "within_5_hz_fraction": 0.0,
+                    "shifted_detection_fraction_at_original_threshold": 0.1328,
+                }
+            },
         },
         "soft_response": {"evaluated": False},
     }
@@ -262,3 +306,8 @@ def test_analysis_does_not_report_g3_soft_quality_when_g2_fails(tmp_path):
     assert "G2 未通过；按预注册协议不评价 soft response 质量" in analysis
     assert "target-mass lift" not in analysis
     assert "候选设备：** `cuda:0`" in analysis
+    assert "公共复尺度的 score/map 最大绝对差为 `4.578e-05`" in analysis
+    assert "频移 +10.0 Hz" in analysis
+    assert "教师全阶段 `3539.7 s`" in analysis
+    assert "batch=16" in analysis
+    assert "实时" in analysis

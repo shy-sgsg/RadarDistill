@@ -1176,11 +1176,11 @@ def _write_analysis(metrics: dict[str, Any], output_dir: Path, git_sha: str) -> 
     lines = [
         "# D2-A-T001 分析",
         "",
-        f"**运行代码提交：** `{git_sha}`  ",
-        "**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2（T001 未修改总纲）  ",
-        "**数据：** 新生成的合成 H0/H1 开发数据；不是实测，也不是 final blind。  ",
-        "**候选：** 唯一模型辅助三通道 post-Doppler ACE×AMF。  ",
-        f"**候选设备：** `{metrics['compute']['teacher_device']}`；B3/T1/K2 对照：{metrics['compute']['comparison_baselines_device']}。  ",
+        f"**运行代码提交：** `{git_sha}`<br>",
+        "**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2（T001 未修改总纲）<br>",
+        "**数据：** 新生成的合成 H0/H1 开发数据；不是实测，也不是 final blind。<br>",
+        "**候选：** 唯一模型辅助三通道 post-Doppler ACE×AMF。<br>",
+        f"**候选设备：** `{metrics['compute']['teacher_device']}`；B3/T1/K2 对照：{metrics['compute']['comparison_baselines_device']}。<br>",
         "",
         "## 冻结阶段门",
         "",
@@ -1214,13 +1214,60 @@ def _write_analysis(metrics: dict[str, Any], output_dir: Path, git_sha: str) -> 
         ]
     else:
         lines.append("G2 未通过；按预注册协议不评价 soft response 质量，G3 记为 NOT EVALUATED。")
+    compute = metrics["compute"]
+    timing = compute["candidate_inference_timing"]["backends"]
+    cpu = timing["cpu"]
+    cuda = timing[compute["teacher_device"]]
+    batch_1_speedup = cpu["batch_1_seconds_per_cpi"] / cuda["batch_1_seconds_per_cpi"]
+    batch_16_speedup = cpu["batch_16_seconds_per_cpi"] / cuda["batch_16_seconds_per_cpi"]
+    physical = metrics["physical_diagnostics"]
+    phase = physical["common_phase_rotation"]
+    scale_values = list(physical["common_complex_scale"].values())
+    scale_error = max(
+        max(value["max_abs_score_difference"], value["max_abs_map_difference"])
+        for value in scale_values
+    )
+    h0_gate = gates["G2"]["h0"]
+    failed_subgroups = [
+        row
+        for row in metrics.get("verification_subgroups", [])
+        if row.get("method") == "ACE_AMF"
+        and row.get("group") in ("course_level", "snr_db", "cnr_db")
+        and int(row.get("n", 0)) >= 1000
+        and float(row["pfa_exact_one_sided_95_upper"]) > 0.10
+    ]
+    failed_subgroup_text = ", ".join(
+        "{}={} ({:.3f})".format(
+            row["group"], row["label"], float(row["pfa_exact_one_sided_95_upper"])
+        )
+        for row in failed_subgroups
+    ) or "未列出"
+    protection = gates["G2"].get("identifiable_protection_vs_T1", {})
+    lines += [
+        "",
+        "## 物理一致性与运行资源",
+        "",
+        f"公共相位旋转的 score/map 最大绝对差为 `{max(phase['max_abs_score_difference'], phase['max_abs_map_difference']):.3e}`。公共复尺度的 score/map 最大绝对差为 `{scale_error:.3e}`；冻结 G1 上限为 `1.000e-06`，尺度不变门{'通过' if gates['G1'].get('scale_invariance_gate', False) else '未通过'}。",
+        "目标单独 Doppler 频移残差（估计频移减预设频移）：",
+    ]
+    for delta, shift in sorted(physical["target_only_doppler_shift"].items(), key=lambda item: float(item[0])):
+        lines.append(
+            f"- 频移 {float(delta):+.1f} Hz：残差均值 `{shift['mean_circular_shift_residual_hz']:+.4f} Hz`，5 Hz 内比例 `{shift['within_5_hz_fraction']:.4f}`；原阈值下检出比例 `{shift['shifted_detection_fraction_at_original_threshold']:.4f}`。"
+        )
+    lines += [
+        "",
+        f"独立 H0 总体 Pfa 点估计/单侧精确上限为 `{metrics['h0_verification']['ACE_AMF']['pfa_ge']:.5f}/{metrics['h0_verification']['ACE_AMF']['pfa_ci95_exact_upper']:.5f}`；大分组门要求 `{h0_gate['large_subgroup_count']}` 个分组的上限均不超过 0.10，门{'通过' if h0_gate['large_subgroups_upper_at_most_0_10'] else '未通过'}。超过 0.10 的分组：`{failed_subgroup_text}`。",
+        f"可辨识 A/B/C 相对 T1：Pd 差 `{protection['pd']['candidate_minus_reference']:+.4f}`（95% CI `{protection['pd']['ci95']}`），joint-success 差 `{protection['joint_success']['candidate_minus_reference']:+.4f}`（95% CI `{protection['joint_success']['ci95']}`），Range RMSE 差 `{protection['range_rmse_cells']['candidate_minus_T1']:+.3f} cells`，Doppler RMSE 差 `{protection['doppler_rmse_hz']['candidate_minus_T1']:+.3f} Hz`。",
+        f"CUDA covariance 拟合 `{compute['covariance_fit_wall_seconds']:.2f} s`（`{compute['covariance_fit_scenes_per_second']:.2f}` scenes/s）；教师全阶段 `{compute['teacher_stage_wall_seconds']:.1f} s`。候选内核 batch=1 为 CPU `{cpu['batch_1_seconds_per_cpi']:.6f} s/CPI`、CUDA `{cuda['batch_1_seconds_per_cpi']:.6f} s/CPI`（`{batch_1_speedup:.2f}×`）；batch=16 为 CPU `{cpu['batch_16_seconds_per_cpi']:.6f}`、CUDA `{cuda['batch_16_seconds_per_cpi']:.6f} s/CPI`（`{batch_16_speedup:.2f}×`）。",
+        f"CUDA 峰值 allocated/reserved `{compute['cuda_peak_allocated_bytes'] / 1024**2:.1f}/{compute['cuda_peak_reserved_bytes'] / 1024**2:.1f} MiB`。候选内核计时仅比较复用的 16 CPI 输入，不代表完整链路实时性能；全阶段时间包含 CPU 场景生成、B3/T1/K2 基线和 CPU bootstrap。",
+    ]
     lines += [
         "",
         "## 解释边界",
         "",
         "检测阈值由独立 H0 calibration 以 `higher` 经验 95% 分位冻结，并只在独立 H0 verification 评价。开发集仅用于预注册阶段门和分层误差；没有生成 final blind。若任一教师门失败，不运行新蒸馏学生；负结果保留，不追加候选或调参。",
         "",
-        "精确数值、分组结果、bootstrap 区间、软图审计、运行资源和物理诊断见 `metrics.json`、`result.csv`、`verification_subgroups.csv`、`soft_teacher_audit.csv`、`physical_diagnostics.json` 与 `environment.json`。",
+        "精确数值、分组结果、bootstrap 区间、运行资源和物理诊断见 `metrics.json`、`result.csv`、`verification_subgroups.csv`、`physical_diagnostics.json` 与 `environment.json`。G2 未通过，因此本协议未评价 soft response，`soft_teacher_audit.csv` 未产生有效记录。",
         "",
     ]
     (output_dir / "analysis.md").write_text("\n".join(lines), encoding="utf-8")

@@ -1,0 +1,173 @@
+experiment:
+  id: D2-A-T001
+  title: Post-Doppler ACE/AMF teacher enhancement and knowledge transferability
+  protocol_version: 1.2
+  status: preregistered
+  date: 2026-10-26
+  synthetic_data: true
+  research_charter_version: 1.2
+  research_charter_commit: 289b812e8bc93fbdabca0cfb3722ad24f045351b
+  authorized_by_user_task: D2-A-T001 attachment, 2026-10-26
+  final_blind: false
+  modify_research_charter: false
+
+physics:
+  source_config: experiments/D2-A-E001/config.yaml
+  preserve_frozen_signal_model: true
+  h0_h1_share_clutter_noise: true
+  h1_minus_h0_is_target_iq: true
+  noise_sidecar_as_detector_input: false
+  truth_or_scene_metadata_as_detector_input: false
+
+radar:
+  channel_count: 3
+  pulse_count: 130
+  prf_hz: 1300.0
+  range_bin_count: 32
+
+execution:
+  teacher_device: cuda:0
+  minimum_free_cuda_memory_bytes: 1073741824
+  teacher_batch_size: 16
+  teacher_precision: complex64
+  cuda_required: true
+  cpu_fallback: false
+  final_project_size_cap_gib: 20
+
+teacher:
+  selected_candidate: model_assisted_post_doppler_three_channel_ACE_AMF
+  score_definition: spatial_ACE_times_whitened_energy_divided_by_observable_CPI_mean_power
+  comparator_methods: [B3, T1, K2]
+  frequency_oversampling_factor: 4
+  covariance_fit_input: h0_iq_only
+  covariance_training_scenes: 4096
+  covariance_training_seed_base: 31000000
+  covariance_course_counts: {C0: 1024, C1: 1024, C2: 1024, C3: 1024}
+  c3_snr_counts: {0.0: 512, 10.0: 512}
+  per_scene_energy_normalization: observable_mean_power_over_all_C_N_R
+  training_batch_size: 16
+  angle_grid_deg: [88.86, 89.0025, 89.145, 89.2875, 89.43, 89.5725, 89.715, 89.8575, 90.0, 90.1425, 90.285, 90.4275, 90.57, 90.7125, 90.855, 90.9975, 91.14]
+  angle_grid_count: 17
+  covariance_eigenvalue_floor_relative_trace: 1.0e-8
+  ace_denominator_epsilon: 1.0e-12
+  ace_diagnostic_clip: [0.0, 1.0]
+  amf_score_clip: null
+  soft_response:
+    shape: [130, 32]
+    frequency_grid: native_130_point_fft
+    normalization: divide_by_full_map_sum
+    temperature: 1.0
+  parameter_estimation:
+    range: 3_point_local_parabolic_offset_clipped_plus_minus_0.5_cell
+    doppler: 4x_zero_padded_fft_plus_circular_3_point_parabolic
+    doppler_period_hz: 1300.0
+  no_hyperparameter_search: true
+  no_target_truth_or_metadata: true
+  offline_training_is_synthetic: true
+
+data:
+  split_unit: base_scene_id
+  generation_batch_size: 16
+  chunk_seed_stride: 1009
+  train_calibration_verification_development_seed_blocks_disjoint: true
+  held_out_final_blind_generated: false
+  course_levels:
+    C0: {snr_db: 20.0, cnr_db: -5.0}
+    C1: {snr_db: 15.0, cnr_db: 0.0}
+    C2: {snr_db: 10.0, cnr_db: 10.0}
+    C3: {snr_db: [0.0, 10.0], cnr_db: 20.0}
+  h0_calibration:
+    scenes: 15000
+    equal_course_mixture: true
+    c3_snr_equal_mixture: true
+    seed_base: 32000000
+    mixture_seed: 2026102701
+  h0_verification:
+    scenes: 15000
+    independent_from_calibration: true
+    same_mixture_as_calibration: true
+    seed_base: 33000000
+    mixture_seed: 2026102703
+  development:
+    paired_base_scenes: 12000
+    per_course: 3000
+    counts:
+      C0: {separated: 3000}
+      C1: {separated: 1500, near_clutter_edge: 1500}
+      C2: {separated: 1000, near_clutter_edge: 1000, partial_overlap: 1000}
+      C3:
+        separated_snr_0: 500
+        separated_snr_10: 500
+        near_clutter_edge_snr_0: 500
+        near_clutter_edge_snr_10: 500
+        partial_overlap_snr_0: 500
+        partial_overlap_snr_10: 500
+    seed_base: 34000000
+    assignment_seed: 2026102704
+    primary_hard_condition: C3_partial_overlap_snr_0_cnr_20
+    primary_hard_condition_n: 500
+    exact_overlap_D: descriptive_only
+  bootstrap:
+    paired_scene_replicates: 2000
+    seed: 2026102702
+  save_full_iq: false
+  save_full_teacher_maps: false
+
+metrics:
+  target_pfa_cpi: 0.05
+  threshold_quantile: 0.95
+  threshold_method: higher
+  decision_comparator: ">="
+  joint_success:
+    detection_required: true
+    range_error_max_cells: 1.0
+    doppler_error_max_hz: 20.0
+    doppler_period_hz: 1300.0
+  teacher_gates:
+    g1_correctness_required: true
+    g2_h0_pfa_point_max: 0.06
+    g2_h0_exact_one_sided_95_upper_max: 0.06
+    g2_large_subgroup_exact_95_upper_max: 0.10
+    g2_primary_joint_gain_point_min: 0.05
+    g2_primary_joint_gain_ci95_lower_min: 0.0
+    g2_identifiable_pd_ci95_lower_min: -0.05
+    g2_identifiable_joint_ci95_lower_min: -0.05
+    g2_range_rmse_noninferiority_cells: 0.5
+    g2_doppler_rmse_noninferiority_hz: 10.0
+    g2_course_auc_loss_max: 0.02
+    g3_hard_target_mass_lift_ci95_lower_min: 0.0
+    g3_hard_top_cell_localization_min: 0.20
+    g3_pooled_c3_mass_lift_ci95_lower_min: 0.0
+
+student_pilot:
+  run_only_if_teacher_g1_g2_g3_all_pass: true
+  architecture_source: src/radardistill/students/task_student.py
+  s0_reuse_checkpoint: experiments/D2-A-E002/runs/seed_101/B/microbatch_16/best_inference.pt
+  s1_reuse_checkpoint: experiments/D2-A-E002/runs/seed_101/C/microbatch_16/best_inference.pt
+  s2_training_data_source: experiments/D2-A-E002/config.yaml
+  training_seed: 101
+  training_updates: 1600
+  effective_batch_size: 64
+  precision: FP32
+  device: cuda:0
+  cuda_required: true
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.0001
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  new_teacher_loss: k2_format_h1_only_kl_lambda_0.05_linear_to_zero
+  store_full_training_iq: false
+  formal_multiseed: false
+  final_blind: false
+  pilot_signal:
+    s2_minus_s1_hard_joint_gain_min: 0.05
+    s2_minus_s1_ci95_lower_min: 0.0
+    s2_minus_s0_ci95_lower_min: -0.05
+    doppler_rmse_noninferiority_hz: 10.0
+
+outputs:
+  directory: experiments/D2-A-T001
+  include_covariance_bank: true
+  include_per_scene_metrics_not_iq: true
+  no_user_gmtI_file_changes: true

@@ -1,0 +1,34 @@
+{
+  "git_sha": "91dfb81673e45cad3f3330d90adc707a0cdf859d",
+  "branch": "main",
+  "timestamp_local": "2026-10-26 11:34:13 +0800",
+  "python": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "processor": "",
+  "logical_cpu_count": 12,
+  "physical_memory_bytes": 16069996544,
+  "numpy_version": "2.3.4",
+  "torch": {
+    "version": "2.8.0+cu128",
+    "cuda_version": "12.8",
+    "cuda_available": true,
+    "cuda_device_count": 1,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU"
+  },
+  "nvidia_smi": {
+    "returncode": 0,
+    "query": "NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 2660 MiB, 580.178.04",
+    "stderr": ""
+  },
+  "disk_free_bytes": 68982538240,
+  "project_size_bytes_before_run": 9371011060,
+  "final_project_size_cap_bytes": 21474836480,
+  "teacher_cuda": {
+    "device": "cuda:0",
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "free_memory_bytes": 2788687872,
+    "total_memory_bytes": 3942383616,
+    "minimum_free_memory_bytes": 1073741824,
+    "precision": "complex64 compute after observable double-precision scale/phase normalization"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "completed": true,
+  "n_fixed_hard_condition_scenes": 128,
+  "threshold_recalibrated": false,
+  "original_threshold": 184.46908569335938,
+  "common_phase_rotation": {
+    "factor": [
+      0.7445071602338416,
+      0.6676144758470572
+    ],
+    "max_abs_score_difference": 0.0,
+    "max_abs_map_difference": 0.0,
+    "pfa_threshold_reused": true
+  },
+  "common_complex_scale": {
+    "(0.5+0j)": {
+      "max_abs_score_difference": 0.0,
+      "max_abs_map_difference": 0.0,
+      "max_abs_soft_map_difference": 0.0,
+      "pfa_threshold_reused": true
+    },
+    "(2+0j)": {
+      "max_abs_score_difference": 0.0,
+      "max_abs_map_difference": 0.0,
+      "max_abs_soft_map_difference": 0.0,
+      "pfa_threshold_reused": true
+    },
+    "(0.6+1.2j)": {
+      "max_abs_score_difference": 4.57763671875e-05,
+      "max_abs_map_difference": 4.57763671875e-05,
+      "max_abs_soft_map_difference": 2.2351741790771484e-08,
+      "pfa_threshold_reused": true
+    }
+  },
+  "target_only_doppler_shift": {
+    "-25.0": {
+      "mean_circular_shift_residual_hz": 25.000457034904798,
+      "rmse_circular_shift_residual_hz": 25.00045720600354,
+      "within_5_hz_fraction": 0.0,
+      "shifted_detection_fraction_at_original_threshold": 0.1328125,
+      "pfa_threshold_reused": true
+    },
+    "-10.0": {
+      "mean_circular_shift_residual_hz": 10.000362387324127,
+      "rmse_circular_shift_residual_hz": 10.000362911949008,
+      "within_5_hz_fraction": 0.0,
+      "shifted_detection_fraction_at_original_threshold": 0.1328125,
+      "pfa_threshold_reused": true
+    },
+    "10.0": {
+      "mean_circular_shift_residual_hz": -10.000079741193062,
+      "rmse_circular_shift_residual_hz": 10.000079828498153,
+      "within_5_hz_fraction": 0.0,
+      "shifted_detection_fraction_at_original_threshold": 0.1328125,
+      "pfa_threshold_reused": true
+    },
+    "25.0": {
+      "mean_circular_shift_residual_hz": -25.000093078419276,
+      "rmse_circular_shift_residual_hz": 25.000093286130486,
+      "within_5_hz_fraction": 0.0,
+      "shifted_detection_fraction_at_original_threshold": 0.1328125,
+      "pfa_threshold_reused": true
+    }
+  },
+  "independent_channel_phase_perturbation": {
+    "score_ratio_mean": 9.528667174207325,
+    "detection_fraction_at_original_threshold": 0.921875,
+    "range_rmse_cells": 6.354451113077012,
+    "doppler_rmse_hz": 48.73906100852033,
+    "pfa_threshold_reused": true
+  }
+}
