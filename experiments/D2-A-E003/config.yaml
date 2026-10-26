@@ -1,7 +1,8 @@
 experiment:
   id: D2-A-E003
   title: Physics-invariant coherent representation for task-level GMTI learning
-  protocol_version: 1.0
+  protocol_version: 1.1
+  protocol_amendment: pre-execution diagnostic sampling clarification; scientific hypotheses, models, data budgets, and gates unchanged
   status: frozen_preregistered
   date: 2026-10-26
   data_are_synthetic: true
@@ -99,6 +100,7 @@ data:
     scenes: 4096
     equal_scenario_snr_mixture: [separated_0db, separated_10db, near_clutter_edge_0db, near_clutter_edge_10db, partial_overlap_0db, partial_overlap_10db]
     seed_base: 101000000
+    assignment_seed: 2026102617
     generation_chunk_size: 16
   development:
     paired_base_scenes: 4096
@@ -239,12 +241,15 @@ statistics:
   primary_ci_lower_bound: 0.0
   phase_rotations: 32
   physical_diagnostic_seed: 2026102604
+  physical_diagnostic_quota_per_course: 64
+  physical_diagnostic_h0_source: h0_verification
+  physical_diagnostic_h1_source: development
   feature_relative_max_error_limit: 1.0e-4
 
 gates:
   G0_engineering: {required: true}
   G1_frontend_tests: {all_required: true}
-  G2_controlled_information: {finite_non_degenerate_A_B_C: true, exact_overlap_exempt: true}
+  G2_controlled_information: {finite_non_degenerate_A_B_C: true, increment_over_measured_numerical_floor_min: 10.0, exact_overlap_exempt: true}
   G3_task_learning: {auc_ci_lower_gt: 0.5, range_doppler_beat_constant_baseline: true}
   G4_task_protection:
     overall_pd_difference_point_min: -0.01

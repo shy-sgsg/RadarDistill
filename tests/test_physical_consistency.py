@@ -6,6 +6,7 @@ import torch
 
 from radardistill.evaluation.physical_consistency import (
     select_scene_ids_by_stratum,
+    summarize_prediction_intervention,
     wrap_periodic_difference,
 )
 from radardistill.students.physical_coherence import FixedCoherenceFeatures
@@ -50,6 +51,38 @@ def test_stratified_scene_selection_rejects_unregistered_strata() -> None:
 def test_periodic_difference_wraps_to_half_open_interval() -> None:
     result = wrap_periodic_difference(np.asarray([650.0, -650.0, 1301.0]), period=1300.0)
     np.testing.assert_allclose(result, np.asarray([-650.0, -650.0, 1.0]))
+
+
+def test_prediction_intervention_reports_h0_h1_and_condition_transitions() -> None:
+    baseline = {
+        "score": np.asarray([0.1, 0.1, 0.9, 0.1]),
+        "range_cell": np.asarray([0.0, 0.0, 10.2, 4.0]),
+        "doppler_hz": np.asarray([0.0, 0.0, 100.0, -50.0]),
+    }
+    intervention = {
+        "score": np.asarray([0.8, 0.1, 0.9, 0.9]),
+        "range_cell": np.asarray([0.0, 0.0, 10.2, 4.0]),
+        "doppler_hz": np.asarray([0.0, 0.0, 130.0, -50.0]),
+    }
+    summary = summarize_prediction_intervention(
+        baseline,
+        intervention,
+        truth_presence=np.asarray([False, False, True, True]),
+        condition=np.asarray(["C0", "C1", "C0", "C1"]),
+        threshold=0.5,
+        truth_range_cell=np.asarray([0.0, 0.0, 10.0, 4.0]),
+        truth_doppler_hz=np.asarray([0.0, 0.0, 100.0, -50.0]),
+        prf_hz=1300.0,
+    )
+
+    assert summary["H0"]["n"] == 2
+    assert summary["H0"]["baseline_h0_false_alarm_rate"] == 0.0
+    assert summary["H0"]["intervention_h0_false_alarm_rate"] == 0.5
+    assert summary["H1"]["n"] == 2
+    assert summary["H1"]["baseline_joint_success_rate"] == 0.5
+    assert summary["H1"]["intervention_joint_success_rate"] == 0.5
+    assert summary["condition:C1/H1"]["baseline_detected_count"] == 0
+    assert summary["condition:C1/H1"]["intervention_detected_count"] == 1
 
 
 def _tone(frequency_hz: float, phases: tuple[float, float, float] = (0.0, 0.0, 0.0), *, dtype: torch.dtype = torch.complex128) -> torch.Tensor:

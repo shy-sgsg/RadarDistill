@@ -10,7 +10,7 @@ import numpy as np
 
 
 COURSE_LEVELS = ("C0", "C1", "C2", "C3")
-PROTOCOL_VERSION = 1.0
+PROTOCOL_VERSION = 1.1
 
 
 def _chunk_seeds(seed_base: int, count: int, chunk_size: int, stride: int) -> list[int]:
@@ -93,7 +93,7 @@ def validate_e003_config(config: Mapping[str, Any]) -> None:
     except (KeyError, TypeError) as exc:
         raise ValueError("E003 config is missing a required section") from exc
     if experiment.get("id") != "D2-A-E003" or float(experiment.get("protocol_version", -1)) != PROTOCOL_VERSION:
-        raise ValueError("config must identify D2-A-E003 protocol v1.0")
+        raise ValueError("config must identify D2-A-E003 protocol v1.1")
     if experiment.get("final_blind_generation_authorized") is not False:
         raise ValueError("E003 final blind generation is not authorized")
     if experiment.get("distillation_authorized") is not False:
@@ -155,6 +155,16 @@ def validate_e003_config(config: Mapping[str, Any]) -> None:
         raise ValueError("E003 development course counts must sum to the paired cohort size")
     if not math.isclose(float(config["statistics"]["primary_ci_lower_bound"]), 0.0):
         raise ValueError("E003 primary gain CI lower bound must remain above zero")
+    if float(config["gates"]["G2_controlled_information"]["increment_over_measured_numerical_floor_min"]) != 10.0:
+        raise ValueError("E003 R2 observable increments must exceed the measured numerical floor by 10x")
+    if int(data["c3_h0_verification"].get("assignment_seed", -1)) < 0:
+        raise ValueError("E003 dedicated C3 H0 composition requires a fixed assignment seed")
+    if (
+        int(config["statistics"].get("physical_diagnostic_quota_per_course", 0)) != 64
+        or config["statistics"].get("physical_diagnostic_h0_source") != "h0_verification"
+        or config["statistics"].get("physical_diagnostic_h1_source") != "development"
+    ):
+        raise ValueError("E003 physical diagnostic selection must remain 64 scenes per course from fixed H0/H1 splits")
     e003_seed_manifest(config)
 
 

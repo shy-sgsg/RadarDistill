@@ -46,6 +46,14 @@ def test_config_validator_rejects_training_budget_or_final_blind_drift() -> None
         validate_e003_config(config)
 
 
+def test_physical_diagnostic_sample_sources_and_quotas_are_frozen() -> None:
+    config = _config()
+    validate_e003_config(config)
+    config["statistics"]["physical_diagnostic_quota_per_course"] = 63
+    with pytest.raises(ValueError, match="64 scenes per course"):
+        validate_e003_config(config)
+
+
 def test_matched_pair_plan_uses_every_scene_once_and_is_reproducible() -> None:
     scene_ids = np.asarray([f"e003-scene-{index:05d}" for index in range(512)])
     first = build_e003_pair_plan(scene_ids, updates=16, pairs_per_update=32, seed=101)

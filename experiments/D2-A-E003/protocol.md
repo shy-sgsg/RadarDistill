@@ -1,11 +1,13 @@
 # D2-A-E003 preregistered protocol
 
-**Protocol version:** 1.0  
-**Status:** Frozen before R0/R1/R2 execution and before creating training/evaluation data.  
-**Date:** 2026-10-26  
-**Research charter:** v1.2; unchanged.  
-**Historical results:** E001, R3, E002, T001 and R4 remain immutable.  
+**Protocol version:** 1.1
+**Status:** Frozen before R0/R1/R2 execution and before creating training/evaluation data.
+**Date:** 2026-10-26
+**Research charter:** v1.2; unchanged.
+**Historical results:** E001, R3, E002, T001 and R4 remain immutable.
 **Data:** synthetic only; no final blind is authorized or generated.
+
+**Pre-execution amendment:** Version 1.1 makes the physical-diagnostic sample size and source splits explicit because version 1.0 described fixed quotas without numeric values. This clarification adds no model, condition, endpoint, acceptance gate, or training budget. It supersedes version 1.0 before any R0/R1/R2 run or generated E003 data.
 
 ## 1. Question and scope
 
@@ -31,6 +33,8 @@ Public phase rotation multiplies every complex coherence by `exp(jφ)exp(-jφ)=1
 Use stable unique `base_scene_id` strings and predeclared stratum labels. For each stratum, sort IDs, apply a fixed-seed generator to that sorted ID list, select the fixed quota, and save selected IDs (not only transient array indices). The selection ID set must be identical after input-row permutation. Report H0 and H1 separately, condition, sample count, detected/correctly detected status, and valid parameter estimates. All Doppler differences use the PRF-periodic wrap.
 
 For public-phase diagnostics apply 32 fixed rotations from 0 through `2π·31/32`. Report score absolute changes, decision agreement, range changes and circular Doppler changes both overall and by H0/H1, C0–C3, detected/missed and parameter-localization strata. Reusing a calibration threshold is mandatory.
+
+Select exactly 64 scene IDs per C0–C3 from the independent H0 verification split and exactly 64 per C0–C3 from H1 development, using `physical_diagnostic_seed` and the stable-ID sampler. Save the selected IDs. Use these same 512 scenes for all 32 public-phase rotations and both models; report resulting H0/H1 sample counts and correctness strata. The separate frequency interventions use the full 64-scene per-geometry R2 control sets.
 
 Frequency diagnostics remain three distinct interventions: (A) whole-observation slow-time modulation; (B) target-component-only modulation `H0 + S·exp(j2πδn/PRF)` as a synthetic counterfactual; (C) regenerated target geometry with changed radial velocity and the same random scene seed so background/noise are paired. Report truth movement, alias/wrap status, target/background Doppler separation and identifiability for each. Never label A/B as a regenerated physical target trajectory.
 
@@ -58,7 +62,7 @@ Generate 64 paired scenes for each identifiable geometry A/B/C at fixed 10 dB SN
 - Clutter-level control: multiply only clutter by `{0.5,1,2}`; leave target and noise unchanged. Record input scale and feature increments.
 - Doppler control: compare whole-IQ shifts and target-only shifts `δ∈{-25,-10,-5,5,10,25} Hz`; separately regenerate geometry at radial velocities `{-4,-1.2,-0.4,0.4,1.2,4} m/s` using matched scene seeds where the named scenario permits. Report D exact-overlap only as a boundary reference.
 
-Use no learned model to select a feature. Report per-scene `F(H0)`, `F(H1)`, target-only `F(S)`, paired `F(H1)-F(H0)` norms, feature-domain standardized separation, Doppler/overlap group, and B3/T1 descriptive score association where computationally available. Oracle components are analysis-only. R2 is a pretraining information diagnostic, not evidence that a student can use the information. The gate is finite, nondegenerate observable increments above the measured numerical floor in identifiable A/B/C; D is exempt. Because normalized second-order features include target/background cross terms, monotonicity of `F(H1)-F(H0)` under target scaling is not assumed; its empirical shape is reported. Report all measurements without post-hoc thresholds.
+Use no learned model to select a feature. Report per-scene `F(H0)`, `F(H1)`, target-only `F(S)`, paired `F(H1)-F(H0)` norms, feature-domain standardized separation, Doppler/overlap group, and B3/T1 descriptive score association where computationally available. Oracle components are analysis-only. R2 is a pretraining information diagnostic, not evidence that a student can use the information. The gate is finite, nondegenerate observable increments above the measured numerical floor in identifiable A/B/C; specifically, the median per-scene RMS feature increment in each A/B/C base cell must exceed 10× the maximum absolute complex64-vs-complex128 feature error measured on the pre-registered R1 random fixture. D is exempt. Because normalized second-order features include target/background cross terms, monotonicity of `F(H1)-F(H0)` under target scaling is not assumed; its empirical shape is reported. Report all measurements without post-hoc thresholds.
 
 ## 6. Splits, scene sizes and seeds
 
