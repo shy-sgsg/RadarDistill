@@ -1,0 +1,106 @@
+experiment:
+  id: D2-A-R4
+  protocol_version: 1.0
+  status: preregistered
+  synthetic_data: true
+  final_blind: false
+  modify_research_charter: false
+  research_charter_version: 1.2
+  research_charter_commit: 289b812e8bc93fbdabca0cfb3722ad24f045351b
+  exploratory_due_to_prior_gate_failure: true
+  prior_t001_status: {G1: FAIL, G2: FAIL, G3: NOT_EVALUATED, candidate: STOP}
+
+physics:
+  source_config: experiments/D2-A-E001/config.yaml
+  preserve_frozen_model: true
+  paired_h0_h1: true
+  detector_input: observable_iq_only
+  range_count_is_not_scene_sample_count: true
+
+compute:
+  device: cuda:0
+  required_gpu: NVIDIA GeForce RTX 3050 Laptop GPU
+  teacher_precision: complex64
+  cpu_reference_precision: complex128
+  student_precision: FP32
+  batch_size: 16
+  sequential_models: true
+  cpu_fallback: false
+
+data:
+  h0_calibration:
+    count: 4096
+    seed_base: 41000000
+    course_counts: {C0: 1024, C1: 1024, C2: 1024, C3: 1024}
+    c3_snr_counts: {0: 512, 10: 512}
+  h0_verification:
+    count: 4096
+    seed_base: 42000000
+    independent_from_calibration: true
+    same_mixture: true
+    c3_snr_counts: {0: 512, 10: 512}
+  h1_development:
+    count: 2048
+    cells:
+      - {course: C0, scenario: separated, snr_db: 20, cnr_db: -5, count: 512, seed_base: 43000000}
+      - {course: C1, scenario: separated, snr_db: 15, cnr_db: 0, count: 512, seed_base: 43100000}
+      - {course: C2, scenario: partial_overlap, snr_db: 10, cnr_db: 10, count: 512, seed_base: 43200000}
+      - {course: C3, scenario: partial_overlap, snr_db: 0, cnr_db: 20, count: 512, seed_base: 43300000}
+  numerical_precision:
+    count: 64
+    seed_base: 44000000
+    scale_factors: [[0.5, 0.0], [2.0, 0.0], [0.6, 1.2]]
+    common_phase_rad: 0.731
+    new_absolute_difference_gate: 1.0e-5
+    preserve_t001_absolute_difference_gate: 1.0e-6
+  h0_scenario_label_independence:
+    seed: 44500000
+    scenes: 16
+    snr_db: 10
+    cnr_db: 10
+  phase_diagnostics:
+    public_rotations: 32
+    signal_frequency_shifts_hz: [-25, -10, 10, 25]
+    regenerated_motion_scenarios: [separated, near_clutter_edge, partial_overlap]
+    trigger_phase_decision_agreement_lt: 0.99
+    trigger_doppler_rotation_p95_hz_gt: 10.0
+  pilot:
+    seed: 101
+    updates: 1600
+    effective_batch_size: 64
+    microbatch_initial: 16
+    microbatch_fallbacks: [8, 4]
+    phase_augmentation: shared_uniform_phase_per_h0_h1_pair
+    phase_augmentation_rng_seed: 2026102809
+    supervision: E1_truth_only
+    distillation: false
+    evaluation:
+      h0_calibration_seed_base: 46000000
+      h0_verification_seed_base: 47000000
+      h1_development_seed_offset: 5000000
+      h0_calibration_assignment_seed: 2026102810
+      h0_verification_assignment_seed: 2026102811
+
+teachers: [B3, T1, ACE_AMF]
+students:
+  - {name: A, checkpoint: experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_inference.pt, threshold_csv: experiments/D2-A-E002/calibration_thresholds.csv}
+  - {name: B, checkpoint: experiments/D2-A-E002/runs/seed_101/B/microbatch_16/best_inference.pt, threshold_csv: experiments/D2-A-E002/calibration_thresholds.csv}
+  - {name: C, checkpoint: experiments/D2-A-E002/runs/seed_101/C/microbatch_16/best_inference.pt, threshold_csv: experiments/D2-A-E002/calibration_thresholds.csv}
+
+metrics:
+  target_pfa_cpi: 0.05
+  threshold_method: higher
+  decision_comparator: ">="
+  report_strict_greater_and_ties: true
+  pfa_interval: exact_one_sided_clopper_pearson_95
+  paired_bootstrap_replicates: 2000
+  paired_bootstrap_seed: 2026102801
+  numerical_gate_applies_only_to_r4: true
+  no_threshold_recalibration_for_frozen_students: true
+  joint_success: {detected: true, range_error_bins_max: 1.0, doppler_error_hz_max: 20.0, misses_fail: true}
+
+resources:
+  max_gpu_resident_models: 1
+  training_data_cache_gpu: false
+  project_size_limit_after_cleanup_gib: 20
+  intermediate_size_limit_gib: null
