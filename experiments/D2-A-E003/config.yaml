@@ -1,0 +1,234 @@
+experiment:
+  id: D2-A-E003
+  title: Physics-invariant coherent representation for task-level GMTI learning
+  protocol_version: 1.0
+  status: frozen_preregistered
+  date: 2026-10-26
+  data_are_synthetic: true
+  route_change_approval: explicit_user_authorization_in_E003_task
+  research_charter_version: 1.2
+  source_review_commit: b2174df409bc5d13c15ce93209c41b28d26bdbe8
+  final_blind_generation_authorized: false
+  distillation_authorized: false
+
+radar:
+  prf_hz: 1300.0
+  pulse_count: 130
+  channel_count: 3
+  range_bin_count: 32
+
+physics:
+  source_config: experiments/D2-A-E001/config.yaml
+  preserve_frozen_signal_model: true
+  clutter: stationary_point_scatterers_from_e001
+  noise: circular_complex_awgn_from_e001
+  h0_h1_share_background_and_noise: true
+  h1_adds_only_target_signal: true
+  exact_overlap_is_descriptive_only: true
+
+representation:
+  name: fixed_multilag_and_crosschannel_coherence
+  type: deterministic_physical_frontend_plus_learned_pointwise_projection
+  same_channel_lags: [1, 4, 16]
+  cross_channel_pairs: [[0, 1], [0, 2], [1, 2]]
+  cross_channel_lag: 0
+  power_scale: max_scene_mean_iq_power_epsilon
+  epsilon_power: 1.0e-12
+  feature_channels: 28
+  projection: {type: Conv2d_pointwise, input: 28, output: 6, bias: true}
+  zero_pad_invalid_lag_tail: true
+  append_validity_mask: false
+  raw_iq_bypass: false
+  complex64_relative_max_error_limit: 1.0e-4
+
+data:
+  split_unit: base_scene_id
+  chunk_size: 16
+  scene_seed_stride: 1009
+  cache_root: experiments/D2-A-E003/data/cache
+  train:
+    paired_base_scenes: 51200
+    pairs_per_course_level: 12800
+    seed_bases_by_course: [51000000, 56000000, 61000000, 66000000]
+    assignment_seed: 2026102611
+    generation_chunk_size: 16
+    cache_iq_on_cpu_memmap: true
+    cache_iq_on_gpu: false
+  validation:
+    paired_base_scenes: 5000
+    pairs_per_course_level: 1250
+    seed_bases_by_course: [71000000, 76000000, 81000000, 86000000]
+    assignment_seed: 2026102612
+    generation_chunk_size: 16
+  h0_calibration:
+    scenes: 8192
+    equal_course_mixture: true
+    seed_base: 91000000
+    mixture_assignment_seed: 2026102613
+    generation_chunk_size: 16
+  h0_verification:
+    scenes: 8192
+    equal_course_mixture: true
+    independent_from_calibration: true
+    seed_base: 96000000
+    mixture_assignment_seed: 2026102614
+    generation_chunk_size: 16
+  c3_h0_verification:
+    scenes: 4096
+    equal_scenario_snr_mixture: [separated_0db, separated_10db, near_clutter_edge_0db, near_clutter_edge_10db, partial_overlap_0db, partial_overlap_10db]
+    seed_base: 101000000
+    generation_chunk_size: 16
+  development:
+    paired_base_scenes: 4096
+    course_level_counts: [1024, 1024, 1024, 1024]
+    seed_bases_by_course: [106000000, 111000000, 116000000, 121000000]
+    assignment_seed: 2026102615
+    generation_chunk_size: 16
+    threshold_selection: false
+    hyperparameter_search: false
+    final_blind: false
+  exact_overlap_boundary:
+    paired_base_scenes: 512
+    scenario: exact_overlap
+    snr_db: 10.0
+    cnr_db: 10.0
+    seed_base: 126000000
+    generation_chunk_size: 16
+    descriptive_only: true
+  controlled_r2:
+    scenes_per_geometry: 64
+    scenario_ids: [separated, near_clutter_edge, partial_overlap]
+    fixed_snr_db: 10.0
+    fixed_cnr_db: 10.0
+    target_amplitude_multipliers: [0.25, 0.5, 1.0, 2.0]
+    clutter_amplitude_multipliers: [0.5, 1.0, 2.0]
+    frequency_shifts_hz: [-25.0, -10.0, -5.0, 5.0, 10.0, 25.0]
+    regenerated_target_radial_velocities_mps: [-4.0, -1.2, -0.4, 0.4, 1.2, 4.0]
+    seed_bases_by_family: [131000000, 136000000, 141000000, 146000000]
+    generation_chunk_size: 16
+  no_shared_base_scene_across_model_splits: true
+  final_blind_reserved_seed_range: [9000000, 9999999]
+
+scenarios:
+  C0:
+    snr_db: [20.0]
+    cnr_db: -5.0
+    counts: {separated: 12800}
+  C1:
+    snr_db: [15.0]
+    cnr_db: 0.0
+    counts: {separated: 6400, near_clutter_edge: 6400}
+  C2:
+    snr_db: [10.0]
+    cnr_db: 10.0
+    counts: {separated: 4288, near_clutter_edge: 4256, partial_overlap: 4256}
+  C3:
+    snr_db: [0.0, 10.0]
+    cnr_db: 20.0
+    counts:
+      separated_0db: 2144
+      separated_10db: 2144
+      near_clutter_edge_0db: 2128
+      near_clutter_edge_10db: 2128
+      partial_overlap_0db: 2128
+      partial_overlap_10db: 2128
+
+models:
+  S0:
+    architecture: D1-E001_TaskStudent
+    input: six_real_imag_iq_planes
+    source: src/radardistill/students/task_student.py
+  S2:
+    architecture: fixed_28ch_physical_coherence_frontend_plus_TaskStudent
+    input: six_real_imag_iq_planes_reconstructed_for_frontend
+    raw_iq_bypass: false
+    auxiliary_teacher_heads: false
+    parameter_increase_limit_fraction: 0.05
+  same_shared_taskstudent_initial_state: true
+  model_order: [S0, S2]
+
+training:
+  supervision: physical_truth_only_E1
+  training_seed: 101
+  optimizer: AdamW
+  optimizer_updates_per_model: 1600
+  effective_batch_size: 64
+  paired_base_scenes_per_update: 32
+  pair_order: one_shared_fixed_permutation_used_by_both_models
+  pair_plan_seed: 2026102616
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.0001
+  learning_rate_schedule: cosine
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  validation_interval_updates: 100
+  checkpoint_selection: minimum_common_validation_truth_task_loss
+  microbatch_size_initial: 16
+  oom_fallbacks: [8, 4]
+  preserve_effective_batch_on_oom: true
+  precision: FP32
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  amp: false
+  simultaneous_gpu_models: 1
+  losses:
+    presence_bce_weight: 1.0
+    range_cell_cross_entropy_weight: 1.0
+    range_offset_smooth_l1_weight: 1.0
+    range_offset_smooth_l1_beta: 0.1
+    doppler_circular_cosine_weight: 1.0
+    parameter_loss_mask: H1_only
+
+detection:
+  score: student_presence_logit
+  target_pfa_cpi: 0.05
+  calibration_quantile: 0.95
+  calibration_quantile_method: higher
+  decision_comparator: ">="
+  report_strict_greater_and_ties: true
+  primary_pfa_point_limit: 0.06
+  one_sided_exact_ci: clopper_pearson_95
+  subgroup_pfa_upper_limit: 0.10
+  method_specific_thresholds: true
+  threshold_uses_truth_or_condition_at_inference: false
+
+statistics:
+  confidence_level: 0.95
+  bootstrap_replicates: 2000
+  bootstrap_seed: 2026102605
+  bootstrap_unit: paired_base_scene_id
+  rmse_recomputed_per_bootstrap: true
+  pfa_interval: one_sided_exact_clopper_pearson
+  single_seed_bootstrap_is_not_seed_uncertainty: true
+  primary_endpoint: C2_C3_pooled_joint_success_s2_minus_s0
+  minimum_primary_gain: 0.02
+  primary_ci_lower_bound: 0.0
+  phase_rotations: 32
+  physical_diagnostic_seed: 2026102604
+  feature_relative_max_error_limit: 1.0e-4
+
+gates:
+  G0_engineering: {required: true}
+  G1_frontend_tests: {all_required: true}
+  G2_controlled_information: {finite_non_degenerate_A_B_C: true, exact_overlap_exempt: true}
+  G3_task_learning: {auc_ci_lower_gt: 0.5, range_doppler_beat_constant_baseline: true}
+  G4_task_protection:
+    overall_pd_difference_point_min: -0.01
+    overall_pd_difference_ci_lower_min: -0.05
+    overall_joint_difference_point_min: -0.01
+    overall_joint_difference_ci_lower_min: -0.05
+    C2_C3_joint_difference_ci_lower_min: -0.05
+    C2_C3_rmse_ratio_point_max: 1.05
+    C2_C3_rmse_ratio_ci_upper_max: 1.10
+    C3_pfa_difference_ci_upper_max: 0.02
+    per_model_C3_pfa_point_max: 0.10
+    primary_C2_C3_joint_gain_point_min: 0.02
+    primary_C2_C3_joint_gain_ci_lower_min: 0.0
+  G5_physical_consistency: report_only_no_substitution_for_task_gates
+  G6_compute: report_measured_boundaries_only
+
+artifacts:
+  retain: [protocol.md, config.yaml, metrics.json, result.csv, analysis.md, stage_review, review_request, checkpoints, training_history, environment, seed_manifest, selected_scene_ids, controlled_diagnostics, figures]
+  removable_cache_root: experiments/D2-A-E003/data/cache
+  final_project_size_limit_gib: 20
