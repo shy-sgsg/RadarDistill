@@ -1,5 +1,12 @@
 # 研究进度
 
+## 2026-10-26：预注册 D2-A-T001 post-Doppler ACE 教师增强与知识迁移
+
+- **总纲映射与授权：** 根据 `RESEARCH_CHARTER.md` v1.2 的 Q1/Q2/Q3/Q4/Q9 与任务级学生目标，用户批准开展一项有界教师增强实验；不修改总纲、历史冻结结果或最终盲测。
+- **设计冻结：** 唯一先进候选为模型辅助三通道 post-Doppler ACE；协方差仅用新的 H0 IQ 拟合。协议固定 4,096 covariance scenes、各 15,000 H0 校准/验证 scenes、12,000 配对开发场景、独立 seed blocks、B3/T1/K2 对照、配对 bootstrap 和教师 G1–G3 门。理论边界及文献审查见 `docs/research/D2-A_teacher_candidate_selection.md`、`D2-A_teacher_literature_review.md` 和 `D2-A_teacher_bottleneck_analysis.md`。
+- **停止/分流：** 只有教师 G1/G2/G3 全通过才运行一个固定预算 S2 pilot；否则保留负结果并停止该教师分支，不再追加教师复杂度，也不生成 final blind。
+- **当前执行状态：** 目前只有协议/配置及文献、历史瓶颈分析。尚未实现 T001 代码、生成 T001 场景、拟合 covariance、训练学生或产生新实验指标。项目总占用上限按用户最新指示设为 20 GiB；不会触碰未授权 GMTI 用户文件。
+
 ## 2026-10-25：D2-A-E001 静止地杂波 R0/R1 开发验证与阶段审查
 
 ### 实施与验证
