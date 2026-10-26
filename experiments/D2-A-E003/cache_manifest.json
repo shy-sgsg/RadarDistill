@@ -1,0 +1,368 @@
+{
+  "experiment": "D2-A-E003",
+  "cache_root": "experiments/D2-A-E003/data/cache",
+  "files": [
+    {
+      "path": "c3_h0_verification/base_scene_id.npy",
+      "size_bytes": 1572992
+    },
+    {
+      "path": "c3_h0_verification/course_level.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "c3_h0_verification/e003_manifest.json",
+      "size_bytes": 588
+    },
+    {
+      "path": "c3_h0_verification/iq_h0.npy",
+      "size_bytes": 408944768
+    },
+    {
+      "path": "c3_h0_verification/noise_power.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "c3_h0_verification/potential_target_amplitude.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "c3_h0_verification/requested_cnr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "c3_h0_verification/scenario_id.npy",
+      "size_bytes": 524416
+    },
+    {
+      "path": "c3_h0_verification/snr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/base_scene_id.npy",
+      "size_bytes": 1572992
+    },
+    {
+      "path": "development/course_level.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "development/e003_manifest.json",
+      "size_bytes": 772
+    },
+    {
+      "path": "development/iq_h0.npy",
+      "size_bytes": 408944768
+    },
+    {
+      "path": "development/iq_h1.npy",
+      "size_bytes": 408944768
+    },
+    {
+      "path": "development/manifest.json",
+      "size_bytes": 1241
+    },
+    {
+      "path": "development/measured_cnr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/measured_scnr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/measured_snr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/noise_power.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/requested_cnr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/scenario_id.npy",
+      "size_bytes": 524416
+    },
+    {
+      "path": "development/snr_db.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_amplitude.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_azimuth_deg.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_doppler_hz.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_phase_rad.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_radial_velocity_mps.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "development/truth_range_cell.npy",
+      "size_bytes": 16512
+    },
+    {
+      "path": "exact_overlap_boundary/base_scene_id.npy",
+      "size_bytes": 196736
+    },
+    {
+      "path": "exact_overlap_boundary/iq_h0.npy",
+      "size_bytes": 51118208
+    },
+    {
+      "path": "exact_overlap_boundary/iq_h1.npy",
+      "size_bytes": 51118208
+    },
+    {
+      "path": "exact_overlap_boundary/manifest.json",
+      "size_bytes": 199
+    },
+    {
+      "path": "exact_overlap_boundary/truth_doppler_hz.npy",
+      "size_bytes": 2176
+    },
+    {
+      "path": "exact_overlap_boundary/truth_range_cell.npy",
+      "size_bytes": 2176
+    },
+    {
+      "path": "h0_calibration/base_scene_id.npy",
+      "size_bytes": 3145856
+    },
+    {
+      "path": "h0_calibration/course_level.npy",
+      "size_bytes": 65664
+    },
+    {
+      "path": "h0_calibration/e003_manifest.json",
+      "size_bytes": 688
+    },
+    {
+      "path": "h0_calibration/iq_h0.npy",
+      "size_bytes": 817889408
+    },
+    {
+      "path": "h0_calibration/noise_power.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_calibration/potential_target_amplitude.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_calibration/requested_cnr_db.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_calibration/scenario_id.npy",
+      "size_bytes": 1048704
+    },
+    {
+      "path": "h0_calibration/snr_db.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_verification/base_scene_id.npy",
+      "size_bytes": 3145856
+    },
+    {
+      "path": "h0_verification/course_level.npy",
+      "size_bytes": 65664
+    },
+    {
+      "path": "h0_verification/e003_manifest.json",
+      "size_bytes": 689
+    },
+    {
+      "path": "h0_verification/iq_h0.npy",
+      "size_bytes": 817889408
+    },
+    {
+      "path": "h0_verification/noise_power.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_verification/potential_target_amplitude.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_verification/requested_cnr_db.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "h0_verification/scenario_id.npy",
+      "size_bytes": 1048704
+    },
+    {
+      "path": "h0_verification/snr_db.npy",
+      "size_bytes": 32896
+    },
+    {
+      "path": "train/base_scene_id.npy",
+      "size_bytes": 19660928
+    },
+    {
+      "path": "train/course_level.npy",
+      "size_bytes": 409728
+    },
+    {
+      "path": "train/e003_manifest.json",
+      "size_bytes": 775
+    },
+    {
+      "path": "train/iq_h0.npy",
+      "size_bytes": 5111808128
+    },
+    {
+      "path": "train/iq_h1.npy",
+      "size_bytes": 5111808128
+    },
+    {
+      "path": "train/manifest.json",
+      "size_bytes": 1245
+    },
+    {
+      "path": "train/measured_cnr_db.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/measured_scnr_db.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/measured_snr_db.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/noise_power.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/requested_cnr_db.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/scenario_id.npy",
+      "size_bytes": 6553728
+    },
+    {
+      "path": "train/snr_db.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_amplitude.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_azimuth_deg.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_doppler_hz.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_phase_rad.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_radial_velocity_mps.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "train/truth_range_cell.npy",
+      "size_bytes": 204928
+    },
+    {
+      "path": "validation/base_scene_id.npy",
+      "size_bytes": 1920128
+    },
+    {
+      "path": "validation/course_level.npy",
+      "size_bytes": 40128
+    },
+    {
+      "path": "validation/e003_manifest.json",
+      "size_bytes": 767
+    },
+    {
+      "path": "validation/iq_h0.npy",
+      "size_bytes": 499200128
+    },
+    {
+      "path": "validation/iq_h1.npy",
+      "size_bytes": 499200128
+    },
+    {
+      "path": "validation/manifest.json",
+      "size_bytes": 1236
+    },
+    {
+      "path": "validation/measured_cnr_db.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/measured_scnr_db.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/measured_snr_db.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/noise_power.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/requested_cnr_db.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/scenario_id.npy",
+      "size_bytes": 640128
+    },
+    {
+      "path": "validation/snr_db.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_amplitude.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_azimuth_deg.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_doppler_hz.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_phase_rad.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_radial_velocity_mps.npy",
+      "size_bytes": 20128
+    },
+    {
+      "path": "validation/truth_range_cell.npy",
+      "size_bytes": 20128
+    }
+  ],
+  "total_bytes": 14232309192,
+  "cleanup_eligible_files_only": true
+}

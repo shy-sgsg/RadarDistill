@@ -1,0 +1,19 @@
+{
+  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "split_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 8192,
+    "h0_verification": 8192,
+    "c3_h0_verification": 4096,
+    "development": 4096,
+    "exact_overlap_boundary": 512
+  },
+  "all_base_scene_ids_disjoint": true,
+  "scene_manifest_rows": 81288,
+  "cache_file_count": 90,
+  "cache_bytes": 14232309192,
+  "generation_seconds": 1245.3837517840147,
+  "cache_path": "experiments/D2-A-E003/data/cache",
+  "final_blind_generated": false
+}
