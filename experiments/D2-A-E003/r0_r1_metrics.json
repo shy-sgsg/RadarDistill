@@ -1,0 +1,78 @@
+{
+  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "r0": {
+    "stable_scene_id_sampler_tests": "covered by tests/test_physical_consistency.py",
+    "seed_streams_disjoint": true,
+    "historical_R4_results_modified": false
+  },
+  "r1": {
+    "feature_shape": [
+      2,
+      28,
+      130,
+      32
+    ],
+    "feature_channel_count": 28,
+    "complex64_vs_complex128_reference": {
+      "max_absolute_error": 9.385539678774535e-07,
+      "relative_max_error": 9.537121616686433e-08,
+      "pre_registered_relative_limit": 0.0001,
+      "passed": true
+    },
+    "common_phase_feature_error": {
+      "max_absolute_error": 2.86102294921875e-06,
+      "relative_max_error": 2.9072302817106145e-07,
+      "passed": true
+    },
+    "lag1_frequency_map_max_circular_error_hz": 1.1368683772161603e-13,
+    "lag4_alias_max_abs_error": 4.203581926986999e-14,
+    "lag16_alias_max_abs_error": 1.3100631690576847e-14,
+    "lag1_separates_lag4_alias": true,
+    "cross_channel_phase_max_abs_error": 1.5700924586837752e-16,
+    "range_locality_nonzero_leakage_count": 0,
+    "zero_small_large_input": {
+      "zero": {
+        "finite": true,
+        "max_abs_feature": 27.63102149963379,
+        "log_scene_power": -27.63102149963379
+      },
+      "tiny": {
+        "finite": true,
+        "max_abs_feature": 27.63102149963379,
+        "log_scene_power": -27.63102149963379
+      },
+      "large": {
+        "finite": true,
+        "max_abs_feature": 138.1551055908203,
+        "log_scene_power": 138.1551055908203
+      }
+    },
+    "parameters": {
+      "S0_shared_taskstudent": 13383,
+      "S2_projection": 174,
+      "S2_total": 13557,
+      "fractional_increase": 0.013001569154898005
+    },
+    "feature_output_tensor_bytes_batch2": 931840,
+    "cuda_feature_timing": {
+      "1": {
+        "mean_ms": 1.6904682755470275,
+        "median_ms": 1.5959840416908264,
+        "p95_ms": 2.288292747735975,
+        "repeats": 30,
+        "cuda_peak_allocated_bytes": 13106176
+      },
+      "16": {
+        "mean_ms": 2.0476330717404685,
+        "median_ms": 1.9812800288200378,
+        "p95_ms": 2.3640480518341063,
+        "repeats": 30,
+        "cuda_peak_allocated_bytes": 50000896
+      }
+    },
+    "public_phase_mathematical_property_passed": true
+  },
+  "G1_frontend_passed": true,
+  "training_authorized_by_prerequisite": true,
+  "final_blind_generated": false
+}

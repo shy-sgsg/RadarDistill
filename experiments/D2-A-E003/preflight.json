@@ -1,0 +1,13 @@
+{
+  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "branch": "main",
+  "pushed_to_origin_main": true,
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "disk_free_bytes_before_generation": 75719106560,
+  "estimated_cache_bytes": 17408090112,
+  "required_reserve_gib": 5.0,
+  "passed": true,
+  "final_blind_generated": false,
+  "training_started": false
+}

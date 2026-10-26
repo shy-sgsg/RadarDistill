@@ -1,0 +1,21 @@
+{
+  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "timestamp_local": "2026-10-26 21:55:22 +0800",
+  "python": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "processor": "",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda_version": "12.8",
+  "cuda_available": true,
+  "cuda_device_count": 1,
+  "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cuda_memory_free_bytes": 2776498176,
+  "cuda_memory_total_bytes": 3942383616,
+  "disk_free_bytes": 75719020544,
+  "nvidia_smi": {
+    "returncode": 0,
+    "query": "NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 2648 MiB, 580.178.04",
+    "stderr": "",
+    "full": "Mon Oct 26 21:55:22 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3050 ...    Off |   00000000:01:00.0 Off |                  N/A |\n| N/A   46C    P8              6W /   40W |    1112MiB /   4096MiB |     36%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            4369      G   /usr/bin/gnome-shell                    554MiB |\n|    0   N/A  N/A            4611      G   /usr/bin/clash-verge                      1MiB |\n|    0   N/A  N/A            4848      G   /usr/bin/Xwayland                         7MiB |\n|    0   N/A  N/A            6954    C+G   /usr/bin/nautilus                        28MiB |\n|    0   N/A  N/A            8162    C+G   /usr/bin/resources                       29MiB |\n|    0   N/A  N/A          881790      G   .../9036/usr/lib/firefox/firefox        214MiB |\n|    0   N/A  N/A         1151216      C   ...aconda3/envs/AISAR/bin/python         70MiB |\n+-----------------------------------------------------------------------------------------+"
+  }
+}
