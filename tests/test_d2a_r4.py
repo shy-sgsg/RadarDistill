@@ -117,6 +117,22 @@ def test_h0_background_is_independent_of_target_scenario_label():
     )
 
 
+def test_teacher_map_alignment_uses_frequency_range_map_dimensions():
+    score_map = np.zeros((2, 8, 4), dtype=np.float64)
+    score_map[0, 2, 1] = 1.0
+    score_map[1, 5, 3] = 1.0
+    truth_range = np.asarray([1.0, 3.0])
+    truth_doppler = np.asarray([
+        np.fft.fftshift(np.fft.fftfreq(8, d=1.0 / 1300.0))[2],
+        np.fft.fftshift(np.fft.fftfreq(8, d=1.0 / 1300.0))[5],
+    ])
+
+    result = runner._map_alignment(score_map, truth_range, truth_doppler)
+
+    assert result["top_cell_localization_rate"] == 1.0
+    assert result["correct_location_count"] == 2
+
+
 def test_cuda_b3_t1_preserve_frozen_cpu_formula_on_small_batch():
     import torch
     import yaml

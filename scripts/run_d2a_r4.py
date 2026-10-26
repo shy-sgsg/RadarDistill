@@ -831,7 +831,7 @@ def _map_alignment(
     correct = (np.abs(range_error) <= range_gate) & (np.abs(doppler_error) <= doppler_gate_hz)
     margins = []
     for index, scene_map in enumerate(maps):
-        range_mask = np.abs(np.arange(scene_map.shape[2]) - truth_range[index]) <= range_gate
+        range_mask = np.abs(np.arange(scene_map.shape[1]) - truth_range[index]) <= range_gate
         doppler_mask = np.abs(wrap_frequency(frequencies - truth_doppler[index], prf_hz)) <= doppler_gate_hz
         window = doppler_mask[:, None] & range_mask[None, :]
         inside = float(np.max(scene_map[window])) if np.any(window) else 0.0
