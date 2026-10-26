@@ -1620,7 +1620,6 @@ def _r4_train_s1_attempt(
     from radardistill.distillation.d2a_e002_losses import d2a_e002_loss
     from radardistill.training.d2a_e002 import (
         _paired_validation,
-        _save_training_checkpoint,
         make_paired_examples,
         scale_d2a_e002_microbatch_loss,
     )
@@ -1661,7 +1660,30 @@ def _r4_train_s1_attempt(
     best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
     torch.cuda.reset_peak_memory_stats(device)
     start_time = time.perf_counter()
-    history_rows: list[dict[str, Any]] = []
+
+    def save_r4_checkpoint(
+        path: Path,
+        *,
+        update: int,
+        validation: dict[str, float],
+        optimizer_state: torch.optim.Optimizer | None = None,
+    ) -> None:
+        payload: dict[str, Any] = {
+            "experiment": "D2-A-R4-S1",
+            "protocol_version": 1.0,
+            "arm": "S1_public_phase_augmented_E1_truth_only",
+            "update": int(update),
+            "microbatch_size": int(microbatch),
+            "model_state_dict": {
+                key: value.detach().cpu().clone()
+                for key, value in model.state_dict().items()
+            },
+            "validation": dict(validation),
+            "teacher_distillation": False,
+        }
+        if optimizer_state is not None:
+            payload["optimizer_state_dict"] = optimizer_state.state_dict()
+        torch.save(payload, path)
 
     model.train()
     with history_path.open("w", newline="", encoding="utf-8") as stream:
@@ -1726,27 +1748,20 @@ def _r4_train_s1_attempt(
                     best_loss = float(validation["task_loss"])
                     best_update = update_index + 1
                     best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
-                _save_training_checkpoint(
+                save_r4_checkpoint(
                     out_dir / "progress_checkpoint.pt",
-                    model,
-                    arm="S1_phase_augmented_truth",
                     update=update_index + 1,
-                    microbatch_size=microbatch,
                     validation=validation,
-                    optimizer=optimizer,
+                    optimizer_state=optimizer,
                 )
                 model.train()
             writer.writerow(row)
             stream.flush()
-            history_rows.append(row)
     model.load_state_dict(best_state, strict=True)
     model.eval()
-    _save_training_checkpoint(
+    save_r4_checkpoint(
         out_dir / "best_checkpoint.pt",
-        model,
-        arm="S1_phase_augmented_truth",
         update=best_update,
-        microbatch_size=microbatch,
         validation=_paired_validation(model, validation_arrays, config, device, microbatch),
     )
     inference = TaskStudent(
@@ -1759,7 +1774,13 @@ def _r4_train_s1_attempt(
         strict=True,
     )
     torch.save(
-        {"has_k2_head": False, "model_state_dict": inference.state_dict()},
+        {
+            "experiment": "D2-A-R4-S1",
+            "protocol_version": 1.0,
+            "has_k2_head": False,
+            "model_state_dict": inference.state_dict(),
+            "teacher_distillation": False,
+        },
         out_dir / "best_inference.pt",
     )
     return {
@@ -1901,6 +1922,7 @@ def run_pilot(device_name: str) -> dict[str, Any]:
     if training_result is None:
         raise RuntimeError("R4 S1 pilot failed to complete")
     attempts.append({"microbatch": training_result["microbatch_size"], "status": "completed"})
+    torch.cuda.empty_cache()
 
     print("R4 S1 pilot: generating independent evaluation scenes", flush=True)
     pilot_eval = config["data"]["pilot"]["evaluation"]
@@ -1913,17 +1935,13 @@ def run_pilot(device_name: str) -> dict[str, Any]:
         int(pilot_eval["h0_verification_assignment_seed"]), physics,
     )
     h1 = _pilot_eval_h1_cells(physics, config)
-    s0_model = _student_from_checkpoint(
-        ROOT / "experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_inference.pt",
-        e002,
-        device,
-    )
-    s1_model = _student_from_checkpoint(
-        Path(training_result["checkpoint"]), e002, device
-    )
-    pilot_models = {"S0_E002_A_frozen": s0_model, "S1_public_phase_augmented": s1_model}
+    pilot_checkpoints = {
+        "S0_E002_A_frozen": ROOT / "experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_inference.pt",
+        "S1_public_phase_augmented": Path(training_result["checkpoint"]),
+    }
     evaluation: dict[str, Any] = {}
-    for name, model in pilot_models.items():
+    for name, checkpoint_path in pilot_checkpoints.items():
+        model = _student_from_checkpoint(checkpoint_path, e002, device)
         cal_prediction = _predict_student(h0_cal["iq"], model, device)
         threshold = float(np.quantile(cal_prediction["score"], 0.95, method="higher"))
         ver_prediction = _predict_student(h0_ver["iq"], model, device)
@@ -1946,6 +1964,8 @@ def run_pilot(device_name: str) -> dict[str, Any]:
             h1["iq_h1"], threshold, model, device
         )
         evaluation[name] = summary
+        del model
+        torch.cuda.empty_cache()
     train_range = np.asarray(train_arrays["truth_range_cell"], dtype=np.float64)
     train_doppler = np.asarray(train_arrays["truth_doppler_hz"], dtype=np.float64)
     pilot_truth_baseline = {
