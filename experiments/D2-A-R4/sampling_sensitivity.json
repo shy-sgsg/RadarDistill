@@ -1,0 +1,799 @@
+{
+  "experiment": "D2-A-R4 diagnostic sampling sensitivity",
+  "status": "posthoc_exploratory_reanalysis",
+  "git_sha": "66c9631f6102ff7477ff600b0263685782be5211",
+  "protocol_changed": false,
+  "original_metrics_overwritten": false,
+  "t001_or_e002_results_modified": false,
+  "pilot_training_repeated": false,
+  "sampling": {
+    "seed": 2026102804,
+    "samples_per_group": 64,
+    "sample_count": 256,
+    "h1_group_counts_balanced_sample": {
+      "C0/separated/SNR20/CNR-5": 64,
+      "C1/separated/SNR15/CNR0": 64,
+      "C2/partial_overlap/SNR10/CNR10": 64,
+      "C3/partial_overlap/SNR0/CNR20": 64
+    },
+    "initial_first_256_h1_group_counts": {
+      "C0/separated/SNR20/CNR-5": 256,
+      "C1/separated/SNR15/CNR0": 0,
+      "C2/partial_overlap/SNR10/CNR10": 0,
+      "C3/partial_overlap/SNR0/CNR20": 0
+    },
+    "pilot_group_counts_balanced_sample": {
+      "C0/separated/SNR20/CNR-5": 64,
+      "C1/separated/SNR15/CNR0": 64,
+      "C2/partial_overlap/SNR10/CNR10": 64,
+      "C3/partial_overlap/SNR0/CNR20": 64
+    },
+    "groups": [
+      "C0/separated/SNR20/CNR-5",
+      "C1/separated/SNR15/CNR0",
+      "C2/partial_overlap/SNR10/CNR10",
+      "C3/partial_overlap/SNR0/CNR20"
+    ],
+    "selection": "uniform without replacement within each frozen H1 condition group"
+  },
+  "teachers_target_only_frequency_shift": {
+    "B3": {
+      "n_scenes": 256,
+      "base_location_correct_count": 195,
+      "base_location_incorrect_count": 61,
+      "shifts": {
+        "-25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 7.3828125,
+            "residual_p95_abs_hz": 25.0,
+            "detection_fraction_at_fixed_threshold": 0.48828125
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": -0.02564102564102564,
+            "residual_p95_abs_hz": 5.0,
+            "detection_fraction_at_fixed_threshold": 0.5282051282051282
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": 31.065573770491802,
+            "residual_p95_abs_hz": 75.0,
+            "detection_fraction_at_fixed_threshold": 0.36065573770491804
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "-10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 1.9140625,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.484375
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": 0.6153846153846154,
+            "residual_p95_abs_hz": 0.0,
+            "detection_fraction_at_fixed_threshold": 0.5128205128205128
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": 6.065573770491803,
+            "residual_p95_abs_hz": 20.0,
+            "detection_fraction_at_fixed_threshold": 0.39344262295081966
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -0.1953125,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.48828125
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": 3.128205128205128,
+            "residual_p95_abs_hz": 0.0,
+            "detection_fraction_at_fixed_threshold": 0.5282051282051282
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": -10.819672131147541,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.36065573770491804
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -7.4609375,
+            "residual_p95_abs_hz": 280.0,
+            "detection_fraction_at_fixed_threshold": 0.5
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": -1.9743589743589745,
+            "residual_p95_abs_hz": 313.9999999999995,
+            "detection_fraction_at_fixed_threshold": 0.5435897435897435
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": -25.0,
+            "residual_p95_abs_hz": 25.0,
+            "detection_fraction_at_fixed_threshold": 0.36065573770491804
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        }
+      },
+      "regenerated_physical_motion_evaluated_separately": true
+    },
+    "T1": {
+      "n_scenes": 256,
+      "base_location_correct_count": 195,
+      "base_location_incorrect_count": 61,
+      "shifts": {
+        "-25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 7.3828125,
+            "residual_p95_abs_hz": 25.0,
+            "detection_fraction_at_fixed_threshold": 0.79296875
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": -0.02564102564102564,
+            "residual_p95_abs_hz": 5.0,
+            "detection_fraction_at_fixed_threshold": 0.9897435897435898
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": 31.065573770491802,
+            "residual_p95_abs_hz": 75.0,
+            "detection_fraction_at_fixed_threshold": 0.16393442622950818
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "-10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 1.9140625,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.77734375
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": 0.6153846153846154,
+            "residual_p95_abs_hz": 0.0,
+            "detection_fraction_at_fixed_threshold": 0.9692307692307692
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": 6.065573770491803,
+            "residual_p95_abs_hz": 20.0,
+            "detection_fraction_at_fixed_threshold": 0.16393442622950818
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -0.1953125,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.6640625
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": 3.128205128205128,
+            "residual_p95_abs_hz": 0.0,
+            "detection_fraction_at_fixed_threshold": 0.8205128205128205
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": -10.819672131147541,
+            "residual_p95_abs_hz": 10.0,
+            "detection_fraction_at_fixed_threshold": 0.16393442622950818
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -7.4609375,
+            "residual_p95_abs_hz": 280.0,
+            "detection_fraction_at_fixed_threshold": 0.54296875
+          },
+          "base_location_correct": {
+            "n": 195,
+            "residual_mean_hz": -1.9743589743589745,
+            "residual_p95_abs_hz": 313.9999999999995,
+            "detection_fraction_at_fixed_threshold": 0.6615384615384615
+          },
+          "base_location_incorrect": {
+            "n": 61,
+            "residual_mean_hz": -25.0,
+            "residual_p95_abs_hz": 25.0,
+            "detection_fraction_at_fixed_threshold": 0.16393442622950818
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        }
+      },
+      "regenerated_physical_motion_evaluated_separately": true
+    },
+    "ACE_AMF": {
+      "n_scenes": 256,
+      "base_location_correct_count": 137,
+      "base_location_incorrect_count": 119,
+      "shifts": {
+        "-25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 7.8350016474584505,
+            "residual_p95_abs_hz": 25.013727279098703,
+            "detection_fraction_at_fixed_threshold": 0.609375
+          },
+          "base_location_correct": {
+            "n": 137,
+            "residual_mean_hz": 0.20728316552137657,
+            "residual_p95_abs_hz": 0.1820534835473147,
+            "detection_fraction_at_fixed_threshold": 0.9927007299270073
+          },
+          "base_location_incorrect": {
+            "n": 119,
+            "residual_mean_hz": 16.6164926728818,
+            "residual_p95_abs_hz": 47.76588065839875,
+            "detection_fraction_at_fixed_threshold": 0.16806722689075632
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "-10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": 3.114993967242079,
+            "residual_p95_abs_hz": 10.00083328800585,
+            "detection_fraction_at_fixed_threshold": 0.5859375
+          },
+          "base_location_correct": {
+            "n": 137,
+            "residual_mean_hz": 0.08022617990573933,
+            "residual_p95_abs_hz": 0.10079813676766193,
+            "detection_fraction_at_fixed_threshold": 0.9927007299270073
+          },
+          "base_location_incorrect": {
+            "n": 119,
+            "residual_mean_hz": 6.608802260225932,
+            "residual_p95_abs_hz": 10.009336217236614,
+            "detection_fraction_at_fixed_threshold": 0.11764705882352941
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "10.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -4.139283036279274,
+            "residual_p95_abs_hz": 10.002036657547336,
+            "detection_fraction_at_fixed_threshold": 0.56640625
+          },
+          "base_location_correct": {
+            "n": 137,
+            "residual_mean_hz": 2.42897292616078,
+            "residual_p95_abs_hz": 0.17463996195683387,
+            "detection_fraction_at_fixed_threshold": 0.9562043795620438
+          },
+          "base_location_incorrect": {
+            "n": 119,
+            "residual_mean_hz": -11.701056707323705,
+            "residual_p95_abs_hz": 10.00717463155189,
+            "detection_fraction_at_fixed_threshold": 0.11764705882352941
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        },
+        "25.0": {
+          "all_base_locations": {
+            "n": 256,
+            "residual_mean_hz": -8.23123290020845,
+            "residual_p95_abs_hz": 25.06368003520339,
+            "detection_fraction_at_fixed_threshold": 0.55078125
+          },
+          "base_location_correct": {
+            "n": 137,
+            "residual_mean_hz": 7.677204405494707,
+            "residual_p95_abs_hz": 40.785023773991554,
+            "detection_fraction_at_fixed_threshold": 0.9343065693430657
+          },
+          "base_location_incorrect": {
+            "n": 119,
+            "residual_mean_hz": -26.54598845383309,
+            "residual_p95_abs_hz": 25.03733395141852,
+            "detection_fraction_at_fixed_threshold": 0.1092436974789916
+          },
+          "threshold_recalibrated": false,
+          "intervention": "frequency shift applied to H1-H0 target component only"
+        }
+      },
+      "regenerated_physical_motion_evaluated_separately": true
+    }
+  },
+  "frozen_students": {
+    "A": {
+      "public_phase_rotation": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 0.9227294921875,
+        "decision_agreement_by_scene_min": 0.125,
+        "range_change_p95_bins": 16.87323760986328,
+        "doppler_change_p95_hz": 85.48661041259766,
+        "score_abs_change_p95": 2.437002182006836,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      },
+      "signal_level_frequency_shift": {
+        "n_scenes": 256,
+        "physical_motion_comparison": "regenerated H1 cells summarized separately by scenario and velocity",
+        "shifts": {
+          "-25.0": {
+            "target_component_only_shift_residual_mean_hz": 15.107612609863281,
+            "target_component_only_shift_residual_p95_abs_hz": 47.5716552734375,
+            "whole_observation_shift_residual_mean_hz": 20.90757179260254,
+            "whole_observation_shift_residual_p95_abs_hz": 102.83149719238281,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "-10.0": {
+            "target_component_only_shift_residual_mean_hz": 6.659457206726074,
+            "target_component_only_shift_residual_p95_abs_hz": 31.081954956054688,
+            "whole_observation_shift_residual_mean_hz": -0.13461840152740479,
+            "whole_observation_shift_residual_p95_abs_hz": 85.12582397460938,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "10.0": {
+            "target_component_only_shift_residual_mean_hz": -5.867702484130859,
+            "target_component_only_shift_residual_p95_abs_hz": 40.64317321777344,
+            "whole_observation_shift_residual_mean_hz": -13.189090728759766,
+            "whole_observation_shift_residual_p95_abs_hz": 99.29368591308594,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "25.0": {
+            "target_component_only_shift_residual_mean_hz": -14.671306610107422,
+            "target_component_only_shift_residual_p95_abs_hz": 64.42839050292969,
+            "whole_observation_shift_residual_mean_hz": -63.11135482788086,
+            "whole_observation_shift_residual_p95_abs_hz": 356.4895324707031,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          }
+        }
+      }
+    },
+    "B": {
+      "public_phase_rotation": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 0.9246826171875,
+        "decision_agreement_by_scene_min": 0.09375,
+        "range_change_p95_bins": 14.08437728881836,
+        "doppler_change_p95_hz": 73.4957275390625,
+        "score_abs_change_p95": 1.6192176342010498,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      },
+      "signal_level_frequency_shift": {
+        "n_scenes": 256,
+        "physical_motion_comparison": "regenerated H1 cells summarized separately by scenario and velocity",
+        "shifts": {
+          "-25.0": {
+            "target_component_only_shift_residual_mean_hz": 23.861019134521484,
+            "target_component_only_shift_residual_p95_abs_hz": 80.59190368652344,
+            "whole_observation_shift_residual_mean_hz": 21.234827041625977,
+            "whole_observation_shift_residual_p95_abs_hz": 114.29362487792969,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "-10.0": {
+            "target_component_only_shift_residual_mean_hz": 10.9757661819458,
+            "target_component_only_shift_residual_p95_abs_hz": 52.5755615234375,
+            "whole_observation_shift_residual_mean_hz": 1.2167973518371582,
+            "whole_observation_shift_residual_p95_abs_hz": 87.62075805664062,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "10.0": {
+            "target_component_only_shift_residual_mean_hz": -9.700214385986328,
+            "target_component_only_shift_residual_p95_abs_hz": 56.29942321777344,
+            "whole_observation_shift_residual_mean_hz": -23.393699645996094,
+            "whole_observation_shift_residual_p95_abs_hz": 140.19415283203125,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "25.0": {
+            "target_component_only_shift_residual_mean_hz": -23.2525634765625,
+            "target_component_only_shift_residual_p95_abs_hz": 82.16522216796875,
+            "whole_observation_shift_residual_mean_hz": -52.852149963378906,
+            "whole_observation_shift_residual_p95_abs_hz": 216.98915100097656,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          }
+        }
+      }
+    },
+    "C": {
+      "public_phase_rotation": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 0.916015625,
+        "decision_agreement_by_scene_min": 0.09375,
+        "range_change_p95_bins": 15.863306999206543,
+        "doppler_change_p95_hz": 64.03894805908203,
+        "score_abs_change_p95": 1.653458833694458,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      },
+      "signal_level_frequency_shift": {
+        "n_scenes": 256,
+        "physical_motion_comparison": "regenerated H1 cells summarized separately by scenario and velocity",
+        "shifts": {
+          "-25.0": {
+            "target_component_only_shift_residual_mean_hz": 21.122440338134766,
+            "target_component_only_shift_residual_p95_abs_hz": 59.82762145996094,
+            "whole_observation_shift_residual_mean_hz": 20.64923095703125,
+            "whole_observation_shift_residual_p95_abs_hz": 96.14907836914062,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "-10.0": {
+            "target_component_only_shift_residual_mean_hz": 8.319938659667969,
+            "target_component_only_shift_residual_p95_abs_hz": 34.58502197265625,
+            "whole_observation_shift_residual_mean_hz": 2.612485885620117,
+            "whole_observation_shift_residual_p95_abs_hz": 64.55221557617188,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "10.0": {
+            "target_component_only_shift_residual_mean_hz": -7.116668701171875,
+            "target_component_only_shift_residual_p95_abs_hz": 38.37742614746094,
+            "whole_observation_shift_residual_mean_hz": -23.416213989257812,
+            "whole_observation_shift_residual_p95_abs_hz": 129.12066650390625,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          },
+          "25.0": {
+            "target_component_only_shift_residual_mean_hz": -20.52621078491211,
+            "target_component_only_shift_residual_p95_abs_hz": 58.57624816894531,
+            "whole_observation_shift_residual_mean_hz": -39.653770446777344,
+            "whole_observation_shift_residual_p95_abs_hz": 156.52645874023438,
+            "target_only_is_synthetic_intervention": true,
+            "whole_observation_shift_is_not_regenerated_motion": true
+          }
+        }
+      }
+    }
+  },
+  "pilot_public_phase_rotation": {
+    "S0_E002_A_frozen": {
+      "original_first_256": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 1.0,
+        "decision_agreement_by_scene_min": 1.0,
+        "range_change_p95_bins": 0.03502544015645981,
+        "doppler_change_p95_hz": 6.483278751373291,
+        "score_abs_change_p95": 0.42953431606292725,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      },
+      "balanced_sample": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 0.9051513671875,
+        "decision_agreement_by_scene_min": 0.03125,
+        "range_change_p95_bins": 14.258264541625977,
+        "doppler_change_p95_hz": 78.77120208740234,
+        "score_abs_change_p95": 2.6557044982910156,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      }
+    },
+    "S1_public_phase_augmented": {
+      "original_first_256": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 1.0,
+        "decision_agreement_by_scene_min": 1.0,
+        "range_change_p95_bins": 0.034164879471063614,
+        "doppler_change_p95_hz": 6.556356906890869,
+        "score_abs_change_p95": 0.41987642645835876,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      },
+      "balanced_sample": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 0.9091796875,
+        "decision_agreement_by_scene_min": 0.0625,
+        "range_change_p95_bins": 16.010211944580078,
+        "doppler_change_p95_hz": 63.13228225708008,
+        "score_abs_change_p95": 2.6448440551757812,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      }
+    }
+  },
+  "pilot_s1_minus_s0_paired_task_difference": {
+    "pd": {
+      "difference": -0.01171875,
+      "paired_bootstrap_95_ci": [
+        -0.0205078125,
+        -0.00341796875
+      ]
+    },
+    "joint": {
+      "difference": -0.03125,
+      "paired_bootstrap_95_ci": [
+        -0.04296875,
+        -0.020495605468750067
+      ]
+    },
+    "range_rmse": {
+      "difference": -0.0789890702153837,
+      "paired_bootstrap_95_ci": [
+        -0.3252461864777129,
+        0.161152664919269
+      ]
+    },
+    "doppler_rmse": {
+      "difference": -6.293455232158102,
+      "paired_bootstrap_95_ci": [
+        -9.162103012060923,
+        -2.8367082015249485
+      ]
+    },
+    "bootstrap_unit": "paired H1 base_scene_id",
+    "replicates": 2000,
+    "seed": 2026102801
+  },
+  "stage_gate_effect": "none; this post-hoc sensitivity report does not change any frozen gate or prior pilot authorization"
+}

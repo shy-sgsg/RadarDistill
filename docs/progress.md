@@ -1,5 +1,15 @@
 # 研究进度
 
+## 2026-10-26：D2-A-R4 数值、教师学生物理瓶颈与单 seed S1 pilot
+
+- **总纲对齐：** 按 `docs/RESEARCH_CHARTER.md` v1.2 执行，服务于任务级 GMTI 学生与教师可靠性判断；研究总纲未改。D2-A-R4 保持探索性，T001 G1/G2 历史结论不变。
+- **执行：** 在 RTX 3050 Laptop `cuda:0` 完成 B3/T1/ACE×AMF 和 E002 A/B/C 复核。新 H0 calibration/verification 各4096场景，H1为2048对。数值与 CUDA parity 审计记录在 `metrics.json` / `numeric_precision.json`。
+- **数值结果：** complex128 中构造复尺度变换后，R4 的 `1e-5` 数学不变性门通过；complex64先乘legacy路径最大差`2.44e-4`，CPU/CUDA最大分数绝对差`3.09e-4`、相对差`9.30e-7`，无峰值/阈值判决翻转。T001冻结`1e-6` G1仍FAIL，历史`4.58e-5`未改。
+- **H0与教师：** 同种子替换场景标签的H0 IQ逐元素相同。B3幅度四分位Pfa为`0–0.119`，T1为`0.046–0.052`，但T1在C3仍为`0.178–0.217`；T1与B3峰值估计相同，收益来自归一化分数，不是更佳参数图。T1不取得固定阈值教师资格。
+- **取样复核：** 首轮phase/shift前256个H1全是C0，旧结果保留。独立提交`c496057`加入确定性分层敏感性入口；`66c9631`增加同一pilot H1的配对区间。分层敏感性 A/B/C phase agreement为`0.916/0.925/0.916`，S0/S1为`0.905/0.909`；S1的Doppler变化p95仍63.1 Hz。
+- **Pilot：** 仅一个 seed101、1600 updates 的 E1 truth-only S1，CUDA用时约302.5秒、峰值分配显存约275MB。S1−S0 paired H1 Doppler RMSE差`−6.29 Hz`（95% CI `[-9.16,-2.84]`），但Pd差`−0.0117`、joint差`−0.0313`且区间均完全低于0；range RMSE差异未定。未运行KD、正式三种子或blind。
+- **阶段建议：** **REFINE**。不继续单一公共相位增强或蒸馏，先做独立ChatGPT研究方向审查；若获得新的研究批准，再冻结最小表示比较协议。结果、表和图见 `experiments/D2-A-R4/`，Codex自审见 `docs/stage_reviews/D2-A-R4_review.md`。
+
 ## 2026-10-26：完成 D2-A-T001 CUDA 教师比较并按门 STOP
 
 - **总纲映射与授权：** 根据 `RESEARCH_CHARTER.md` v1.2 的 Q1/Q2/Q3/Q4/Q9 与任务级学生目标，用户批准开展一项有界教师增强实验；不修改总纲、历史冻结结果或最终盲测。

@@ -2,8 +2,8 @@
 
 **更新日期：** 2026-10-26
 **工作分支：** `main`
-**最新完成工作：** D2-A-E002 v2.1 的 A/B/C 单 seed CUDA pilot、评价、阶段审查及缓存归档清理均已完成；D2-A-T001 v1.2 CUDA 教师阶段已完成并记录负结果。
-**阶段判断：** D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）。E002 的 G4 任务学习门通过，G3 分层 H0 虚警与 G6 公共相位/频移等变性门未通过，G5 未发现课程或 K2 pilot 增益。总纲 v1.2 未修改。
+**最新完成工作：** D2-A-R4 数值精度、教师/学生物理一致性诊断及一个 CUDA E1 truth-only S1 pilot 已完成；完整记录见 [R4 分析](../experiments/D2-A-R4/analysis.md) 与 [Codex 自审](stage_reviews/D2-A-R4_review.md)。
+**阶段判断：** D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）；D2-A-R4 **REFINE**（探索性诊断；平衡敏感性复核未支持公共相位增强可跨条件泛化）。E002 的 G4 任务学习门通过，G3 分层 H0 虚警与 G6 公共相位/频移等变性门未通过，G5 未发现课程或 K2 pilot 增益。总纲 v1.2 未修改。
 
 ## 当前结论
 
@@ -25,9 +25,17 @@ E002 v1 truth-only 提案从未执行，已由 v2.1 matched A/B/C 路线取代�
 
 CUDA covariance 拟合用时47.95秒（85.42场景/秒）；候选内核复用16个CPI时 batch=1 CUDA约为CPU的7.40倍、batch=16约15.63倍。整个教师阶段用时3539.7秒（约59分钟），该时间包括CPU场景仿真、旧基线与CPU bootstrap，不代表端到端实时性能。阶段后项目占用9,379,091,889 bytes（8.735 GiB），低于最终20 GiB上限；未生成原始IQ或大型模型文件，GMTI用户目录未改动。
 
+### D2-A-R4 阶段结果
+
+R4 新复尺度不变性诊断在正确的 complex128 变换构造下通过 `1e-5` 门；T001 历史 `4.58e-5 > 1e-6` G1 失败不变。legacy complex64 先乘路径最大差为`2.44e-4`，CPU/CUDA ACE×AMF 最大绝对差`3.09e-4`，相对差`9.30e-7`，64例无峰值或阈值判决变化。`1e-4` 不是适用于所有指标的通用容差。
+
+H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR、CNR 变化。B3 的 H0 幅度四分位 Pfa 从0到0.119，T1 对应 Pfa 为0.046–0.052；但 C3 的 T1 Pfa 仍约0.178–0.217，冻结学生 A/B/C 约0.152–0.195。T1改善了 C2 检测和联合成功，但峰图/参数估计与 B3 相同，属于分数归一化收益；T1 仍未取得跨条件固定阈值教师资格。
+
+首轮phase/频移诊断的256例全部是C0。原结果保留，另按每条件64例做后验分层复核：冻结 A/B/C phase agreement 为0.916/0.925/0.916；pilot S0/S1 为0.905/0.909，不能支持 phase-augmented S1 跨条件不变。相同2048个pilot H1的配对 bootstrap 中，S1−S0 Doppler RMSE为`−6.29 Hz`（95% CI `[-9.16,-2.84]`），Pd为`−0.0117`、joint success为`−0.0313`且区间低于0，range RMSE区间跨0。单seed的频率改善以检测/联合任务退化为代价，不启动新seed、KD或blind。阶段建议 **REFINE**，先进行独立 ChatGPT 方向审查。
+
 ## 下一项唯一优先任务
 
-对 D2-A-T001 阶段报告进行独立 ChatGPT 审查，并决定整体研究路线是否应从“增加传统教师”转向一项单独预注册的学生/物理一致性研究。不得启动本协议 S2、继续搜索 post-Doppler 教师、降低门槛或生成 final blind；任何新实验须另行论证并预注册。
+对 D2-A-R4 阶段报告进行独立 ChatGPT 审查，并判断是否值得单独预注册最小复数/相位等变表示诊断。不得启动正式三种子、E2/E3 蒸馏、final blind 或继续搜索教师；任何新实验须另行论证、冻结协议并按治理流程批准。T001 S2 仍禁止。
 
 ## 关键材料
 
@@ -37,5 +45,6 @@ CUDA covariance 拟合用时47.95秒（85.42场景/秒）；候选内核复用16
 - 当前提案：[D2-A-E002 v2 对齐](task_alignments/D2-A-E002_curriculum_k2_alignment.md)、[模型与损失审查](../experiments/D2-A-E002/architecture_and_loss_review.md)、[E002 v2 协议](../experiments/D2-A-E002/protocol.md)；[v1 对齐与审查](task_alignments/D2-A-E002_alignment.md)保留为历史记录
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
+- D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。

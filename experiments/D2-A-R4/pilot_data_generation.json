@@ -1,0 +1,7 @@
+{
+  "train_scenes": 51200,
+  "validation_scenes": 5000,
+  "same_seed_blocks_as_E002": true,
+  "same_A_arm_pair_plan": true,
+  "all_training_samples_cached_on_gpu": false
+}

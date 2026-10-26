@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3 与 E002 v2.1 pilot 已完成；R3 和 E002 阶段决定均为 REFINE。** R3 的 T1/T2 没有通过独立固定阈值 G2。E002 v2.1 的 A/B/C CUDA pilot 表明三臂能在当前可辨识开发分布学习任务，但 G3 分层 H0 门和 G6 相位/频移等变门失败；G5 没有课程或 K2 增益。此结果不覆盖 R3 结论、不授予 T1 固定阈值教师资格、不改变 Charter 或 D1/E001 历史门。D1-E001 的 GO → D2 与 D1-E002 的 STOP/REDIRECT 适用范围不同，均保留原结论。
+**D2-A-E001、R3、E002 v2.1 pilot、T001 与 R4 均已完成。** R3 和 E002 阶段均为 REFINE；T001 ACE×AMF 教师候选 STOP。R4 建议 **REFINE**：正确构造的 R4 数值尺度诊断通过 `1e-5`，不改变 T001 `1e-6` G1 FAIL；T1 在潜在幅度四分位上的 Pfa 较稳定，但 C3 分层 Pfa 仍高；一个 seed 的公共相位增强 S1 降低 Doppler RMSE，却损害 Pd/joint success，平衡条件后 phase agreement 仅0.909。R4 不授予 T1 固定阈值教师资格，也不支持继续当前 S1 增强或蒸馏。D1-E001 的 GO → D2、D1-E002 的 STOP/REDIRECT 与其他历史门保持原范围。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
@@ -19,6 +19,7 @@
 - **D2-A-R3：** 新种子、3 个 4096 场景主校准组、4 个 4096 场景主 H0/H1 配对验证组，并含 CNR=0/20 dB 有界检查。原始 E001 B3 阈值在 16,384 个新主 H0 上得到 `Pfa=0.06464`（95% Wilson CI `[0.06097,0.06850]`）；有限样本可能解释 E001 `23/256` 的一部分，但层级 bootstrap 达到该点估计的比例为 0.0216。潜在目标参考幅度通过噪声/杂波生成尺度影响 H0，导致 B3 固定阈值的幅度箱 Pfa 极差达 0.169–0.216。T1 scene-wide B3 峰值/中位背景统计量与 T2 local median CFAR-like 分数均通过 G3/G4，但 T1 三次主合并验证 Pfa 为 0.0444–0.0462，T2 一次主验证 CI 不覆盖 0.05；因此都未过 G2，无方法完成全部门。T1 是未来候选，未被选为教师。无 E1、KD 或 final blind。阶段决定 **REFINE**。
 - **D2-A-E002：** v2.1 A/B/C 已按相同 1,600 updates、有效 batch64、单 seed 101 使用 RTX 3050 CUDA 顺序训练。K2 audit 通过，G4 三臂通过；development AUC 为 A/B/C `0.9846/0.9787/0.9815`，Pd `0.9158/0.8996/0.9000`。学生整体 Pfa 与精确上限门通过，但 C3/SNR0 最差分层上限达 `0.195–0.204`，G3 分层门失败。G5 B−A joint-success gain `−0.1254`（95% CI `[−0.1386,−0.1122]`），C−B `+0.0036`（`[−0.0088,+0.0162]`）；课程和 K2 均无预注册 pilot signal。G6 phase agreement `0.943–0.950`、频移 residual p95 最大 `73.4 Hz`，等变门失败。阶段为 **REFINE**，没有 formal three-seed 或 final blind。
 - **D2-A-T001：** v1.2 CUDA 教师比较已完成。总体验证 Pfa 达标，但 C3/SNR0/CNR20 分层 Pfa、主要困难条件 joint-success、A/B/C 参数保护和 G1 公共尺度严格误差均未过门。频移诊断未见目标峰跟随注入频率移动。按预注册规则 **STOP** 本候选，不评估 G3、不运行 S2、不生成 blind；不追加第二个先进教师。CUDA加速是候选内核实测，不代表完整处理链实时性。完整结果见 [`experiments/D2-A-T001/analysis.md`](../experiments/D2-A-T001/analysis.md)、[`metrics.json`](../experiments/D2-A-T001/metrics.json) 和 [`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md)。
+- **D2-A-R4：** 在新场景上复核复尺度数值误差、H0幅度nuisance、B3/T1/ACE×AMF和冻结学生。正确complex128缩放后R4 `1e-5`诊断门通过；complex64量化对照最大差`2.44e-4`，CPU/CUDA最大绝对差`3.09e-4`但相对差`9.30e-7`、无峰值/判决翻转。T1总体 H0 幅度四分位Pfa稳定在0.046–0.052，但C3 Pfa仍0.178–0.217；学生A/B/C C3 Pfa约0.152–0.195。只运行一个 seed101、1600 update、CUDA S1 E1 truth-only pilot。后验分层敏感性复核发现首256样本全属C0；平衡子集 S1 phase agreement 0.909。S1−S0 paired H1 Doppler RMSE差`−6.29 Hz`（95% CI `[-9.16,-2.84]`），但Pd差`−0.0117`和joint差`−0.0313`区间均低于0，故不继续此增强方向、不开展KD或final blind。R4是探索性证据，门槛未追溯修改；详见 [`analysis.md`](../experiments/D2-A-R4/analysis.md)、[`metrics.json`](../experiments/D2-A-R4/metrics.json)、[`sampling_sensitivity.json`](../experiments/D2-A-R4/sampling_sensitivity.json) 和 [`D2-A-R4_review.md`](stage_reviews/D2-A-R4_review.md)。
 - **P0/P1 历史先导：** 按各自冻结阶段审查保留；不将旧开发测试重新称为盲测，也不把其结论扩大到 D0/D1。
 
 ## 当前支持、否定与未决判断
@@ -43,6 +44,8 @@
 | 课程顺序提高 joint success | NOT_SUPPORTED（当前 pilot） | B−A 差 −0.1254，配对 CI `[−0.1386,−0.1122]`；未见收敛提前 |
 | K2 软响应在课程之外带来增益 | NOT_SUPPORTED（当前 pilot） | C−B 差 +0.0036，配对 CI `[−0.0088,+0.0162]`；未见收敛提前 |
 | 当前 TaskStudent 满足所需公共相位/频移等变性 | NOT_SUPPORTED（当前 pilot） | G6 phase agreement 0.943–0.950；最大 frequency-shift residual p95 73.4 Hz |
+| 一次公共相位增强可恢复 TaskStudent 跨条件相位一致性 | NOT_SUPPORTED（单 seed 探索诊断） | 后验分层64例/组：冻结学生 agreement 0.916–0.925，S1 0.909；S1还降低Pd与joint success |
+| T1可同时稳定整体幅度尺度与全部条件Pfa | NOT_SUPPORTED（R4 mixture） | H0幅度四分位Pfa 0.046–0.052；C3子组Pfa 0.178–0.217 |
 
 ## 当前主要问题
 
@@ -52,7 +55,7 @@
 
 ## 当前唯一优先任务
 
-独立审查 D2-A-T001 STOP 结果，并判断 RadarDistill 是否应以新的、单独预注册的学生/物理一致性问题作为后续方向。不得重开 T001 教师搜索、运行 S2 或将其软响应质量当作已验证。新的研究问题需说明与总纲目标的关系、证伪标准和盲测计划；总纲保持不变。
+独立审查 D2-A-R4 结果，并判断是否值得提出一个单因素复数/相位等变表示诊断，以区分普通学生的物理一致性缺口是否来自表示方式。不得启动正式多种子、蒸馏、final blind 或重开 T001 教师搜索。任何新问题须先写明与总纲的对应、证伪标准、独立评估和停止条件，再另行冻结协议；总纲保持不变。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md) 和 [`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

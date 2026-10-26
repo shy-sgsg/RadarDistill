@@ -1,0 +1,483 @@
+{
+  "experiment": "D2-A-R4-S1",
+  "status": "exploratory_one_seed_truth_only",
+  "git_sha": "971dd3704053ebfa462388d4cf34cb3e60efcc48",
+  "training_seed": 101,
+  "data_reconstruction": {
+    "train_scenes": 51200,
+    "validation_scenes": 5000,
+    "same_seed_blocks_as_E002": true,
+    "same_A_arm_pair_plan": true,
+    "all_training_samples_cached_on_gpu": false
+  },
+  "training_attempts": [
+    {
+      "microbatch": 16,
+      "status": "completed"
+    }
+  ],
+  "training": {
+    "microbatch_size": 16,
+    "effective_batch_size": 64,
+    "optimizer_updates": 1600,
+    "best_update": 1600,
+    "initial_validation": {
+      "task_loss": 6.154112845516205,
+      "presence_loss": 1.1479105670928955,
+      "range_cell_loss": 4.177179648590088,
+      "range_offset_loss": 0.29938438215255736,
+      "doppler_loss": 0.529638247680664,
+      "auc": 0.85897638,
+      "range_rmse_all_h1_cells": 14.692822456359863,
+      "doppler_rmse_all_h1_hz": 224.10369873046875,
+      "true_cell_doppler_rmse_hz": 239.15304565429688,
+      "predicted_range_cell_mismatch_rate": 0.993
+    },
+    "best_validation_task_loss": 0.6256197898738429,
+    "train_seconds": 302.4728224109858,
+    "cuda_peak_allocated_bytes": 275202560,
+    "cuda_peak_reserved_bytes": 337641472,
+    "checkpoint": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R4/runs/seed_101/S1/microbatch_16/best_inference.pt",
+    "history": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R4/runs/seed_101/S1/microbatch_16/training_history.csv",
+    "supervision": "E1 truth only",
+    "phase_augmentation": "shared uniform phase per paired H0/H1 example",
+    "distillation": false
+  },
+  "pilot_truth_constant_baseline": {
+    "range_constant": 15.965460777282715,
+    "range_rmse_cells": 6.817558871093423,
+    "doppler_constant_circular_mean_hz": -278.6713572800155,
+    "doppler_rmse_hz": 211.65065002441406
+  },
+  "evaluation": {
+    "S0_E002_A_frozen": {
+      "n_h0": 4096,
+      "n_h1": 2048,
+      "threshold": -0.7427527904510498,
+      "threshold_comparator": ">=",
+      "pfa_gt": 0.04833984375,
+      "pfa_ge": 0.04833984375,
+      "pfa_ci95_exact_upper": 0.05421826700110827,
+      "h0_ties": 0,
+      "pd": 0.7568359375,
+      "pfa_by_course": {
+        "C0": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C1": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C2": {
+          "n": 1024,
+          "pfa": 0.013671875,
+          "exact_upper95": 0.02129116859231291
+        },
+        "C3": {
+          "n": 1024,
+          "pfa": 0.1796875,
+          "exact_upper95": 0.20058689945491576
+        }
+      },
+      "pfa_by_condition": {
+        "C0/SNR20/CNR-5": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C1/SNR15/CNR0": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C2/SNR10/CNR10": {
+          "n": 1024,
+          "pfa": 0.013671875,
+          "exact_upper95": 0.02129116859231291
+        },
+        "C3/SNR0/CNR20": {
+          "n": 512,
+          "pfa": 0.173828125,
+          "exact_upper95": 0.20373805705200676
+        },
+        "C3/SNR10/CNR20": {
+          "n": 512,
+          "pfa": 0.185546875,
+          "exact_upper95": 0.21611202373637078
+        }
+      },
+      "pfa_by_amplitude_quartile": {
+        "1": {
+          "n": 1024,
+          "pfa": 0.05078125,
+          "median_observable_power": 0.031299176786074884,
+          "median_noise_power": 0.01568758487701416,
+          "exact_upper95": 0.06355463510613987
+        },
+        "2": {
+          "n": 1024,
+          "pfa": 0.0478515625,
+          "median_observable_power": 0.6214289576456791,
+          "median_noise_power": 0.054604168981313705,
+          "exact_upper95": 0.060320623050856566
+        },
+        "3": {
+          "n": 1024,
+          "pfa": 0.0439453125,
+          "median_observable_power": 0.12152387792227343,
+          "median_noise_power": 0.06142692640423775,
+          "exact_upper95": 0.05599117167571671
+        },
+        "4": {
+          "n": 1024,
+          "pfa": 0.05078125,
+          "median_observable_power": 0.24007638905636214,
+          "median_noise_power": 0.12072120606899261,
+          "exact_upper95": 0.06355463510613987
+        }
+      },
+      "score_vs_observable_power_spearman": 0.8943415174031231,
+      "h1_task": {
+        "n": 2048,
+        "threshold": -0.7427527904510498,
+        "pd": 0.7568359375,
+        "range_mae_cells": 2.516978145111352,
+        "range_rmse_cells": 5.770345630002053,
+        "doppler_mae_hz": 36.2348798752555,
+        "doppler_rmse_hz": 61.331950659921716,
+        "doppler_rmse_at_truth_range_cell_hz": 46.785530905967484,
+        "true_range_cell_doppler_rmse_detected_hz": 30.981875407089618,
+        "predicted_range_gate_error_gt_1_cell_fraction": 0.23583984375,
+        "doppler_gate_error_p95_hz": 138.65851440429685,
+        "joint_success": 0.54736328125,
+        "range_gate_mismatch_diagnostic": {
+          "decoded_doppler_uses_predicted_range_argmax": true,
+          "training_supervision_selects_truth_range_cell": true,
+          "true_range_cell_doppler_prediction_measured": true,
+          "interpretation": "difference compares the inference range gate with the training-time truth gate"
+        },
+        "scenario_summary": {
+          "C0/separated/SNR20/CNR-5": {
+            "n": 512,
+            "target_radial_velocity_mps": 4.0,
+            "snr_db": 20.0,
+            "cnr_db": -5.0,
+            "pd": 1.0,
+            "doppler_rmse_hz": 9.455481950137248
+          },
+          "C1/separated/SNR15/CNR0": {
+            "n": 512,
+            "target_radial_velocity_mps": 4.0,
+            "snr_db": 15.0,
+            "cnr_db": 0.0,
+            "pd": 1.0,
+            "doppler_rmse_hz": 9.28279986167642
+          },
+          "C2/partial_overlap/SNR10/CNR10": {
+            "n": 512,
+            "target_radial_velocity_mps": 0.4000000059604645,
+            "snr_db": 10.0,
+            "cnr_db": 10.0,
+            "pd": 0.828125,
+            "doppler_rmse_hz": 55.378281242537184
+          },
+          "C3/partial_overlap/SNR0/CNR20": {
+            "n": 512,
+            "target_radial_velocity_mps": 0.4000000059604645,
+            "snr_db": 0.0,
+            "cnr_db": 20.0,
+            "pd": 0.19921875,
+            "doppler_rmse_hz": 108.64668490775699
+          }
+        },
+        "auc_vs_h0_calibration": 0.9543788433074951,
+        "scene_bootstrap_95_ci": {
+          "pd": [
+            0.73779296875,
+            0.775390625
+          ],
+          "range_rmse_cells": [
+            5.410136987541551,
+            6.134034060411777
+          ],
+          "doppler_rmse_hz": [
+            57.57846024403562,
+            64.86060493220292
+          ],
+          "joint_success": [
+            0.5263671875,
+            0.56884765625
+          ],
+          "replicates": 2000,
+          "bootstrap_unit": "H1 base_scene_id",
+          "seed_base": 2026102801
+        }
+      },
+      "public_phase_rotation": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 1.0,
+        "decision_agreement_by_scene_min": 1.0,
+        "range_change_p95_bins": 0.03502544015645981,
+        "doppler_change_p95_hz": 6.483278751373291,
+        "score_abs_change_p95": 0.42953431606292725,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      }
+    },
+    "S1_public_phase_augmented": {
+      "n_h0": 4096,
+      "n_h1": 2048,
+      "threshold": -0.6630737781524658,
+      "threshold_comparator": ">=",
+      "pfa_gt": 0.04931640625,
+      "pfa_ge": 0.04931640625,
+      "pfa_ci95_exact_upper": 0.05524673487220253,
+      "h0_ties": 0,
+      "pd": 0.7451171875,
+      "pfa_by_course": {
+        "C0": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C1": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C2": {
+          "n": 1024,
+          "pfa": 0.009765625,
+          "exact_upper95": 0.01650835830108534
+        },
+        "C3": {
+          "n": 1024,
+          "pfa": 0.1875,
+          "exact_upper95": 0.20870975707894884
+        }
+      },
+      "pfa_by_condition": {
+        "C0/SNR20/CNR-5": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C1/SNR15/CNR0": {
+          "n": 1024,
+          "pfa": 0.0,
+          "exact_upper95": 0.0029212446353880273
+        },
+        "C2/SNR10/CNR10": {
+          "n": 1024,
+          "pfa": 0.009765625,
+          "exact_upper95": 0.01650835830108534
+        },
+        "C3/SNR0/CNR20": {
+          "n": 512,
+          "pfa": 0.193359375,
+          "exact_upper95": 0.22433780479850113
+        },
+        "C3/SNR10/CNR20": {
+          "n": 512,
+          "pfa": 0.181640625,
+          "exact_upper95": 0.21199218993074137
+        }
+      },
+      "pfa_by_amplitude_quartile": {
+        "1": {
+          "n": 1024,
+          "pfa": 0.0517578125,
+          "median_observable_power": 0.031299176786074884,
+          "median_noise_power": 0.01568758487701416,
+          "exact_upper95": 0.06463033008965416
+        },
+        "2": {
+          "n": 1024,
+          "pfa": 0.04296875,
+          "median_observable_power": 0.6214289576456791,
+          "median_noise_power": 0.054604168981313705,
+          "exact_upper95": 0.05490544093331734
+        },
+        "3": {
+          "n": 1024,
+          "pfa": 0.05078125,
+          "median_observable_power": 0.12152387792227343,
+          "median_noise_power": 0.06142692640423775,
+          "exact_upper95": 0.06355463510613987
+        },
+        "4": {
+          "n": 1024,
+          "pfa": 0.0517578125,
+          "median_observable_power": 0.24007638905636214,
+          "median_noise_power": 0.12072120606899261,
+          "exact_upper95": 0.06463033008965416
+        }
+      },
+      "score_vs_observable_power_spearman": 0.8939706647900143,
+      "h1_task": {
+        "n": 2048,
+        "threshold": -0.6630737781524658,
+        "pd": 0.7451171875,
+        "range_mae_cells": 2.4633565528929466,
+        "range_rmse_cells": 5.691356559786669,
+        "doppler_mae_hz": 34.32228917336579,
+        "doppler_rmse_hz": 55.038495427763614,
+        "doppler_rmse_at_truth_range_cell_hz": 46.41069677103078,
+        "true_range_cell_doppler_rmse_detected_hz": 32.846949799961,
+        "predicted_range_gate_error_gt_1_cell_fraction": 0.232421875,
+        "doppler_gate_error_p95_hz": 120.41878089904768,
+        "joint_success": 0.51611328125,
+        "range_gate_mismatch_diagnostic": {
+          "decoded_doppler_uses_predicted_range_argmax": true,
+          "training_supervision_selects_truth_range_cell": true,
+          "true_range_cell_doppler_prediction_measured": true,
+          "interpretation": "difference compares the inference range gate with the training-time truth gate"
+        },
+        "scenario_summary": {
+          "C0/separated/SNR20/CNR-5": {
+            "n": 512,
+            "target_radial_velocity_mps": 4.0,
+            "snr_db": 20.0,
+            "cnr_db": -5.0,
+            "pd": 1.0,
+            "doppler_rmse_hz": 10.877551284211247
+          },
+          "C1/separated/SNR15/CNR0": {
+            "n": 512,
+            "target_radial_velocity_mps": 4.0,
+            "snr_db": 15.0,
+            "cnr_db": 0.0,
+            "pd": 1.0,
+            "doppler_rmse_hz": 11.278028561118566
+          },
+          "C2/partial_overlap/SNR10/CNR10": {
+            "n": 512,
+            "target_radial_velocity_mps": 0.4000000059604645,
+            "snr_db": 10.0,
+            "cnr_db": 10.0,
+            "pd": 0.806640625,
+            "doppler_rmse_hz": 52.56207210226472
+          },
+          "C3/partial_overlap/SNR0/CNR20": {
+            "n": 512,
+            "target_radial_velocity_mps": 0.4000000059604645,
+            "snr_db": 0.0,
+            "cnr_db": 20.0,
+            "pd": 0.173828125,
+            "doppler_rmse_hz": 95.4392866798474
+          }
+        },
+        "auc_vs_h0_calibration": 0.9539756178855896,
+        "scene_bootstrap_95_ci": {
+          "pd": [
+            0.7265625,
+            0.7646606445312499
+          ],
+          "range_rmse_cells": [
+            5.342025542053504,
+            6.03658263788827
+          ],
+          "doppler_rmse_hz": [
+            51.39578126906237,
+            59.12022857437908
+          ],
+          "joint_success": [
+            0.49510498046875,
+            0.5380859375
+          ],
+          "replicates": 2000,
+          "bootstrap_unit": "H1 base_scene_id",
+          "seed_base": 2026102801
+        }
+      },
+      "public_phase_rotation": {
+        "n_scenes": 256,
+        "n_rotations": 32,
+        "decision_agreement": 1.0,
+        "decision_agreement_by_scene_min": 1.0,
+        "range_change_p95_bins": 0.034164879471063614,
+        "doppler_change_p95_hz": 6.556356906890869,
+        "score_abs_change_p95": 0.41987642645835876,
+        "threshold_reused": true,
+        "rotation_values_rad": [
+          0.0,
+          0.19634954084936207,
+          0.39269908169872414,
+          0.5890486225480862,
+          0.7853981633974483,
+          0.9817477042468103,
+          1.1780972450961724,
+          1.3744467859455345,
+          1.5707963267948966,
+          1.7671458676442586,
+          1.9634954084936207,
+          2.1598449493429825,
+          2.356194490192345,
+          2.552544031041707,
+          2.748893571891069,
+          2.945243112740431,
+          3.141592653589793,
+          3.3379421944391554,
+          3.5342917352885173,
+          3.730641276137879,
+          3.9269908169872414,
+          4.123340357836604,
+          4.319689898685965,
+          4.516039439535327,
+          4.71238898038469,
+          4.908738521234052,
+          5.105088062083414,
+          5.301437602932776,
+          5.497787143782138,
+          5.6941366846315,
+          5.890486225480862,
+          6.086835766330224
+        ]
+      }
+    }
+  },
+  "S1_exploratory_gate_passed": true,
+  "formal_stage_gate_effect": "none; T001 G1/G2 remain FAIL and T001 G3 remains NOT_EVALUATED",
+  "S2_or_KD_run": false,
+  "final_blind_generated": false,
+  "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cuda_peak_allocated_bytes": 275202560,
+  "cuda_peak_reserved_bytes": 337641472
+}

@@ -98,6 +98,53 @@ def test_balanced_h1_diagnostic_indices_cover_every_group_deterministically():
     assert [int(mask[first].sum()) for _, mask in runner._h1_group_masks(h1)] == [16] * 4
 
 
+def test_r4_result_export_preserves_condition_pfa_and_paired_intervals():
+    import summarize_d2a_r4 as exporter
+
+    assert hasattr(exporter, "build_rows")
+    method_result = {
+        "n_h1": 8,
+        "threshold": 2.0,
+        "pfa_ge": 0.05,
+        "pfa_ci95_exact_upper": 0.1,
+        "pd": 0.75,
+        "auc": 0.8,
+        "joint_success": 0.5,
+        "pfa_by_condition": {"C3/SNR0": {"n": 4, "pfa": 0.25, "exact_upper95": 0.7}},
+        "pfa_by_amplitude_quartile": {"1": {"n": 2, "pfa": 0.5, "exact_upper95": 0.95, "median_observable_power": 0.03}},
+        "parameter_and_map": {
+            "auc": 0.8,
+            "joint_success": 0.5,
+            "range_rmse_cells": 1.0,
+            "doppler_rmse_hz": 3.0,
+            "peak_map_alignment": {"top_cell_localization_rate": 0.6},
+            "scenario_summary": {"C3/SNR0": {"n": 4, "pd": 0.5, "auc": 0.7, "joint_success": 0.25}},
+        },
+    }
+    metrics = {"teachers": {"B3": method_result}, "frozen_students": {}}
+    pilot = {"evaluation": {}}
+    sensitivity = {
+        "pilot_public_phase_rotation": {},
+        "frozen_students": {},
+        "pilot_s1_minus_s0_paired_task_difference": {
+            "joint": {"difference": -0.1, "paired_bootstrap_95_ci": [-0.2, -0.01]}
+        },
+    }
+
+    rows = exporter.build_rows(metrics, pilot, sensitivity)
+
+    condition = next(row for row in rows if row["record_type"] == "h0_condition")
+    amplitude = next(row for row in rows if row["record_type"] == "h0_amplitude_quartile")
+    overall = next(row for row in rows if row["record_type"] == "h1_overall")
+    paired = next(row for row in rows if row["record_type"] == "pilot_paired_difference")
+    assert condition["pfa_cpi"] == 0.25
+    assert condition["pfa_upper95"] == 0.7
+    assert amplitude["median_observable_power"] == 0.03
+    assert overall["top_cell_localization_rate"] == 0.6
+    assert paired["ci95_lower"] == -0.2
+    assert paired["ci95_upper"] == -0.01
+
+
 def test_shared_phase_augmentation_preserves_h0_h1_pair_relation():
     batch = {
         "iq_ri": np.zeros((2, 6, 130, 32), dtype=np.float32),
