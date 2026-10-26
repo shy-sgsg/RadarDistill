@@ -54,12 +54,34 @@ data:
     generation_chunk_size: 16
     cache_iq_on_cpu_memmap: true
     cache_iq_on_gpu: false
+    cell_counts:
+      C0: {separated: 12800}
+      C1: {separated: 6400, near_clutter_edge: 6400}
+      C2: {separated: 4288, near_clutter_edge: 4256, partial_overlap: 4256}
+      C3:
+        separated_0db: 2144
+        separated_10db: 2144
+        near_clutter_edge_0db: 2128
+        near_clutter_edge_10db: 2128
+        partial_overlap_0db: 2128
+        partial_overlap_10db: 2128
   validation:
     paired_base_scenes: 5000
     pairs_per_course_level: 1250
     seed_bases_by_course: [71000000, 76000000, 81000000, 86000000]
     assignment_seed: 2026102612
     generation_chunk_size: 16
+    cell_counts:
+      C0: {separated: 1250}
+      C1: {separated: 625, near_clutter_edge: 625}
+      C2: {separated: 417, near_clutter_edge: 417, partial_overlap: 416}
+      C3:
+        separated_0db: 209
+        separated_10db: 208
+        near_clutter_edge_0db: 208
+        near_clutter_edge_10db: 209
+        partial_overlap_0db: 208
+        partial_overlap_10db: 208
   h0_calibration:
     scenes: 8192
     equal_course_mixture: true
@@ -84,6 +106,17 @@ data:
     seed_bases_by_course: [106000000, 111000000, 116000000, 121000000]
     assignment_seed: 2026102615
     generation_chunk_size: 16
+    cell_counts:
+      C0: {separated: 1024}
+      C1: {separated: 512, near_clutter_edge: 512}
+      C2: {separated: 342, near_clutter_edge: 341, partial_overlap: 341}
+      C3:
+        separated_0db: 171
+        separated_10db: 171
+        near_clutter_edge_0db: 171
+        near_clutter_edge_10db: 171
+        partial_overlap_0db: 170
+        partial_overlap_10db: 170
     threshold_selection: false
     hyperparameter_search: false
     final_blind: false
