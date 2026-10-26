@@ -1,0 +1,14 @@
+analysis_type: posthoc_sampling_sensitivity
+seed: 2026102804
+samples_per_h1_group: 64
+included_diagnostics:
+  - teacher_target_only_frequency_shift
+  - frozen_student_public_phase_rotation
+  - frozen_student_signal_level_frequency_shift
+  - pilot_s0_s1_public_phase_rotation
+scope:
+  changes_frozen_protocol: false
+  changes_t001_or_e002_results: false
+  changes_pilot_training: false
+  changes_stage_gates: false
+  stores_generated_iq: false

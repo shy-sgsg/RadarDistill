@@ -1019,6 +1019,24 @@ def _h1_group_masks(h1: dict[str, np.ndarray]) -> list[tuple[str, np.ndarray]]:
     return groups
 
 
+def _balanced_h1_indices(
+    h1: dict[str, np.ndarray], *, per_group: int, seed: int
+) -> np.ndarray:
+    """Return a deterministic equal-quota H1 subset for post-hoc sensitivity checks."""
+    if per_group <= 0:
+        raise ValueError("per_group must be positive")
+    rng = np.random.default_rng(int(seed))
+    selected: list[np.ndarray] = []
+    for name, mask in _h1_group_masks(h1):
+        candidates = np.flatnonzero(mask)
+        if len(candidates) < per_group:
+            raise ValueError(
+                f"H1 group {name} has {len(candidates)} rows; {per_group} required"
+            )
+        selected.append(np.sort(rng.choice(candidates, size=per_group, replace=False)))
+    return np.concatenate(selected).astype(np.int64, copy=False)
+
+
 def _read_thresholds(path: Path) -> dict[str, float]:
     with path.open(encoding="utf-8", newline="") as stream:
         rows = csv.DictReader(stream)
@@ -1585,6 +1603,138 @@ def run_diagnostics(device_name: str) -> dict[str, Any]:
     return metrics
 
 
+def run_sampling_sensitivity(device_name: str) -> dict[str, Any]:
+    """Recheck subset diagnostics on a fixed, balanced H1 sample; keep original records intact."""
+    device = _cuda_device(device_name)
+    out_dir = ROOT / "experiments/D2-A-R4"
+    metrics_path = out_dir / "metrics.json"
+    pilot_path = out_dir / "pilot.json"
+    if not metrics_path.is_file() or not pilot_path.is_file():
+        raise RuntimeError("R4 diagnostics and the authorized S1 pilot must exist first")
+    preflight_record = json.loads((out_dir / "preflight.json").read_text(encoding="utf-8"))
+    if not preflight_record.get("passed") or preflight_record["git_sha"] != git("rev-parse", "HEAD"):
+        raise RuntimeError("R4 preflight is missing or stale")
+
+    reanalysis = read_yaml(out_dir / "sampling_reanalysis.yaml")
+    config = read_yaml(out_dir / "config.yaml")
+    physics = read_yaml(ROOT / "experiments/D2-A-E001/config.yaml")
+    r3 = read_yaml(ROOT / "experiments/D2-A-R3/config.yaml")
+    e002 = read_yaml(ROOT / "experiments/D2-A-E002/config.yaml")
+    teacher_config = read_yaml(ROOT / "experiments/D2-A-T001/config.yaml")["teacher"]
+    covariance = _load_covariance()
+    original = json.loads(metrics_path.read_text(encoding="utf-8"))
+    pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
+    per_group = int(reanalysis["samples_per_h1_group"])
+    seed = int(reanalysis["seed"])
+
+    print("R4: generating H1 development scenes for balanced post-hoc sensitivity", flush=True)
+    h1_full = generate_h1_cells(physics, config)
+    indices = _balanced_h1_indices(h1_full, per_group=per_group, seed=seed)
+    h1 = {
+        key: np.asarray(value)[indices]
+        for key, value in h1_full.items()
+    }
+    group_counts = {
+        name: int(mask[indices].sum())
+        for name, mask in _h1_group_masks(h1_full)
+    }
+    first_256_counts = {
+        name: int(mask[:256].sum())
+        for name, mask in _h1_group_masks(h1_full)
+    }
+    t1_options = r3["detection"]["t1_global_robust_background"]
+
+    print("R4: balanced teacher target-frequency shift diagnostics", flush=True)
+    teacher_outputs = _score_all_teachers(
+        h1["iq_h1"], covariance, physics, teacher_config, t1_options, device, include_maps=True
+    )
+    teacher_thresholds = original["teacher_thresholds_calibrated_on_r4_h0_calibration"]
+    teacher_sensitivity: dict[str, Any] = {}
+    for method in ("B3", "T1", "ACE_AMF"):
+        teacher_sensitivity[method] = _teacher_frequency_shift_diagnostic(
+            method,
+            h1,
+            teacher_outputs[method],
+            float(teacher_thresholds[method]),
+            covariance,
+            physics,
+            teacher_config,
+            t1_options,
+            device,
+        )
+
+    print("R4: balanced frozen-student phase and frequency diagnostics", flush=True)
+    frozen_thresholds = _read_thresholds(ROOT / "experiments/D2-A-E002/calibration_thresholds.csv")
+    frozen_sensitivity: dict[str, Any] = {}
+    for spec in config["students"]:
+        name = str(spec["name"])
+        model = _student_from_checkpoint(ROOT / str(spec["checkpoint"]), e002, device)
+        frozen_sensitivity[name] = {
+            "public_phase_rotation": _student_phase_diagnostic(
+                h1["iq_h1"], frozen_thresholds[name], model, device
+            ),
+            "signal_level_frequency_shift": _student_frequency_shift_diagnostic(
+                h1["iq_h0"], h1["iq_h1"], model, device
+            ),
+        }
+        del model
+        torch.cuda.empty_cache()
+
+    print("R4: balanced phase sensitivity for frozen S0 and one-seed S1 pilot", flush=True)
+    pilot_h1_full = _pilot_eval_h1_cells(physics, config)
+    pilot_indices = _balanced_h1_indices(pilot_h1_full, per_group=per_group, seed=seed)
+    pilot_h1 = {
+        key: np.asarray(value)[pilot_indices]
+        for key, value in pilot_h1_full.items()
+    }
+    pilot_group_counts = {
+        name: int(mask[pilot_indices].sum())
+        for name, mask in _h1_group_masks(pilot_h1_full)
+    }
+    pilot_checkpoints = {
+        "S0_E002_A_frozen": ROOT / "experiments/D2-A-E002/runs/seed_101/A/microbatch_16/best_inference.pt",
+        "S1_public_phase_augmented": Path(pilot["training"]["checkpoint"]),
+    }
+    pilot_sensitivity: dict[str, Any] = {}
+    for name, checkpoint_path in pilot_checkpoints.items():
+        model = _student_from_checkpoint(checkpoint_path, e002, device)
+        threshold = float(pilot["evaluation"][name]["threshold"])
+        pilot_sensitivity[name] = {
+            "original_first_256": pilot["evaluation"][name]["public_phase_rotation"],
+            "balanced_sample": _student_phase_diagnostic(
+                pilot_h1["iq_h1"], threshold, model, device
+            ),
+        }
+        del model
+        torch.cuda.empty_cache()
+
+    result = {
+        "experiment": "D2-A-R4 diagnostic sampling sensitivity",
+        "status": "posthoc_exploratory_reanalysis",
+        "git_sha": git("rev-parse", "HEAD"),
+        "protocol_changed": False,
+        "original_metrics_overwritten": False,
+        "t001_or_e002_results_modified": False,
+        "pilot_training_repeated": False,
+        "sampling": {
+            "seed": seed,
+            "samples_per_group": per_group,
+            "sample_count": int(len(indices)),
+            "h1_group_counts_balanced_sample": group_counts,
+            "initial_first_256_h1_group_counts": first_256_counts,
+            "pilot_group_counts_balanced_sample": pilot_group_counts,
+            "groups": [name for name, _ in _h1_group_masks(h1_full)],
+            "selection": "uniform without replacement within each frozen H1 condition group",
+        },
+        "teachers_target_only_frequency_shift": teacher_sensitivity,
+        "frozen_students": frozen_sensitivity,
+        "pilot_public_phase_rotation": pilot_sensitivity,
+        "stage_gate_effect": "none; this post-hoc sensitivity report does not change any frozen gate or prior pilot authorization",
+    }
+    write_json(out_dir / "sampling_sensitivity.json", result)
+    return result
+
+
 def _augment_pair_phase(batch: dict[str, np.ndarray], rng: np.random.Generator) -> None:
     """Apply one public phase rotation jointly to each paired H0/H1 example."""
     planes = np.asarray(batch["iq_ri"], dtype=np.float32)
@@ -2026,7 +2176,11 @@ def run_pilot(device_name: str) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stage", choices=("preflight", "diagnostics", "pilot"), required=True)
+    parser.add_argument(
+        "--stage",
+        choices=("preflight", "diagnostics", "pilot", "sampling-reanalysis"),
+        required=True,
+    )
     parser.add_argument("--device", default="cuda:0")
     args = parser.parse_args()
     out_dir = ROOT / "experiments/D2-A-R4"
@@ -2038,13 +2192,16 @@ def main() -> None:
     elif args.stage == "diagnostics":
         result = run_diagnostics(args.device)
         print(json.dumps(json_safe(result["stage_gate"]), ensure_ascii=False, indent=2))
-    else:
+    elif args.stage == "pilot":
         result = run_pilot(args.device)
         print(json.dumps(json_safe({
             "S1_exploratory_gate_passed": result["S1_exploratory_gate_passed"],
             "checkpoint": result["training"]["checkpoint"],
             "cuda_device": result["cuda_device"],
         }), ensure_ascii=False, indent=2))
+    else:
+        result = run_sampling_sensitivity(args.device)
+        print(json.dumps(json_safe(result["sampling"]), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

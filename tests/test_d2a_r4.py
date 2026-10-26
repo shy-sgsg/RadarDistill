@@ -81,6 +81,23 @@ def test_t001_frozen_gate_is_not_overwritten_by_r4_diagnostic_tolerance():
     assert result["exploratory_only"] is True
 
 
+def test_balanced_h1_diagnostic_indices_cover_every_group_deterministically():
+    h1 = {
+        "course": np.repeat(np.asarray(["C0", "C1", "C2", "C3"]), 80),
+        "scenario": np.repeat(np.asarray(["separated", "separated", "partial_overlap", "partial_overlap"]), 80),
+        "snr_db": np.repeat(np.asarray([20.0, 15.0, 10.0, 0.0]), 80),
+        "cnr_db": np.repeat(np.asarray([-5.0, 0.0, 10.0, 20.0]), 80),
+    }
+
+    first = runner._balanced_h1_indices(h1, per_group=16, seed=2026102804)
+    second = runner._balanced_h1_indices(h1, per_group=16, seed=2026102804)
+
+    np.testing.assert_array_equal(first, second)
+    assert len(first) == 64
+    assert len(np.unique(first)) == 64
+    assert [int(mask[first].sum()) for _, mask in runner._h1_group_masks(h1)] == [16] * 4
+
+
 def test_shared_phase_augmentation_preserves_h0_h1_pair_relation():
     batch = {
         "iq_ri": np.zeros((2, 6, 130, 32), dtype=np.float32),
