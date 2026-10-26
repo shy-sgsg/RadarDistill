@@ -1696,9 +1696,11 @@ def run_sampling_sensitivity(device_name: str) -> dict[str, Any]:
         "S1_public_phase_augmented": Path(pilot["training"]["checkpoint"]),
     }
     pilot_sensitivity: dict[str, Any] = {}
+    pilot_full_predictions: dict[str, dict[str, np.ndarray]] = {}
     for name, checkpoint_path in pilot_checkpoints.items():
         model = _student_from_checkpoint(checkpoint_path, e002, device)
         threshold = float(pilot["evaluation"][name]["threshold"])
+        pilot_full_predictions[name] = _predict_student(pilot_h1_full["iq_h1"], model, device)
         pilot_sensitivity[name] = {
             "original_first_256": pilot["evaluation"][name]["public_phase_rotation"],
             "balanced_sample": _student_phase_diagnostic(
@@ -1707,6 +1709,15 @@ def run_sampling_sensitivity(device_name: str) -> dict[str, Any]:
         }
         del model
         torch.cuda.empty_cache()
+    pilot_paired_difference = _paired_h1_method_difference(
+        pilot_full_predictions["S1_public_phase_augmented"],
+        float(pilot["evaluation"]["S1_public_phase_augmented"]["threshold"]),
+        pilot_full_predictions["S0_E002_A_frozen"],
+        float(pilot["evaluation"]["S0_E002_A_frozen"]["threshold"]),
+        pilot_h1_full["truth_range_cell"],
+        pilot_h1_full["truth_doppler_hz"],
+        seed=2026102801,
+    )
 
     result = {
         "experiment": "D2-A-R4 diagnostic sampling sensitivity",
@@ -1729,6 +1740,7 @@ def run_sampling_sensitivity(device_name: str) -> dict[str, Any]:
         "teachers_target_only_frequency_shift": teacher_sensitivity,
         "frozen_students": frozen_sensitivity,
         "pilot_public_phase_rotation": pilot_sensitivity,
+        "pilot_s1_minus_s0_paired_task_difference": pilot_paired_difference,
         "stage_gate_effect": "none; this post-hoc sensitivity report does not change any frozen gate or prior pilot authorization",
     }
     write_json(out_dir / "sampling_sensitivity.json", result)
