@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-T001
-  title: Post-Doppler ACE teacher enhancement and knowledge transferability
-  protocol_version: 1.0
+  title: Post-Doppler ACE/AMF teacher enhancement and knowledge transferability
+  protocol_version: 1.1
   status: preregistered
   date: 2026-10-26
   synthetic_data: true
@@ -26,7 +26,8 @@ radar:
   range_bin_count: 32
 
 teacher:
-  selected_candidate: model_assisted_post_doppler_three_channel_ACE
+  selected_candidate: model_assisted_post_doppler_three_channel_ACE_AMF
+  score_definition: spatial_ACE_times_whitened_energy_divided_by_observable_CPI_mean_power
   comparator_methods: [B3, T1, K2]
   frequency_oversampling_factor: 4
   covariance_fit_input: h0_iq_only
@@ -40,7 +41,8 @@ teacher:
   angle_grid_count: 17
   covariance_eigenvalue_floor_relative_trace: 1.0e-8
   ace_denominator_epsilon: 1.0e-12
-  score_clip: [0.0, 1.0]
+  ace_diagnostic_clip: [0.0, 1.0]
+  amf_score_clip: null
   soft_response:
     shape: [130, 32]
     frequency_grid: native_130_point_fft

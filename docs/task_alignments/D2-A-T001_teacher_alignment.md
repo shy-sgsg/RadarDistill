@@ -1,7 +1,7 @@
 # D2-A-T001 教师增强与知识迁移任务对齐
 
 **日期：** 2026-10-26
-**状态：** 用户明确批准；协议 v1.0 已冻结，执行/结果状态以本文件提交更新为准。
+**状态：** 用户明确批准；协议 v1.1 已冻结，执行/结果状态以本文件提交更新为准。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2，提交 `289b812e8bc93fbdabca0cfb3722ad24f045351b`。本任务未修改总纲。
 **对应协议：** `experiments/D2-A-T001/protocol.md`；配置 `config.yaml`。
 
@@ -18,11 +18,11 @@
 | 阶段 | 冻结设计 | 当前实况 |
 |---|---|---|
 | 文献与瓶颈 | 参见教师文献、瓶颈与候选选择三个研究文件 | 已完成文献/旧结果核验；未运行 T001 新数据 |
-| 候选 | 唯一先进候选为 3维 post-Doppler ACE；训练 covariance 只用独立 H0 IQ | 方法设计冻结；实现待完成 |
-| 协议 | 4096 H0 covariance scenes；15k calibration + 15k verification；12k paired development；困难主条件 C3/C/SNR0/CNR20、n=500；固定 B3/T1/K2 比较 | v1.0 已冻结并需先提交推送 |
+| 候选 | 唯一先进候选为 3维 post-Doppler ACE×AMF；训练 covariance 只用独立 H0 IQ | 方法设计冻结；实现待完成 |
+| 协议 | 4096 H0 covariance scenes；15k calibration + 15k verification；12k paired development；困难主条件 C3/C/SNR0/CNR20、n=500；固定 B3/T1/K2 比较 | v1.1 数据前勘误已冻结并需先提交推送 |
 | 实现/正确性 | G1：公式、几何、尺度/相位不变、配对、split、基线逐样本一致 | 尚未实现/运行 |
 | Teacher G2/G3 | Pfa/任务增益/保护；target-window mass、localization 和错误知识 | 尚未有结果 |
-| 学生 | 只有 Teacher G1–G3 全通过才运行单 S2 seed；S0=E002 B、S1=E002 C、S2=新 ACE，同课程、init、数据、1600 updates | 仅作为冻结条件分支，未开训 |
+| 学生 | 只有 Teacher G1–G3 全通过才运行单 S2 seed；S0=E002 B、S1=E002 C、S2=新 ACE/AMF，同课程、init、数据、1600 updates | 仅作为冻结条件分支，未开训 |
 | Blind/部署 | 不生成 final blind；CPU teacher成本仅实测记录，不作实时主张 | 未生成/未测 |
 
 ## 保留的既有证据
@@ -34,4 +34,4 @@
 
 ## 当前唯一下一步
 
-按冻结协议先以小批量实现和正确性测试验证 PD-ACE，再推送冻结代码后生成新数据；若 G1–G3 不满足，则停止教师/学生该分支并保留失败结果，不追加第二个 advanced teacher。动态状态和阶段决定会在实际证据产生后更新。
+按冻结协议先以小批量实现和正确性测试验证 PD-ACE/AMF，再推送冻结代码后生成新数据；若 G1–G3 不满足，则停止教师/学生该分支并保留失败结果，不追加第二个 advanced teacher。动态状态和阶段决定会在实际证据产生后更新。

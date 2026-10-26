@@ -1,7 +1,7 @@
-# D2-A-T001 预注册协议：三通道 post-Doppler ACE 教师与软知识可迁移性
+# D2-A-T001 预注册协议：三通道 post-Doppler ACE/AMF 教师与软知识可迁移性
 
-**协议版本：** 1.0
-**状态：** 2026-10-26 冻结，先于 T001 新场景生成、covariance 拟合、实现结果筛选与训练。
+**协议版本：** 1.1
+**状态：** 2026-10-26 v1.1 冻结，先于 T001 新场景生成、covariance 拟合、实现结果筛选与训练。v1.1 是数据生成前的方法学勘误，保留唯一候选、种子、分组、门槛和预算不变。
 **用户授权：** 用户已明确批准 D2-A-T001、单个先进教师候选、阶段门和必要学生 pilot；本协议将其预先量化。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.2；本任务不修改研究总纲。
 **实验性质：** 合成仿真开发筛选；不生成 final blind，不等于实测或生产系统结论。
@@ -12,30 +12,31 @@
 
 主要问题：
 
-1. 三通道 post-Doppler ACE 能否在 C3、partial-overlap、SNR=0 dB、CNR=20 dB 的可辨识困难条件下改善检测/联合任务，并保护 A/B/C 的主要性能？
+1. 三通道 post-Doppler ACE×AMF 分数能否在 C3、partial-overlap、SNR=0 dB、CNR=20 dB 的可辨识困难条件下改善检测/联合任务，并保护 A/B/C 的主要性能？
 2. 其增益相对 B3/T1 是否源自完整三通道协方差白化，而非旧 T1 的全局尺度归一化？
-3. ACE 图在困难场景是否含有比 K2 更正确、更可学习的目标位置软知识？
+3. ACE×AMF 图在困难场景是否含有比 K2 更正确、更可学习的目标位置软知识？
 4. 若教师和知识两道门均通过，固定 TaskStudent 在匹配数据和预算下是否实际获益？
 
-T001 只选择一个主要先进教师：**模型辅助 post-Doppler 三通道 ACE（PD-ACE）**。文献中其他方法只作选择依据或历史基线，不实现搜索。候选、边界和文献见 `docs/research/D2-A_teacher_candidate_selection.md` 与 `D2-A_teacher_literature_review.md`。
+T001 只选择一个主要先进教师：**模型辅助 post-Doppler 三通道 ACE×AMF（PD-ACE/AMF）**。v1.0 的纯归一化 ACE 对固定空间 steering 的单目标复正弦会丢失每个 Doppler bin 的能量差，不能直接用于连续频率估计；v1.1 冻结以 CPI 可观测总能量归一化的 ACE×白化能量统计量。它等价于逐 CPI 能量归一化的 AMF 分数，空间 ACE 相干度作为可解释分量保留。候选仍为一个，无数据驱动搜索。文献中其他方法只作选择依据或历史基线。候选、边界和文献见 `docs/research/D2-A_teacher_candidate_selection.md` 与 `D2-A_teacher_literature_review.md`.
 
 ## 2. 冻结物理场景与候选方法
 
 保持 D2-A-E001 信号模型：三通道复 IQ，PRF=1300 Hz、N=130、32 range cells，静止地面点散射体、理想通道、平地/匀速平台、复圆对称 AWGN、E001 的 Tx phase center/波形/几何/range PSF。H0/H1 配对共享 clutter/noise，`H1−H0=target_signal_iq`。A/B/C 为可辨识条件；D exact-overlap 只描述信息边界。
 
-### 2.1 PD-ACE 定义
+### 2.1 PD-ACE/AMF 定义
 
 1. H0 covariance training 输入只用 `iq_h0`。逐场景计算所有通道/脉冲/range 的可观测平均功率 `e_i`；对 IQ 做四倍零填充慢时间 FFT，得到 `Y_i[k,r]∈C^3`。
 2. 对每个 Doppler bin，拟合 population covariance 形状：
    `R[k] = mean_i( mean_r( Y_i[k,r] Y_i[k,r]^H ) / e_i )`；跨 scene 等权，去除生成器参考幅度造成的全 CPI 整体尺度权重。所有数据在 CPU 分批流式处理，不保存完整 IQ。
 3. 仅为数值求逆，Hermitianize 后将最小特征值下限固定为 `1e-8 × trace(R[k])/3`；不搜索收缩系数、rank 或温度。记录每个 bin 的条件数、特征值和地板触发比例。
-4. 由 E001 公开几何计算17点冻结接收 steering grid `a(θ)`。新测试 CPI 对每个 `(k,r,θ)` 计算
-   `ACE[k,r,θ]=|aᴴ R[k]⁻¹Y[k,r]|² / ((aᴴR[k]⁻¹a)(Y[k,r]ᴴR[k]⁻¹Y[k,r]))`，分母为零时 score=0；range-Doppler score 取 angle grid 最大值。数值结果裁剪到 `[0,1]` 只用于浮点容差，不做任何数据相关阈值。
-5. Detection score 为四倍频率网格和全部 range cell 的最大 ACE。Doppler 由对应 Doppler bin 及周期三点抛物插值估计；range 由 ACE 图峰值和三点局部抛物线插值估计，偏移限于 `[-0.5,+0.5]` cell。
-6. 为与 K2 匹配，蒸馏图从 N=130 原生 FFT ACE score map 产生；对 `[130,32]` map 全图求和归一化。若和为0则使用全零响应并记录；不按真值裁剪、不读场景标签。该图是 saliency，不解释为后验概率。
-7. PD-ACE 推理函数仅接收 observable IQ、已拟合 `R[k]` 与冻结物理几何配置；不读取 truth、潜在幅度、SNR/CNR、组件功率、scene id 或目标标签。Covariance fitting只读独立 H0 training IQ。
+4. 由 E001 公开几何计算 17 点冻结接收 steering grid `a(θ)`。定义 CPI 可观测平均功率 `e_CPI=mean(|X[c,n,r]|²)`，以免固定阈值分数随公共复尺度变化。对每个 `(k,r,θ)` 计算空间相干度
+   `ACE[k,r,θ]=|aᴴ R[k]⁻¹Y[k,r]|² / ((aᴴR[k]⁻¹a)(Y[k,r]ᴴR[k]⁻¹Y[k,r]))`，并计算白化匹配能量 `W[k,r,θ]=|aᴴR[k]⁻¹Y[k,r]|²/(aᴴR[k]⁻¹a)`。分母为零时两者均为0；诊断 ACE 裁剪到 `[0,1]` 仅限浮点容差。
+5. 唯一检测和参数估计 map 定义为 `S[k,r]=max_θ(ACE[k,r,θ] × Y[k,r]ᴴR[k]⁻¹Y[k,r] / e_CPI)`，代数上等于 `max_θ W[k,r,θ]/e_CPI`。这保留 ACE 的空间相干解释，同时保留 Doppler 能量剖面；不把纯 ACE 的频率平坦图当作频率估计器。不得在看过新数据后改成另一种 map。
+6. Detection score 为四倍频率网格和全部 range cell 的最大 `S`。Doppler 由该 score map 对应 bin 及周期三点抛物插值估计；range 由峰值和三点局部抛物线估计，偏移限于 `[-0.5,+0.5]` cell。
+7. 为与 K2 匹配，蒸馏图从 N=130 原生 FFT `S` map 产生；对 `[130,32]` map 全图求和归一化。若和为0则使用全零响应并记录；不按真值裁剪、不读场景标签。该图是 saliency，不解释为后验概率。
+8. PD-ACE/AMF 推理函数仅接收 observable IQ、已拟合 `R[k]` 与冻结物理几何配置；不读取 truth、潜在幅度、SNR/CNR、组件功率、scene id 或目标标签。Covariance fitting 只读独立 H0 training IQ。
 
-ACE 对 IQ 的公共复数标量缩放不变；固定 population covariance 不等于 Kelly/ACE 文献中以在线独立 secondary 估计协方差的统计设置。因此不继承解析 CFAR 保证，全部 Pfa 结论由独立 H0 校准和验证给出。
+联合分数和归一化软图对 IQ 的公共复数标量缩放不变；单独记录的 ACE 空间相干度也不变。固定 population covariance 不等于 Kelly/ACE 文献中以在线独立 secondary 估计协方差的统计设置。因此不继承解析 CFAR 保证，全部 Pfa 结论由独立 H0 校准和验证给出。
 
 ## 3. 冻结分组、样本量和种子
 
@@ -59,10 +60,10 @@ H0 mixture 中场景合成函数以固定 `separated` scenario 调用，但 dete
 - B3：E001 几何 DPCA 原始检测/估计分数。
 - T1：R3 固定 global robust background normalization detection statistic；保留 B3 argmax输出。
 - K2：B3 IQ-only `[130,32]` normalized RD soft response；不是新固定阈值教师。硬检测分数仍报告B3。
-- PD-ACE：本协议唯一先进教师候选。
-- S0/S1/S2：若教师门通过，分别为匹配课程 TaskStudent truth-only、旧K2软监督和新PD-ACE同形软监督。
+- PD-ACE/AMF：本协议唯一先进教师候选。
+- S0/S1/S2：若教师门通过，分别为匹配课程 TaskStudent truth-only、旧K2软监督和新PD-ACE/AMF同形软监督。
 
-B3、T1、PD-ACE 每个 detector 用 calibration H0 自己的 `numpy.quantile(0.95, method="higher")` 取 CPI score 阈值，比较符 `>=`；阈值不从 verification/development 重估。三方法以相同 verification H0 和 paired development H0/H1评价。S0/S1/S2 如运行，也独立用同一 T001 H0 calibration scene IDs 的各自 presence logit校准，并在 verification固定阈值评价。报告`>`、`>=`、阈值平局数。
+B3、T1、PD-ACE/AMF 每个 detector 用 calibration H0 自己的 `numpy.quantile(0.95, method="higher")` 取 CPI score 阈值，比较符 `>=`；阈值不从 verification/development 重估。三方法以相同 verification H0 和 paired development H0/H1评价。S0/S1/S2 如运行，也独立用同一 T001 H0 calibration scene IDs 的各自 presence logit校准，并在 verification固定阈值评价。报告`>`、`>=`、阈值平局数。
 
 必须报告：
 
@@ -78,19 +79,19 @@ B3、T1、PD-ACE 每个 detector 用 calibration H0 自己的 `numpy.quantile(0.
 
 ### G1：数学、实现、物理和数据正确性
 
-- 测试covariance Hermitian/PSD/有限、逆矩阵有限、每 bin 有 condition/eigen记录；无 clutter/noise/单 steering 极限符合 ACE；对于单一已知复目标 steering，在白噪声/已知协方差高SNR时目标响应达到峰值附近；无目标所有输出有限。
-- 相同IQ乘任意预设公共复数因子时ACE score/map最大绝对差`≤1e-6`；所有角度、PRF、shape、Nyquist环绕与map和边界正确。
-- H0/H1 paired identity、split/seed互斥、目标信息/sidecar不进入 covariance或detector、PD-ACE scores由相同提交代码可重放。
+- 测试 covariance Hermitian/PSD/有限、逆矩阵有限、每 bin 有 condition/eigen记录；无 clutter/noise/单 steering 极限符合 ACE/AMF；已知单目标复频率必须落在目标 Doppler 峰附近且空间 ACE 峰对齐 steering；无目标所有输出有限。
+- 相同 IQ 乘任意预设公共复数因子时空间 ACE、归一化 AMF score/map 最大绝对差`≤1e-6`；所有角度、PRF、shape、Nyquist 环绕与 map 和边界正确。
+- H0/H1 paired identity、split/seed 互斥、目标信息/sidecar 不进入 covariance 或 detector、PD-ACE/AMF scores 由相同提交代码可重放。
 - 冻结B3/T1/K2基线在任一同IQ上的实现与现有函数一致。
 - 通过后才能解释统计结果；失败停止并记录最小复现。
 
 ### G2：教师检测/参数任务增益
 
-PD-ACE独立H0 verification的总Pfa点估计`≤0.06`且单侧95% exact上限`≤0.06`；预注册course/SNR/CNR各大组上限`≤0.10`。在主要困难条件 C3/C/SNR0/CNR20 中，相对新数据中最好旧teacher基线（T1、B3）取逐场景配对比较：joint success点增益至少`+0.05`且双侧95% bootstrap差值区间下限`>0`。同时在 pooled identifiable A/B/C 上，候选相对T1的 Pd/joint-success 区间下限均须高于`−0.05`，range RMSE非劣界`+0.5 cell`、Doppler RMSE非劣界`+10 Hz`；各C0–C3大组AUC相对T1不得低`>0.02`。G2失败则停止教师分支，不因AUC排序或更复杂soft loss继续调参。
+PD-ACE/AMF 独立 H0 verification的总Pfa点估计`≤0.06`且单侧95% exact上限`≤0.06`；预注册course/SNR/CNR各大组上限`≤0.10`。在主要困难条件 C3/C/SNR0/CNR20 中，相对新数据中最好旧teacher基线（T1、B3）取逐场景配对比较：joint success点增益至少`+0.05`且双侧95% bootstrap差值区间下限`>0`。同时在 pooled identifiable A/B/C 上，候选相对 T1的 Pd/joint-success 区间下限均须高于`−0.05`，range RMSE非劣界`+0.5 cell`、Doppler RMSE非劣界`+10 Hz`；各C0–C3大组AUC相对 T1不得低`>0.02`。G2失败则停止教师分支，不因AUC排序或更复杂soft loss继续调参。
 
 ### G3：软知识是否值得教
 
-只在G2通过后审查PD-ACE soft map：C3/C/SNR0 H1−paired-H0 target-window mass-lift的95% paired bootstrap下限`>0`；teacher top-cell localization至少`0.20`（旧K2为0.047）；pooled C3 A/B/C mass-lift下限`>0`。报告H0最大score/map entropy和困难场景错误，不以 pooled 平均替代困难组。如果G3失败，不运行S2蒸馏。
+只在 G2 通过后审查 PD-ACE/AMF soft map：C3/C/SNR0 H1−paired-H0 target-window mass-lift的95% paired bootstrap下限`>0`；teacher top-cell localization至少`0.20`（旧K2为0.047）；pooled C3 A/B/C mass-lift下限`>0`。报告H0最大score/map entropy和困难场景错误，不以 pooled 平均替代困难组。如果G3失败，不运行S2蒸馏。
 
 阶段门依据新数据，不允许在测试真值上选择协方差模型、steering、阈值、温度或样本窗口。失败保留，停止，不再实现第二个先进教师。
 
@@ -100,7 +101,7 @@ PD-ACE独立H0 verification的总Pfa点估计`≤0.06`且单侧95% exact上限`�
 
 - **S0 truth-only：** 复用 D2-A-E002 v2.1 B 臂 checkpoint（同一课程计划、直接真值监督）。
 - **S1 old teacher：** 复用 E002 v2.1 C 臂 checkpoint（B同课程/初始化/训练数据，加旧K2 H1-only软监督）。
-- **S2 new teacher：** 仅新增训练一次；沿用同 E002 训练 split/batch计划/模型/初始化，在H1真值任务损失外使用新PD-ACE `[130,32]` map；软loss格式与K2完全一致，H1-only，lambda按 E002 `0.05→0` 线性退火；H0仍只有真值presence监督。
+- **S2 new teacher：** 仅新增训练一次；沿用同 E002 训练 split/batch计划/模型/初始化，在H1真值任务损失外使用新PD-ACE/AMF `[130,32]` map；软loss格式与K2完全一致，H1-only，lambda按 E002 `0.05→0` 线性退火；H0仍只有真值presence监督。
 
 S0/S1以冻结 checkpoint 作为相同种子 pilot锚点，不重训练；三组均在新T001 H0 calibration/verification和paired development上评价。S2训练IQ按E002冻结scene seeds/batch plan确定性分批生成，CPU流式处理，不将全训练IQ缓存到GPU/仓库。new-teacher maps只保存必要的训练中间缓存并按既有项目忽略规则处理；项目总量需小于20 GiB。
 
