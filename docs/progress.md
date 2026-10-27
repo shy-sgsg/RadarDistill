@@ -1,5 +1,12 @@
 # 研究进度
 
+# 2026-10-28：D2-A-R5-D 配对错误诊断工具准备
+
+- **主线与边界：** 服务总纲 v1.3 的 Q1/Q2/Q4/Q9/Q10 与 H-TEACH-002/H-TEACH-004/H-LEARN-002；仅建设后续机制研究的评估工具。R5-C独立方向审查仍待返回；没有运行preflight、训练、KD或新数据实验。
+- **实现：** 扩展现有 `physical_consistency.py`，按H0/H1、condition和任务分别计算教师/学生四格正确性、学生纠错/退化比例及场景bootstrap区间。周期Doppler使用PRF回绕；range/Doppler正确性与detection分开，joint则包含三项门。配对H0/H1共享的`base_scene_id`作为bootstrap簇。
+- **范围限制：** 当前没有同一批scene上的R5-C教师与T0–T3学生输出，故没有错误矩阵科研结果，也不从错误相关性推断因果知识吸收。若独立审查不支持pilot，不启动学生侧R5-D比较。
+- **任务对齐：** `docs/task_alignments/D2-A-R5D-diagnostic-tools.md`；研究设计说明更新于 `docs/research/D2-A_knowledge_transfer_mechanisms.md`。这一准备不改变当前R5-C审查优先级或任何冻结假设状态。
+
 # 2026-10-28：D2-A-R5-C 教师软知识质量审计完成
 
 - **总纲对齐：** 按 `docs/RESEARCH_CHARTER.md` v1.3，检验B3教师响应中的目标定位/Doppler信息与可观测可靠性信号，服务任务级GMTI学生和后续有界知识迁移判断；未修改研究总纲、R5-B冻结门或既有负结果。

@@ -67,6 +67,255 @@ def wrap_periodic_difference(difference: np.ndarray | float, *, period: float) -
     return np.remainder(values + period / 2.0, period) - period / 2.0
 
 
+def _summarize_paired_correctness(
+    teacher_correct: np.ndarray,
+    student_correct: np.ndarray,
+    scene_ids: np.ndarray,
+    *,
+    bootstrap_replicates: int,
+    bootstrap_seed: int,
+) -> dict[str, object]:
+    teacher = np.asarray(teacher_correct, dtype=bool).reshape(-1)
+    student = np.asarray(student_correct, dtype=bool).reshape(-1)
+    ids = np.asarray(scene_ids).reshape(-1).astype(str)
+    if teacher.shape != student.shape or ids.size != teacher.size:
+        raise ValueError("correctness arrays and scene IDs must have equal length")
+
+    n = teacher.size
+    counts = {
+        "both_correct": int(np.sum(teacher & student)),
+        "teacher_only_correct": int(np.sum(teacher & ~student)),
+        "student_only_correct": int(np.sum(~teacher & student)),
+        "both_wrong": int(np.sum(~teacher & ~student)),
+    }
+    if n == 0:
+        return {
+            "n": 0,
+            "n_base_scenes": 0,
+            "counts": counts,
+            "proportions": {name: None for name in counts},
+            "teacher_accuracy": None,
+            "student_accuracy": None,
+            "student_minus_teacher_accuracy": None,
+            "scene_bootstrap_95_ci": None,
+            "student_rescue_given_teacher_wrong": None,
+            "student_regression_given_teacher_correct": None,
+        }
+
+    unique_ids, inverse = np.unique(ids, return_inverse=True)
+    cluster_rows = [np.flatnonzero(inverse == cluster) for cluster in range(unique_ids.size)]
+    delta = student.astype(np.float64) - teacher.astype(np.float64)
+    rng = np.random.default_rng(bootstrap_seed)
+    bootstrap_delta = np.empty(bootstrap_replicates, dtype=np.float64)
+    for replicate in range(bootstrap_replicates):
+        selected_clusters = rng.integers(0, unique_ids.size, size=unique_ids.size)
+        sampled_rows = np.concatenate([cluster_rows[index] for index in selected_clusters])
+        bootstrap_delta[replicate] = np.mean(delta[sampled_rows])
+
+    teacher_wrong = ~teacher
+    teacher_correct_mask = teacher
+    return {
+        "n": int(n),
+        "n_base_scenes": int(unique_ids.size),
+        "counts": counts,
+        "proportions": {name: count / n for name, count in counts.items()},
+        "teacher_accuracy": float(np.mean(teacher)),
+        "student_accuracy": float(np.mean(student)),
+        "student_minus_teacher_accuracy": float(np.mean(delta)),
+        "scene_bootstrap_95_ci": [
+            float(value) for value in np.quantile(bootstrap_delta, [0.025, 0.975])
+        ],
+        "student_rescue_given_teacher_wrong": (
+            float(np.mean(student[teacher_wrong])) if np.any(teacher_wrong) else None
+        ),
+        "student_regression_given_teacher_correct": (
+            float(np.mean(~student[teacher_correct_mask]))
+            if np.any(teacher_correct_mask)
+            else None
+        ),
+    }
+
+
+def summarize_teacher_student_error_matrix(
+    teacher_predictions: Mapping[str, np.ndarray],
+    student_predictions: Mapping[str, np.ndarray],
+    *,
+    scene_ids: np.ndarray,
+    truth_presence: np.ndarray,
+    condition: np.ndarray,
+    teacher_threshold: float,
+    student_threshold: float,
+    truth_range_cell: np.ndarray,
+    truth_doppler_hz: np.ndarray,
+    prf_hz: float,
+    range_gate_cells: float = 1.0,
+    doppler_gate_hz: float = 20.0,
+    bootstrap_replicates: int = 2000,
+    bootstrap_seed: int = 0,
+) -> dict[str, object]:
+    """Compare teacher and student correctness by task and scene stratum.
+
+    Detection is evaluated on H0 and H1 separately; range and circular-Doppler
+    parameter correctness are evaluated on H1 independently of detection;
+    joint correctness requires detection and both parameter gates. Bootstrap
+    intervals resample unique ``base_scene_id`` rows and do not estimate
+    training-seed variation. Teacher and student prediction rows must already
+    be aligned to the shared ``scene_ids`` array.
+    """
+    ids = np.asarray(scene_ids).reshape(-1).astype(str)
+    presence_values = np.asarray(truth_presence).reshape(-1)
+    labels = np.asarray(condition).reshape(-1).astype(str)
+    count = ids.size
+    if count == 0 or presence_values.size != count or labels.size != count:
+        raise ValueError("scene IDs, presence labels, and conditions must have equal nonzero length")
+    if np.any(ids == ""):
+        raise ValueError("scene_ids must be nonempty")
+    if np.any(labels == ""):
+        raise ValueError("condition labels must be nonempty")
+    if not np.all(np.isin(presence_values, (False, True, 0, 1))):
+        raise ValueError("truth_presence must contain only boolean values")
+    presence = presence_values.astype(bool)
+
+    settings = (teacher_threshold, student_threshold, prf_hz, range_gate_cells, doppler_gate_hz)
+    if not np.all(np.isfinite(settings)):
+        raise ValueError("thresholds, PRF, and error gates must be finite")
+    if prf_hz <= 0.0 or range_gate_cells < 0.0 or doppler_gate_hz < 0.0:
+        raise ValueError("PRF must be positive and error gates must be nonnegative")
+    if bootstrap_replicates <= 0 or bootstrap_seed < 0:
+        raise ValueError("bootstrap_replicates must be positive and bootstrap_seed nonnegative")
+
+    def prediction_vector(
+        source: Mapping[str, np.ndarray], name: str, *, finite_mask: np.ndarray | None = None
+    ) -> np.ndarray:
+        if name not in source:
+            raise ValueError(f"prediction field {name!r} is missing")
+        values = np.asarray(source[name], dtype=np.float64).reshape(-1)
+        mask = np.ones(count, dtype=bool) if finite_mask is None else finite_mask
+        if values.size != count or not np.all(np.isfinite(values[mask])):
+            raise ValueError(
+                f"prediction field {name!r} must be finite on required rows and have length {count}"
+            )
+        return values
+
+    def truth_vector(source: np.ndarray, name: str) -> np.ndarray:
+        values = np.asarray(source, dtype=np.float64).reshape(-1)
+        if values.size != count or not np.all(np.isfinite(values[presence])):
+            raise ValueError(f"{name} must be finite for every H1 scene and have length {count}")
+        return values
+
+    teacher_score = prediction_vector(teacher_predictions, "score")
+    student_score = prediction_vector(student_predictions, "score")
+    teacher_range = prediction_vector(teacher_predictions, "range_cell", finite_mask=presence)
+    student_range = prediction_vector(student_predictions, "range_cell", finite_mask=presence)
+    teacher_doppler = prediction_vector(teacher_predictions, "doppler_hz", finite_mask=presence)
+    student_doppler = prediction_vector(student_predictions, "doppler_hz", finite_mask=presence)
+    range_truth = truth_vector(truth_range_cell, "truth_range_cell")
+    doppler_truth = truth_vector(truth_doppler_hz, "truth_doppler_hz")
+
+    teacher_detected = teacher_score >= teacher_threshold
+    student_detected = student_score >= student_threshold
+    teacher_range_correct = np.zeros(count, dtype=bool)
+    student_range_correct = np.zeros(count, dtype=bool)
+    teacher_doppler_correct = np.zeros(count, dtype=bool)
+    student_doppler_correct = np.zeros(count, dtype=bool)
+    teacher_range_correct[presence] = (
+        np.abs(teacher_range[presence] - range_truth[presence]) <= range_gate_cells
+    )
+    student_range_correct[presence] = (
+        np.abs(student_range[presence] - range_truth[presence]) <= range_gate_cells
+    )
+    teacher_doppler_correct[presence] = np.abs(
+        wrap_periodic_difference(
+            teacher_doppler[presence] - doppler_truth[presence], period=prf_hz
+        )
+    ) <= doppler_gate_hz
+    student_doppler_correct[presence] = np.abs(
+        wrap_periodic_difference(
+            student_doppler[presence] - doppler_truth[presence], period=prf_hz
+        )
+    ) <= doppler_gate_hz
+    teacher_presence_correct = teacher_detected == presence
+    student_presence_correct = student_detected == presence
+    teacher_joint_correct = (
+        teacher_detected & teacher_range_correct & teacher_doppler_correct
+    )
+    student_joint_correct = (
+        student_detected & student_range_correct & student_doppler_correct
+    )
+
+    groups: list[tuple[str, np.ndarray]] = [
+        ("all", np.ones(count, dtype=bool)),
+        ("H0", ~presence),
+        ("H1", presence),
+    ]
+    for label in sorted(np.unique(labels).tolist()):
+        condition_mask = labels == label
+        groups.extend(
+            (
+                (f"condition:{label}", condition_mask),
+                (f"condition:{label}/H0", condition_mask & ~presence),
+                (f"condition:{label}/H1", condition_mask & presence),
+            )
+        )
+
+    grouped: dict[str, object] = {}
+    for group_index, (name, mask) in enumerate(groups):
+        h1_mask = mask & presence
+        task_scene_ids = ids[mask]
+        h1_scene_ids = ids[h1_mask]
+        task_inputs = (
+            (
+                "presence",
+                teacher_presence_correct[mask],
+                student_presence_correct[mask],
+                task_scene_ids,
+            ),
+            ("range", teacher_range_correct[h1_mask], student_range_correct[h1_mask], h1_scene_ids),
+            (
+                "doppler",
+                teacher_doppler_correct[h1_mask],
+                student_doppler_correct[h1_mask],
+                h1_scene_ids,
+            ),
+            ("joint", teacher_joint_correct[h1_mask], student_joint_correct[h1_mask], h1_scene_ids),
+        )
+        tasks: dict[str, object] = {}
+        for task_index, (task, teacher_ok, student_ok, task_ids) in enumerate(task_inputs):
+            tasks[task] = _summarize_paired_correctness(
+                teacher_ok,
+                student_ok,
+                task_ids,
+                bootstrap_replicates=bootstrap_replicates,
+                bootstrap_seed=bootstrap_seed + group_index * 10 + task_index,
+            )
+        grouped[name] = {
+            "n": int(np.sum(mask)),
+            "n_base_scenes": int(np.unique(task_scene_ids).size),
+            "tasks": tasks,
+        }
+
+    return {
+        "bootstrap": {
+            "unit": "base_scene_id",
+            "replicates": int(bootstrap_replicates),
+            "seed": int(bootstrap_seed),
+            "interval": "two_sided_95_percentile",
+        },
+        "thresholds": {
+            "teacher": float(teacher_threshold),
+            "student": float(student_threshold),
+            "comparator": ">=",
+        },
+        "gates": {
+            "range_error_cells": float(range_gate_cells),
+            "doppler_error_hz": float(doppler_gate_hz),
+            "doppler_period_hz": float(prf_hz),
+        },
+        "uncertainty_is_training_seed_variance": False,
+        "groups": grouped,
+    }
+
+
 def summarize_prediction_intervention(
     baseline: Mapping[str, np.ndarray],
     intervention: Mapping[str, np.ndarray],

@@ -6,6 +6,7 @@ import torch
 
 from radardistill.evaluation.physical_consistency import (
     select_scene_ids_by_stratum,
+    summarize_teacher_student_error_matrix,
     summarize_prediction_intervention,
     wrap_periodic_difference,
 )
@@ -83,6 +84,113 @@ def test_prediction_intervention_reports_h0_h1_and_condition_transitions() -> No
     assert summary["H1"]["intervention_joint_success_rate"] == 0.5
     assert summary["condition:C1/H1"]["baseline_detected_count"] == 0
     assert summary["condition:C1/H1"]["intervention_detected_count"] == 1
+
+
+def test_teacher_student_error_matrix_separates_task_errors_and_bootstraps_scenes() -> None:
+    scene_ids = np.asarray([f"scene-{index}" for index in range(8)])
+    truth_presence = np.asarray([False] * 4 + [True] * 4)
+    conditions = np.asarray(["C2", "C2", "C3", "C3", "C2", "C2", "C3", "C3"])
+    teacher = {
+        "score": np.asarray([0.1, 0.8, 0.1, 0.9, 0.9, 0.1, 0.9, 0.1]),
+        "range_cell": np.asarray([np.nan] * 4 + [10.2, 15.0, 12.2, 20.0]),
+        "doppler_hz": np.asarray([np.nan] * 4 + [649.0, -649.0, 100.0, 400.0]),
+    }
+    student = {
+        "score": np.asarray([0.1, 0.1, 0.8, 0.9, 0.9, 0.9, 0.1, 0.1]),
+        "range_cell": np.asarray([np.nan] * 4 + [10.2, 11.2, 30.0, 13.2]),
+        "doppler_hz": np.asarray([np.nan] * 4 + [649.0, 651.0, 100.0, -10.0]),
+    }
+
+    result = summarize_teacher_student_error_matrix(
+        teacher,
+        student,
+        scene_ids=scene_ids,
+        truth_presence=truth_presence,
+        condition=conditions,
+        teacher_threshold=0.5,
+        student_threshold=0.5,
+        truth_range_cell=np.asarray([np.nan] * 4 + [10.0, 11.0, 12.0, 13.0]),
+        truth_doppler_hz=np.asarray([np.nan] * 4 + [649.0, -649.0, 10.0, -10.0]),
+        prf_hz=1300.0,
+        bootstrap_replicates=200,
+        bootstrap_seed=17,
+    )
+
+    h0 = result["groups"]["H0"]["tasks"]["presence"]
+    assert h0["counts"] == {
+        "both_correct": 1,
+        "teacher_only_correct": 1,
+        "student_only_correct": 1,
+        "both_wrong": 1,
+    }
+    assert h0["student_rescue_given_teacher_wrong"] == pytest.approx(0.5)
+    assert h0["student_regression_given_teacher_correct"] == pytest.approx(0.5)
+
+    h1_tasks = result["groups"]["H1"]["tasks"]
+    assert h1_tasks["presence"]["counts"]["teacher_only_correct"] == 1
+    assert h1_tasks["presence"]["counts"]["student_only_correct"] == 1
+    assert h1_tasks["range"]["counts"] == {
+        "both_correct": 1,
+        "teacher_only_correct": 1,
+        "student_only_correct": 2,
+        "both_wrong": 0,
+    }
+    assert h1_tasks["doppler"]["counts"] == {
+        "both_correct": 2,
+        "teacher_only_correct": 0,
+        "student_only_correct": 1,
+        "both_wrong": 1,
+    }
+    assert h1_tasks["joint"]["counts"] == {
+        "both_correct": 1,
+        "teacher_only_correct": 0,
+        "student_only_correct": 1,
+        "both_wrong": 2,
+    }
+    assert h1_tasks["doppler"]["student_minus_teacher_accuracy"] == pytest.approx(0.25)
+    assert h1_tasks["doppler"]["scene_bootstrap_95_ci"][0] <= 0.25
+    assert h1_tasks["doppler"]["scene_bootstrap_95_ci"][1] >= 0.25
+    assert result["bootstrap"]["unit"] == "base_scene_id"
+    assert result["uncertainty_is_training_seed_variance"] is False
+    assert result["groups"]["condition:C3/H1"]["n"] == 2
+
+
+def test_teacher_student_error_matrix_bootstraps_paired_h0_h1_rows_by_base_scene() -> None:
+    teacher = {
+        "score": np.asarray([0.1, 0.9]),
+        "range_cell": np.asarray([0.0, 1.0]),
+        "doppler_hz": np.asarray([0.0, 20.0]),
+    }
+    student = {
+        "score": np.asarray([0.9, 0.9]),
+        "range_cell": np.asarray([0.0, 1.0]),
+        "doppler_hz": np.asarray([0.0, 20.0]),
+    }
+
+    result = summarize_teacher_student_error_matrix(
+        teacher,
+        student,
+        scene_ids=np.asarray(["paired-scene", "paired-scene"]),
+        truth_presence=np.asarray([False, True]),
+        condition=np.asarray(["C2", "C2"]),
+        teacher_threshold=0.5,
+        student_threshold=0.5,
+        truth_range_cell=np.asarray([np.nan, 1.0]),
+        truth_doppler_hz=np.asarray([np.nan, 20.0]),
+        prf_hz=1300.0,
+        bootstrap_replicates=100,
+        bootstrap_seed=19,
+    )
+
+    overall = result["groups"]["all"]
+    presence = overall["tasks"]["presence"]
+    assert overall["n"] == 2
+    assert overall["n_base_scenes"] == 1
+    assert presence["n_base_scenes"] == 1
+    assert presence["counts"]["both_correct"] == 1
+    assert presence["counts"]["teacher_only_correct"] == 1
+    assert presence["student_minus_teacher_accuracy"] == pytest.approx(-0.5)
+    assert presence["scene_bootstrap_95_ci"] == pytest.approx([-0.5, -0.5])
 
 
 def _tone(frequency_hz: float, phases: tuple[float, float, float] = (0.0, 0.0, 0.0), *, dtype: torch.dtype = torch.complex128) -> torch.Tensor:
