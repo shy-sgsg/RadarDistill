@@ -1,0 +1,26 @@
+{
+  "experiment": "D2-A-R5-B",
+  "git_sha": "55e7c7810e6cbb0277f79b1b6b4c401052b559dc",
+  "gate": "G1",
+  "result": {
+    "microbatch_size": 16,
+    "paired_scenes": 16,
+    "updates": 200,
+    "initial_task_loss": 5.576828956604004,
+    "final_task_loss": 0.0008666779613122344,
+    "relative_loss_reduction": 0.9998445930531389,
+    "presence_accuracy": 1.0,
+    "h1_range_cell_accuracy": 1.0,
+    "task_head_gradient_norms": {
+      "presence_head": 0.34282130002975464,
+      "range_head": 0.29048168659210205,
+      "range_offset_head": 0.7409273386001587,
+      "doppler_head": 16.1230411529541
+    },
+    "finite_outputs_and_losses": true,
+    "passed": true,
+    "prior_oom_attempts": []
+  },
+  "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cpu_fallback": false
+}

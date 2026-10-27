@@ -416,3 +416,12 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **任务收益：** Medium−Small overall joint-success差`+0.07178`（95% CI `[+0.06201,+0.08204]`），可辨识C2/C3 joint差`+0.13086`（`[+0.11230,+0.15088]`）。C2/C3 range/Doppler RMSE比`0.839/0.713`；primary-gain门通过。
 - **保护与判定：** 普通H0 verification Pfa=`0.05017/0.04797`，但C3 H0 Pfa=`0.20410/0.18896`，两模型均高于0.10限制；相对C3 Pfa差值区间虽未显示Medium恶化，绝对保护门失败。容量阶段判 **REFINE**，H-CAP-002为有限支持；不运行Large、KD或final blind。数据是E003既用开发材料，非blind，单seed不估计seed方差。
 - **交付：** `experiments/D2-A-R5/R5-A/capacity/` 含config、preflight、G1、training/metrics、per-scene输出、图和analysis；`docs/stage_reviews/D2-A-R5A-capacity_review.md` 提供Codex阶段自审。当前总纲未修改。下一优先阶段为R5-B一个轻量原始IQ时频注意力候选的架构调查和有界pilot设计。
+
+## 2026-10-28：D2-A-R5-B TFAS 单seed CUDA pilot 完成
+
+- **协议与运行：** 按 R5-B v1.0，seed101、E1物理真值监督、12,800 updates、有效batch64、FP32、固定训练集8遍，在 RTX 3050 Laptop `cuda:0` 完成；模型79,638参数，无 CPU 回退或OOM。代码/runner SHA=`55e7c7810e6cbb0277f79b1b6b4c401052b559dc`。模型和runner/训练测试共26项通过；compileall与配置检查通过。
+- **训练与G2：** 16-pair G1 loss `5.57683→0.000867`，下降99.984%。development AUC=`0.96139`（95% CI `[0.95760,0.96512]`），range RMSE=`4.595 cells`、Doppler RMSE=`82.00 Hz`，优于训练真值常值基线，G2通过。共同验证最低task loss checkpoint为update12400，`1.71301`；末段已近平台但仅一个seed。
+- **G3失败：** TFAS总体Pd/joint=`0.8020/0.5054`；C2/C3 joint相对Medium差`−0.60449`（95% paired-scene CI `[-0.62598,-0.58350]`）；range/Doppler RMSE比`2.385/4.599`。C3 H0 Pfa=`0.15186`（单侧exact95%上限`0.16138`），不满足0.10绝对门。虽然Pfa低于Small/Medium基线，但任务退化显著且三者均未过绝对门。
+- **物理诊断及边界：** 公共相位32旋转与频移诊断复用已见development/verification IDs；phase下H1判决一致率中位数0.9258，Doppler变化p95最高122.18 Hz；frequency shift未呈现稳定等变。仅为描述性诊断。训练、校准、验证与开发数据来自已用E003/R5-A ID；单seed、非blind，不估计seed方差。
+- **决定：** G0/G1/G2通过、G3失败。停止本TFAS候选，不进行额外seed、KD、Large、调参或final blind；不外推否定所有非CNN/attention，也不声称CNN或任何教师已通过全门。H-ARCH-003对当前TFAS为NOT_SUPPORTED；H-LEARN-002保持INCONCLUSIVE。阶段建议 **REFINE**，下一唯一任务为独立ChatGPT阶段审查；审查前不启动R5-C/D或新架构。
+- **交付与复核：** R5-B protocol/config、训练history、模型checkpoint、逐场景输出、metrics、物理诊断、曲线和 `docs/stage_reviews/D2-A-R5B_review.md` 已归档。可重建IQ缓存（manifest 90 files，14,232,309,192 bytes）未纳入Git；项目目录当前约15 GiB，低于20 GiB最终上限。ChatGPT审查请求将在结果提交后记录准确结果SHA。

@@ -1,5 +1,12 @@
 # 技术决策记录
 
+## 2026-10-28：停止 D2-A-R5-B TFAS 候选并提交独立审查
+
+- **结果：** 按冻结 protocol/config v1.0，TFAS seed101、E1 truth-only、12,800 updates在 RTX 3050 Laptop `cuda:0` 完成。G0/G1/G2通过；G3失败。TFAS相对Medium的C2/C3 joint-success差为`−0.60449`（paired 95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa=`0.15186`，高于0.10绝对保护。
+- **解释边界：** TFAS优于训练真值常值基线，说明基础任务映射可学习；但检测/参数联合性能和公共相位/频移响应不足。此单seed、复用development结果只否定当前TFAS候选，不否定所有非CNN/attention结构，也不证明CNN已通过绝对门。没有教师、KD、多seed或blind结果。
+- **决定：** 按预注册停止当前TFAS扩展，不追加seed、KD、Large、架构搜索或final blind。R5-B阶段总体待独立审查，建议 **REFINE**；总纲v1.3不变。
+- **下一步唯一优先任务：** 将R5-B证据提交ChatGPT独立审查；审查前不启动R5-C/D。审查后再讨论一个有界的下一阶段。
+
 ## 2026-10-28：冻结 D2-A-R5-B 单一原始 IQ 时频注意力候选
 
 - **决定：** 从非 CNN/复数/SSM/展开候选中，仅预注册约79.6K参数的分解式时域/距离轴 TFAS；对物理模型驱动展开只作数学适配审查，本轮不训练第二结构。

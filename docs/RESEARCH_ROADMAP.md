@@ -5,21 +5,22 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4 与 E003 均已完成。** R3/E002/R4 当前为 REFINE；T001 教师候选 STOP。E003 固定相干特征 R1/R2 前置门通过，但单 seed S2 的任务保护和 C2/C3 joint-gain 门失败，故停止该 S2 候选；这不代表充分训练或所有相干架构上限。按用户授权进行的 **R5：学生训练充分性、容量、架构适用性与教师知识迁移机制联合研究** 中，R5-A Phase 1/2 已完成；旧阶段结论保持不变。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003与R5-A/R5-B均已完成当前冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP。E003固定相干特征前置门通过但S2任务保护失败。R5-A容量Medium有任务收益但C3绝对Pfa门失败；R5-B的TFAS通过G0/G1/G2、未通过G3，故停止该候选扩展。旧阶段结论保持不变。
 
-R5 顺序为：Phase 0 设计/总纲 v1.3/协议预注册；Phase 1 seed 101 下 S0/S2 6,400 updates并依预设曲线延长到12,800；Phase 2 Small/Medium width-only容量对照；Phase 3 一个原始IQ输入的轻量时频注意力pilot并完成物理展开设计审查；Phase 4 独立审计教师知识质量；Phase 5 仅在知识质量门通过后比较truth-only、完整响应、教师局部知识和匹配真值辅助；Phase 6 只研究有pilot收益的知识内容的时机和物理吸收机制；Phase 7 综合阶段审查。R5-A容量 pilot 显示 Medium 有 C2/C3 joint 与参数估计收益，但两模型 C3 H0 Pfa 均超过0.10保护门，故 Large 停止。R5-B 架构调查与TFAS protocol/config v1.0已冻结，候选代码和训练尚未运行。任一分支按 G0–G7 失败即停止，不以完成所有架构/蒸馏臂为目标。
+R5顺序原计划包括训练充分性、容量、单一非CNN架构、教师知识质量、最小蒸馏内容对照及机制审查。R5-A和R5-B已完成各自冻结的单seed试验；Medium CNN与TFAS均未通过C3绝对Pfa任务保护，TFAS也显著落后Medium的C2/C3联合成功。故不自动进入教师蒸馏阶段；先完成独立方向审查，再按总纲和现有证据决定R5后续是否继续、收缩或转向。新盲测、额外架构和KD均未获当前阶段自动授权。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
 ## 已完成实验与证据
 
-### D2-A-R5（进行中）
+### D2-A-R5（R5-A/R5-B单seed阶段完成；等待独立审查）
 
 - 设计依据、路线和用户授权见 `docs/superpowers/specs/2026-10-27-d2-a-r5-design.md`、执行计划 `docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md` 与 `docs/task_alignments/D2-A-R5_alignment.md`。
 - R5-A 使用 E003 冻结 train/validation IDs，seed101、E1 truth-only、RTX 3050 `cuda:0` FP32。S0/S2各训练12,800 updates（8遍）；两臂均在6,400步满足预注册延长条件。复用的E003开发材料不作盲测。验证任务指标持续改善；H-CAP-001在该单seed范围内得到支持，但尚不能声称训练收敛或跨seed稳定。
 - S0原始复IQ学生的开发任务结果优于S2固定相干前端；S2的C2/C3联合成功差为−0.3945（95% CI `[−0.4189,−0.3696]`），C3 H0 Pfa仍为0.1838，故停止当前S2候选。S0的C3 H0 Pfa为0.2041，也未达到0.10保护门。完整结果见 `experiments/D2-A-R5/R5-A/analysis.md` 和 `docs/stage_reviews/D2-A-R5A_review.md`。
 - R5-A容量对照中，Medium−Small C2/C3 joint-success差为`+0.13086`（95% CI `[+0.11230,+0.15088]`），range/Doppler RMSE比分别`0.839/0.713`；但C3 H0 Pfa为`0.2041/0.1890`，G3 absolute protection失败，因此不运行Large。结果见容量分析和阶段审查。
-- 当前唯一优先任务为按冻结的 R5-B v1.0 实现一个原始复 IQ 轻量时频注意力候选。先通过结构/参数/显存、物理正确性及小批可学习性审查，再比较冻结 CNN 参照。文献调查和物理展开设计已归档；深度展开仅作数学适配审查；R5-C/D 均受教师质量和教学收益前置门约束。
+- R5-B TFAS以79,638参数、seed101、E1 truth-only在RTX3050 `cuda:0`完成12,800 updates。G0/G1/G2通过，但C2/C3 joint相对Medium差`−0.60449`（95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa=`0.15186`，绝对0.10门失败；按协议停止TFAS扩展，不做额外seed、KD、Large或blind。phase/frequency敏感性与错误集中于C2/C3，均来自复用开发ID的描述性诊断。完整结果见 `experiments/D2-A-R5/R5-B/analysis.md`、`metrics.json` 和 `docs/stage_reviews/D2-A-R5B_review.md`。
+- R5-A Small/Medium和R5-B TFAS均为单seed、使用E003/R5-A已见开发材料，不能估计seed variance或泛化至独立场景；R5-B E1只证明基础真值映射可学习，未进行教师硬标签、软响应、KD或final blind。当前唯一优先任务为独立ChatGPT阶段审查；审查前不开始R5-C/D或新架构。
 - 当前总纲 v1.3 修订内容仅新增训练/容量/架构/知识吸收原则与 Q10、事实更新 D2 状态；Q1–Q9 和历史结果不变。
 
 - **D0-E001：** 12/12 简化仿真与 APX15 慢时间 FFT 子链正确性检查通过；不覆盖完整生产链。
@@ -71,7 +72,7 @@ R5 顺序为：Phase 0 设计/总纲 v1.3/协议预注册；Phase 1 seed 101 下
 
 ## 当前唯一优先任务
 
-独立审查 D2-A-E003 结果，判断是否值得提出一个不训练的表示归因诊断，以区分固定相干特征、场景归一化与28→6投影对 C1–C3 任务表现的影响。审查前不启动 S2 正式多种子、蒸馏、final blind 或教师搜索。若审查支持新诊断，须重新对齐研究总纲、登记假设并冻结独立协议与停止条件；总纲保持不变。
+独立审查 D2-A-R5-B 阶段结果，判断当前学生架构路线与后续教师知识阶段是否仍服务总纲目标。审查前不启动新的架构、KD、教师搜索或blind；任何获准后续工作均须先登记新假设并冻结独立protocol及停止条件，总纲保持不变。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

@@ -2,10 +2,10 @@
 
 **更新日期：** 2026-10-28
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5-A Small/Medium width-only capacity pilot 已在 CUDA 完成；代码提交 `1678a468d5c150ff734d80ad40cf75407a49651f`，结果与状态归档提交 `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`。结果、训练曲线、分层指标和 Codex 阶段自审见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md) 与 [stage review](stage_reviews/D2-A-R5A-capacity_review.md)；ChatGPT 审查请求见 [review request](../experiments/D2-A-R5/R5-A/capacity/review_request.md)。
-**阶段判断：** R5-A **REFINE**：延长训练在固定 seed/data 下持续改善；Medium width=96 相对 Small width=32 的 C2/C3 joint-success 提升 `+0.1309`（95% CI `[+0.1123,+0.1509]`），range/Doppler RMSE 亦改善；但两者 C3 H0 Pfa 分别 `0.2041/0.1890`，均超 0.10 门，因此 G3 任务保护失败，Medium 不晋级、不运行 Large。E003、R3、E002、T001、R4 和旧 R5-A 结论保持不变。
+**最新完成工作：** D2-A-R5-B TFAS seed101 E1 truth-only pilot 已在 CUDA 完成；模型/runner提交 `55e7c7810e6cbb0277f79b1b6b4c401052b559dc`。训练、指标、配对场景输出和阶段分析见 [R5-B analysis](../experiments/D2-A-R5/R5-B/analysis.md)；阶段自审见 [R5-B review](stage_reviews/D2-A-R5B_review.md)。ChatGPT 审查请求随结果归档提交提供。
+**阶段判断：** R5-B **REFINE**；TFAS候选依据冻结G3 **STOP**。G0/G1/G2通过，但相对Medium的C2/C3 joint-success差为`−0.60449`（95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa为`0.15186`，超过`0.10`保护。R5-A Small/Medium总体任务表现较好但C3 H0 Pfa亦超限，因此当前没有通过完整门的学生或获准教师。历史阶段结论保持不变。
 
-**当前授权工作：** R5-A Phase 1/2 已完成：S0/S2 及 Small/Medium 均按12,800-update预算使用RTX 3050 Laptop `cuda:0` FP32训练；未运行KD、正式多 seed 或 final blind。Medium 未通过C3 Pfa绝对保护。R5-B 架构调查与单一轻量原始IQ时频注意力候选 protocol/config v1.0 已冻结；代码、G1与CUDA pilot 尚未运行。大型可重建缓存不提交，整个项目最终须低于20 GiB。
+**当前授权工作：** R5-A与R5-B已按预注册预算完成单seed CUDA E1训练；未运行KD、正式多seed或final blind。R5-B模型未通过G3，不追加TFAS seed、KD、Large、参数搜索或blind。阶段结果等待独立ChatGPT审查；项目最终体积上限为20 GiB。
 
 ## 当前结论
 
@@ -22,6 +22,12 @@ RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识�
 ### D2-A-R5-A Small/Medium 容量结果
 
 在 seed101、相同 E003 train/validation IDs、pair plan、E1 truth-only、有效 batch64、FP32和12,800 updates下，Medium width=96（82,887参数）相对复用的Small width=32（13,383参数）取得 C2/C3 joint-success `+0.13086`（95% paired-scene bootstrap CI `[+0.11230,+0.15088]`），C2/C3 range/Doppler RMSE比为 `0.839/0.713`。G1和primary gain筛选通过。常规H0 verification Pfa为`0.05017/0.04797`，但C3 H0 Pfa为`0.20410/0.18896`；两者的单侧 exact 95%上限均远高于冻结0.10限制。因此 G3 任务保护未通过，Medium不得晋级，Large不运行。结果限于一个训练seed与已使用开发材料，不是blind或跨seed确认。详细数据见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[metrics](../experiments/D2-A-R5/R5-A/capacity/metrics.json) 和 [capacity review](stage_reviews/D2-A-R5A-capacity_review.md)。
+
+### D2-A-R5-B TFAS 架构 pilot
+
+按冻结protocol/config v1.0，seed101 TFAS以三通道原始I/Q实虚平面为输入，FP32在RTX 3050 Laptop `cuda:0`完成12,800次E1 truth-only更新（有效batch64、固定训练集遍历8次），79,638参数；无OOM。训练、校准、verification和development复用E003/R5-A冻结ID，因此不是盲测，也不估计训练seed方差。G0/G1/G2通过：16对场景200步过拟合task loss下降99.984%；development AUC=`0.96139`（95% CI `[0.95760,0.96512]`），range/Doppler RMSE优于训练真值常值基线。
+
+G3失败：TFAS总体Pd=`0.8020`、joint=`0.5054`，C2/C3 joint相对Medium差`−0.60449`（paired 95% CI `[-0.62598,-0.58350]`）；自身C3 H0 verification `Pfa=0.15186`（单侧exact95%上限`0.16138`），超过0.10。其C3 Pfa低于Small/Medium，但三者都未通过绝对门；TFAS同时有更差的困难条件检测和参数误差。公共相位与频移诊断也呈现输出不稳定，且复用了已看development ID，只作描述性证据。按协议停止TFAS扩展，不追加seed、KD、Large或blind。此结果只否定本协议的TFAS候选，不外推至所有非CNN/注意力结构，也不证明CNN已满足任务门。详见 [analysis](../experiments/D2-A-R5/R5-B/analysis.md)、[metrics](../experiments/D2-A-R5/R5-B/metrics.json) 和 [stage review](stage_reviews/D2-A-R5B_review.md)。
 
 ### D2-A-E003 阶段结果
 
@@ -55,7 +61,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-按冻结的 R5-B protocol/config v1.0 实现 TFAS 轻量时频注意力学生、CUDA-only runner 和定向测试。先核对物理/频率表示、模型规模、显存及 G1 可学习性，再完成与 R5-A Small/Medium 的单 seed、同数据同暴露比较；维持独立校准与开发评估，报告 C3 H0 Pfa 和 C2/C3 任务保护。Medium 的正向参数估计增益与失败的绝对虚警门均需进入比较；不运行 Large、KD 或 final blind。当前仅完成架构调查/预注册，没有 R5-B 运行结果。
+将R5-B结果提交独立ChatGPT阶段审查，先依据结果提交对应的`docs/RESEARCH_CHARTER.md`评估其对总纲目标的贡献、TFAS停止结论与下一条路线。审查前不启动R5-C/D、KD、额外架构或final blind；审查意见确定后再提出一个有界且独立预注册的后续任务。
 
 ## 关键材料
 
@@ -68,6 +74,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
 - D2-A-R5-A [容量对照分析](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[指标](../experiments/D2-A-R5/R5-A/capacity/metrics.json)、[阶段自审](stage_reviews/D2-A-R5A-capacity_review.md)、[容量研究汇总](research/D2-A_student_capacity_study.md)
 - D2-A-R5-A [ChatGPT容量阶段审查请求](../experiments/D2-A-R5/R5-A/capacity/review_request.md)，审查目标结果SHA `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`
+- D2-A-R5-B [实验协议](../experiments/D2-A-R5/R5-B/protocol.md)、[配置](../experiments/D2-A-R5/R5-B/config.yaml)、[分析](../experiments/D2-A-R5/R5-B/analysis.md)、[阶段自审](stage_reviews/D2-A-R5B_review.md)与ChatGPT审查请求 `experiments/D2-A-R5/R5-B/review_request.md`
 - D2-A-E003 [实验协议](../experiments/D2-A-E003/protocol.md)、[固定特征设计](../experiments/D2-A-E003/feature_design.md)、[训练与指标](../experiments/D2-A-E003/training.json)、[分析](../experiments/D2-A-E003/analysis.md)、[审查请求](../experiments/D2-A-E003/review_request.md)、[阶段自审](stage_reviews/D2-A-E003_review.md)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。
