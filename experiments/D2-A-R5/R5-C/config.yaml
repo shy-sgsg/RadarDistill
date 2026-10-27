@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-R5-C
   title: IQ-only teacher knowledge quality audit
-  protocol_version: 1.0
+  protocol_version: 1.1
   status: preregistered
   charter: docs/RESEARCH_CHARTER.md
   charter_version: 1.3
@@ -78,6 +78,9 @@ evaluation:
   bootstrap_replicates: 2000
   bootstrap_seed: 2026102817
   primary_contrast: K3_minus_K1_teacher_localization_and_circular_doppler_rmse
+  minimum_meaningful_gain:
+    localization_rate: 0.02
+    circular_doppler_rmse_reduction_hz: 2.5
   response_sum_tolerance: 1.0e-6
   cpu_cuda_k1_max_abs_tolerance: 1.0e-6
   complex_scale_max_abs_tolerance: 1.0e-6

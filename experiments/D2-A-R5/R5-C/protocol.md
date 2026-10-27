@@ -1,9 +1,13 @@
 # D2-A-R5-C 教师知识质量审计协议
 
-**协议版本：** 1.0
+**协议版本：** 1.1
 **状态：** preregistered；数据运行前必须提交并推送协议、配置、代码。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3；本实验不修改总纲。
 **来源：** 用户授权的 D2-A-R5 完整任务 Phase 4；任务对齐见 `docs/task_alignments/D2-A-R5C_alignment.md`。
+
+## 变更记录
+
+- **v1.1（2026-10-28，数据生成前）：** 冻结 K3 相对 K1 的最小有意义增益：可辨识 C2+C3 localization 提升至少 0.02 且配对 95% CI 下界大于 0；或 circular Doppler RMSE 至少改善 2.5 Hz 且配对 95% CI 下界仍不少于 2.5 Hz。其他设计与数据预算不变。该阈值把“有明确增益”从文字说明变成可证伪规则。
 
 ## 1. 问题和范围
 
@@ -69,7 +73,7 @@
 
 每种形式独立评级。**适合提出一次受限 truth+teacher 学生 pilot** 的最低条件：数值与隔离门全部通过；在可辨识 C2+C3 合并的配对 target-window lift 95% CI 下界 `>0`；C3 所有子组逐一报告。若任何 C3 子组同时满足 lift CI 上界 `≤0` 且 top-cell localization `≤0.05`，该知识不得作为无条件全域监督。此时只有当固定可观测 confidence 对该子组正确定位的 AUC `≥0.65`，才可提出另行预注册的可靠性分层 pilot；本协议本身不实施该 gate。
 
-全域 G4 通过不等于固定阈值 detector 资格或学生收益成立。若 K3 对 K1 的主要配对差 CI 不显示有意义增益，保留更简单的合格知识形式，不继续搜索倍率/温度。
+全域 G4 通过不等于固定阈值 detector 资格或学生收益成立。只有 K3 相对 K1 的可辨识 C2+C3 localization 提升至少 0.02 且配对 95% CI 下界大于 0，或其 circular Doppler RMSE 改善至少 2.5 Hz 且 paired-bootstrap CI 下界至少 2.5 Hz，才称 4× 表达有明确知识质量增益；否则保留更简单的合格形式，不继续搜索倍率/温度。
 
 ## 6. 中止条件
 

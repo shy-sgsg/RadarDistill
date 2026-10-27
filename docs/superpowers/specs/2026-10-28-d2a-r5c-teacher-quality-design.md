@@ -36,6 +36,7 @@ R5-B 的 TFAS 未通过困难场景 G3，但这不回答现有 IQ-only 教师响
 - 主要指标：按配对 base scene 计算的真值窗口质量 lift（H1−H0；距离半径 1 cell、周期 Doppler 误差半径 20 Hz）、全图峰值定位率、range/Doppler 回绕 RMSE。K1 与 K3 使用同一物理窗口与配对 H0/H1；对连续/原生网格分别保留实际频率轴。
 - 可靠性诊断：固定可观测分数为 K3 归一化全图在教师自身峰值周围 ±1 cell、±20 Hz 的质量；报告它与 H1 联合定位正确性的分层关系/AUC，仅作审计描述，不拟合门限或 gate。
 - 置信区间按 base_scene_id 配对 cluster bootstrap，2,000 次；主 C3 汇总和各预注册条件单独报告，不能把跨条件 scenes 当同质重复。
+- 将 4× 表达定义为有意义提升的门限在分析前冻结为：可辨识 C2+C3 localization rate 至少 +0.02 且配对 95% CI 下界 >0，或 circular Doppler RMSE 至少改善 2.5 Hz 且 CI 下界仍不少于 2.5 Hz。
 - 数值与物理检查：CUDA/CPU K1 输出最大绝对差≤1e−6；固定正/复尺度 `{0.5,2.0,0.6+1.2j}` 下归一化图差≤1e−6；确定性、shape、有限/非负/和为 1；analytic tone 频率峰误差≤一个 2.5 Hz 网格间距；信息隔离由函数签名和配置审计确认。
 
 ## 阶段门和解释规则
