@@ -1,11 +1,11 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-10-26
+**更新时间：** 2026-10-27
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001 与 R4 均已完成。** R3 和 E002 阶段均为 REFINE；T001 ACE×AMF 教师候选 STOP。R4 建议 **REFINE**：正确构造的 R4 数值尺度诊断通过 `1e-5`，不改变 T001 `1e-6` G1 FAIL；T1 在潜在幅度四分位上的 Pfa 较稳定，但 C3 分层 Pfa 仍高；一个 seed 的公共相位增强 S1 降低 Doppler RMSE，却损害 Pd/joint success，平衡条件后 phase agreement 仅0.909。R4 不授予 T1 固定阈值教师资格，也不支持继续当前 S1 增强或蒸馏。D1-E001 的 GO → D2、D1-E002 的 STOP/REDIRECT 与其他历史门保持原范围。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4 与 E003 均已完成。** R3/E002/R4 当前为 REFINE；T001 教师候选 STOP。E003 固定相干特征的 R1/R2 前置门通过，但单 seed S2 的 task protection 和 C2/C3 joint-gain 门失败，故 **停止 S2 候选**，不做正式三 seed、KD 或 final blind。总体学生路线为 **REFINE**，先独立审查 E003 是否值得进行表示归因诊断。R4 公共相位增强 S1 的负结果、E002 C3 虚警问题和所有既有门保持原范围；D1-E001 的 GO → D2、D1-E002 的 STOP/REDIRECT 不变。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
@@ -20,6 +20,7 @@
 - **D2-A-E002：** v2.1 A/B/C 已按相同 1,600 updates、有效 batch64、单 seed 101 使用 RTX 3050 CUDA 顺序训练。K2 audit 通过，G4 三臂通过；development AUC 为 A/B/C `0.9846/0.9787/0.9815`，Pd `0.9158/0.8996/0.9000`。学生整体 Pfa 与精确上限门通过，但 C3/SNR0 最差分层上限达 `0.195–0.204`，G3 分层门失败。G5 B−A joint-success gain `−0.1254`（95% CI `[−0.1386,−0.1122]`），C−B `+0.0036`（`[−0.0088,+0.0162]`）；课程和 K2 均无预注册 pilot signal。G6 phase agreement `0.943–0.950`、频移 residual p95 最大 `73.4 Hz`，等变门失败。阶段为 **REFINE**，没有 formal three-seed 或 final blind。
 - **D2-A-T001：** v1.2 CUDA 教师比较已完成。总体验证 Pfa 达标，但 C3/SNR0/CNR20 分层 Pfa、主要困难条件 joint-success、A/B/C 参数保护和 G1 公共尺度严格误差均未过门。频移诊断未见目标峰跟随注入频率移动。按预注册规则 **STOP** 本候选，不评估 G3、不运行 S2、不生成 blind；不追加第二个先进教师。CUDA加速是候选内核实测，不代表完整处理链实时性。完整结果见 [`experiments/D2-A-T001/analysis.md`](../experiments/D2-A-T001/analysis.md)、[`metrics.json`](../experiments/D2-A-T001/metrics.json) 和 [`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md)。
 - **D2-A-R4：** 在新场景上复核复尺度数值误差、H0幅度nuisance、B3/T1/ACE×AMF和冻结学生。正确complex128缩放后R4 `1e-5`诊断门通过；complex64量化对照最大差`2.44e-4`，CPU/CUDA最大绝对差`3.09e-4`但相对差`9.30e-7`、无峰值/判决翻转。T1总体 H0 幅度四分位Pfa稳定在0.046–0.052，但C3 Pfa仍0.178–0.217；学生A/B/C C3 Pfa约0.152–0.195。只运行一个 seed101、1600 update、CUDA S1 E1 truth-only pilot。后验分层敏感性复核发现首256样本全属C0；平衡子集 S1 phase agreement 0.909。S1−S0 paired H1 Doppler RMSE差`−6.29 Hz`（95% CI `[-9.16,-2.84]`），但Pd差`−0.0117`和joint差`−0.0313`区间均低于0，故不继续此增强方向、不开展KD或final blind。R4是探索性证据，门槛未追溯修改；详见 [`analysis.md`](../experiments/D2-A-R4/analysis.md)、[`metrics.json`](../experiments/D2-A-R4/metrics.json)、[`sampling_sensitivity.json`](../experiments/D2-A-R4/sampling_sensitivity.json) 和 [`D2-A-R4_review.md`](stage_reviews/D2-A-R4_review.md)。
+- **D2-A-E003：** 单一 28 通道复相干特征前端、场景尺度归一化及 `28→6` 投影接既有 TaskStudent；R1 数值/物理检查与 R2 A/B/C 可观测增量均通过。seed101 的 S0/S2 matched E1 truth-only CUDA pilot 各1600 updates、有效batch64。S0/S2 均通过基础任务学习 G3，但 S2 overall Pd 差`−0.0474`、joint差`−0.2102`，C2/C3 joint差`−0.2593`（95% CI `[-0.2822,-0.2368]`）；C2/C3 Doppler RMSE比`1.835`（`[1.720,1.959]`），G4失败。总体 H0 Pfa 为0.0483/0.0475，C3 H0 Pfa 为0.1814/0.1528，均高于冻结0.10门。S2公共相位输出一致率为1.0，但估计与任务更差。故 **STOP 当前 S2 候选**，不进入多seed/KD/blind；D2-A学生路线整体 **REFINE**。结果见 [`E003分析`](../experiments/D2-A-E003/analysis.md)、[`metrics.json`](../experiments/D2-A-E003/metrics.json)、[`物理一致性`](../experiments/D2-A-E003/physical_consistency.json)、[`CUDA成本`](../experiments/D2-A-E003/compute.json) 和 [`阶段自审`](stage_reviews/D2-A-E003_review.md)。
 - **P0/P1 历史先导：** 按各自冻结阶段审查保留；不将旧开发测试重新称为盲测，也不把其结论扩大到 D0/D1。
 
 ## 当前支持、否定与未决判断
@@ -46,18 +47,22 @@
 | 当前 TaskStudent 满足所需公共相位/频移等变性 | NOT_SUPPORTED（当前 pilot） | G6 phase agreement 0.943–0.950；最大 frequency-shift residual p95 73.4 Hz |
 | 一次公共相位增强可恢复 TaskStudent 跨条件相位一致性 | NOT_SUPPORTED（单 seed 探索诊断） | 后验分层64例/组：冻结学生 agreement 0.916–0.925，S1 0.909；S1还降低Pd与joint success |
 | T1可同时稳定整体幅度尺度与全部条件Pfa | NOT_SUPPORTED（R4 mixture） | H0幅度四分位Pfa 0.046–0.052；C3子组Pfa 0.178–0.217 |
+| 固定公共相位不变的28通道相干特征可改善该 TaskStudent 的困难条件任务 | NOT_SUPPORTED（当前 E003 候选） | S2 phase agreement 1.0，但 C2/C3 joint-success 相对 S0 差−0.2593，区间完全低于0；C3 Pfa仍超门 |
+| 延迟 `{1,4,16}` 相对 lag-1 可提供额外可学习 Doppler 任务收益 | INCONCLUSIVE | 数学响应与频率敏感性通过；没有 lag-1-only matched student 对照，S2 Doppler RMSE在 C2/C3 恶化 |
+| E003 的 C2/C3 任务退化主要来自不可辨识性 | INCONCLUSIVE | R2 在有限固定条件下特征增量非退化，但不能代表完整 C3 mixture 或排除28→6投影/优化影响 |
 
 ## 当前主要问题
 
-1. D2-A-R3 的 T1/T2 与 D2-A-T001 的 ACE×AMF 均未通过独立 H0 分层固定阈值门；T001候选还明显落后T1，不能用总体验证Pfa达标替代分层和任务门。
-2. 单 seed 学生可学习当前开发任务，但 C3 分层 H0 虚警不稳定，公共相位/频移等变性未通过；D1 与 E002 单 seed 结果均不能替代独立盲测和跨 seed 确认。
-3. 真实 GMTI、系统级虚警率 `1e-6` 和完整链成本均未验证。
+1. D2-A-R3 的 T1/T2 与 D2-A-T001 的 ACE×AMF 均未通过独立 H0 分层固定阈值门；E003 的 S0/S2 学生 C3 Pfa 也明显超限。
+2. E003 S2 证实公共相位不变性可做到接近数值精度，但未保护 C1–C3 估计和联合任务；固定前端、归一化、投影与优化的贡献仍未拆分。
+3. 单 seed 学生开发结果不能替代跨训练 seed 或盲测；传统教师的完整任务比较与蒸馏收益也未由 E003 评价。
+4. 真实 GMTI、系统级虚警率 `1e-6` 和完整链成本均未验证。
 
 ## 当前唯一优先任务
 
-独立审查 D2-A-R4 结果，并判断是否值得提出一个单因素复数/相位等变表示诊断，以区分普通学生的物理一致性缺口是否来自表示方式。不得启动正式多种子、蒸馏、final blind 或重开 T001 教师搜索。任何新问题须先写明与总纲的对应、证伪标准、独立评估和停止条件，再另行冻结协议；总纲保持不变。
+独立审查 D2-A-E003 结果，判断是否值得提出一个不训练的表示归因诊断，以区分固定相干特征、场景归一化与28→6投影对 C1–C3 任务表现的影响。审查前不启动 S2 正式多种子、蒸馏、final blind 或教师搜索。若审查支持新诊断，须重新对齐研究总纲、登记假设并冻结独立协议与停止条件；总纲保持不变。
 
-详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md) 和 [`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
+详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 
 ## 后续依赖和阶段决策
 

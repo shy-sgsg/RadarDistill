@@ -1,13 +1,19 @@
 # 当前研究状态
 
-**更新日期：** 2026-10-26
+**更新日期：** 2026-10-27
 **工作分支：** `main`
-**最新完成工作：** D2-A-R4 数值精度、教师/学生物理一致性诊断及一个 CUDA E1 truth-only S1 pilot 已完成；完整记录见 [R4 分析](../experiments/D2-A-R4/analysis.md) 与 [Codex 自审](stage_reviews/D2-A-R4_review.md)。
-**阶段判断：** D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）；D2-A-R4 **REFINE**（探索性诊断；平衡敏感性复核未支持公共相位增强可跨条件泛化）。E002 的 G4 任务学习门通过，G3 分层 H0 虚警与 G6 公共相位/频移等变性门未通过，G5 未发现课程或 K2 pilot 增益。总纲 v1.2 未修改。
+**最新完成工作：** D2-A-E003 完成 R0/R1/R2、匹配 S0/S2 单 seed CUDA E1 pilot、独立 H0/H1 评价和阶段审查材料；完整结果见 [E003 分析](../experiments/D2-A-E003/analysis.md) 与 [Codex 阶段自审](stage_reviews/D2-A-E003_review.md)。
+**阶段判断：** D2-A-E003 的 S2 候选 **STOP**（G4 任务保护和主要 joint-gain 门失败）；D2-A 学生路线 **REFINE**；D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）；D2-A-R4 **REFINE**。E003 的 S0/S2 均通过基础任务学习 G3，但 C3 条件虚警仍高，S2 公共相位不变性改善没有转化为任务收益。总纲 v1.2 未修改。
 
 ## 当前结论
 
 RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
+
+### D2-A-E003 阶段结果
+
+E003 固定相干前端 R1 正确性与 R2 可观测信息门通过。seed 101 的 S0/S2 均使用 RTX 3050 `cuda:0`、FP32、1,600 updates、有效 batch64；本轮无教师损失、蒸馏、多 seed 或 final blind。独立 H0 verification 总体 Pfa 为 S0/S2 `0.0483/0.0475`，但 C3 H0 Pfa 为 `0.1814/0.1528`，两者均超过冻结 0.10 限值。S2 相对 S0 的总体 Pd 差 `−0.0474`（95% CI `[−0.0571,−0.0376]`）、overall joint 差 `−0.2102`、C2/C3 joint 差 `−0.2593`（`[−0.2822,−0.2368]`）；C2/C3 Doppler RMSE 比为 `1.835`（`[1.720,1.959]`）。所以停止当前 S2 表示候选，不做正式三 seed 或 KD。
+
+S2 公共相位 32 旋转下的 H0/H1 决策一致率为 1.0，分数变化约 `1e−5`，但 C1–C3 joint success 与参数估计恶化；该结果说明物理不变性不能替代任务质量。固定前端、归一化、28→6 投影的独立贡献尚未分离。训练后严格按 `cache_manifest.json` 删除了 90 个 E003 可重建缓存文件（14,232,309,192 bytes）；保留检查点、history、metrics、scene IDs、受控诊断、环境与审查材料。清理后项目总占用为 801,766,373 bytes（0.747 GiB），低于最终 20 GiB 限制；审计记录见 `experiments/D2-A-E003/cleanup.json`。清理未触及清单外文件或用户未跟踪文件。
 
 D2-A-R3 使用新种子完成了三个独立 H0 主校准组、四个独立主验证场景组和预先规定的 CNR=0/20 dB 辅助组。H0 总体尺度随潜在目标参考幅度 `A` 变化，因为生成器用 `noise_power=A²×10^(-SNR/10)` 控制噪声，并按 CNR 设定杂波功率。该幅度变量不是 H0/H1 标签分支泄漏，但使绝对功率分数的跨尺度固定阈值不稳定。
 
@@ -35,7 +41,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 下一项唯一优先任务
 
-对 D2-A-R4 阶段报告进行独立 ChatGPT 审查，并判断是否值得单独预注册最小复数/相位等变表示诊断。不得启动正式三种子、E2/E3 蒸馏、final blind 或继续搜索教师；任何新实验须另行论证、冻结协议并按治理流程批准。T001 S2 仍禁止。
+独立审查 D2-A-E003，判断是否值得另行预注册一个不训练的表示归因诊断，以区分固定相干特征、场景归一化和 28→6 投影与 C1–C3 任务退化的关系。在审查前不做 S2 多种子确认、E2/E3 蒸馏、final blind 或继续搜索教师。D2-A-E003 的 review request 要求先阅读本次审查目标提交对应的研究总纲 v1.2。
 
 ## 关键材料
 
@@ -46,5 +52,6 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
 - D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
+- D2-A-E003 [实验协议](../experiments/D2-A-E003/protocol.md)、[固定特征设计](../experiments/D2-A-E003/feature_design.md)、[训练与指标](../experiments/D2-A-E003/training.json)、[分析](../experiments/D2-A-E003/analysis.md)、[审查请求](../experiments/D2-A-E003/review_request.md)、[阶段自审](stage_reviews/D2-A-E003_review.md)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。

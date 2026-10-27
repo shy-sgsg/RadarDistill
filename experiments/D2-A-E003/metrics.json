@@ -1,0 +1,2829 @@
+{
+  "experiment": "D2-A-E003",
+  "git_sha": "af0f59690ae29f0b3d4638067efe663145c1d670",
+  "supervision": "physical_truth_only_E1",
+  "arms": {
+    "S0": {
+      "arm": "S0",
+      "threshold_calibration": {
+        "threshold": -0.7210898399353027,
+        "target_pfa": 0.05,
+        "quantile_method": "higher",
+        "decision_comparator": ">=",
+        "n": 8192,
+        "pfa_gt": 0.0499267578125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 1,
+        "tie_fraction": 0.0001220703125
+      },
+      "h0_verification": {
+        "overall": {
+          "n": 8192,
+          "threshold": -0.7210898399353027,
+          "pfa_gt": 0.04833984375,
+          "pfa_ge": 0.04833984375,
+          "false_alarm_count_ge": 396,
+          "pfa_ci95_exact_upper": 0.052419514020461334,
+          "tie_count": 0
+        },
+        "by_course_level": {
+          "C0": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "C1": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.00048828125,
+            "pfa_ge": 0.00048828125,
+            "false_alarm_count_ge": 1,
+            "pfa_ci95_exact_upper": 0.002314223971154482,
+            "tie_count": 0
+          },
+          "C2": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0107421875,
+            "pfa_ge": 0.0107421875,
+            "false_alarm_count_ge": 22,
+            "pfa_ci95_exact_upper": 0.015303970691392601,
+            "tie_count": 0
+          },
+          "C3": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.18212890625,
+            "pfa_ge": 0.18212890625,
+            "false_alarm_count_ge": 373,
+            "pfa_ci95_exact_upper": 0.1967355969945135,
+            "tie_count": 0
+          }
+        },
+        "by_scenario_id": {
+          "near_clutter_edge": {
+            "n": 2389,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.05357890330682294,
+            "pfa_ge": 0.05357890330682294,
+            "false_alarm_count_ge": 128,
+            "pfa_ci95_exact_upper": 0.06178263088233685,
+            "tie_count": 0
+          },
+          "partial_overlap": {
+            "n": 1364,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.10190615835777127,
+            "pfa_ge": 0.10190615835777127,
+            "false_alarm_count_ge": 139,
+            "pfa_ci95_exact_upper": 0.11638993163134095,
+            "tie_count": 0
+          },
+          "separated": {
+            "n": 4439,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.029060599234061724,
+            "pfa_ge": 0.029060599234061724,
+            "false_alarm_count_ge": 129,
+            "pfa_ci95_exact_upper": 0.03355753625710344,
+            "tie_count": 0
+          }
+        },
+        "by_snr_db": {
+          "0": {
+            "n": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.1845703125,
+            "pfa_ge": 0.1845703125,
+            "false_alarm_count_ge": 189,
+            "pfa_ci95_exact_upper": 0.20566525687828874,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 3072,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.06705729166666667,
+            "pfa_ge": 0.06705729166666667,
+            "false_alarm_count_ge": 206,
+            "pfa_ci95_exact_upper": 0.07495364024443153,
+            "tie_count": 0
+          },
+          "15": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.00048828125,
+            "pfa_ge": 0.00048828125,
+            "false_alarm_count_ge": 1,
+            "pfa_ci95_exact_upper": 0.002314223971154482,
+            "tie_count": 0
+          },
+          "20": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          }
+        },
+        "by_requested_cnr_db": {
+          "-5": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "0": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.00048828125,
+            "pfa_ge": 0.00048828125,
+            "false_alarm_count_ge": 1,
+            "pfa_ci95_exact_upper": 0.002314223971154482,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0107421875,
+            "pfa_ge": 0.0107421875,
+            "false_alarm_count_ge": 22,
+            "pfa_ci95_exact_upper": 0.015303970691392601,
+            "tie_count": 0
+          },
+          "20": {
+            "n": 2048,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.18212890625,
+            "pfa_ge": 0.18212890625,
+            "false_alarm_count_ge": 373,
+            "pfa_ci95_exact_upper": 0.1967355969945135,
+            "tie_count": 0
+          }
+        }
+      },
+      "c3_h0_verification": {
+        "overall": {
+          "n": 4096,
+          "threshold": -0.7210898399353027,
+          "pfa_gt": 0.181396484375,
+          "pfa_ge": 0.181396484375,
+          "false_alarm_count_ge": 743,
+          "pfa_ci95_exact_upper": 0.19158960414527987,
+          "tie_count": 0
+        },
+        "by_course_level": {
+          "C3": {
+            "n": 4096,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.181396484375,
+            "pfa_ge": 0.181396484375,
+            "false_alarm_count_ge": 743,
+            "pfa_ci95_exact_upper": 0.19158960414527987,
+            "tie_count": 0
+          }
+        },
+        "by_scenario_id": {
+          "near_clutter_edge": {
+            "n": 1365,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.18168498168498168,
+            "pfa_ge": 0.18168498168498168,
+            "false_alarm_count_ge": 248,
+            "pfa_ci95_exact_upper": 0.1997212989615864,
+            "tie_count": 0
+          },
+          "partial_overlap": {
+            "n": 1365,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.17509157509157508,
+            "pfa_ge": 0.17509157509157508,
+            "false_alarm_count_ge": 239,
+            "pfa_ci95_exact_upper": 0.19289249142261428,
+            "tie_count": 0
+          },
+          "separated": {
+            "n": 1366,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.18740849194729137,
+            "pfa_ge": 0.18740849194729137,
+            "false_alarm_count_ge": 256,
+            "pfa_ci95_exact_upper": 0.20563533431257405,
+            "tie_count": 0
+          }
+        },
+        "by_snr_db": {
+          "0": {
+            "n": 2049,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.17569546120058566,
+            "pfa_ge": 0.17569546120058566,
+            "false_alarm_count_ge": 360,
+            "pfa_ci95_exact_upper": 0.1901097711013111,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 2047,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.18710307767464582,
+            "pfa_ge": 0.18710307767464582,
+            "false_alarm_count_ge": 383,
+            "pfa_ci95_exact_upper": 0.2018549373255763,
+            "tie_count": 0
+          }
+        },
+        "by_requested_cnr_db": {
+          "20": {
+            "n": 4096,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.181396484375,
+            "pfa_ge": 0.181396484375,
+            "false_alarm_count_ge": 743,
+            "pfa_ci95_exact_upper": 0.19158960414527987,
+            "tie_count": 0
+          }
+        }
+      },
+      "development": {
+        "overall": {
+          "n_paired_scenes": 4096,
+          "threshold": -0.7210898399353027,
+          "pfa_gt": 0.045654296875,
+          "pfa_ge": 0.045654296875,
+          "pfa_ci95_exact_upper": 0.051386740979538686,
+          "tie_count_h0": 0,
+          "pd": 0.910888671875,
+          "pd_ci95_bootstrap": [
+            0.90234375,
+            0.919921875
+          ],
+          "auc": 0.9841642379760742,
+          "auc_ci95_paired_bootstrap": [
+            0.9820859149098397,
+            0.9861051380634308
+          ],
+          "range_mae_all_h1_cells": 0.8136437203502283,
+          "range_rmse_all_h1_cells": 3.107634932342733,
+          "range_rmse_all_h1_ci95": [
+            2.846798965868901,
+            3.3675045410964186
+          ],
+          "range_rmse_detected_h1_cells": 1.4611765606674478,
+          "range_rmse_detected_h1_ci95": [
+            1.188205305975247,
+            1.7452376335611517
+          ],
+          "doppler_mae_all_h1_hz": 24.293672717969912,
+          "doppler_rmse_all_h1_hz": 46.418676359231966,
+          "doppler_rmse_all_h1_ci95": [
+            43.468658157425146,
+            49.68703647429131
+          ],
+          "doppler_bias_all_h1_hz": -5.478546211953926,
+          "doppler_rmse_detected_h1_hz": 37.13537168334134,
+          "doppler_rmse_detected_h1_ci95": [
+            33.83900599284309,
+            40.35829815436865
+          ],
+          "joint_success": 0.6865234375,
+          "joint_success_ci95_bootstrap": [
+            0.672607421875,
+            0.7001953125
+          ],
+          "misses_count_as_joint_failure": true,
+          "detected_count": 3731,
+          "missed_count": 365,
+          "range_gate_bins": 1.0,
+          "doppler_gate_hz": 20.0
+        },
+        "by_course": {
+          "C0": {
+            "n_paired_scenes": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.0029212446353880273,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.04398100357502699,
+            "range_rmse_all_h1_cells": 0.05124698123973768,
+            "range_rmse_all_h1_ci95": [
+              0.049644346910572616,
+              0.05281353109156033
+            ],
+            "range_rmse_detected_h1_cells": 0.05124698123973768,
+            "range_rmse_detected_h1_ci95": [
+              0.049649286119991025,
+              0.05284054235559017
+            ],
+            "doppler_mae_all_h1_hz": 6.96790012717247,
+            "doppler_rmse_all_h1_hz": 9.230815942322108,
+            "doppler_rmse_all_h1_ci95": [
+              8.67326382396986,
+              9.776863375063526
+            ],
+            "doppler_bias_all_h1_hz": -1.6001714169979095,
+            "doppler_rmse_detected_h1_hz": 9.230815942322108,
+            "doppler_rmse_detected_h1_ci95": [
+              8.716845222203942,
+              9.77713084585583
+            ],
+            "joint_success": 0.958984375,
+            "joint_success_ci95_bootstrap": [
+              0.9462890625,
+              0.970703125
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1": {
+            "n_paired_scenes": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.001953125,
+            "pfa_ge": 0.001953125,
+            "pfa_ci95_exact_upper": 0.006135352396230428,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.045853995718061924,
+            "range_rmse_all_h1_cells": 0.06474784599590176,
+            "range_rmse_all_h1_ci95": [
+              0.05743043311132712,
+              0.07334262183208409
+            ],
+            "range_rmse_detected_h1_cells": 0.06474784599590176,
+            "range_rmse_detected_h1_ci95": [
+              0.05738299515941618,
+              0.07345447143470617
+            ],
+            "doppler_mae_all_h1_hz": 8.086593811167404,
+            "doppler_rmse_all_h1_hz": 10.923599968746258,
+            "doppler_rmse_all_h1_ci95": [
+              10.22965145768305,
+              11.674433630329478
+            ],
+            "doppler_bias_all_h1_hz": -4.124119652202353,
+            "doppler_rmse_detected_h1_hz": 10.923599968746258,
+            "doppler_rmse_detected_h1_ci95": [
+              10.230779325854563,
+              11.662646326201054
+            ],
+            "joint_success": 0.931640625,
+            "joint_success_ci95_bootstrap": [
+              0.916015625,
+              0.9462890625
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2": {
+            "n_paired_scenes": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0107421875,
+            "pfa_ge": 0.0107421875,
+            "pfa_ci95_exact_upper": 0.017718193765452486,
+            "tie_count_h0": 0,
+            "pd": 0.9365234375,
+            "pd_ci95_bootstrap": [
+              0.9208984375,
+              0.951171875
+            ],
+            "auc": 0.9856138229370117,
+            "auc_ci95_paired_bootstrap": [
+              0.9803359508514404,
+              0.9903709888458252
+            ],
+            "range_mae_all_h1_cells": 0.3426408644299954,
+            "range_rmse_all_h1_cells": 1.5856400555554107,
+            "range_rmse_all_h1_ci95": [
+              1.027553748623766,
+              2.0949111977595636
+            ],
+            "range_rmse_detected_h1_cells": 0.6710811368226238,
+            "range_rmse_detected_h1_ci95": [
+              0.19065601756975595,
+              1.0817952474117096
+            ],
+            "doppler_mae_all_h1_hz": 22.381273469394728,
+            "doppler_rmse_all_h1_hz": 34.48528537889522,
+            "doppler_rmse_all_h1_ci95": [
+              31.615783694196256,
+              37.52594452100748
+            ],
+            "doppler_bias_all_h1_hz": -5.036262382314817,
+            "doppler_rmse_detected_h1_hz": 26.6269566411616,
+            "doppler_rmse_detected_h1_ci95": [
+              24.695612401872246,
+              28.673153320264287
+            ],
+            "joint_success": 0.62890625,
+            "joint_success_ci95_bootstrap": [
+              0.599609375,
+              0.6591796875
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 959,
+            "missed_count": 65,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3": {
+            "n_paired_scenes": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.169921875,
+            "pfa_ge": 0.169921875,
+            "pfa_ci95_exact_upper": 0.19041386266106478,
+            "tie_count_h0": 0,
+            "pd": 0.70703125,
+            "pd_ci95_bootstrap": [
+              0.6806396484375,
+              0.736328125
+            ],
+            "auc": 0.8273782730102539,
+            "auc_ci95_paired_bootstrap": [
+              0.8105952739715576,
+              0.8427567958831786
+            ],
+            "range_mae_all_h1_cells": 2.8220990176778287,
+            "range_rmse_all_h1_cells": 6.009035410815801,
+            "range_rmse_all_h1_ci95": [
+              5.492750423312613,
+              6.484556935156298
+            ],
+            "range_rmse_detected_h1_cells": 3.2243366486351044,
+            "range_rmse_detected_h1_ci95": [
+              2.575206360398934,
+              3.8129479148484333
+            ],
+            "doppler_mae_all_h1_hz": 59.738923464145046,
+            "doppler_rmse_all_h1_hz": 85.0000361933477,
+            "doppler_rmse_all_h1_ci95": [
+              78.91494829267424,
+              91.92272714197696
+            ],
+            "doppler_bias_all_h1_hz": -11.153631396300625,
+            "doppler_rmse_detected_h1_hz": 76.66940275107974,
+            "doppler_rmse_detected_h1_ci95": [
+              68.99442374508476,
+              84.56887527679997
+            ],
+            "joint_success": 0.2265625,
+            "joint_success_ci95_bootstrap": [
+              0.201171875,
+              0.251953125
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 724,
+            "missed_count": 300,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        },
+        "by_scenario": {
+          "near_clutter_edge": {
+            "n_paired_scenes": 1195,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.055230125523012555,
+            "pfa_ge": 0.055230125523012555,
+            "pfa_ci95_exact_upper": 0.06735933689525857,
+            "tie_count_h0": 0,
+            "pd": 0.9405857740585774,
+            "pd_ci95_bootstrap": [
+              0.9263598326359833,
+              0.9539748953974896
+            ],
+            "auc": 0.989082824180249,
+            "auc_ci95_paired_bootstrap": [
+              0.9858089669298506,
+              0.9919540274154864
+            ],
+            "range_mae_all_h1_cells": 0.5799697819115228,
+            "range_rmse_all_h1_cells": 2.3169128297147927,
+            "range_rmse_all_h1_ci95": [
+              1.8744902133338246,
+              2.7426970866969826
+            ],
+            "range_rmse_detected_h1_cells": 1.3207658584255262,
+            "range_rmse_detected_h1_ci95": [
+              0.8169644371805895,
+              1.7787514822782626
+            ],
+            "doppler_mae_all_h1_hz": 23.924196017736172,
+            "doppler_rmse_all_h1_hz": 42.53391163698316,
+            "doppler_rmse_all_h1_ci95": [
+              38.183562027718466,
+              47.147189597780546
+            ],
+            "doppler_bias_all_h1_hz": -8.14795545105156,
+            "doppler_rmse_detected_h1_hz": 37.96315424466535,
+            "doppler_rmse_detected_h1_ci95": [
+              33.238321299049474,
+              42.76090405472496
+            ],
+            "joint_success": 0.6761506276150627,
+            "joint_success_ci95_bootstrap": [
+              0.6493723849372385,
+              0.700418410041841
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1124,
+            "missed_count": 71,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "partial_overlap": {
+            "n_paired_scenes": 681,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0881057268722467,
+            "pfa_ge": 0.0881057268722467,
+            "pfa_ci95_exact_upper": 0.10806485241364651,
+            "tie_count_h0": 0,
+            "pd": 0.5756240822320118,
+            "pd_ci95_bootstrap": [
+              0.5388766519823789,
+              0.6109030837004403
+            ],
+            "auc": 0.8439756685016636,
+            "auc_ci95_paired_bootstrap": [
+              0.8244786646570108,
+              0.8631258342120187
+            ],
+            "range_mae_all_h1_cells": 3.605552692420332,
+            "range_rmse_all_h1_cells": 6.972286657799323,
+            "range_rmse_all_h1_ci95": [
+              6.336997151599138,
+              7.595798785174959
+            ],
+            "range_rmse_detected_h1_cells": 3.902235158470681,
+            "range_rmse_detected_h1_ci95": [
+              2.9834453231325115,
+              4.705444382210999
+            ],
+            "doppler_mae_all_h1_hz": 57.95657918321327,
+            "doppler_rmse_all_h1_hz": 78.22182014998607,
+            "doppler_rmse_all_h1_ci95": [
+              71.73669591774386,
+              85.02903525895341
+            ],
+            "doppler_bias_all_h1_hz": -28.99761220199848,
+            "doppler_rmse_detected_h1_hz": 55.35952253831549,
+            "doppler_rmse_detected_h1_ci95": [
+              49.22774732414738,
+              61.76037527890079
+            ],
+            "joint_success": 0.17033773861967694,
+            "joint_success_ci95_bootstrap": [
+              0.14243759177679882,
+              0.19823788546255505
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 392,
+            "missed_count": 289,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "separated": {
+            "n_paired_scenes": 2220,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.027477477477477478,
+            "pfa_ge": 0.027477477477477478,
+            "pfa_ci95_exact_upper": 0.03389511782256045,
+            "tie_count_h0": 0,
+            "pd": 0.9977477477477478,
+            "pd_ci95_bootstrap": [
+              0.9954954954954955,
+              0.9995495495495496
+            ],
+            "auc": 0.9997441360279198,
+            "auc_ci95_paired_bootstrap": [
+              0.9995077002678354,
+              0.9999233118253388
+            ],
+            "range_mae_all_h1_cells": 0.08299072325766624,
+            "range_rmse_all_h1_cells": 0.12826585552140352,
+            "range_rmse_all_h1_ci95": [
+              0.12128814608203388,
+              0.13501686694636167
+            ],
+            "range_rmse_detected_h1_cells": 0.1273728510501608,
+            "range_rmse_detected_h1_ci95": [
+              0.12012783802459953,
+              0.13429002893584216
+            ],
+            "doppler_mae_all_h1_hz": 14.166233688217025,
+            "doppler_rmse_all_h1_hz": 33.537038452544444,
+            "doppler_rmse_all_h1_ci95": [
+              28.58351013139343,
+              38.43582001565452
+            ],
+            "doppler_bias_all_h1_hz": 3.172997923155089,
+            "doppler_rmse_detected_h1_hz": 32.39094840135346,
+            "doppler_rmse_detected_h1_ci95": [
+              27.20154236567922,
+              37.6094179450929
+            ],
+            "joint_success": 0.8504504504504504,
+            "joint_success_ci95_bootstrap": [
+              0.8355743243243243,
+              0.8653153153153154
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 2215,
+            "missed_count": 5,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        },
+        "by_scenario_snr": {
+          "C0/separated/SNR20/CNR-5": {
+            "n_paired_scenes": 1024,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.0029212446353880273,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.04398100357502699,
+            "range_rmse_all_h1_cells": 0.05124698123973768,
+            "range_rmse_all_h1_ci95": [
+              0.04966896313566996,
+              0.05286793351292923
+            ],
+            "range_rmse_detected_h1_cells": 0.05124698123973768,
+            "range_rmse_detected_h1_ci95": [
+              0.04970963820723103,
+              0.05283496937213896
+            ],
+            "doppler_mae_all_h1_hz": 6.96790012717247,
+            "doppler_rmse_all_h1_hz": 9.230815942322108,
+            "doppler_rmse_all_h1_ci95": [
+              8.714985801379354,
+              9.794616130318039
+            ],
+            "doppler_bias_all_h1_hz": -1.6001714169979095,
+            "doppler_rmse_detected_h1_hz": 9.230815942322108,
+            "doppler_rmse_detected_h1_ci95": [
+              8.700679406355771,
+              9.815310420744838
+            ],
+            "joint_success": 0.958984375,
+            "joint_success_ci95_bootstrap": [
+              0.9462890625,
+              0.9697265625
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1/near_clutter_edge/SNR15/CNR0": {
+            "n_paired_scenes": 512,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.00390625,
+            "pfa_ge": 0.00390625,
+            "pfa_ci95_exact_upper": 0.012244988396149322,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.04924521129578352,
+            "range_rmse_all_h1_cells": 0.07471170708900508,
+            "range_rmse_all_h1_ci95": [
+              0.06109085329390525,
+              0.08929421593830432
+            ],
+            "range_rmse_detected_h1_cells": 0.07471170708900508,
+            "range_rmse_detected_h1_ci95": [
+              0.06101930545962466,
+              0.08929023987645643
+            ],
+            "doppler_mae_all_h1_hz": 9.059400030877441,
+            "doppler_rmse_all_h1_hz": 11.903828046280603,
+            "doppler_rmse_all_h1_ci95": [
+              10.80243920140113,
+              13.053369430778273
+            ],
+            "doppler_bias_all_h1_hz": -6.71913095889613,
+            "doppler_rmse_detected_h1_hz": 11.903828046280603,
+            "doppler_rmse_detected_h1_ci95": [
+              10.842951610443965,
+              13.027400867989392
+            ],
+            "joint_success": 0.935546875,
+            "joint_success_ci95_bootstrap": [
+              0.9140625,
+              0.955078125
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 512,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1/separated/SNR15/CNR0": {
+            "n_paired_scenes": 512,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.005833955600556271,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.04246278014034033,
+            "range_rmse_all_h1_cells": 0.05294079661343161,
+            "range_rmse_all_h1_ci95": [
+              0.0496141248302168,
+              0.0564633372366785
+            ],
+            "range_rmse_detected_h1_cells": 0.05294079661343161,
+            "range_rmse_detected_h1_ci95": [
+              0.04961092881506345,
+              0.05625400294428898
+            ],
+            "doppler_mae_all_h1_hz": 7.113787591457367,
+            "doppler_rmse_all_h1_hz": 9.846265809888022,
+            "doppler_rmse_all_h1_ci95": [
+              9.061567762520882,
+              10.64645149117381
+            ],
+            "doppler_bias_all_h1_hz": -1.5291083455085754,
+            "doppler_rmse_detected_h1_hz": 9.846265809888022,
+            "doppler_rmse_detected_h1_ci95": [
+              9.048317534982445,
+              10.635343787625617
+            ],
+            "joint_success": 0.927734375,
+            "joint_success_ci95_bootstrap": [
+              0.904296875,
+              0.951171875
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 512,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/near_clutter_edge/SNR10/CNR10": {
+            "n_paired_scenes": 341,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.017595307917888565,
+            "pfa_ge": 0.017595307917888565,
+            "pfa_ci95_exact_upper": 0.03443146430236231,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.17233043052583846,
+            "range_rmse_all_h1_cells": 0.2064652552871961,
+            "range_rmse_all_h1_ci95": [
+              0.19376075360459666,
+              0.2197580742589123
+            ],
+            "range_rmse_detected_h1_cells": 0.2064652552871961,
+            "range_rmse_detected_h1_ci95": [
+              0.19220476659557573,
+              0.22029289908319202
+            ],
+            "doppler_mae_all_h1_hz": 14.020172308267387,
+            "doppler_rmse_all_h1_hz": 18.393322605440055,
+            "doppler_rmse_all_h1_ci95": [
+              16.639628110868017,
+              20.126588516561846
+            ],
+            "doppler_bias_all_h1_hz": 2.376985117487194,
+            "doppler_rmse_detected_h1_hz": 18.393322605440055,
+            "doppler_rmse_detected_h1_ci95": [
+              16.64422893619673,
+              20.205171676371457
+            ],
+            "joint_success": 0.7624633431085044,
+            "joint_success_ci95_bootstrap": [
+              0.718475073313783,
+              0.8064516129032258
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 341,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/partial_overlap/SNR10/CNR10": {
+            "n_paired_scenes": 341,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.008797653958944282,
+            "pfa_ge": 0.008797653958944282,
+            "pfa_ci95_exact_upper": 0.022579943405665017,
+            "tie_count_h0": 0,
+            "pd": 0.8093841642228738,
+            "pd_ci95_bootstrap": [
+              0.7683284457478006,
+              0.8504398826979472
+            ],
+            "auc": 0.9533629741746287,
+            "auc_ci95_paired_bootstrap": [
+              0.9379331103103689,
+              0.9676217524789089
+            ],
+            "range_mae_all_h1_cells": 0.7386227842649756,
+            "range_rmse_all_h1_cells": 2.736180160281871,
+            "range_rmse_all_h1_ci95": [
+              1.7726305949913217,
+              3.5583745564690297
+            ],
+            "range_rmse_detected_h1_cells": 1.2191817954297475,
+            "range_rmse_detected_h1_ci95": [
+              0.22062767178946302,
+              1.9938323179845936
+            ],
+            "doppler_mae_all_h1_hz": 42.116406624885464,
+            "doppler_rmse_all_h1_hz": 55.01918751845672,
+            "doppler_rmse_all_h1_ci95": [
+              50.082839263766786,
+              60.44834827558767
+            ],
+            "doppler_bias_all_h1_hz": -13.77374035984693,
+            "doppler_rmse_detected_h1_hz": 42.323561133760265,
+            "doppler_rmse_detected_h1_ci95": [
+              38.26171446172052,
+              46.07227440789337
+            ],
+            "joint_success": 0.2697947214076246,
+            "joint_success_ci95_bootstrap": [
+              0.22287390029325513,
+              0.31671554252199413
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 276,
+            "missed_count": 65,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/separated/SNR10/CNR10": {
+            "n_paired_scenes": 342,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.005847953216374269,
+            "pfa_ge": 0.005847953216374269,
+            "pfa_ci95_exact_upper": 0.018293479369439637,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.11762923664516872,
+            "range_rmse_all_h1_cells": 0.1441029833449571,
+            "range_rmse_all_h1_ci95": [
+              0.13466325821922578,
+              0.15353112894792964
+            ],
+            "range_rmse_detected_h1_cells": 0.1441029833449571,
+            "range_rmse_detected_h1_ci95": [
+              0.13386387175623288,
+              0.15386689070113077
+            ],
+            "doppler_mae_all_h1_hz": 11.04049887852362,
+            "doppler_rmse_all_h1_hz": 14.323590545573097,
+            "doppler_rmse_all_h1_ci95": [
+              13.026336440381598,
+              15.624890488696133
+            ],
+            "doppler_bias_all_h1_hz": -3.7159039235254476,
+            "doppler_rmse_detected_h1_hz": 14.323590545573097,
+            "doppler_rmse_detected_h1_ci95": [
+              12.963931962166868,
+              15.685046769963193
+            ],
+            "joint_success": 0.8538011695906432,
+            "joint_success_ci95_bootstrap": [
+              0.8128654970760234,
+              0.8918128654970761
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 342,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/near_clutter_edge/SNR0/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.1695906432748538,
+            "pfa_ge": 0.1695906432748538,
+            "pfa_ci95_exact_upper": 0.22395330206292566,
+            "tie_count_h0": 0,
+            "pd": 0.6023391812865497,
+            "pd_ci95_bootstrap": [
+              0.5263157894736842,
+              0.672514619883041
+            ],
+            "auc": 0.767210423720119,
+            "auc_ci95_paired_bootstrap": [
+              0.7251051605622243,
+              0.808453883246127
+            ],
+            "range_mae_all_h1_cells": 3.205125518012465,
+            "range_rmse_all_h1_cells": 5.964292704936541,
+            "range_rmse_all_h1_ci95": [
+              4.9180750220887335,
+              6.994048404681734
+            ],
+            "range_rmse_detected_h1_cells": 3.9836997814816852,
+            "range_rmse_detected_h1_ci95": [
+              2.3317855033879864,
+              5.452668129915965
+            ],
+            "doppler_mae_all_h1_hz": 62.009273089163486,
+            "doppler_rmse_all_h1_hz": 83.0596331645813,
+            "doppler_rmse_all_h1_ci95": [
+              72.24233306827524,
+              94.35943038444894
+            ],
+            "doppler_bias_all_h1_hz": 7.626820050484953,
+            "doppler_rmse_detected_h1_hz": 79.44596168282018,
+            "doppler_rmse_detected_h1_ci95": [
+              63.927049623885345,
+              95.38547871150364
+            ],
+            "joint_success": 0.14035087719298245,
+            "joint_success_ci95_bootstrap": [
+              0.08771929824561403,
+              0.19298245614035087
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 103,
+            "missed_count": 68,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/near_clutter_edge/SNR10/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.1695906432748538,
+            "pfa_ge": 0.1695906432748538,
+            "pfa_ci95_exact_upper": 0.22395330206292566,
+            "tie_count_h0": 0,
+            "pd": 0.9824561403508771,
+            "pd_ci95_bootstrap": [
+              0.9590643274853801,
+              1.0
+            ],
+            "auc": 0.9927841045107897,
+            "auc_ci95_paired_bootstrap": [
+              0.9839258233302555,
+              0.9995562737252488
+            ],
+            "range_mae_all_h1_cells": 0.3567789521133691,
+            "range_rmse_all_h1_cells": 1.356209401319725,
+            "range_rmse_all_h1_ci95": [
+              0.2811910928502557,
+              2.3059702985218133
+            ],
+            "range_rmse_detected_h1_cells": 1.3556338222071034,
+            "range_rmse_detected_h1_ci95": [
+              0.27526035949072764,
+              2.32330654165298
+            ],
+            "doppler_mae_all_h1_hz": 50.09670742701369,
+            "doppler_rmse_all_h1_hz": 68.15385875519193,
+            "doppler_rmse_all_h1_ci95": [
+              56.40977689507318,
+              80.19513400497846
+            ],
+            "doppler_bias_all_h1_hz": -49.1891805072974,
+            "doppler_rmse_detected_h1_hz": 68.22113869251439,
+            "doppler_rmse_detected_h1_ci95": [
+              56.7351427739692,
+              80.32643155625301
+            ],
+            "joint_success": 0.2631578947368421,
+            "joint_success_ci95_bootstrap": [
+              0.19883040935672514,
+              0.3333333333333333
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 168,
+            "missed_count": 3,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/partial_overlap/SNR0/CNR20": {
+            "n_paired_scenes": 170,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.17058823529411765,
+            "pfa_ge": 0.17058823529411765,
+            "pfa_ci95_exact_upper": 0.22522656936720875,
+            "tie_count_h0": 0,
+            "pd": 0.17647058823529413,
+            "pd_ci95_bootstrap": [
+              0.11764705882352941,
+              0.23529411764705882
+            ],
+            "auc": 0.5019377162629758,
+            "auc_ci95_paired_bootstrap": [
+              0.4960190311418685,
+              0.5067136678200692
+            ],
+            "range_mae_all_h1_cells": 9.189404842432808,
+            "range_rmse_all_h1_cells": 11.277072822370295,
+            "range_rmse_all_h1_ci95": [
+              10.2564207668298,
+              12.308681613051474
+            ],
+            "range_rmse_detected_h1_cells": 11.24867353320897,
+            "range_rmse_detected_h1_ci95": [
+              8.987641314899818,
+              13.559432546586535
+            ],
+            "doppler_mae_all_h1_hz": 78.82413690931656,
+            "doppler_rmse_all_h1_hz": 98.44632104951766,
+            "doppler_rmse_all_h1_ci95": [
+              87.84989981801188,
+              109.5706933649561
+            ],
+            "doppler_bias_all_h1_hz": -35.966341620333054,
+            "doppler_rmse_detected_h1_hz": 102.3689065705129,
+            "doppler_rmse_detected_h1_ci95": [
+              73.52419780141203,
+              130.10297365521959
+            ],
+            "joint_success": 0.0,
+            "joint_success_ci95_bootstrap": [
+              0.0,
+              0.0
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 30,
+            "missed_count": 140,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/partial_overlap/SNR10/CNR20": {
+            "n_paired_scenes": 170,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.16470588235294117,
+            "pfa_ge": 0.16470588235294117,
+            "pfa_ci95_exact_upper": 0.2187765749540152,
+            "tie_count_h0": 0,
+            "pd": 0.5058823529411764,
+            "pd_ci95_bootstrap": [
+              0.43529411764705883,
+              0.5823529411764706
+            ],
+            "auc": 0.7181660899653979,
+            "auc_ci95_paired_bootstrap": [
+              0.6809290657439446,
+              0.7587975778546713
+            ],
+            "range_mae_all_h1_cells": 3.772424652295954,
+            "range_rmse_all_h1_cells": 7.248952200532517,
+            "range_rmse_all_h1_ci95": [
+              5.799321805403524,
+              8.459523473028332
+            ],
+            "range_rmse_detected_h1_cells": 4.527601292844975,
+            "range_rmse_detected_h1_ci95": [
+              2.276829744572027,
+              6.364849994239199
+            ],
+            "doppler_mae_all_h1_hz": 68.86254405940281,
+            "doppler_rmse_all_h1_hz": 93.52485238594616,
+            "doppler_rmse_all_h1_ci95": [
+              76.89787123492798,
+              111.93960852915392
+            ],
+            "doppler_bias_all_h1_hz": -52.566178655273774,
+            "doppler_rmse_detected_h1_hz": 67.56367824483553,
+            "doppler_rmse_detected_h1_ci95": [
+              54.50942828944723,
+              81.3189302021831
+            ],
+            "joint_success": 0.1411764705882353,
+            "joint_success_ci95_bootstrap": [
+              0.09411764705882353,
+              0.19411764705882353
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 86,
+            "missed_count": 84,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/separated/SNR0/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.1695906432748538,
+            "pfa_ge": 0.1695906432748538,
+            "pfa_ci95_exact_upper": 0.22395330206292566,
+            "tie_count_h0": 0,
+            "pd": 0.9707602339181286,
+            "pd_ci95_bootstrap": [
+              0.9415204678362573,
+              0.9941520467836257
+            ],
+            "auc": 0.9811907937485038,
+            "auc_ci95_paired_bootstrap": [
+              0.9628227488799973,
+              0.9951104613385315
+            ],
+            "range_mae_all_h1_cells": 0.24413975219280398,
+            "range_rmse_all_h1_cells": 0.29242631545349074,
+            "range_rmse_all_h1_ci95": [
+              0.26648689000465176,
+              0.3165829729760499
+            ],
+            "range_rmse_detected_h1_cells": 0.2907699933677963,
+            "range_rmse_detected_h1_ci95": [
+              0.26594941741676764,
+              0.31516142579964646
+            ],
+            "doppler_mae_all_h1_hz": 75.88754326000549,
+            "doppler_rmse_all_h1_hz": 111.17298864375778,
+            "doppler_rmse_all_h1_ci95": [
+              92.49309042427767,
+              130.246396352593
+            ],
+            "doppler_bias_all_h1_hz": 59.83250918025859,
+            "doppler_rmse_detected_h1_hz": 108.11850243924196,
+            "doppler_rmse_detected_h1_ci95": [
+              87.62223134799365,
+              127.29188526581783
+            ],
+            "joint_success": 0.23976608187134502,
+            "joint_success_ci95_bootstrap": [
+              0.18128654970760233,
+              0.30409356725146197
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 166,
+            "missed_count": 5,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/separated/SNR10/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": -0.7210898399353027,
+            "pfa_gt": 0.17543859649122806,
+            "pfa_ge": 0.17543859649122806,
+            "pfa_ci95_exact_upper": 0.23034799168208858,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.2075135554486548,
+            "range_rmse_all_h1_cells": 0.24985188980564907,
+            "range_rmse_all_h1_ci95": [
+              0.22735153978132422,
+              0.271210028942514
+            ],
+            "range_rmse_detected_h1_cells": 0.24985188980564907,
+            "range_rmse_detected_h1_ci95": [
+              0.228586166586895,
+              0.27027860214466015
+            ],
+            "doppler_mae_all_h1_hz": 22.918299981725145,
+            "doppler_rmse_all_h1_hz": 32.11699209604129,
+            "doppler_rmse_all_h1_ci95": [
+              26.938378857405166,
+              37.110990891186134
+            ],
+            "doppler_bias_all_h1_hz": 2.953300966853984,
+            "doppler_rmse_detected_h1_hz": 32.11699209604129,
+            "doppler_rmse_detected_h1_ci95": [
+              27.120397866213594,
+              37.104898127444685
+            ],
+            "joint_success": 0.5730994152046783,
+            "joint_success_ci95_bootstrap": [
+              0.502777777777778,
+              0.6432748538011696
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 171,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        }
+      },
+      "exact_overlap_boundary_descriptive_only": {
+        "n_paired_scenes": 512,
+        "threshold": -0.7210898399353027,
+        "pfa_gt": 0.0078125,
+        "pfa_ge": 0.0078125,
+        "pfa_ci95_exact_upper": 0.017788140281132275,
+        "tie_count_h0": 0,
+        "pd": 0.009765625,
+        "pd_ci95_bootstrap": [
+          0.001953125,
+          0.01953125
+        ],
+        "auc": 0.5125045776367188,
+        "auc_ci95_paired_bootstrap": [
+          0.5061797142028809,
+          0.5190892219543457
+        ],
+        "range_mae_all_h1_cells": 10.55915357171034,
+        "range_rmse_all_h1_cells": 13.015637965996197,
+        "range_rmse_all_h1_ci95": [
+          12.334133492843948,
+          13.667604203838586
+        ],
+        "range_rmse_detected_h1_cells": 18.14134680545687,
+        "range_rmse_detected_h1_ci95": [
+          5.891872483954886,
+          25.039984187218355
+        ],
+        "doppler_mae_all_h1_hz": 80.17687313264469,
+        "doppler_rmse_all_h1_hz": 97.91472863989934,
+        "doppler_rmse_all_h1_ci95": [
+          92.35308287286037,
+          102.99696323563997
+        ],
+        "doppler_bias_all_h1_hz": -51.55908213375369,
+        "doppler_rmse_detected_h1_hz": 127.49365375019033,
+        "doppler_rmse_detected_h1_ci95": [
+          35.885751828202174,
+          220.95909474057606
+        ],
+        "joint_success": 0.0,
+        "joint_success_ci95_bootstrap": [
+          0.0,
+          0.0
+        ],
+        "misses_count_as_joint_failure": true,
+        "detected_count": 5,
+        "missed_count": 507,
+        "range_gate_bins": 1.0,
+        "doppler_gate_hz": 20.0
+      },
+      "threshold_comparator": ">=",
+      "teacher_oracle_inputs_used_for_prediction": false
+    },
+    "S2": {
+      "arm": "S2",
+      "threshold_calibration": {
+        "threshold": 0.03366708755493164,
+        "target_pfa": 0.05,
+        "quantile_method": "higher",
+        "decision_comparator": ">=",
+        "n": 8192,
+        "pfa_gt": 0.0499267578125,
+        "pfa_ge": 0.050048828125,
+        "tie_count": 1,
+        "tie_fraction": 0.0001220703125
+      },
+      "h0_verification": {
+        "overall": {
+          "n": 8192,
+          "threshold": 0.03366708755493164,
+          "pfa_gt": 0.0474853515625,
+          "pfa_ge": 0.0474853515625,
+          "false_alarm_count_ge": 389,
+          "pfa_ci95_exact_upper": 0.051532415782976564,
+          "tie_count": 0
+        },
+        "by_course_level": {
+          "C0": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "C1": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "C2": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0361328125,
+            "pfa_ge": 0.0361328125,
+            "false_alarm_count_ge": 74,
+            "pfa_ci95_exact_upper": 0.043672862938623255,
+            "tie_count": 0
+          },
+          "C3": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.15380859375,
+            "pfa_ge": 0.15380859375,
+            "false_alarm_count_ge": 315,
+            "pfa_ci95_exact_upper": 0.1675316765960647,
+            "tie_count": 0
+          }
+        },
+        "by_scenario_id": {
+          "near_clutter_edge": {
+            "n": 2389,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.053997488488907494,
+            "pfa_ge": 0.053997488488907494,
+            "false_alarm_count_ge": 129,
+            "pfa_ci95_exact_upper": 0.06222859359117824,
+            "tie_count": 0
+          },
+          "partial_overlap": {
+            "n": 1364,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.09310850439882698,
+            "pfa_ge": 0.09310850439882698,
+            "false_alarm_count_ge": 127,
+            "pfa_ci95_exact_upper": 0.10707675775617088,
+            "tie_count": 0
+          },
+          "separated": {
+            "n": 4439,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.029961703086280694,
+            "pfa_ge": 0.029961703086280694,
+            "false_alarm_count_ge": 133,
+            "pfa_ci95_exact_upper": 0.034519844847315295,
+            "tie_count": 0
+          }
+        },
+        "by_snr_db": {
+          "0": {
+            "n": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.279296875,
+            "pfa_ge": 0.279296875,
+            "false_alarm_count_ge": 286,
+            "pfa_ci95_exact_upper": 0.3033000202012288,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 3072,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.033528645833333336,
+            "pfa_ge": 0.033528645833333336,
+            "false_alarm_count_ge": 103,
+            "pfa_ci95_exact_upper": 0.03937474166054134,
+            "tie_count": 0
+          },
+          "15": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "20": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          }
+        },
+        "by_requested_cnr_db": {
+          "-5": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "0": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "false_alarm_count_ge": 0,
+            "pfa_ci95_exact_upper": 0.0014616905873806323,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0361328125,
+            "pfa_ge": 0.0361328125,
+            "false_alarm_count_ge": 74,
+            "pfa_ci95_exact_upper": 0.043672862938623255,
+            "tie_count": 0
+          },
+          "20": {
+            "n": 2048,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.15380859375,
+            "pfa_ge": 0.15380859375,
+            "false_alarm_count_ge": 315,
+            "pfa_ci95_exact_upper": 0.1675316765960647,
+            "tie_count": 0
+          }
+        }
+      },
+      "c3_h0_verification": {
+        "overall": {
+          "n": 4096,
+          "threshold": 0.03366708755493164,
+          "pfa_gt": 0.15283203125,
+          "pfa_ge": 0.15283203125,
+          "false_alarm_count_ge": 626,
+          "pfa_ci95_exact_upper": 0.16238495699219108,
+          "tie_count": 0
+        },
+        "by_course_level": {
+          "C3": {
+            "n": 4096,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.15283203125,
+            "pfa_ge": 0.15283203125,
+            "false_alarm_count_ge": 626,
+            "pfa_ci95_exact_upper": 0.16238495699219108,
+            "tie_count": 0
+          }
+        },
+        "by_scenario_id": {
+          "near_clutter_edge": {
+            "n": 1365,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.16263736263736264,
+            "pfa_ge": 0.16263736263736264,
+            "false_alarm_count_ge": 222,
+            "pfa_ci95_exact_upper": 0.17996935815068174,
+            "tie_count": 0
+          },
+          "partial_overlap": {
+            "n": 1365,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.14871794871794872,
+            "pfa_ge": 0.14871794871794872,
+            "false_alarm_count_ge": 203,
+            "pfa_ci95_exact_upper": 0.16548519832079123,
+            "tie_count": 0
+          },
+          "separated": {
+            "n": 1366,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.14714494875549047,
+            "pfa_ge": 0.14714494875549047,
+            "false_alarm_count_ge": 201,
+            "pfa_ci95_exact_upper": 0.16383902284242707,
+            "tie_count": 0
+          }
+        },
+        "by_snr_db": {
+          "0": {
+            "n": 2049,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.2781844802342606,
+            "pfa_ge": 0.2781844802342606,
+            "false_alarm_count_ge": 570,
+            "pfa_ci95_exact_upper": 0.29494054282441373,
+            "tie_count": 0
+          },
+          "10": {
+            "n": 2047,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.027357107962872496,
+            "pfa_ge": 0.027357107962872496,
+            "false_alarm_count_ge": 56,
+            "pfa_ci95_exact_upper": 0.03405998912217456,
+            "tie_count": 0
+          }
+        },
+        "by_requested_cnr_db": {
+          "20": {
+            "n": 4096,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.15283203125,
+            "pfa_ge": 0.15283203125,
+            "false_alarm_count_ge": 626,
+            "pfa_ci95_exact_upper": 0.16238495699219108,
+            "tie_count": 0
+          }
+        }
+      },
+      "development": {
+        "overall": {
+          "n_paired_scenes": 4096,
+          "threshold": 0.03366708755493164,
+          "pfa_gt": 0.04833984375,
+          "pfa_ge": 0.04833984375,
+          "pfa_ci95_exact_upper": 0.05421826700110827,
+          "tie_count_h0": 0,
+          "pd": 0.863525390625,
+          "pd_ci95_bootstrap": [
+            0.85302734375,
+            0.8740234375
+          ],
+          "auc": 0.9771267175674438,
+          "auc_ci95_paired_bootstrap": [
+            0.974459744989872,
+            0.9797290027141571
+          ],
+          "range_mae_all_h1_cells": 1.3519921161059756,
+          "range_rmse_all_h1_cells": 4.129948491664076,
+          "range_rmse_all_h1_ci95": [
+            3.883898540234205,
+            4.392402230045461
+          ],
+          "range_rmse_detected_h1_cells": 2.21105680360401,
+          "range_rmse_detected_h1_ci95": [
+            1.9347196739685377,
+            2.4781931982113155
+          ],
+          "doppler_mae_all_h1_hz": 51.14383602188127,
+          "doppler_rmse_all_h1_hz": 85.70375005070929,
+          "doppler_rmse_all_h1_ci95": [
+            82.3469192015358,
+            89.13306185371535
+          ],
+          "doppler_bias_all_h1_hz": -11.525361771221924,
+          "doppler_rmse_detected_h1_hz": 67.82956880029663,
+          "doppler_rmse_detected_h1_ci95": [
+            64.27708596665619,
+            71.23274018879495
+          ],
+          "joint_success": 0.476318359375,
+          "joint_success_ci95_bootstrap": [
+            0.461669921875,
+            0.49169921875
+          ],
+          "misses_count_as_joint_failure": true,
+          "detected_count": 3537,
+          "missed_count": 559,
+          "range_gate_bins": 1.0,
+          "doppler_gate_hz": 20.0
+        },
+        "by_course": {
+          "C0": {
+            "n_paired_scenes": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.0029212446353880273,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.0393925947137177,
+            "range_rmse_all_h1_cells": 0.053251404895611115,
+            "range_rmse_all_h1_ci95": [
+              0.049939772270680804,
+              0.05675084129184759
+            ],
+            "range_rmse_detected_h1_cells": 0.053251404895611115,
+            "range_rmse_detected_h1_ci95": [
+              0.049891491324548086,
+              0.056565624331195094
+            ],
+            "doppler_mae_all_h1_hz": 9.58837354183197,
+            "doppler_rmse_all_h1_hz": 11.691148590691661,
+            "doppler_rmse_all_h1_ci95": [
+              11.235571491174333,
+              12.16599389916245
+            ],
+            "doppler_bias_all_h1_hz": -3.3441359400749207,
+            "doppler_rmse_detected_h1_hz": 11.691148590691661,
+            "doppler_rmse_detected_h1_ci95": [
+              11.207465154890762,
+              12.146053200583998
+            ],
+            "joint_success": 0.921875,
+            "joint_success_ci95_bootstrap": [
+              0.9052734375,
+              0.9375
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1": {
+            "n_paired_scenes": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.0029212446353880273,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.05768460012041032,
+            "range_rmse_all_h1_cells": 0.08442092051279587,
+            "range_rmse_all_h1_ci95": [
+              0.07888090345022115,
+              0.08979828824058889
+            ],
+            "range_rmse_detected_h1_cells": 0.08442092051279587,
+            "range_rmse_detected_h1_ci95": [
+              0.0788521213433293,
+              0.08992651236424973
+            ],
+            "doppler_mae_all_h1_hz": 20.382282314589247,
+            "doppler_rmse_all_h1_hz": 30.094653763259007,
+            "doppler_rmse_all_h1_ci95": [
+              27.90370770193715,
+              32.42680041185841
+            ],
+            "doppler_bias_all_h1_hz": -4.742233974626288,
+            "doppler_rmse_detected_h1_hz": 30.094653763259007,
+            "doppler_rmse_detected_h1_ci95": [
+              27.820818703197208,
+              32.44400422411477
+            ],
+            "joint_success": 0.646484375,
+            "joint_success_ci95_bootstrap": [
+              0.6161865234375,
+              0.6748046875
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2": {
+            "n_paired_scenes": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0263671875,
+            "pfa_ge": 0.0263671875,
+            "pfa_ci95_exact_upper": 0.03617925899858777,
+            "tie_count_h0": 0,
+            "pd": 0.935546875,
+            "pd_ci95_bootstrap": [
+              0.9208984375,
+              0.951171875
+            ],
+            "auc": 0.9793987274169922,
+            "auc_ci95_paired_bootstrap": [
+              0.9731255531311035,
+              0.9854117393493652
+            ],
+            "range_mae_all_h1_cells": 0.4064085972495377,
+            "range_rmse_all_h1_cells": 1.7523368279296796,
+            "range_rmse_all_h1_ci95": [
+              1.2263593738921075,
+              2.2049260807300293
+            ],
+            "range_rmse_detected_h1_cells": 0.6169790095405112,
+            "range_rmse_detected_h1_ci95": [
+              0.23683429160163152,
+              0.942330369294691
+            ],
+            "doppler_mae_all_h1_hz": 47.522239875541345,
+            "doppler_rmse_all_h1_hz": 61.048771049940896,
+            "doppler_rmse_all_h1_ci95": [
+              58.08517145026653,
+              63.935311989852856
+            ],
+            "doppler_bias_all_h1_hz": -13.281878043459074,
+            "doppler_rmse_detected_h1_hz": 56.6099772293836,
+            "doppler_rmse_detected_h1_ci95": [
+              53.65103244566856,
+              59.64548866437544
+            ],
+            "joint_success": 0.2841796875,
+            "joint_success_ci95_bootstrap": [
+              0.2568359375,
+              0.3115234375
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 958,
+            "missed_count": 66,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3": {
+            "n_paired_scenes": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.1669921875,
+            "pfa_ge": 0.1669921875,
+            "pfa_ci95_exact_upper": 0.18735753801459917,
+            "tie_count_h0": 0,
+            "pd": 0.5185546875,
+            "pd_ci95_bootstrap": [
+              0.4873046875,
+              0.548828125
+            ],
+            "auc": 0.755584716796875,
+            "auc_ci95_paired_bootstrap": [
+              0.7388396024703979,
+              0.7720368385314942
+            ],
+            "range_mae_all_h1_cells": 4.904482672340237,
+            "range_rmse_all_h1_cells": 8.07126081927299,
+            "range_rmse_all_h1_ci95": [
+              7.572728810671517,
+              8.538698057096353
+            ],
+            "range_rmse_detected_h1_cells": 5.644307880040666,
+            "range_rmse_detected_h1_ci95": [
+              4.917581472718435,
+              6.303612224424821
+            ],
+            "doppler_mae_all_h1_hz": 127.08244835556252,
+            "doppler_rmse_all_h1_hz": 156.87959556235995,
+            "doppler_rmse_all_h1_ci95": [
+              150.67616768132717,
+              163.20534991693535
+            ],
+            "doppler_bias_all_h1_hz": -24.733199126727413,
+            "doppler_rmse_detected_h1_hz": 151.17697233317233,
+            "doppler_rmse_detected_h1_ci95": [
+              143.03193525770823,
+              159.18703240887407
+            ],
+            "joint_success": 0.052734375,
+            "joint_success_ci95_bootstrap": [
+              0.04001464843750004,
+              0.06643066406249987
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 531,
+            "missed_count": 493,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        },
+        "by_scenario": {
+          "near_clutter_edge": {
+            "n_paired_scenes": 1195,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.05355648535564853,
+            "pfa_ge": 0.05355648535564853,
+            "pfa_ci95_exact_upper": 0.0655334289276374,
+            "tie_count_h0": 0,
+            "pd": 0.8753138075313808,
+            "pd_ci95_bootstrap": [
+              0.8560669456066946,
+              0.8937238493723849
+            ],
+            "auc": 0.9821879869049912,
+            "auc_ci95_paired_bootstrap": [
+              0.9777587052047408,
+              0.9859830185045779
+            ],
+            "range_mae_all_h1_cells": 1.4093844273100338,
+            "range_rmse_all_h1_cells": 4.250352853943873,
+            "range_rmse_all_h1_ci95": [
+              3.7652509106027585,
+              4.706096853873755
+            ],
+            "range_rmse_detected_h1_cells": 2.333360953932244,
+            "range_rmse_detected_h1_ci95": [
+              1.7883003386947138,
+              2.827326453505667
+            ],
+            "doppler_mae_all_h1_hz": 55.422370538252665,
+            "doppler_rmse_all_h1_hz": 76.85262395500447,
+            "doppler_rmse_all_h1_ci95": [
+              72.49235820404837,
+              81.40534141851704
+            ],
+            "doppler_bias_all_h1_hz": -30.59396262817303,
+            "doppler_rmse_detected_h1_hz": 71.10008528590173,
+            "doppler_rmse_detected_h1_ci95": [
+              66.16958388949169,
+              75.90682050482378
+            ],
+            "joint_success": 0.25774058577405856,
+            "joint_success_ci95_bootstrap": [
+              0.2317991631799163,
+              0.28368200836820084
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1046,
+            "missed_count": 149,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "partial_overlap": {
+            "n_paired_scenes": 681,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.1027900146842878,
+            "pfa_ge": 0.1027900146842878,
+            "pfa_ci95_exact_upper": 0.12396653273078315,
+            "tie_count_h0": 0,
+            "pd": 0.5286343612334802,
+            "pd_ci95_bootstrap": [
+              0.4919236417033774,
+              0.5653450807635829
+            ],
+            "auc": 0.8134793568238813,
+            "auc_ci95_paired_bootstrap": [
+              0.792748743426032,
+              0.8331054142111992
+            ],
+            "range_mae_all_h1_cells": 4.187479252857258,
+            "range_rmse_all_h1_cells": 7.427956008315966,
+            "range_rmse_all_h1_ci95": [
+              6.825289377547911,
+              8.028187443873351
+            ],
+            "range_rmse_detected_h1_cells": 4.613580088008322,
+            "range_rmse_detected_h1_ci95": [
+              3.723276727626447,
+              5.419619660884496
+            ],
+            "doppler_mae_all_h1_hz": 100.52543803226482,
+            "doppler_rmse_all_h1_hz": 125.92218211705782,
+            "doppler_rmse_all_h1_ci95": [
+              118.91343603809415,
+              132.5342593897744
+            ],
+            "doppler_bias_all_h1_hz": -76.66306448415764,
+            "doppler_rmse_detected_h1_hz": 115.34951955001007,
+            "doppler_rmse_detected_h1_ci95": [
+              104.48492119985139,
+              125.51838397545798
+            ],
+            "joint_success": 0.0763582966226138,
+            "joint_success_ci95_bootstrap": [
+              0.05726872246696035,
+              0.09838472834067548
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 360,
+            "missed_count": 321,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "separated": {
+            "n_paired_scenes": 2220,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.02882882882882883,
+            "pfa_ge": 0.02882882882882883,
+            "pfa_ci95_exact_upper": 0.03537880464422671,
+            "tie_count_h0": 0,
+            "pd": 0.9599099099099099,
+            "pd_ci95_bootstrap": [
+              0.9513513513513514,
+              0.968018018018018
+            ],
+            "auc": 0.9969387630874117,
+            "auc_ci95_paired_bootstrap": [
+              0.9960749127505883,
+              0.9977012620728838
+            ],
+            "range_mae_all_h1_cells": 0.4512936692517083,
+            "range_rmse_all_h1_cells": 2.195531161944368,
+            "range_rmse_all_h1_ci95": [
+              1.8500502185325705,
+              2.529423275695474
+            ],
+            "range_rmse_detected_h1_cells": 1.35869203714211,
+            "range_rmse_detected_h1_ci95": [
+              0.9785726847257004,
+              1.6939928464045817
+            ],
+            "doppler_mae_all_h1_hz": 33.69261092452316,
+            "doppler_rmse_all_h1_hz": 74.22087457507969,
+            "doppler_rmse_all_h1_ci95": [
+              68.52283798816106,
+              79.93080011261391
+            ],
+            "doppler_bias_all_h1_hz": 18.72047317092483,
+            "doppler_rmse_detected_h1_hz": 53.919406176665056,
+            "doppler_rmse_detected_h1_ci95": [
+              49.14449797790024,
+              58.837285598351066
+            ],
+            "joint_success": 0.7166666666666667,
+            "joint_success_ci95_bootstrap": [
+              0.6963963963963964,
+              0.7346846846846847
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 2131,
+            "missed_count": 89,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        },
+        "by_scenario_snr": {
+          "C0/separated/SNR20/CNR-5": {
+            "n_paired_scenes": 1024,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.0029212446353880273,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.0393925947137177,
+            "range_rmse_all_h1_cells": 0.053251404895611115,
+            "range_rmse_all_h1_ci95": [
+              0.05001945507164897,
+              0.05671023893911307
+            ],
+            "range_rmse_detected_h1_cells": 0.053251404895611115,
+            "range_rmse_detected_h1_ci95": [
+              0.049687573017461094,
+              0.056610509603484335
+            ],
+            "doppler_mae_all_h1_hz": 9.58837354183197,
+            "doppler_rmse_all_h1_hz": 11.691148590691661,
+            "doppler_rmse_all_h1_ci95": [
+              11.229478768347228,
+              12.156574265324577
+            ],
+            "doppler_bias_all_h1_hz": -3.3441359400749207,
+            "doppler_rmse_detected_h1_hz": 11.691148590691661,
+            "doppler_rmse_detected_h1_ci95": [
+              11.237773206773449,
+              12.166796157194
+            ],
+            "joint_success": 0.921875,
+            "joint_success_ci95_bootstrap": [
+              0.9052734375,
+              0.9384765625
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 1024,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1/near_clutter_edge/SNR15/CNR0": {
+            "n_paired_scenes": 512,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.005833955600556271,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.07065270468592644,
+            "range_rmse_all_h1_cells": 0.10097155262360935,
+            "range_rmse_all_h1_ci95": [
+              0.09253053977303294,
+              0.10933432673678593
+            ],
+            "range_rmse_detected_h1_cells": 0.10097155262360935,
+            "range_rmse_detected_h1_ci95": [
+              0.09205973191179108,
+              0.1091427271349926
+            ],
+            "doppler_mae_all_h1_hz": 31.610511894803494,
+            "doppler_rmse_all_h1_hz": 40.962446782053426,
+            "doppler_rmse_all_h1_ci95": [
+              37.85017751784237,
+              44.00846758383497
+            ],
+            "doppler_bias_all_h1_hz": -13.32946928916499,
+            "doppler_rmse_detected_h1_hz": 40.962446782053426,
+            "doppler_rmse_detected_h1_ci95": [
+              37.91057349017557,
+              44.03558818565878
+            ],
+            "joint_success": 0.384765625,
+            "joint_success_ci95_bootstrap": [
+              0.341796875,
+              0.42578125
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 512,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C1/separated/SNR15/CNR0": {
+            "n_paired_scenes": 512,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.0,
+            "pfa_ge": 0.0,
+            "pfa_ci95_exact_upper": 0.005833955600556271,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.04471649555489421,
+            "range_rmse_all_h1_cells": 0.06370658679629042,
+            "range_rmse_all_h1_ci95": [
+              0.057767309016879105,
+              0.06892610874907766
+            ],
+            "range_rmse_detected_h1_cells": 0.06370658679629042,
+            "range_rmse_detected_h1_ci95": [
+              0.05789140762799712,
+              0.06927331215188973
+            ],
+            "doppler_mae_all_h1_hz": 9.154052734375,
+            "doppler_rmse_all_h1_hz": 11.55224324052778,
+            "doppler_rmse_all_h1_ci95": [
+              10.848377163337435,
+              12.285426754137553
+            ],
+            "doppler_bias_all_h1_hz": 3.8450013399124146,
+            "doppler_rmse_detected_h1_hz": 11.55224324052778,
+            "doppler_rmse_detected_h1_ci95": [
+              10.863305800527247,
+              12.263533595140768
+            ],
+            "joint_success": 0.908203125,
+            "joint_success_ci95_bootstrap": [
+              0.884716796875,
+              0.931640625
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 512,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/near_clutter_edge/SNR10/CNR10": {
+            "n_paired_scenes": 341,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.02346041055718475,
+            "pfa_ge": 0.02346041055718475,
+            "pfa_ci95_exact_upper": 0.04193136611689213,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 0.9999828002855152,
+            "auc_ci95_paired_bootstrap": [
+              0.9999140014275762,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.1513834894577429,
+            "range_rmse_all_h1_cells": 0.21733925743539015,
+            "range_rmse_all_h1_ci95": [
+              0.19473329938132505,
+              0.23960129080188441
+            ],
+            "range_rmse_detected_h1_cells": 0.21733925743539015,
+            "range_rmse_detected_h1_ci95": [
+              0.19628334922727406,
+              0.23836128749780733
+            ],
+            "doppler_mae_all_h1_hz": 47.811546047761645,
+            "doppler_rmse_all_h1_hz": 60.96747621833763,
+            "doppler_rmse_all_h1_ci95": [
+              55.57140991325946,
+              66.58675949478416
+            ],
+            "doppler_bias_all_h1_hz": -16.680806942000068,
+            "doppler_rmse_detected_h1_hz": 60.96747621833763,
+            "doppler_rmse_detected_h1_ci95": [
+              55.44433438833575,
+              66.37169715575313
+            ],
+            "joint_success": 0.2668621700879765,
+            "joint_success_ci95_bootstrap": [
+              0.21994134897360704,
+              0.31378299120234604
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 341,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/partial_overlap/SNR10/CNR10": {
+            "n_paired_scenes": 341,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.02932551319648094,
+            "pfa_ge": 0.02932551319648094,
+            "pfa_ci95_exact_upper": 0.049234845206151547,
+            "tie_count_h0": 0,
+            "pd": 0.8064516129032258,
+            "pd_ci95_bootstrap": [
+              0.7653958944281525,
+              0.844574780058651
+            ],
+            "auc": 0.9369114472699753,
+            "auc_ci95_paired_bootstrap": [
+              0.9178782432211625,
+              0.9535693707484456
+            ],
+            "range_mae_all_h1_cells": 0.9615525849753461,
+            "range_rmse_all_h1_cells": 3.025348789428872,
+            "range_rmse_all_h1_ci95": [
+              2.1524637944418545,
+              3.842301871791612
+            ],
+            "range_rmse_detected_h1_cells": 1.114168587669001,
+            "range_rmse_detected_h1_ci95": [
+              0.3359988196401093,
+              1.7230233672999977
+            ],
+            "doppler_mae_all_h1_hz": 66.08173714887864,
+            "doppler_rmse_all_h1_hz": 78.46365245071738,
+            "doppler_rmse_all_h1_ci95": [
+              73.65175742214397,
+              82.84883935632594
+            ],
+            "doppler_bias_all_h1_hz": -30.36499194568706,
+            "doppler_rmse_detected_h1_hz": 70.14465620354538,
+            "doppler_rmse_detected_h1_ci95": [
+              65.21204282468274,
+              74.84336973580966
+            ],
+            "joint_success": 0.1436950146627566,
+            "joint_success_ci95_bootstrap": [
+              0.10557184750733138,
+              0.17895894428152453
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 275,
+            "missed_count": 66,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C2/separated/SNR10/CNR10": {
+            "n_paired_scenes": 342,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.02631578947368421,
+            "pfa_ge": 0.02631578947368421,
+            "pfa_ci95_exact_upper": 0.0454717755470034,
+            "tie_count_h0": 0,
+            "pd": 1.0,
+            "pd_ci95_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "auc": 1.0,
+            "auc_ci95_paired_bootstrap": [
+              1.0,
+              1.0
+            ],
+            "range_mae_all_h1_cells": 0.1071672579001265,
+            "range_rmse_all_h1_cells": 0.14499899470645292,
+            "range_rmse_all_h1_ci95": [
+              0.13053356951220602,
+              0.16034485391729067
+            ],
+            "range_rmse_detected_h1_cells": 0.14499899470645292,
+            "range_rmse_detected_h1_ci95": [
+              0.1305452591274503,
+              0.15918248263077373
+            ],
+            "doppler_mae_all_h1_hz": 28.728549890350877,
+            "doppler_rmse_all_h1_hz": 36.25402729477884,
+            "doppler_rmse_all_h1_ci95": [
+              33.38207432743107,
+              38.90292079623816
+            ],
+            "doppler_bias_all_h1_hz": 7.14027574327257,
+            "doppler_rmse_detected_h1_hz": 36.25402729477884,
+            "doppler_rmse_detected_h1_ci95": [
+              33.53493131455449,
+              38.97405627772765
+            ],
+            "joint_success": 0.4415204678362573,
+            "joint_success_ci95_bootstrap": [
+              0.391812865497076,
+              0.49707602339181284
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 342,
+            "missed_count": 0,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/near_clutter_edge/SNR0/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.29239766081871343,
+            "pfa_ge": 0.29239766081871343,
+            "pfa_ci95_exact_upper": 0.3549682210687762,
+            "tie_count_h0": 0,
+            "pd": 0.30409356725146197,
+            "pd_ci95_bootstrap": [
+              0.23976608187134502,
+              0.3742690058479532
+            ],
+            "auc": 0.5266577750418933,
+            "auc_ci95_paired_bootstrap": [
+              0.5146190280770151,
+              0.541603399336548
+            ],
+            "range_mae_all_h1_cells": 8.241266036591334,
+            "range_rmse_all_h1_cells": 10.673090622703446,
+            "range_rmse_all_h1_ci95": [
+              9.710924440538333,
+              11.627045443018922
+            ],
+            "range_rmse_detected_h1_cells": 9.567749543028805,
+            "range_rmse_detected_h1_ci95": [
+              7.819528330235079,
+              11.364854798969327
+            ],
+            "doppler_mae_all_h1_hz": 101.67370260319514,
+            "doppler_rmse_all_h1_hz": 124.39767880367022,
+            "doppler_rmse_all_h1_ci95": [
+              112.07224247764941,
+              136.33028524371812
+            ],
+            "doppler_bias_all_h1_hz": -86.58203904182591,
+            "doppler_rmse_detected_h1_hz": 151.89970906867703,
+            "doppler_rmse_detected_h1_ci95": [
+              125.8753942803001,
+              175.5511722701804
+            ],
+            "joint_success": 0.005847953216374269,
+            "joint_success_ci95_bootstrap": [
+              0.0,
+              0.017543859649122806
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 52,
+            "missed_count": 119,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/near_clutter_edge/SNR10/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.03508771929824561,
+            "pfa_ge": 0.03508771929824561,
+            "pfa_ci95_exact_upper": 0.06807491000837582,
+            "tie_count_h0": 0,
+            "pd": 0.8245614035087719,
+            "pd_ci95_bootstrap": [
+              0.7660818713450293,
+              0.8771929824561403
+            ],
+            "auc": 0.94162306350672,
+            "auc_ci95_paired_bootstrap": [
+              0.9158014431790978,
+              0.9641992407920386
+            ],
+            "range_mae_all_h1_cells": 1.09451429049174,
+            "range_rmse_all_h1_cells": 3.493940073714263,
+            "range_rmse_all_h1_ci95": [
+              2.071442618346942,
+              4.75706129081206
+            ],
+            "range_rmse_detected_h1_cells": 2.545362797796075,
+            "range_rmse_detected_h1_ci95": [
+              0.40969761432370605,
+              4.1385546358433185
+            ],
+            "doppler_mae_all_h1_hz": 95.64450500373952,
+            "doppler_rmse_all_h1_hz": 115.60335345165872,
+            "doppler_rmse_all_h1_ci95": [
+              105.67515967480558,
+              125.74922513504791
+            ],
+            "doppler_bias_all_h1_hz": -54.04335217099441,
+            "doppler_rmse_detected_h1_hz": 117.94140952727831,
+            "doppler_rmse_detected_h1_ci95": [
+              106.70179655042449,
+              130.22734689917732
+            ],
+            "joint_success": 0.1111111111111111,
+            "joint_success_ci95_bootstrap": [
+              0.06432748538011696,
+              0.15789473684210525
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 141,
+            "missed_count": 30,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/partial_overlap/SNR0/CNR20": {
+            "n_paired_scenes": 170,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.31176470588235294,
+            "pfa_ge": 0.31176470588235294,
+            "pfa_ci95_exact_upper": 0.37531497717135837,
+            "tie_count_h0": 0,
+            "pd": 0.3352941176470588,
+            "pd_ci95_bootstrap": [
+              0.2647058823529412,
+              0.40588235294117647
+            ],
+            "auc": 0.5120415224913495,
+            "auc_ci95_paired_bootstrap": [
+              0.5032525951557093,
+              0.5230112456747404
+            ],
+            "range_mae_all_h1_cells": 7.966099525900448,
+            "range_rmse_all_h1_cells": 10.169908775858744,
+            "range_rmse_all_h1_ci95": [
+              9.18651407207397,
+              11.088584732281404
+            ],
+            "range_rmse_detected_h1_cells": 10.30688229003241,
+            "range_rmse_detected_h1_ci95": [
+              8.206085171258517,
+              12.161264364101669
+            ],
+            "doppler_mae_all_h1_hz": 163.25692766554215,
+            "doppler_rmse_all_h1_hz": 187.67625333082503,
+            "doppler_rmse_all_h1_ci95": [
+              174.21029653025155,
+              200.99788831004457
+            ],
+            "doppler_bias_all_h1_hz": -161.69147087125216,
+            "doppler_rmse_detected_h1_hz": 225.02324707945684,
+            "doppler_rmse_detected_h1_ci95": [
+              202.605781626641,
+              246.9586996899848
+            ],
+            "joint_success": 0.0058823529411764705,
+            "joint_success_ci95_bootstrap": [
+              0.0,
+              0.01764705882352941
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 57,
+            "missed_count": 113,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/partial_overlap/SNR10/CNR20": {
+            "n_paired_scenes": 170,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.041176470588235294,
+            "pfa_ge": 0.041176470588235294,
+            "pfa_ci95_exact_upper": 0.07594719300343196,
+            "tie_count_h0": 0,
+            "pd": 0.16470588235294117,
+            "pd_ci95_bootstrap": [
+              0.11176470588235295,
+              0.21764705882352942
+            ],
+            "auc": 0.6194117647058823,
+            "auc_ci95_paired_bootstrap": [
+              0.5917595155709343,
+              0.6501764705882352
+            ],
+            "range_mae_all_h1_cells": 6.879688354800729,
+            "range_rmse_all_h1_cells": 9.961742979186061,
+            "range_rmse_all_h1_ci95": [
+              8.784114232888655,
+              11.08887153849045
+            ],
+            "range_rmse_detected_h1_cells": 6.7242964474094356,
+            "range_rmse_detected_h1_ci95": [
+              3.4214078433812447,
+              9.148452660655794
+            ],
+            "doppler_mae_all_h1_hz": 106.88396017095621,
+            "doppler_rmse_all_h1_hz": 126.28212925260375,
+            "doppler_rmse_all_h1_ci95": [
+              115.82003770009096,
+              136.59377609865876
+            ],
+            "doppler_bias_all_h1_hz": -84.50314477717176,
+            "doppler_rmse_detected_h1_hz": 140.2405918708366,
+            "doppler_rmse_detected_h1_ci95": [
+              115.7124675230002,
+              164.11829179493748
+            ],
+            "joint_success": 0.011764705882352941,
+            "joint_success_ci95_bootstrap": [
+              0.0,
+              0.029411764705882353
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 28,
+            "missed_count": 142,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/separated/SNR0/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.2807017543859649,
+            "pfa_ge": 0.2807017543859649,
+            "pfa_ci95_exact_upper": 0.3427426417750912,
+            "tie_count_h0": 0,
+            "pd": 0.5087719298245614,
+            "pd_ci95_bootstrap": [
+              0.43859649122807015,
+              0.5847953216374269
+            ],
+            "auc": 0.6669060565644129,
+            "auc_ci95_paired_bootstrap": [
+              0.6346149242501966,
+              0.7021647686467631
+            ],
+            "range_mae_all_h1_cells": 4.781665441585563,
+            "range_rmse_all_h1_cells": 7.651313054441847,
+            "range_rmse_all_h1_ci95": [
+              6.554740215459599,
+              8.624157851899863
+            ],
+            "range_rmse_detected_h1_cells": 6.365446964228089,
+            "range_rmse_detected_h1_ci95": [
+              4.770921176778537,
+              7.860091862977338
+            ],
+            "doppler_mae_all_h1_hz": 208.22728385702212,
+            "doppler_rmse_all_h1_hz": 226.94507403799093,
+            "doppler_rmse_all_h1_ci95": [
+              213.4002969457659,
+              240.1185851199445
+            ],
+            "doppler_bias_all_h1_hz": 207.55625085663377,
+            "doppler_rmse_detected_h1_hz": 204.6578402328687,
+            "doppler_rmse_detected_h1_ci95": [
+              191.27106355838518,
+              219.10055641788043
+            ],
+            "joint_success": 0.0,
+            "joint_success_ci95_bootstrap": [
+              0.0,
+              0.0
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 87,
+            "missed_count": 84,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          },
+          "C3/separated/SNR10/CNR20": {
+            "n_paired_scenes": 171,
+            "threshold": 0.03366708755493164,
+            "pfa_gt": 0.04093567251461988,
+            "pfa_ge": 0.04093567251461988,
+            "pfa_ci95_exact_upper": 0.07551114377811297,
+            "tie_count_h0": 0,
+            "pd": 0.9707602339181286,
+            "pd_ci95_bootstrap": [
+              0.9415204678362573,
+              0.9941520467836257
+            ],
+            "auc": 0.9848842378851612,
+            "auc_ci95_paired_bootstrap": [
+              0.9689468554427003,
+              0.9980506822612085
+            ],
+            "range_mae_all_h1_cells": 0.4931174872214334,
+            "range_rmse_all_h1_cells": 1.9915573247423577,
+            "range_rmse_all_h1_ci95": [
+              0.39805190644626604,
+              3.11178030001572
+            ],
+            "range_rmse_detected_h1_cells": 1.545693742515487,
+            "range_rmse_detected_h1_ci95": [
+              0.28363689277133625,
+              2.656462848753372
+            ],
+            "doppler_mae_all_h1_hz": 86.90173768160636,
+            "doppler_rmse_all_h1_hz": 127.145959850363,
+            "doppler_rmse_all_h1_ci95": [
+              104.88217370244158,
+              149.45256113704744
+            ],
+            "doppler_bias_all_h1_hz": 29.714103832579497,
+            "doppler_rmse_detected_h1_hz": 106.80687983893581,
+            "doppler_rmse_detected_h1_ci95": [
+              89.29020381651941,
+              123.6637487504583
+            ],
+            "joint_success": 0.18128654970760233,
+            "joint_success_ci95_bootstrap": [
+              0.1286549707602339,
+              0.23976608187134502
+            ],
+            "misses_count_as_joint_failure": true,
+            "detected_count": 166,
+            "missed_count": 5,
+            "range_gate_bins": 1.0,
+            "doppler_gate_hz": 20.0
+          }
+        }
+      },
+      "exact_overlap_boundary_descriptive_only": {
+        "n_paired_scenes": 512,
+        "threshold": 0.03366708755493164,
+        "pfa_gt": 0.04296875,
+        "pfa_ge": 0.04296875,
+        "pfa_ci95_exact_upper": 0.06079067970373002,
+        "tie_count_h0": 0,
+        "pd": 0.048828125,
+        "pd_ci95_bootstrap": [
+          0.03125,
+          0.068359375
+        ],
+        "auc": 0.5048675537109375,
+        "auc_ci95_paired_bootstrap": [
+          0.500262451171875,
+          0.5092622756958007
+        ],
+        "range_mae_all_h1_cells": 9.358400339304353,
+        "range_rmse_all_h1_cells": 11.980482670813586,
+        "range_rmse_all_h1_ci95": [
+          11.294864230066336,
+          12.645944773586116
+        ],
+        "range_rmse_detected_h1_cells": 12.709739780951809,
+        "range_rmse_detected_h1_ci95": [
+          10.316328174781969,
+          14.77342457049109
+        ],
+        "doppler_mae_all_h1_hz": 76.75571065029362,
+        "doppler_rmse_all_h1_hz": 92.88554794393636,
+        "doppler_rmse_all_h1_ci95": [
+          88.21022166132643,
+          97.97452327938478
+        ],
+        "doppler_bias_all_h1_hz": -42.53145317552844,
+        "doppler_rmse_detected_h1_hz": 120.36851927883595,
+        "doppler_rmse_detected_h1_ci95": [
+          88.72171870351752,
+          145.79923039809486
+        ],
+        "joint_success": 0.0,
+        "joint_success_ci95_bootstrap": [
+          0.0,
+          0.0
+        ],
+        "misses_count_as_joint_failure": true,
+        "detected_count": 25,
+        "missed_count": 487,
+        "range_gate_bins": 1.0,
+        "doppler_gate_hz": 20.0
+      },
+      "threshold_comparator": ">=",
+      "teacher_oracle_inputs_used_for_prediction": false
+    }
+  },
+  "comparison_and_gates": {
+    "truth_constant_baseline": {
+      "range_median_cell": 15.963967323303223,
+      "doppler_circular_mean_hz": -278.61975866076085,
+      "range_rmse_all_h1_cells": 6.917271034299238,
+      "doppler_rmse_all_h1_hz": 179.6353051227751
+    },
+    "G3_task_learning": {
+      "S0": {
+        "auc": 0.9841642379760742,
+        "auc_ci95": [
+          0.9820859149098397,
+          0.9861051380634308
+        ],
+        "range_rmse_difference_vs_truth_constant": {
+          "point_difference_s2_minus_s0": -3.809636101956505,
+          "paired_scene_bootstrap_ci95": [
+            -4.074741368972935,
+            -3.531716605227996
+          ]
+        },
+        "doppler_rmse_difference_vs_truth_constant": {
+          "point_difference_s2_minus_s0": -133.21662876354313,
+          "paired_scene_bootstrap_ci95": [
+            -136.43551310655855,
+            -129.70098131992327
+          ]
+        },
+        "passed": true
+      },
+      "S2": {
+        "auc": 0.9771267175674438,
+        "auc_ci95": [
+          0.974459744989872,
+          0.9797290027141571
+        ],
+        "range_rmse_difference_vs_truth_constant": {
+          "point_difference_s2_minus_s0": -2.7873225426351613,
+          "paired_scene_bootstrap_ci95": [
+            -3.0575576276160836,
+            -2.5310462495472006
+          ]
+        },
+        "doppler_rmse_difference_vs_truth_constant": {
+          "point_difference_s2_minus_s0": -93.9315550720658,
+          "paired_scene_bootstrap_ci95": [
+            -97.32603712653378,
+            -90.3756924677196
+          ]
+        },
+        "passed": true
+      }
+    },
+    "G4_task_protection": {
+      "components": {
+        "overall_pd_point": false,
+        "overall_pd_ci_lower": false,
+        "overall_joint_point": false,
+        "overall_joint_ci_lower": false,
+        "c2_c3_joint_ci_lower": false,
+        "c2_c3_range_rmse_ratio_point": false,
+        "c2_c3_range_rmse_ratio_ci_upper": false,
+        "c2_c3_doppler_rmse_ratio_point": false,
+        "c2_c3_doppler_rmse_ratio_ci_upper": false,
+        "c3_h0_pfa_difference_ci_upper": true,
+        "s0_c3_h0_pfa_point": false,
+        "s2_c3_h0_pfa_point": false
+      },
+      "passed": false
+    },
+    "G4_primary_C2_C3_joint_gain": {
+      "point_difference_s2_minus_s0": -0.25927734375,
+      "paired_scene_bootstrap_ci95": [
+        -0.2822265625,
+        -0.23681640625
+      ],
+      "minimum_gain": 0.02,
+      "passed": false
+    },
+    "paired_comparisons": {
+      "overall_pd": {
+        "point_difference_s2_minus_s0": -0.04736328125,
+        "paired_scene_bootstrap_ci95": [
+          -0.05712890625,
+          -0.03759155273437503
+        ]
+      },
+      "overall_joint_success": {
+        "point_difference_s2_minus_s0": -0.210205078125,
+        "paired_scene_bootstrap_ci95": [
+          -0.2255859375,
+          -0.195068359375
+        ]
+      },
+      "C2_C3_joint_success": {
+        "point_difference_s2_minus_s0": -0.25927734375,
+        "paired_scene_bootstrap_ci95": [
+          -0.2822265625,
+          -0.23681640625
+        ]
+      },
+      "C2_C3_range_rmse_ratio": {
+        "point_difference_s2_minus_s0": 1.3289886190115172,
+        "paired_scene_bootstrap_ci95": [
+          1.2214236292332084,
+          1.4557631350748357
+        ]
+      },
+      "C2_C3_doppler_rmse_ratio": {
+        "point_difference_s2_minus_s0": 1.8351786521897158,
+        "paired_scene_bootstrap_ci95": [
+          1.7202524584901073,
+          1.9592258964932432
+        ]
+      },
+      "C3_h0_pfa": {
+        "point_difference_s2_minus_s0": -0.028564453125,
+        "paired_scene_bootstrap_ci95": [
+          -0.04443969726562499,
+          -0.012451171875
+        ]
+      }
+    },
+    "C3_h0_pfa_by_arm": {
+      "S0": 0.181396484375,
+      "S2": 0.15283203125
+    },
+    "S2_route_candidate_passed": false,
+    "bootstrap_unit": "paired base_scene_id; fixed-seed scene uncertainty, not training-seed uncertainty"
+  },
+  "thresholds": {
+    "S0": {
+      "threshold": -0.7210898399353027,
+      "target_pfa": 0.05,
+      "quantile_method": "higher",
+      "decision_comparator": ">=",
+      "n": 8192,
+      "pfa_gt": 0.0499267578125,
+      "pfa_ge": 0.050048828125,
+      "tie_count": 1,
+      "tie_fraction": 0.0001220703125
+    },
+    "S2": {
+      "threshold": 0.03366708755493164,
+      "target_pfa": 0.05,
+      "quantile_method": "higher",
+      "decision_comparator": ">=",
+      "n": 8192,
+      "pfa_gt": 0.0499267578125,
+      "pfa_ge": 0.050048828125,
+      "tie_count": 1,
+      "tie_fraction": 0.0001220703125
+    }
+  },
+  "scene_prediction_tables": {
+    "S0": "experiments/D2-A-E003/scene_predictions_S0.csv",
+    "S2": "experiments/D2-A-E003/scene_predictions_S2.csv"
+  },
+  "final_blind_generated": false,
+  "distillation_run": false
+}

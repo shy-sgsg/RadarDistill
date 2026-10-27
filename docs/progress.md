@@ -1,5 +1,17 @@
 # 研究进度
 
+## 2026-10-27：D2-A-E003 固定相干特征学生 pilot 完成
+
+- **总纲对齐：** 依据研究总纲 v1.2，围绕 Q1/Q4 及 Q3/Q8，测试复相干物理表征能否改善任务级 GMTI 学生；本轮没有修改研究主题、路线边界或 `docs/RESEARCH_CHARTER.md`。
+- **前置门：** R0 分层稳定 scene-ID 抽样与 split 审计通过；R1 固定 28 通道前端通过 complex64 误差、公共相位、Lag-1 频率映射、lag-4/16 alias、跨通道相位、距离 locality 和极值数值测试。相对最大误差 `9.5371e−8`（门限 `1e−4`），相位误差 `2.9072e−7`，lag-1 映射最大回绕误差 `1.14e−13 Hz`，距离泄漏为0。R2 在 A/B/C 可辨识几何的固定10 dB SNR/CNR控制下，特征 H1−H0 中位RMS为0.1686/0.1433/0.1562，均远高于数值地板的10倍；这不是学生可用信息的充分证明。
+- **数据与训练：** 新建 train 51,200 pairs、validation 5,000 pairs、H0 calibration/verification各8,192、专用C3 H0 verification 4,096、H1 development 4,096 pairs、exact-overlap boundary 512 pairs。81,288 scene ID 跨 split 不重叠。S0 raw-IQ TaskStudent 与 S2（固定复相关/功率特征＋28→6投影＋同主干）各用 seed101、E1物理真值、FP32、RTX3050 `cuda:0`、microbatch16/有效batch64、1,600 updates；参数数13,383/13,557，未使用教师/KD/课程。训练约350/494秒，无OOM。
+- **训练执行审计：** 首次训练工具会话只完成 S0 60 updates，在任何预设验证点前中断；该部分没有被当作结果。随后从相同初始权重、seed和pair plan完整重跑S0与S2。最终保存的是完整重跑的初始/最佳/末尾 checkpoint、逐更新history与配置。
+- **独立评价：** 总体H0 Pfa S0/S2=`0.04834/0.04749`，但C3 H0 Pfa=`0.18140/0.15283`，均超0.10上限。Development AUC=`0.98416/0.97713`，Pd=`0.91089/0.86353`，joint=`0.68652/0.47632`，range RMSE=`3.108/4.130 cells`，circular Doppler RMSE=`46.42/85.70 Hz`。S2−S0总体Pd差`−0.04736`（95%CI `[-0.05713,-0.03759]`）、joint差`−0.21021`（`[-0.22559,-0.19507]`），C2/C3 joint差`−0.25928`（`[-0.28223,-0.23682]`）。G3两臂通过，G4失败，主要增益门失败。
+- **物理与计算：** S2在32个公共相位旋转下H0/H1判决一致率为1.0，输出变化约`1e−5`；C1–C3任务质量仍更差。CUDA输入至输出batch1延迟S0/S2=`1.77/4.20 ms`，batch16=`8.21/10.94 ms`，不代表完整处理链实时性。重生成速度几何的频移残差仍大，整体IQ调制/目标分量反事实/几何重生成分开保存。
+- **工程错误修复：** 首次完整评价在S2最终CUDA计时处遇到PyTorch inference tensor/autograd冲突；没有最终metrics写出。修复 `_cuda_timing` 的推理上下文并增加回归测试后，用相同检查点与split完整重评；AISAR全套 `303 passed`。保留原始训练前preflight，另记录训练后评价代码重验。
+- **决定：** S2当前候选 **STOP**；D2-A任务级学生路线 **REFINE**。不进行正式多seed、E2/E3、final blind或继续S2架构搜索。H-ARCH-D2-002、H-FREQ-D2-001、H-DET-D2-002、H-IDENT-D2-001已登记更新；总纲未改。
+- **清理与交付：** 评价完成后只按 `cache_manifest.json` 删除 90 个 E003 可重建缓存文件，共 14,232,309,192 bytes；没有清单外文件或用户未跟踪文件被触及。项目清理后测得 801,766,373 bytes（0.747 GiB），低于 20 GiB 限制。保留协议、配置、训练检查点/history、scene IDs、metrics/result/ROC、物理一致性/成本、4张图、分析、阶段自审、审查请求和 `cleanup.json`。当前下一项唯一优先任务是独立审查E003，再决定是否值得做不训练的表示归因诊断。
+
 ## 2026-10-26：D2-A-R4 数值、教师学生物理瓶颈与单 seed S1 pilot
 
 - **总纲对齐：** 按 `docs/RESEARCH_CHARTER.md` v1.2 执行，服务于任务级 GMTI 学生与教师可靠性判断；研究总纲未改。D2-A-R4 保持探索性，T001 G1/G2 历史结论不变。
