@@ -43,15 +43,23 @@ class TaskStudent(nn.Module):
         width: int = 32,
         temporal_dilations: Sequence[int] = (1, 2, 4, 8, 16, 32, 64),
         include_spectrum_head: bool = True,
+        spectrum_frequency_bins: int = 130,
     ) -> None:
         super().__init__()
         if width <= 0 or width % 8:
             raise ValueError("width must be a positive multiple of 8 for GroupNorm(8)")
+        if (
+            isinstance(spectrum_frequency_bins, bool)
+            or not isinstance(spectrum_frequency_bins, int)
+            or spectrum_frequency_bins <= 0
+        ):
+            raise ValueError("spectrum_frequency_bins must be a positive integer")
         dilations = tuple(int(value) for value in temporal_dilations)
         if not dilations or any(value <= 0 for value in dilations):
             raise ValueError("temporal dilations must be positive")
         self.width = int(width)
         self.temporal_dilations = dilations
+        self.spectrum_frequency_bins = int(spectrum_frequency_bins)
         self.temporal_receptive_field = 1 + 2 * sum(dilations)
         self.stem = nn.Sequential(
             nn.Conv2d(6, width, kernel_size=(1, 3), padding=(0, 1), bias=False),
@@ -66,7 +74,9 @@ class TaskStudent(nn.Module):
         self.range_offset_head = nn.Conv1d(width, 1, kernel_size=1)
         self.doppler_head = nn.Conv1d(width, 2, kernel_size=1)
         self.spectrum_head: nn.Module | None = (
-            nn.Conv1d(width, 130, kernel_size=1) if include_spectrum_head else None
+            nn.Conv1d(width, self.spectrum_frequency_bins, kernel_size=1)
+            if include_spectrum_head
+            else None
         )
 
     def forward(
@@ -106,6 +116,7 @@ def export_inference_model(training_model: TaskStudent) -> TaskStudent:
         width=training_model.width,
         temporal_dilations=training_model.temporal_dilations,
         include_spectrum_head=False,
+        spectrum_frequency_bins=training_model.spectrum_frequency_bins,
     )
     state = {
         key: value.detach().cpu()
