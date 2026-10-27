@@ -1,0 +1,10 @@
+{
+  "git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+  "arm_criteria": {
+    "S0": true,
+    "S2": true
+  },
+  "extend_both_arms": true,
+  "criterion": "relative validation task-loss drop >=1% from updates 4800 to 6400 and >=3/4 intervals without >0.5% increase",
+  "training_seed_uncertainty_estimated": false
+}

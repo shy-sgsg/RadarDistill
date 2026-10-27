@@ -1,5 +1,15 @@
 # 研究进度
 
+# 2026-10-27：D2-A-R5-A 训练充分性 pilot 已完成
+
+- **训练：** 按 protocol/config v1.1，在 RTX 3050 Laptop `cuda:0`、FP32 顺序训练 seed101 的 S0/S2。固定51,200对训练数据，microbatch16、有效batch64；每臂先6,400 updates，两臂均满足预注册延长规则后连续训练至12,800 updates。两臂G1小样本过拟合门通过；未用教师/蒸馏，不生成final blind。
+- **预算证据：** 同一长程schedule内，S0验证task loss从update1600的0.519降到12800的0.321，range RMSE从2.844降到2.203 cell，Doppler RMSE从35.49降到24.16 Hz；S2也持续改善。支持H-CAP-001但仅限单seed、冻结数据与复用开发集。
+- **任务结果：** 复用E003开发集上S0/S2 Pd为0.9619/0.9336、AUC为0.99374/0.98999、joint为0.8389/0.6055；S2−S0 joint差−0.2334（paired scene bootstrap 95% CI `[-0.2488,-0.2188]`），C2/C3差−0.3945（`[-0.4189,-0.3696]`）。C3 H0 Pfa为0.2041/0.1838，均超过0.10；S2未通过任务保护和主要收益门。
+- **物理诊断：** S2公共相位旋转几乎不变，但其频率干预和C2/C3任务表现弱；S0任务表现较好但公共相位敏感。物理干预复用E003开发诊断ID，不作为独立blind证据。
+- **代码/复现：** 评估器把继承自E003的`G3_task_learning`映射到R5-A的`G1_basic_learning`，并以`G3_architecture_value`单列架构收益；指标计算与冻结阈值不变。定向测试13 passed。修复后评估命令：`PYTHONPATH=src conda run --no-capture-output -n AISAR python scripts/run_d2a_r5.py --phase evaluate`。
+- **运行记录限制：** 旧R5-A记录仅保留扩展调用时长，完整12,800-update累计时长未保存；后续代码已添加训练分段和累计墙钟计时。不得把S0 878秒、S2 1,005秒当作全程用时。
+- **阶段判断：** R5-A **REFINE**。停止当前固定相干S2候选；不否定原始IQ非CNN路线。H-CAP-002尚未测试。阶段分析、metrics及图表归档后，唯一下一项是已冻结的Small width32/Medium width96单因素容量对照；无容量收益则不运行Large。无KD、正式多seed或final blind。
+
 ## 2026-10-27：D2-A-R5 Phase 1 执行器与预注册门实现
 
 - **协议冻结：** R5-A 更新至 protocol/config v1.1，在任何 R5 数据生成或训练前量化续训保护门；除原有末段 validation loss 条件外，检查各任务损失与 RMSE 恶化不超过5%、AUC下降不超过0.01、range-cell mismatch增加不超过0.01。未查看 R5 结果。

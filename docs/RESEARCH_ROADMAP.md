@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4 与 E003 均已完成。** R3/E002/R4 当前为 REFINE；T001 教师候选 STOP。E003 固定相干特征 R1/R2 前置门通过，但单 seed S2 的任务保护和 C2/C3 joint-gain 门失败，故停止该 S2 候选；这不代表充分训练或所有相干架构上限。按用户对 D2-A-R5 的明确授权，路线转入 **R5：学生训练充分性、容量、架构适用性与教师知识迁移机制联合研究**。R5 尚无运行结果；E003/R4 等旧结果、阶段门和负结果不变。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4 与 E003 均已完成。** R3/E002/R4 当前为 REFINE；T001 教师候选 STOP。E003 固定相干特征 R1/R2 前置门通过，但单 seed S2 的任务保护和 C2/C3 joint-gain 门失败，故停止该 S2 候选；这不代表充分训练或所有相干架构上限。按用户对 D2-A-R5 的明确授权，路线转入 **R5：学生训练充分性、容量、架构适用性与教师知识迁移机制联合研究**。R5-A 已完成单 seed 训练充分性 pilot；其余 R5 分支尚未运行，旧阶段结论保持不变。
 
 R5 顺序为：Phase 0 设计/总纲 v1.3/协议预注册；Phase 1 seed 101 下 S0/S2 6,400 updates（固定数据4遍）并按末段趋势决定是否连续延长到12,800；Phase 2 width 32/96容量对照；Phase 3 一个原始IQ输入的慢时间/距离轴注意力pilot并完成物理展开设计审查；Phase 4 独立审计教师知识质量；Phase 5 仅在知识质量门通过后比较truth-only、完整响应、教师局部知识和匹配真值辅助；Phase 6 只研究有pilot收益的知识内容的时机和物理吸收机制；Phase 7 综合阶段审查。任一分支按 G0–G7 失败停止，不以完成所有架构/蒸馏臂为目标。
 
@@ -13,10 +13,12 @@ R5 顺序为：Phase 0 设计/总纲 v1.3/协议预注册；Phase 1 seed 101 下
 
 ## 已完成实验与证据
 
-### D2-A-R5（进行中，尚无实验结果）
+### D2-A-R5（进行中）
 
 - 设计依据、路线和用户授权见 `docs/superpowers/specs/2026-10-27-d2-a-r5-design.md`、执行计划 `docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md` 与 `docs/task_alignments/D2-A-R5_alignment.md`。
-- R5-A 预注册只复用 E003 冻结 train/validation 场景作训练充分性对照；主预算 6,400 updates；12,800 扩展由验证趋势条件控制。先跑 S0/S2，再做 width=32/96。截至本记录，R5 尚无数据生成、CUDA训练或盲测结果。
+- R5-A 使用 E003 冻结 train/validation IDs，seed101、E1 truth-only、RTX 3050 `cuda:0` FP32。S0/S2各训练12,800 updates（8遍）；两臂均在6,400步满足预注册延长条件。复用的E003开发材料不作盲测。验证任务指标持续改善；H-CAP-001在该单seed范围内得到支持，但尚不能声称训练收敛或跨seed稳定。
+- S0原始复IQ学生的开发任务结果优于S2固定相干前端；S2的C2/C3联合成功差为−0.3945（95% CI `[−0.4189,−0.3696]`），C3 H0 Pfa仍为0.1838，故停止当前S2候选。S0的C3 H0 Pfa为0.2041，也未达到0.10保护门。完整结果见 `experiments/D2-A-R5/R5-A/analysis.md` 和 `docs/stage_reviews/D2-A-R5A_review.md`。
+- R5-A训练充分性审查后，按冻结协议对 Small width=32 与 Medium width=96 进行单因素对照；若无预注册任务收益或任务保护失败，不运行Large。R5-B只做一个原始IQ时频注意力candidate；R5-C/D仍受教师知识质量和教学收益门约束。
 - R5-B 只批准一个有界非 CNN attention候选进入单seed pilot；深度展开当前仅作物理设计审查。R5-C/D 均受教师质量和教学收益前置门约束。
 - 当前总纲 v1.3 修订内容仅新增训练/容量/架构/知识吸收原则与 Q10、事实更新 D2 状态；Q1–Q9 和历史结果不变。
 

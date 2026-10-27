@@ -2,14 +2,22 @@
 
 **更新日期：** 2026-10-27
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5 Phase 0 设计和总纲 v1.3 已在 `b521fad` 提交并推送；R5-A 执行器与定向测试已实现。历史阶段结果仍见 [E003 分析](../experiments/D2-A-E003/analysis.md) 与 [Codex 阶段自审](stage_reviews/D2-A-E003_review.md)。
-**阶段判断：** D2-A-E003 的 S2 候选 **STOP**（G4 任务保护和主要 joint-gain 门失败）；D2-A 学生路线 **REFINE**；D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）；D2-A-R4 **REFINE**。E003 的 S0/S2 均通过基础任务学习 G3，但 C3 条件虚警仍高，S2 公共相位不变性改善没有转化为任务收益。E003 完成时总纲为 v1.2 且未修改；R5 用户后续批准的总纲 v1.3 修订单独记录，不重写 E003 历史判断。
+**最新完成工作：** D2-A-R5 Phase 1 训练充分性 pilot 已完成并重评；分析、曲线、指标和 Codex 阶段自审见 [R5-A](../experiments/D2-A-R5/R5-A/analysis.md) 与 [审查报告](stage_reviews/D2-A-R5A_review.md)。训练代码提交 `d996b66418221e027c29927789ff84f3c1df3c89`，协议门字段评估修复 `d1d46617deac234f9456121b2adf0752b44c6f5d`。
+**阶段判断：** D2-A-R5-A **REFINE**：H-CAP-001 在单 seed、固定数据及复用开发分布内获支持；S2 固定相干候选未通过 C2/C3 任务保护和收益筛选；S0 为更强的任务基线但 C3 H0 Pfa 仍为0.204。下一项是预注册 Small/Medium width-only 容量对照。E003、R3、E002、T001、R4 的历史决定保持不变；E003 的旧门控名称和冻结结果不由 R5-A 覆写。
 
-**当前授权工作：** Phase 0 已完成；R5-A protocol v1.1 在生成数据前冻结续训保护条件。R5-A runner 和 10 项定向测试已完成，CUDA preflight、R5 数据生成和训练尚未运行，因此尚无 R5 实验结果。E003/R4 旧结论及所有冻结记录保持不变。
+**当前授权工作：** Phase 0 和 R5-A 已完成。R5-A v1.1 在生成/使用 R5 缓存及训练前冻结；RTX 3050 Laptop `cuda:0` 上 FP32 顺序完成 S0/S2，各12,800 updates。未运行 KD、正式多 seed 或 final blind。按协议先完成阶段审查，再进行 Small width=32 与 Medium width=96 对照；大型可重建缓存不提交，阶段最终项目仍须低于20 GiB。
 
 ## 当前结论
 
 RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
+
+### D2-A-R5-A 阶段结果
+
+在同一 R5 长程学习率计划内，seed101 的验证任务指标从 update1600 到 12,800 持续改善：S0 task loss `0.519→0.321`、range RMSE `2.844→2.203 cells`、Doppler RMSE `35.49→24.16 Hz`；S2 分别为 `1.023→0.694`、`3.750→2.907 cells`、`72.51→52.13 Hz`。两臂均触发预注册连续延长条件；S0/S2最佳checkpoint分别来自 update12,400/12,000。该证据支持训练预算影响，但不证明达到收敛或跨 seed 泛化。
+
+复用 E003 development 的 Pd 为 S0/S2 `0.9619/0.9336`，AUC `0.99374/0.98999`，全 H1 range RMSE `2.239/2.824 cells`，Doppler RMSE `25.23/54.25 Hz`，joint success `0.8389/0.6055`。S2−S0 joint差为 `−0.2334`（95% paired scene bootstrap CI `[-0.2488,-0.2188]`），C2/C3 joint差 `−0.3945`（`[-0.4189,-0.3696]`）。S0/S2普通 H0 verification Pfa 为 `0.05017/0.04834`，但 C3 H0 Pfa 为 `0.20410/0.18384`，均超过0.10门。S2公共相位旋转下基本不变，但该性质没有转化为任务收益；频移干预也暴露估计不稳定。所有校准、verification、development 与物理诊断均为 E003 已使用材料，不是盲测。
+
+固定相干 S2 候选按 R5-A任务保护与C2/C3收益筛选停止；不外推否定所有物理结构。H-CAP-001限定支持，H-CAP-002尚未测试。R5-A训练计时文件只保留了扩展段用时，未保存前6,400 updates墙钟时间；此限制已写入分析，后续训练记录器已修正累计计时。完整门控、统计区间和物理干预见 [R5-A分析](../experiments/D2-A-R5/R5-A/analysis.md)。
 
 ### D2-A-E003 阶段结果
 
@@ -43,7 +51,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-R5-A Phase 1：提交并推送 runner、配置/协议 v1.1 和定向测试后运行 CUDA preflight、冻结 E003 数据重建与 G1 小样本过拟合门，再从头训练 seed 101 的 S0/S2 至 6,400 updates。仅在预注册验证趋势和任务保护同时满足时，才将两臂连续延长至 12,800 updates。当前不做 KD 或 final blind；E003 一遍训练仍只作为历史 pilot。
+完成 R5-A 阶段审查后，进行已冻结的 Small width=32 / Medium width=96 单因素容量对照，维持原始复 IQ、seed101、训练/验证 scene IDs、E1真值损失、pair plan、优化器、有效batch和12,800更新预算。Small臂可复用已训练的R5-A S0 checkpoint/history；Medium从同一初始化规则和配对计划训练。须把训练时间记为累计值，模型顺序使用CUDA，并继续显式报告C3 H0 Pfa与C2/C3 joint任务保护。未出现容量收益则不运行Large；不启动KD或final blind。
 
 ## 关键材料
 

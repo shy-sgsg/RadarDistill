@@ -1,0 +1,32 @@
+{
+  "protocol_version": 1.1,
+  "source_git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+  "arm": "S0",
+  "width": 32,
+  "updates_completed": 12800,
+  "target_updates": 12800,
+  "selected_update": 12400,
+  "selected_validation": {
+    "task_loss": 0.3205856862320698,
+    "presence_loss": 0.07792876369315199,
+    "range_cell_loss": 0.19805260957625165,
+    "range_offset_loss": 0.0382992783728987,
+    "doppler_loss": 0.006305034589767456,
+    "auc": 0.99423344,
+    "range_rmse_all_h1_cells": 2.245697259902954,
+    "doppler_rmse_all_h1_hz": 24.24605369567871,
+    "true_cell_doppler_rmse_hz": 23.431447982788086,
+    "predicted_range_cell_mismatch_rate": 0.0572
+  },
+  "microbatch_size": 16,
+  "effective_batch_size": 64,
+  "gradient_accumulation_steps": 4,
+  "training_seconds_this_invocation": 878.2556279459968,
+  "cuda_peak_allocated_bytes": 274465280,
+  "cuda_peak_reserved_bytes": 337641472,
+  "parameter_count": 13383,
+  "history_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/training_history.csv",
+  "best_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/best_checkpoint.pt",
+  "resume_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/latest_training_state.pt",
+  "prior_oom_attempts": []
+}

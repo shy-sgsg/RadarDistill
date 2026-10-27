@@ -1,0 +1,38 @@
+{
+  "git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+  "purpose": "engineering_only; excluded from scientific metrics",
+  "final_blind_generated": false,
+  "arms": {
+    "S0": {
+      "updates": 200,
+      "paired_scenes": 16,
+      "initial_truth_task_loss": 6.975389003753662,
+      "final_truth_task_loss": 0.006082653068006039,
+      "loss_ratio_final_to_initial": 0.0008720163226355955,
+      "presence_accuracy_on_overfit_batch": 1.0,
+      "h1_range_cell_accuracy_on_overfit_batch": 1.0,
+      "task_gradient_norms": {
+        "range_cell": 38.12867111416086,
+        "doppler": 12.962265023370097
+      },
+      "last_gradient_norm": 3.900984048843384,
+      "passed": true
+    },
+    "S2": {
+      "updates": 200,
+      "paired_scenes": 16,
+      "initial_truth_task_loss": 9.012702941894531,
+      "final_truth_task_loss": 0.019714709371328354,
+      "loss_ratio_final_to_initial": 0.002187435833448671,
+      "presence_accuracy_on_overfit_batch": 1.0,
+      "h1_range_cell_accuracy_on_overfit_batch": 1.0,
+      "task_gradient_norms": {
+        "range_cell": 53.34234651518555,
+        "doppler": 18.73085749347135
+      },
+      "last_gradient_norm": 10.114863395690918,
+      "passed": true
+    }
+  },
+  "passed": true
+}

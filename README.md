@@ -24,7 +24,7 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 的 R0 T1–T12 全通过；后续 R3 固定阈值迁移决定为 **REFINE**，T1 未获固定阈值教师资格。
 
-**当前状态：** D2-A-E003 的 R0/R1/R2 和匹配 S0/S2 单 seed E1 truth-only pilot 已完成；S2 的任务保护和 C2/C3 joint-success 主收益门失败，当前 S2 候选 STOP。该训练只遍历固定数据一次，不能视作充分训练能力上限。用户已批准 D2-A-R5：先完成训练充分性和容量研究，再运行一个有界非 CNN 学生 pilot，并按教师知识质量门开展教学对照。目前 R5 仅有设计与预注册材料，尚未训练或产生结果。历史 E003/R3/E002/T001/R4 结论保持原样；最终盲测未生成。
+**当前状态：** D2-A-E003 的 R0/R1/R2 与匹配 S0/S2 单 seed E1 truth-only pilot 已完成；S2 的任务保护和 C2/C3 joint-success 主收益门失败，当前 E003 S2 候选 STOP。E003仅一遍训练，不能当作充分训练上限。用户已批准 D2-A-R5。R5-A seed101 的 S0/S2 已在RTX 3050 Laptop CUDA上各训练12,800 updates；固定相干S2未过任务保护，S0开发集任务指标更好但C3 H0 Pfa仍未过0.10门。R5-A分析与阶段审查记录已形成；下一项是预注册Small/Medium容量对照。结果限单seed及复用的E003开发材料，不是blind；未运行KD或final blind。历史E003/R3/E002/T001/R4结论保持原样。
 
 **近期历史：** D2-A-E002 v2.1 的 A/B/C 单 seed pilot 曾显示 G3 分层虚警和 G6 公共相位/频移一致性门失败，课程与 K2 未达到预注册增益；其 **REFINE** 结论保留，不由 E003 覆盖。
 
@@ -50,7 +50,7 @@ conda run --no-capture-output -n AISAR python scripts/evaluate_d1_e001.py --phas
 - 实验档案：`experiments/D0-E001/`、`experiments/D1-E001/`、`experiments/D1-R1/`、`experiments/D1-E002/`
 - D2-A-E002 阶段：[协议](experiments/D2-A-E002/protocol.md)、[分析](experiments/D2-A-E002/analysis.md)、[指标](experiments/D2-A-E002/metrics.json)、[审查](docs/stage_reviews/D2-A-E002_review.md)
 - D2-A-E003 阶段：[协议](experiments/D2-A-E003/protocol.md)、[特征设计](experiments/D2-A-E003/feature_design.md)、[结果分析](experiments/D2-A-E003/analysis.md)、[指标](experiments/D2-A-E003/metrics.json)、[ChatGPT 审查请求](experiments/D2-A-E003/review_request.md)、[阶段自审](docs/stage_reviews/D2-A-E003_review.md)
-- D2-A-R5 阶段：[设计说明](docs/superpowers/specs/2026-10-27-d2-a-r5-design.md)、[执行计划](docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md)、[任务对齐](docs/task_alignments/D2-A-R5_alignment.md)、[R5-A protocol](experiments/D2-A-R5/R5-A/protocol.md)、[架构调研](docs/research/D2-A_architecture_survey.md)
+- D2-A-R5 阶段：[设计说明](docs/superpowers/specs/2026-10-27-d2-a-r5-design.md)、[执行计划](docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md)、[任务对齐](docs/task_alignments/D2-A-R5_alignment.md)、[R5-A protocol](experiments/D2-A-R5/R5-A/protocol.md)、[R5-A分析](experiments/D2-A-R5/R5-A/analysis.md)、[R5-A审查](docs/stage_reviews/D2-A-R5A_review.md)、[架构调研](docs/research/D2-A_architecture_survey.md)
 - D2-A 复现：`python scripts/run_d2a_e001.py --config experiments/D2-A-E001/config.yaml --output-dir experiments/D2-A-E001 --batch-size 16`
 - D2-A 物理模型、可辨识性与基线审查：[物理模型](docs/research/D2-A_physical_model.md)、[可辨识性](docs/research/D2-A_identifiability.md)、[基线审查](docs/research/D2-A_baseline_review.md)
 - D2-A 测试：`pytest -q tests/test_d2a_simulation.py tests/test_d2a_baselines.py tests/test_d2a_evaluation.py tests/test_d0_simulation.py`

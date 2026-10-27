@@ -1,5 +1,13 @@
 # 技术决策记录
 
+## 2026-10-27：R5-A训练充分性结果支持扩展容量对照，停止当前固定相干候选
+
+- **证据：** R5-A protocol v1.1 seed101、E1 truth-only S0/S2 均完成12,800 updates；两臂在6,400 updates均满足冻结续训规则。相同长程schedule下任务验证指标继续改善，支持H-CAP-001在本seed/数据范围内，但仍未观察到平台，不能断言容量或架构上限。
+- **结果：** 复用E003开发集的S0 joint=0.8389、S2=0.6055；S2−S0 joint差−0.2334（95% CI `[-0.2488,-0.2188]`），C2/C3差−0.3945（`[-0.4189,-0.3696]`）。C3 H0 Pfa分别0.2041/0.1838，均高于冻结0.10保护。S2公共相位不变性没有转化为任务收益。
+- **决定：** 当前S2固定相干前端候选STOP；保留S0作容量比较基线，但不宣称其已具备稳定C3检测资格。R5-A总体 **REFINE**；H-CAP-001限定支持、H-CAP-002待width-only对照、H-ARCH-003仍未检验。
+- **下一步唯一优先任务：** 依R5-A冻结协议比较Small width=32与Medium width=96，保持数据、seed、loss、优化器、pair plan、有效batch和总更新相同。无预注册任务收益或任务保护失败即停止Large。暂不进行KD、formal多seed或final blind。
+- **范围：** train/validation及校准、verification、development使用E003已知scene IDs；物理干预是开发诊断。没有新blind。累计训练时间缺失已记录；下一阶段runner会保存完整时间分段。分析见`experiments/D2-A-R5/R5-A/analysis.md`。
+
 ## 2026-10-27：批准并预注册 D2-A-R5 有界研究路线
 
 - **授权与总纲映射：** 用户明确批准总纲 v1.3 有界修订和 R5 分阶段实际执行。路线服务于任务级 GMTI 学生与知识蒸馏总目标，涉及 Q1/Q2/Q3/Q4/Q6/Q8/Q9/Q10；不是独立 CFAR 项目。

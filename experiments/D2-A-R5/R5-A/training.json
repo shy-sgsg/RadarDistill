@@ -1,0 +1,96 @@
+{
+  "experiment": "D2-A-R5/R5-A",
+  "protocol_version": 1.1,
+  "git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+  "training_seed": 101,
+  "supervision": "physical_truth_only_E1",
+  "teacher_losses_used": false,
+  "same_train_and_validation_scene_ids_as_E003": true,
+  "same_pair_plan_for_S0_S2": true,
+  "same_shared_taskstudent_initialization": true,
+  "pair_order_seed_base": 2026102711,
+  "initial_pair_plan_rows": 6400,
+  "continuation_decision": {
+    "git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+    "arm_criteria": {
+      "S0": true,
+      "S2": true
+    },
+    "extend_both_arms": true,
+    "criterion": "relative validation task-loss drop >=1% from updates 4800 to 6400 and >=3/4 intervals without >0.5% increase",
+    "training_seed_uncertainty_estimated": false
+  },
+  "final_blind_generated": false,
+  "distillation_run": false,
+  "parameter_counts": {
+    "S0": 13383,
+    "S2": 13557,
+    "S2_projection": 174
+  },
+  "arms": {
+    "S0": {
+      "protocol_version": 1.1,
+      "source_git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+      "arm": "S0",
+      "width": 32,
+      "updates_completed": 12800,
+      "target_updates": 12800,
+      "selected_update": 12400,
+      "selected_validation": {
+        "task_loss": 0.3205856862320698,
+        "presence_loss": 0.07792876369315199,
+        "range_cell_loss": 0.19805260957625165,
+        "range_offset_loss": 0.0382992783728987,
+        "doppler_loss": 0.006305034589767456,
+        "auc": 0.99423344,
+        "range_rmse_all_h1_cells": 2.245697259902954,
+        "doppler_rmse_all_h1_hz": 24.24605369567871,
+        "true_cell_doppler_rmse_hz": 23.431447982788086,
+        "predicted_range_cell_mismatch_rate": 0.0572
+      },
+      "microbatch_size": 16,
+      "effective_batch_size": 64,
+      "gradient_accumulation_steps": 4,
+      "training_seconds_this_invocation": 878.2556279459968,
+      "cuda_peak_allocated_bytes": 274465280,
+      "cuda_peak_reserved_bytes": 337641472,
+      "parameter_count": 13383,
+      "history_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/training_history.csv",
+      "best_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/best_checkpoint.pt",
+      "resume_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/latest_training_state.pt",
+      "prior_oom_attempts": []
+    },
+    "S2": {
+      "protocol_version": 1.1,
+      "source_git_sha": "d996b66418221e027c29927789ff84f3c1df3c89",
+      "arm": "S2",
+      "width": 32,
+      "updates_completed": 12800,
+      "target_updates": 12800,
+      "selected_update": 12000,
+      "selected_validation": {
+        "task_loss": 0.6932526060206855,
+        "presence_loss": 0.11481030121838558,
+        "range_cell_loss": 0.5164623501800215,
+        "range_offset_loss": 0.036402064965257885,
+        "doppler_loss": 0.02557788965702057,
+        "auc": 0.99038656,
+        "range_rmse_all_h1_cells": 2.9493048191070557,
+        "doppler_rmse_all_h1_hz": 53.42299270629883,
+        "true_cell_doppler_rmse_hz": 48.34062576293945,
+        "predicted_range_cell_mismatch_rate": 0.1808
+      },
+      "microbatch_size": 16,
+      "effective_batch_size": 64,
+      "gradient_accumulation_steps": 4,
+      "training_seconds_this_invocation": 1005.3974018500303,
+      "cuda_peak_allocated_bytes": 285836800,
+      "cuda_peak_reserved_bytes": 371195904,
+      "parameter_count": 13557,
+      "history_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S2/training_history.csv",
+      "best_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S2/best_checkpoint.pt",
+      "resume_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S2/latest_training_state.pt",
+      "prior_oom_attempts": []
+    }
+  }
+}
