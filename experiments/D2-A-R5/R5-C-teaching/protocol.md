@@ -38,6 +38,11 @@ and use the same 12,800-update FP32 schedule. The current implementation has
 120,717 training parameters and 70,277 inference parameters after export; G0
 must record and verify these counts at runtime.
 
+The physical-truth task terms use the frozen R5-A/E003 weights: presence BCE,
+range-cell cross-entropy, range-offset Smooth L1 (`beta=0.1`), and circular
+Doppler cosine loss each have weight 1.0. Only the separate response KL is
+weighted by `lambda=0.05` on T1–T3.
+
 | Arm | Physical-truth task loss | Auxiliary response loss |
 |---|---|---|
 | T0 | Presence, range and Doppler truth | None; response head is instantiated but unused |
@@ -162,12 +167,13 @@ frozen multi-seed confirmation protocol.
 The run should retain protocol/config, split manifests, training history,
 selected checkpoints, per-scene predictions, metrics, analysis, phase review,
 environment/resource records, and failure logs. It should not retain complete
-IQ or response-map caches. Keep the final project below 20 GiB while preserving
-all user data and historical negative results.
+IQ or response-map caches. The 20 GiB project-size limit applies after the
+stage's cleanup; intermediate size may exceed it. Preserve all user data and
+historical negative results.
 
 Current execution state is **not authorized**: external R5-C ChatGPT review is
-pending. Do not run preflight that generates data, `overfit`, or `train` until
-the returned review has been considered and a preregistered config/protocol is
-committed and pushed. A later update must record the review decision, update
-the protocol version/status before any data generation or training, and retain
-this draft history.
+pending. Do not run `preflight`, `overfit`, or `train` until the returned review
+has been considered and a preregistered config/protocol is committed and
+pushed. A later update must record the review decision, update the protocol
+version/status before any data generation or training, and retain this draft
+history.

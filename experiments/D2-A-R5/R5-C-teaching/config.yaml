@@ -4,7 +4,11 @@ experiment:
   protocol_version: 0.1
   status: draft
   charter_version: 1.3
-  independent_chatgpt_review: pending
+  independent_chatgpt_review:
+    status: pending
+    target_commit: null
+    decision: null
+    supports_pilot: false
   run_authorized: false
   final_blind_generation_authorized: false
 
@@ -84,6 +88,12 @@ training:
   initialization_seed: 303
   matched_initial_state_bit_identical: true
   supervision: physical_truth_task_loss_all_arms
+  task_losses:
+    presence_bce_weight: 1.0
+    range_cell_cross_entropy_weight: 1.0
+    range_offset_smooth_l1_weight: 1.0
+    range_offset_smooth_l1_beta: 0.1
+    doppler_circular_cosine_weight: 1.0
   teacher_loss_weight: 0.05
   teacher_loss_weight_schedule: constant
   teacher_loss_rows: H1_only
@@ -142,6 +152,8 @@ resources:
   cuda_required: true
   cpu_fallback: forbidden
   simultaneous_models_on_gpu: 1
+  minimum_free_vram_bytes: 536870912
+  minimum_free_disk_bytes: 2147483648
   persist_full_iq: false
   persist_teacher_maps: false
   project_size_final_limit_gib: 20

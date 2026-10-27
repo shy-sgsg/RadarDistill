@@ -96,11 +96,11 @@
 - `compute_h1_teacher_maps(iq_h1, config, device) -> Tensor` calls the existing strict-CUDA K3 response (factor 4), returns only the current update's temporary targets, and does not persist them.
 - Runner phases: `preflight`, `overfit`, `train`, `evaluate`, `analyze`.
 
-- [ ] **Step 1: Write failing CPU unit tests** for matched initialization, paired H0/H1 ordering, H1-only K3 calls/loss, accumulation scale, and sequential arm selection.
-- [ ] **Step 2: Run the focused tests and confirm missing pilot behavior.**
-- [ ] **Step 3: Implement a stage-specific runner** that reuses `make_paired_examples`, `scale_d2a_e002_microbatch_loss`, `R5CosineSchedule`, `TaskStudent`, `task_loss`, and `k2_response_cuda`; do not modify R5-A runner behavior.
-- [ ] **Step 4: Run focused tests plus the existing R5 student/teacher regression tests.**
-- [ ] **Step 5: After the independent R5-C review supports proceeding, freeze protocol/config, commit and push the code, then run `preflight` and verify actual RTX 3050 `cuda:0` availability.**
+- [x] **Step 1: Write failing CPU unit tests** for matched initialization, paired H0/H1 ordering, H1-only K3 calls/loss, accumulation scale, sequential arm selection, and review-gated preflight.
+- [x] **Step 2: Run the focused tests and confirm missing pilot behavior.**
+- [x] **Step 3: Implement a stage-specific runner** that reuses `make_paired_examples`, `scale_d2a_e002_microbatch_loss`, `R5CosineSchedule`, `TaskStudent`, `task_loss`, and `k2_response_cuda`; do not modify R5-A runner behavior.
+- [x] **Step 4: Run focused tests plus the existing R5 student/teacher regression tests.**
+- [x] **Step 5: Commit and push this implementation while the protocol/config remain draft.** Do not run preflight, overfit, or training before the independent R5-C review supports proceeding.
 
 ### Task 5: Implement independent streamed evaluation and pilot gates
 
@@ -128,7 +128,7 @@
 - Create: `docs/stage_reviews/D2-A-R5C-teaching_review.md`
 - Create: `experiments/D2-A-R5/R5-C-teaching/review_request.md`
 
-- [ ] **Step 1: Verify protocol/code are pushed and G0/G1 pass; record environment, CUDA, disk and model parameter counts.**
+- [ ] **Step 1: After the independent R5-C review supports proceeding, record its decision and freeze protocol/config in a separate commit; verify the frozen code is pushed, then run preflight and G0/G1 and record environment, CUDA, disk and model parameter counts.**
 - [ ] **Step 2: Train T0, T1, T2, T3 sequentially** using one seed and the frozen 12,800-update schedule; preserve checkpoints, per-update history, resource data and failure logs.
 - [ ] **Step 3: Run separate H0 calibration, H0 verification, C3 H0 verification and new H1 development evaluation.**
 - [ ] **Step 4: Analyze T1/T2 versus T0 and T2 versus truth-assisted T3; evaluate C3 Pfa and all task protections; distinguish scenario bootstrap from seed uncertainty.**
