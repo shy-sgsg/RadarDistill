@@ -8,10 +8,11 @@ simulation or evidence about hardware behavior.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 
+from radardistill.evaluation.physical_consistency import wrap_periodic_difference
 from radardistill.simulation.d2a import D2APairedBatch, compute_scene_power_metrics
 
 
@@ -33,6 +34,9 @@ class D2APhysicalInterventionBatch:
     target_power_shift_db: float
     clutter_power_shift_db: float
     component_metrics: dict[str, np.ndarray]
+    target_doppler_shift_hz: float = 0.0
+    channel_phase_offsets_rad: np.ndarray | None = None
+    channel_keep_mask: np.ndarray | None = None
 
 
 def _power_shift_to_amplitude_scale(power_shift_db: float, *, name: str) -> float:
@@ -63,8 +67,32 @@ def _scaled_iq(values: np.ndarray, amplitude_scale: float) -> np.ndarray:
     return scaled
 
 
+def _component_metrics(
+    target_iq: np.ndarray, clutter_iq: np.ndarray, noise_iq: np.ndarray
+) -> dict[str, np.ndarray]:
+    return {
+        name: np.asarray(value, dtype=np.float64).copy()
+        for name, value in compute_scene_power_metrics(target_iq, clutter_iq, noise_iq).items()
+    }
+
+
+def _rotate_channels(values: np.ndarray, phase_offsets_rad: np.ndarray) -> np.ndarray:
+    phase = np.exp(1j * phase_offsets_rad)[None, :, None, None]
+    with np.errstate(over="ignore", invalid="ignore"):
+        rotated = np.asarray(values.astype(np.complex128) * phase, dtype=values.dtype)
+    if np.any(~np.isfinite(rotated)):
+        raise ValueError("channel phase transform produced non-finite IQ")
+    return rotated
+
+
+def _metadata(batch: D2APairedBatch | D2APhysicalInterventionBatch, name: str, default):
+    if isinstance(batch, D2APhysicalInterventionBatch):
+        return getattr(batch, name)
+    return default
+
+
 def scale_d2a_paired_components(
-    batch: D2APairedBatch,
+    batch: D2APairedBatch | D2APhysicalInterventionBatch,
     *,
     target_power_shift_db: float = 0.0,
     clutter_power_shift_db: float = 0.0,
@@ -152,7 +180,8 @@ def scale_d2a_paired_components(
     else:
         iq_h1 = np.asarray(iq_h0 + target_iq, dtype=iq_h1_source.dtype)
 
-    metrics = compute_scene_power_metrics(target_iq, clutter_iq, noise_iq)
+    prior_channel_phase = _metadata(batch, "channel_phase_offsets_rad", None)
+    prior_channel_mask = _metadata(batch, "channel_keep_mask", None)
     return D2APhysicalInterventionBatch(
         iq_h0=iq_h0,
         iq_h1=iq_h1,
@@ -165,10 +194,150 @@ def scale_d2a_paired_components(
         truth_target_doppler_hz=truth_doppler.copy(),
         truth_target_amplitude=changed_truth_amplitude,
         base_scene_id=scene_ids.copy(),
-        target_power_shift_db=float(target_power_shift_db),
-        clutter_power_shift_db=float(clutter_power_shift_db),
-        component_metrics={
-            name: np.asarray(value, dtype=np.float64).copy()
-            for name, value in metrics.items()
-        },
+        target_power_shift_db=(
+            _metadata(batch, "target_power_shift_db", 0.0) + float(target_power_shift_db)
+        ),
+        clutter_power_shift_db=(
+            _metadata(batch, "clutter_power_shift_db", 0.0) + float(clutter_power_shift_db)
+        ),
+        component_metrics=_component_metrics(target_iq, clutter_iq, noise_iq),
+        target_doppler_shift_hz=_metadata(batch, "target_doppler_shift_hz", 0.0),
+        channel_phase_offsets_rad=(
+            None if prior_channel_phase is None else np.asarray(prior_channel_phase).copy()
+        ),
+        channel_keep_mask=(
+            None if prior_channel_mask is None else np.asarray(prior_channel_mask).copy()
+        ),
+    )
+
+
+def shift_d2a_target_doppler(
+    batch: D2APairedBatch | D2APhysicalInterventionBatch,
+    *,
+    doppler_shift_hz: float,
+    prf_hz: float,
+) -> D2APhysicalInterventionBatch:
+    """Apply ``exp(j 2π Δf n / PRF)`` to target IQ and wrap Doppler truth.
+
+    Clutter, noise, and H0 are fixed. This exact slow-time modulation is a
+    controlled target-frequency counterfactual; it does not resynthesize the
+    target trajectory or update a physical velocity label.
+    """
+    shift = float(doppler_shift_hz)
+    prf = float(prf_hz)
+    if not np.isfinite(shift):
+        raise ValueError("doppler_shift_hz must be finite")
+    if not np.isfinite(prf) or prf <= 0.0:
+        raise ValueError("prf_hz must be positive and finite")
+
+    baseline = scale_d2a_paired_components(batch)
+    pulse_count = baseline.target_signal_iq.shape[2]
+    pulse_times = np.arange(pulse_count, dtype=np.float64) / prf
+    wrapped_shift = float(wrap_periodic_difference(shift, period=prf))
+    phase = np.exp(2j * np.pi * wrapped_shift * pulse_times)[None, None, :, None]
+    with np.errstate(over="ignore", invalid="ignore"):
+        shifted_target = np.asarray(
+            baseline.target_signal_iq.astype(np.complex128) * phase,
+            dtype=baseline.target_signal_iq.dtype,
+        )
+    if np.any(~np.isfinite(shifted_target)):
+        raise ValueError("Doppler shift produced non-finite target IQ")
+    shifted_h1 = np.asarray(baseline.iq_h0 + shifted_target, dtype=baseline.iq_h1.dtype)
+    shifted_truth = wrap_periodic_difference(
+        baseline.truth_target_doppler_hz + wrapped_shift, period=prf
+    )
+    return replace(
+        baseline,
+        iq_h1=shifted_h1,
+        target_signal_iq=shifted_target,
+        truth_target_doppler_hz=shifted_truth,
+        target_doppler_shift_hz=baseline.target_doppler_shift_hz + shift,
+        component_metrics=_component_metrics(
+            shifted_target, baseline.clutter_iq, baseline.noise_iq
+        ),
+    )
+
+
+def apply_d2a_channel_phase_offsets(
+    batch: D2APairedBatch | D2APhysicalInterventionBatch,
+    phase_offsets_rad: np.ndarray,
+) -> D2APhysicalInterventionBatch:
+    """Apply fixed receive-channel phase offsets to every IQ component.
+
+    A common phase is invariant across channels; unequal offsets perturb the
+    relative array phase. Applying the negative offsets to this returned batch
+    restores the original coherent IQ to numerical precision.
+    """
+    baseline = scale_d2a_paired_components(batch)
+    offsets = np.asarray(phase_offsets_rad, dtype=np.float64).reshape(-1)
+    channel_count = baseline.iq_h0.shape[1]
+    if offsets.size != channel_count:
+        raise ValueError("provide one phase offset per channel")
+    if np.any(~np.isfinite(offsets)):
+        raise ValueError("phase offsets must be finite")
+
+    clutter_iq = _rotate_channels(baseline.clutter_iq, offsets)
+    noise_iq = _rotate_channels(baseline.noise_iq, offsets)
+    target_iq = _rotate_channels(baseline.target_signal_iq, offsets)
+    iq_h0 = np.asarray(clutter_iq + noise_iq, dtype=baseline.iq_h0.dtype)
+    iq_h1 = np.asarray(iq_h0 + target_iq, dtype=baseline.iq_h1.dtype)
+    prior = baseline.channel_phase_offsets_rad
+    cumulative = np.zeros(channel_count, dtype=np.float64) if prior is None else prior
+    cumulative = wrap_periodic_difference(cumulative + offsets, period=2.0 * np.pi)
+    keep_mask = baseline.channel_keep_mask
+    return replace(
+        baseline,
+        iq_h0=iq_h0,
+        iq_h1=iq_h1,
+        clutter_iq=clutter_iq,
+        noise_iq=noise_iq,
+        target_signal_iq=target_iq,
+        channel_phase_offsets_rad=cumulative,
+        channel_keep_mask=None if keep_mask is None else keep_mask.copy(),
+        component_metrics=_component_metrics(target_iq, clutter_iq, noise_iq),
+    )
+
+
+def mask_d2a_channels(
+    batch: D2APairedBatch | D2APhysicalInterventionBatch,
+    keep_channels: np.ndarray,
+) -> D2APhysicalInterventionBatch:
+    """Zero omitted receive channels in H0/H1 and all component IQ arrays.
+
+    The keep mask is cumulative. To restore channels, start from the original
+    paired batch; a zeroed channel cannot be recovered from a masked result.
+    """
+    baseline = scale_d2a_paired_components(batch)
+    keep = np.asarray(keep_channels, dtype=bool).reshape(-1)
+    channel_count = baseline.iq_h0.shape[1]
+    if keep.size != channel_count:
+        raise ValueError("provide one keep flag per channel")
+    if not np.any(keep):
+        raise ValueError("at least one channel must be kept")
+    prior = baseline.channel_keep_mask
+    cumulative = keep if prior is None else (prior & keep)
+    if not np.any(cumulative):
+        raise ValueError("at least one cumulative channel must be kept")
+
+    def mask(values: np.ndarray) -> np.ndarray:
+        return np.asarray(values * cumulative[None, :, None, None], dtype=values.dtype)
+
+    clutter_iq = mask(baseline.clutter_iq)
+    noise_iq = mask(baseline.noise_iq)
+    target_iq = mask(baseline.target_signal_iq)
+    iq_h0 = np.asarray(clutter_iq + noise_iq, dtype=baseline.iq_h0.dtype)
+    iq_h1 = np.asarray(iq_h0 + target_iq, dtype=baseline.iq_h1.dtype)
+    phase_offsets = baseline.channel_phase_offsets_rad
+    return replace(
+        baseline,
+        iq_h0=iq_h0,
+        iq_h1=iq_h1,
+        clutter_iq=clutter_iq,
+        noise_iq=noise_iq,
+        target_signal_iq=target_iq,
+        channel_phase_offsets_rad=(
+            None if phase_offsets is None else phase_offsets.copy()
+        ),
+        channel_keep_mask=cumulative.copy(),
+        component_metrics=_component_metrics(target_iq, clutter_iq, noise_iq),
     )
