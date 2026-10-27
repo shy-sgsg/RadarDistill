@@ -2,7 +2,7 @@
 
 **更新日期：** 2026-10-28
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5-A Small/Medium width-only capacity pilot 已在 CUDA 完成；训练执行代码提交 `1678a468d5c150ff734d80ad40cf75407a49651f`。结果、训练曲线、分层指标和 Codex 阶段自审见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md) 与 [stage review](stage_reviews/D2-A-R5A-capacity_review.md)。
+**最新完成工作：** D2-A-R5-A Small/Medium width-only capacity pilot 已在 CUDA 完成；代码提交 `1678a468d5c150ff734d80ad40cf75407a49651f`，结果与状态归档提交 `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`。结果、训练曲线、分层指标和 Codex 阶段自审见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md) 与 [stage review](stage_reviews/D2-A-R5A-capacity_review.md)；ChatGPT 审查请求见 [review request](../experiments/D2-A-R5/R5-A/capacity/review_request.md)。
 **阶段判断：** R5-A **REFINE**：延长训练在固定 seed/data 下持续改善；Medium width=96 相对 Small width=32 的 C2/C3 joint-success 提升 `+0.1309`（95% CI `[+0.1123,+0.1509]`），range/Doppler RMSE 亦改善；但两者 C3 H0 Pfa 分别 `0.2041/0.1890`，均超 0.10 门，因此 G3 任务保护失败，Medium 不晋级、不运行 Large。E003、R3、E002、T001、R4 和旧 R5-A 结论保持不变。
 
 **当前授权工作：** R5-A Phase 1/2 已完成：S0/S2 及 Small/Medium 均按12,800-update预算使用RTX 3050 Laptop `cuda:0` FP32训练；未运行KD、正式多 seed 或 final blind。Medium 未通过C3 Pfa绝对保护。按既有授权进入R5-B单一轻量原始IQ时频注意力候选；大型可重建缓存不提交，整个项目最终须低于20 GiB。
@@ -67,6 +67,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
 - D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
 - D2-A-R5-A [容量对照分析](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[指标](../experiments/D2-A-R5/R5-A/capacity/metrics.json)、[阶段自审](stage_reviews/D2-A-R5A-capacity_review.md)、[容量研究汇总](research/D2-A_student_capacity_study.md)
+- D2-A-R5-A [ChatGPT容量阶段审查请求](../experiments/D2-A-R5/R5-A/capacity/review_request.md)，审查目标结果SHA `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`
 - D2-A-E003 [实验协议](../experiments/D2-A-E003/protocol.md)、[固定特征设计](../experiments/D2-A-E003/feature_design.md)、[训练与指标](../experiments/D2-A-E003/training.json)、[分析](../experiments/D2-A-E003/analysis.md)、[审查请求](../experiments/D2-A-E003/review_request.md)、[阶段自审](stage_reviews/D2-A-E003_review.md)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。
