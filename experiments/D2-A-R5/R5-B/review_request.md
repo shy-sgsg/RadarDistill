@@ -13,6 +13,13 @@
 - **阶段/实验：** D2-A-R5-B，单个原始 IQ 时频注意力学生 TemporalFrequencyAttentionStudent（TFAS）seed 101 E1 truth-only pilot。
 - **研究总纲路径与版本：** `docs/RESEARCH_CHARTER.md`，v1.3（2026-10-27修订）；结果提交未修改总纲正文。
 
+## 既有教师知识证据（供路线判断）
+
+- **E002 K2：** 旧协议中K2是只依赖可观测IQ生成的非阈值B3 DPCA完整RD软响应。质量审计允许过一次有界学生pilot：可辨识A/B/C pooled target-window lift均值`0.03623`（95% CI `[0.03200,0.04073]`），teacher top-cell localization=`0.7227`。但C3 partial-overlap/SNR=0 dB localization仅`0.0471`、target-window lift=`0.000673`（CI `[0.000544,0.000796]`）。已有A/B/C单seed训练中，K2组C相对matched课程真值B的joint差仅`+0.0036`（95% CI `[-0.0088,+0.0162]`），未达到预注册pilot收益门。它是条件性知识候选，尚无支持扩大蒸馏的收益证据。
+- **R3 T1/T2：** B3基础上的全图归一化T1和局部CFAR-like T2均未通过固定阈值迁移G2，不能授予固定阈值教师资格。T1在CNR=10 dB部分重叠C有较好检测（Pd/joint约`.982/.982`），参数估计与B3接近；这只能支持进一步研究任务软响应，不证明其分层虚警稳定或软知识可教。T2参考窗被目标污染，部分重叠条件Doppler RMSE约23 Hz。
+- **T001 ACE×AMF：** 公共尺度正确性与固定阈值/困难场景教师任务门均失败；按冻结规则未生成S2学生或知识图教学实验。
+- **阶段含义：** 目前没有在困难C3绝对虚警门下合格的传统检测器，也没有已显示学生增益的蒸馏知识。请据这些负/条件性证据判断R5-C应该先做教师知识质量审计、换知识形式，还是暂缓该分支；不要把K2 audit允许一个pilot等同于教学收益成立。
+
 ## 总体目标与本阶段科学问题
 
 RadarDistill 的总体目标是通过可信物理仿真真值与传统方法知识，训练直接完成 GMTI 目标检测和连续参数估计的学生，并在后续评估精度与完整处理成本。学习模型必须保留并正确利用复数相干信息，且在明确的检测、参数、虚警保护门下评价；不能仅因替换成 Transformer 或通过阶段门就主张研究成功。
@@ -74,5 +81,6 @@ R5-B服务总纲 Q3/Q4/Q6/Q8/Q10，检验 H-ARCH-003：在三通道原始复 IQ�
 - `docs/stage_reviews/D2-A-R5B_review.md`
 - 实现：`src/radardistill/students/temporal_frequency_attention.py`、`scripts/run_d2a_r5_attention.py`
 - 关键比较：`experiments/D2-A-R5/R5-A/capacity/analysis.md` 与 metrics；R5-B相对实现提交`55e7c7810e6cbb0277f79b1b6b4c401052b559dc`的Git差异
+- 教师/蒸馏历史证据：`experiments/D2-A-E002/protocol.md`、`analysis.md`、`architecture_and_loss_review.md`；`experiments/D2-A-R3/analysis.md`；`experiments/D2-A-T001/analysis.md`；总体教师研究范围：`docs/research/D2-A_teacher_pedagogy_study.md`
 
 审查时请首先以结果 SHA `d847f233a5614580132d4ccad41e59e4d68b6789` 检查 `docs/RESEARCH_CHARTER.md`。该版本总纲为v1.3；请不要把阶段自审作为独立结论，也不要把未运行的KD、传统教师比较或blind写成证据。
