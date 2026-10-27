@@ -60,7 +60,7 @@ def test_validator_accepts_review_supported_preregistration_record(config: dict)
         protocol_version=1.0,
         independent_chatgpt_review={
             "status": "returned",
-            "target_commit": "a" * 40,
+            "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
             "decision": "CONTINUE",
             "supports_pilot": True,
         },
@@ -69,6 +69,25 @@ def test_validator_accepts_review_supported_preregistration_record(config: dict)
     approved["training"]["execution_authorized"] = True
 
     validate_r5c_teaching_config(approved)
+
+
+def test_validator_rejects_review_for_a_different_r5c_commit(config: dict) -> None:
+    approved = deepcopy(config)
+    approved["experiment"].update(
+        status="preregistered",
+        protocol_version=1.0,
+        independent_chatgpt_review={
+            "status": "returned",
+            "target_commit": "a" * 40,
+            "decision": "CONTINUE",
+            "supports_pilot": True,
+        },
+        run_authorized=True,
+    )
+    approved["training"]["execution_authorized"] = True
+
+    with pytest.raises(ValueError, match="review target commit"):
+        validate_r5c_teaching_config(approved)
 
 
 @pytest.mark.parametrize(
@@ -417,7 +436,7 @@ def test_preflight_rejects_authorized_config_not_equal_to_committed_config(confi
         protocol_version=1.0,
         independent_chatgpt_review={
             "status": "returned",
-            "target_commit": "a" * 40,
+            "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
             "decision": "CONTINUE",
             "supports_pilot": True,
         },
@@ -443,7 +462,7 @@ def test_low_level_training_requires_preflight_and_passing_g1(config: dict, monk
         protocol_version=1.0,
         independent_chatgpt_review={
             "status": "returned",
-            "target_commit": "a" * 40,
+            "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
             "decision": "CONTINUE",
             "supports_pilot": True,
         },

@@ -44,6 +44,7 @@ _CONDITIONS = (
 )
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 _STAGE_ROOT = _PROJECT_ROOT / "experiments/D2-A-R5/R5-C-teaching"
+_REQUIRED_R5C_REVIEW_TARGET_COMMIT = "7563c822e70afe761897ddd5e91bb64207720f89"
 FROZEN_INPUTS = (
     "AGENTS.md",
     "docs/RESEARCH_CHARTER.md",
@@ -243,6 +244,11 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
         ):
             raise ValueError("R5-C teaching draft must remain blocked pending independent review")
     elif status == "preregistered":
+        if review.get("target_commit") != _REQUIRED_R5C_REVIEW_TARGET_COMMIT:
+            raise ValueError(
+                "R5-C teaching review target commit must equal the frozen teacher-audit commit "
+                f"{_REQUIRED_R5C_REVIEW_TARGET_COMMIT}"
+            )
         if (
             experiment.get("protocol_version") != 1.0
             or review.get("status") != "returned"

@@ -264,7 +264,7 @@ def test_split_generation_yields_fixed_size_scene_chunks(monkeypatch, config: di
     authorized["experiment"]["protocol_version"] = 1.0
     authorized["experiment"]["independent_chatgpt_review"] = {
         "status": "returned",
-        "target_commit": "a" * 40,
+        "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
         "decision": "CONTINUE",
         "supports_pilot": True,
     }

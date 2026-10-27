@@ -184,6 +184,9 @@ historical negative results.
 Current execution state is **not authorized**: external R5-C ChatGPT review is
 pending. Do not run `preflight`, `overfit`, or `train` until the returned review
 has been considered and a preregistered config/protocol is committed and
-pushed. A later update must record the review decision, update the protocol
-version/status before any data generation or training, and retain this draft
-history.
+pushed. The returned review must identify the exact result commit named in
+`experiments/D2-A-R5/R5-C/review_request.md`:
+`7563c822e70afe761897ddd5e91bb64207720f89`. The config validator rejects a
+preregistration that cites another target commit. A later update must record
+the review decision, update the protocol version/status before any data
+generation or training, and retain this draft history.
