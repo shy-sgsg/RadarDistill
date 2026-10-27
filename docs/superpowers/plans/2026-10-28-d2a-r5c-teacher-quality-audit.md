@@ -43,11 +43,11 @@
 - Consumes the frozen E001 simulation config, existing B3/K2 definition, and R5-C design.
 - Produces the fixed conditions, sample counts, seed blocks, metrics, gates, and stopping rules consumed by Tasks 2–4.
 
-- [ ] Add task alignment mapping R5-C to charter Q1/Q2/Q4/Q9/Q10, H-TEACH-002/H-TEACH-004, prior K2/T1/T001 evidence, route reason, alternatives, and explicit no-student/no-KD boundaries.
-- [ ] Freeze C3 6 strata ×512, C2 3×256, C1 2×128, C0 1×256; total 4,352 paired scenes, batch 16, 2,000 paired-scene bootstrap replicates, and seeds from 726,000,000 in disjoint 100,000 blocks.
-- [ ] Freeze K1/K3 response definitions, ±1 range cell/±20 Hz truth window, observability sharpness score, scale factors, numerical tolerances, and G0/G4 eligibility rules from the spec.
-- [ ] Validate YAML parsing, count totals, and `git diff --check`; review exact protocol/spec alignment.
-- [ ] Commit and push only these reviewed protocol/alignment/spec/plan paths to `main` before running data or CUDA teacher evaluation.
+- [x] Add task alignment mapping R5-C to charter Q1/Q2/Q4/Q9/Q10, H-TEACH-002/H-TEACH-004, prior K2/T1/T001 evidence, route reason, alternatives, and explicit no-student/no-KD boundaries.
+- [x] Freeze C3 6 strata ×512, C2 3×256, C1 2×128, C0 1×256; total 4,352 paired scenes, batch 16, 2,000 paired-scene bootstrap replicates, and seeds from 726,000,000 in disjoint 100,000 blocks.
+- [x] Freeze K1/K3 response definitions, ±1 range cell/±20 Hz truth window, observability sharpness score, scale factors, numerical tolerances, and G0/G4 eligibility rules from the spec.
+- [x] Validate YAML parsing, count totals, and `git diff --check`; review exact protocol/spec alignment.
+- [x] Commit and push only these reviewed protocol/alignment/spec/plan paths to `main` before running data or CUDA teacher evaluation.
 
 ### Task 2: Add and test the strict-CUDA B3 response backend
 
@@ -60,12 +60,12 @@
 - Consumes observable IQ shaped `[B,3,130,32]`, frozen physical config, explicit CUDA device, and oversampling factor.
 - Produces a normalized NumPy support map `[B,130×factor,32]`; rejects non-CUDA devices or unavailable CUDA.
 
-- [ ] Write failing tests for CPU-device rejection, malformed/nonfinite input rejection, K1 parity at absolute tolerance `1e-6`, normalized/nonnegative finite maps, deterministic output, global complex-scale invariance, and a known off-bin tone peak within one 2.5 Hz bin at factor 4.
-- [ ] Run the focused test file to confirm the expected missing-module/API failures.
-- [ ] Implement the minimal Torch complex128 DPCA shift, channel difference, centered FFT/zero-padding, power normalization, explicit synchronization, and CPU-array result export.
-- [ ] Run the focused tests under `/home/shy/anaconda3/envs/AISAR/bin/python -m pytest` on the visible CUDA device.
-- [ ] Compare CUDA peak allocation and actual runtime on batch 16; reject execution without `cuda:0`.
-- [ ] Commit and push the module/tests after reviewing only their exact paths.
+- [x] Write failing tests for CPU-device rejection, malformed/nonfinite input rejection, K1 parity at absolute tolerance `1e-6`, normalized/nonnegative finite maps, deterministic output, global complex-scale invariance, and a known off-bin tone peak within one 2.5 Hz bin at factor 4.
+- [x] Run the focused test file to confirm the expected missing-module/API failures.
+- [x] Implement the minimal Torch complex128 DPCA shift, channel difference, centered FFT/zero-padding, power normalization, explicit synchronization, and CPU-array result export.
+- [x] Run the focused tests under `/home/shy/anaconda3/envs/AISAR/bin/python -m pytest` on the visible CUDA device.
+- [x] Compare CUDA peak allocation and actual runtime on batch 16; reject execution without `cuda:0`.
+- [x] Commit and push the module/tests after reviewing only their exact paths.
 
 ### Task 3: Implement the registered streaming audit runner
 
@@ -78,12 +78,12 @@
 - Consumes committed protocol/config, E001 simulator, K1/K3 CUDA functions, and new condition-specific seed blocks.
 - Produces preflight/environment records, one metric row per paired scene and candidate, condition-stratified bootstrap summaries, and GPU/storage usage.
 
-- [ ] Write failing tests for exact condition sample allocation, seed-block non-overlap, paired IDs, fixed chunk size 16, and per-scene K1/K3 metric correctness on a small synthetic map.
-- [ ] Run focused tests to observe missing runner/helper behavior.
-- [ ] Implement preflight checking `main == origin/main`, committed protocol/code, PyTorch CUDA availability, RTX 3050 identity, free VRAM, disk headroom, data manifest seed disjointness, and `git status` preservation rules.
-- [ ] Implement ordered CPU scene batches with explicit per-batch seeds; transfer only IQ batches to GPU; compute K1/K3 for H0/H1; emit metrics/IDs and discard IQ/maps before the next batch.
-- [ ] Implement paired target-window mass lift, top-cell localization, range/circular Doppler errors, fixed observable peak-mass confidence, condition-stratified 2,000-replicate base-scene bootstrap, scale-invariance checks, and runtime/peak-memory records.
-- [ ] Run focused tests in AISAR; then push runner/tests before actual scene generation.
+- [x] Write failing tests for exact condition sample allocation, seed-block non-overlap, paired IDs, fixed chunk size 16, and per-scene K1/K3 metric correctness on a small synthetic map.
+- [x] Run focused tests to observe missing runner/helper behavior.
+- [x] Implement preflight checking `main == origin/main`, committed protocol/code, PyTorch CUDA availability, RTX 3050 identity, free VRAM, disk headroom, data manifest seed disjointness, and `git status` preservation rules.
+- [x] Implement ordered CPU scene batches with explicit per-batch seeds; transfer only IQ batches to GPU; compute K1/K3 for H0/H1; emit metrics/IDs and discard IQ/maps before the next batch.
+- [x] Implement paired target-window mass lift, top-cell localization, range/circular Doppler errors, fixed observable peak-mass confidence, condition-stratified 2,000-replicate base-scene bootstrap, scale-invariance checks, and runtime/peak-memory records.
+- [x] Run focused tests in AISAR; push runner/tests before actual scene generation.
 
 ### Task 4: Run R5-C teacher audit on new scenes
 

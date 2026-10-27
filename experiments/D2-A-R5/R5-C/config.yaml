@@ -97,5 +97,8 @@ resources:
   precision: complex128_FP64
   models_resident_simultaneously: 1
   max_batch_size: 16
+  minimum_free_vram_bytes: 536870912
+  minimum_free_disk_bytes: 2147483648
+  output_directory: experiments/D2-A-R5/R5-C
   project_size_final_limit_gib: 20
   preserve_untracked_user_files: true
