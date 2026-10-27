@@ -1,0 +1,148 @@
+experiment:
+  id: D2-A-R5
+  subphase: R5-C-teaching
+  protocol_version: 0.1
+  status: draft
+  charter_version: 1.3
+  independent_chatgpt_review: pending
+  run_authorized: false
+  final_blind_generation_authorized: false
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  source_config: experiments/D2-A-E001/config.yaml
+
+model:
+  architecture: TaskStudent
+  width: 96
+  spectrum_frequency_bins: 520
+  training_parameter_count_expected: 120717
+  inference_parameter_count_expected: 70277
+  spectrum_head_training_only: true
+  remove_spectrum_head_at_inference: true
+
+data:
+  training_source: experiments/D2-A-R5/R5-A/training_pair_plan.npz
+  training_pairs: 51200
+  validation_source: frozen_R5-A_common_validation_ids
+  validation_pairs: 5000
+  pair_plan_seed_base: 2026102711
+  fixed_pair_dataset_passes: 8
+  reuse_same_pair_order_for_all_arms: true
+  chunk_size: 16
+  condition_seed_stride: 1000000
+  chunk_seed_stride: 1009
+  split_seed_bases:
+    h0_calibration: 728000000
+    h0_verification: 748000000
+    c3_h0_verification: 768000000
+    h1_development: 788000000
+  conditions:
+    - {course: C0, scenario_id: separated, snr_db: 20.0, cnr_db: -5.0}
+    - {course: C1, scenario_id: separated, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C1, scenario_id: near_clutter_edge, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C2, scenario_id: separated, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C3, scenario_id: separated, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: separated, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 20.0}
+  splits:
+    h0_calibration:
+      presence: H0
+      scene_count: 8192
+      condition_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      condition_counts: [2048, 1024, 1024, 683, 683, 682, 342, 342, 341, 341, 341, 341]
+    h0_verification:
+      presence: H0
+      scene_count: 8192
+      condition_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      condition_counts: [2048, 1024, 1024, 683, 683, 682, 342, 342, 341, 341, 341, 341]
+    c3_h0_verification:
+      presence: H0
+      scene_count: 4096
+      condition_indices: [6, 7, 8, 9, 10, 11]
+      condition_counts: [683, 683, 683, 683, 682, 682]
+    h1_development:
+      presence: H1
+      scene_count: 4352
+      condition_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      condition_counts: [256, 128, 128, 256, 256, 256, 512, 512, 512, 512, 512, 512]
+  persist_full_iq: false
+  persist_teacher_maps: false
+  final_blind_generation_authorized: false
+
+training:
+  arms: [T0, T1, T2, T3]
+  initialization_seed: 303
+  matched_initial_state_bit_identical: true
+  supervision: physical_truth_task_loss_all_arms
+  teacher_loss_weight: 0.05
+  teacher_loss_weight_schedule: constant
+  teacher_loss_rows: H1_only
+  teacher_input: observable_H1_IQ_and_frozen_physics_config_only
+  teacher_backend: K3_B3_DPCA_complex128_cuda_4x
+  teacher_map_storage: online_update_temporary_only
+  updates: 12800
+  paired_scenes_per_update: 32
+  effective_batch_size_cpi: 64
+  initial_microbatch_size: 16
+  oom_microbatch_fallbacks: [8, 4]
+  preserve_effective_batch_on_oom: true
+  optimizer: AdamW
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  learning_rate_initial: 0.001
+  learning_rate_at_update_6400: 0.0001
+  learning_rate_final: 0.00001
+  schedule: two_segment_R5_cosine
+  validation_interval_updates: 400
+  selection: minimum_common_validation_truth_task_loss
+  precision: FP32
+  amp: false
+  execution_authorized: false
+
+evaluation:
+  threshold_target_pfa_cpi: 0.05
+  calibration_quantile: 0.95
+  calibration_quantile_method: higher
+  decision_comparator: ">="
+  exact_pfa_interval: one_sided_clopper_pearson_95
+  bootstrap_unit: paired_base_scene_id
+  bootstrap_replicates: 2000
+  bootstrap_seed: 2026102828
+  primary_scope: identifiable_C2_C3_joint_success
+  primary_contrasts: [T1_minus_T0, T2_minus_T0]
+  minimum_primary_gain: 0.02
+  simultaneous_one_sided_confidence: 0.975
+  primary_bootstrap_lower_quantile: 0.025
+  protection_intervals: nominal_95_percent_pilot_screening
+  c3_h0_pfa_point_limit: 0.10
+  final_blind_generation_authorized: false
+gates:
+  g1_overfit:
+    paired_scenes: 16
+    updates: 200
+    minimum_truth_task_loss_relative_drop: 0.50
+    minimum_presence_accuracy: 1.0
+    minimum_h1_range_cell_accuracy: 0.95
+    task_head_gradients_finite_and_nonzero: true
+    excluded_from_scientific_metrics: true
+
+resources:
+  gpu: NVIDIA_GeForce_RTX_3050_Laptop_GPU
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  simultaneous_models_on_gpu: 1
+  persist_full_iq: false
+  persist_teacher_maps: false
+  project_size_final_limit_gib: 20
+  preserve_untracked_user_files: true
