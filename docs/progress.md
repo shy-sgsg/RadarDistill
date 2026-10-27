@@ -400,3 +400,11 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **缓存清理：** 评价完成后删除 D1-E001/D1-E002 可再生成训练/校准缓存及 D2-A-E002 IQ 缓存，共释放 `30,657,060,864` 字节分配空间；24 份缓存 manifest 已归档。D1-E002 独立 blind cache 和本地 GMTI 源码/验收包未变。项目清理前约 `40.03 GB`，清理后约 `8.73 GiB`；审计见 `docs/maintenance/CACHE_CLEANUP_2026-10-25.md`。
 - **验证：** `conda run --no-capture-output -n AISAR python -m pytest -q`：**250 passed**。定向 E002 runner 测试：2 passed。
 - **补充架构/损失审查：** validation 中预测/真实 range-cell 错配率 A/B/C=`10.30%/11.14%/10.96%`；用同模型真实 range cell 读取 Doppler 后 RMSE=`40.95/56.03/59.55 Hz`，预测门为 `46.66/58.55/60.03 Hz`。Development 错配率为 `10.04%/11.02%/11.30%`。错门会增加部分误差，但真值门下误差仍高，尚不支持其为主要 Doppler 瓶颈；H-OPT-D2-001 保持 INCONCLUSIVE，冻结损失不改。K2 audit 的 pooled C3 允许 C，但 partial-overlap/SNR0 子组 localization 仅 4.7%。详见 E002 架构/损失审查和阶段分析。
+
+## 2026-10-28：D2-A-R5-A Small/Medium 容量 pilot 完成
+
+- **执行：** R5-A capacity runner 与配置提交 `1678a468d5c150ff734d80ad40cf75407a49651f`。在 RTX 3050 Laptop `cuda:0`、AISAR / PyTorch 2.8.0+cu128 上，Small width32 复用 seed101 R5-A S0 checkpoint；Medium width96 独立初始化。两者共用冻结 E003 train/validation IDs、R5 pair plan、E1 truth-only、FP32、有效 batch64和12,800 updates。Medium microbatch16，无 OOM，训练用时3,951.3秒，CUDA peak allocated 820,737,024 bytes。
+- **可学习性：** Medium 的16对 scene、200-update过拟合检查通过，task loss `4.1465→0.00238`，presence/range-cell准确率均1.0；该检查只验证工程学习路径。
+- **任务收益：** Medium−Small overall joint-success差`+0.07178`（95% CI `[+0.06201,+0.08204]`），可辨识C2/C3 joint差`+0.13086`（`[+0.11230,+0.15088]`）。C2/C3 range/Doppler RMSE比`0.839/0.713`；primary-gain门通过。
+- **保护与判定：** 普通H0 verification Pfa=`0.05017/0.04797`，但C3 H0 Pfa=`0.20410/0.18896`，两模型均高于0.10限制；相对C3 Pfa差值区间虽未显示Medium恶化，绝对保护门失败。容量阶段判 **REFINE**，H-CAP-002为有限支持；不运行Large、KD或final blind。数据是E003既用开发材料，非blind，单seed不估计seed方差。
+- **交付：** `experiments/D2-A-R5/R5-A/capacity/` 含config、preflight、G1、training/metrics、per-scene输出、图和analysis；`docs/stage_reviews/D2-A-R5A-capacity_review.md` 提供Codex阶段自审。当前总纲未修改。下一优先阶段为R5-B一个轻量原始IQ时频注意力候选的架构调查和有界pilot设计。

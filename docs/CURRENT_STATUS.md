@@ -1,11 +1,11 @@
 # 当前研究状态
 
-**更新日期：** 2026-10-27
+**更新日期：** 2026-10-28
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5 Phase 1 训练充分性 pilot 已完成并重评；分析、曲线、指标和 Codex 阶段自审见 [R5-A](../experiments/D2-A-R5/R5-A/analysis.md) 与 [审查报告](stage_reviews/D2-A-R5A_review.md)。训练代码提交 `d996b66418221e027c29927789ff84f3c1df3c89`，协议门字段评估修复 `d1d46617deac234f9456121b2adf0752b44c6f5d`。
-**阶段判断：** D2-A-R5-A **REFINE**：H-CAP-001 在单 seed、固定数据及复用开发分布内获支持；S2 固定相干候选未通过 C2/C3 任务保护和收益筛选；S0 为更强的任务基线但 C3 H0 Pfa 仍为0.204。下一项是预注册 Small/Medium width-only 容量对照。E003、R3、E002、T001、R4 的历史决定保持不变；E003 的旧门控名称和冻结结果不由 R5-A 覆写。
+**最新完成工作：** D2-A-R5-A Small/Medium width-only capacity pilot 已在 CUDA 完成；训练执行代码提交 `1678a468d5c150ff734d80ad40cf75407a49651f`。结果、训练曲线、分层指标和 Codex 阶段自审见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md) 与 [stage review](stage_reviews/D2-A-R5A-capacity_review.md)。
+**阶段判断：** R5-A **REFINE**：延长训练在固定 seed/data 下持续改善；Medium width=96 相对 Small width=32 的 C2/C3 joint-success 提升 `+0.1309`（95% CI `[+0.1123,+0.1509]`），range/Doppler RMSE 亦改善；但两者 C3 H0 Pfa 分别 `0.2041/0.1890`，均超 0.10 门，因此 G3 任务保护失败，Medium 不晋级、不运行 Large。E003、R3、E002、T001、R4 和旧 R5-A 结论保持不变。
 
-**当前授权工作：** Phase 0 和 R5-A 已完成。R5-A v1.1 在生成/使用 R5 缓存及训练前冻结；RTX 3050 Laptop `cuda:0` 上 FP32 顺序完成 S0/S2，各12,800 updates。未运行 KD、正式多 seed 或 final blind。按协议先完成阶段审查，再进行 Small width=32 与 Medium width=96 对照；大型可重建缓存不提交，阶段最终项目仍须低于20 GiB。
+**当前授权工作：** R5-A Phase 1/2 已完成：S0/S2 及 Small/Medium 均按12,800-update预算使用RTX 3050 Laptop `cuda:0` FP32训练；未运行KD、正式多 seed 或 final blind。Medium 未通过C3 Pfa绝对保护。按既有授权进入R5-B单一轻量原始IQ时频注意力候选；大型可重建缓存不提交，整个项目最终须低于20 GiB。
 
 ## 当前结论
 
@@ -17,7 +17,11 @@ RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识�
 
 复用 E003 development 的 Pd 为 S0/S2 `0.9619/0.9336`，AUC `0.99374/0.98999`，全 H1 range RMSE `2.239/2.824 cells`，Doppler RMSE `25.23/54.25 Hz`，joint success `0.8389/0.6055`。S2−S0 joint差为 `−0.2334`（95% paired scene bootstrap CI `[-0.2488,-0.2188]`），C2/C3 joint差 `−0.3945`（`[-0.4189,-0.3696]`）。S0/S2普通 H0 verification Pfa 为 `0.05017/0.04834`，但 C3 H0 Pfa 为 `0.20410/0.18384`，均超过0.10门。S2公共相位旋转下基本不变，但该性质没有转化为任务收益；频移干预也暴露估计不稳定。所有校准、verification、development 与物理诊断均为 E003 已使用材料，不是盲测。
 
-固定相干 S2 候选按 R5-A任务保护与C2/C3收益筛选停止；不外推否定所有物理结构。H-CAP-001限定支持，H-CAP-002尚未测试。R5-A训练计时文件只保留了扩展段用时，未保存前6,400 updates墙钟时间；此限制已写入分析，后续训练记录器已修正累计计时。完整门控、统计区间和物理干预见 [R5-A分析](../experiments/D2-A-R5/R5-A/analysis.md)。
+固定相干 S2 候选按 R5-A任务保护与C2/C3收益筛选停止；不外推否定所有物理结构。H-CAP-001限定支持；H-CAP-002在width-only试验中显示有限的C2/C3容量收益，但因C3绝对Pfa保护失败而未通过G3。R5-A训练计时文件只保留了扩展段用时，未保存前6,400 updates墙钟时间；此限制已写入分析，后续训练记录器已修正累计计时。完整门控、统计区间和物理干预见 [R5-A分析](../experiments/D2-A-R5/R5-A/analysis.md)。
+
+### D2-A-R5-A Small/Medium 容量结果
+
+在 seed101、相同 E003 train/validation IDs、pair plan、E1 truth-only、有效 batch64、FP32和12,800 updates下，Medium width=96（82,887参数）相对复用的Small width=32（13,383参数）取得 C2/C3 joint-success `+0.13086`（95% paired-scene bootstrap CI `[+0.11230,+0.15088]`），C2/C3 range/Doppler RMSE比为 `0.839/0.713`。G1和primary gain筛选通过。常规H0 verification Pfa为`0.05017/0.04797`，但C3 H0 Pfa为`0.20410/0.18896`；两者的单侧 exact 95%上限均远高于冻结0.10限制。因此 G3 任务保护未通过，Medium不得晋级，Large不运行。结果限于一个训练seed与已使用开发材料，不是blind或跨seed确认。详细数据见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[metrics](../experiments/D2-A-R5/R5-A/capacity/metrics.json) 和 [capacity review](stage_reviews/D2-A-R5A-capacity_review.md)。
 
 ### D2-A-E003 阶段结果
 
@@ -51,7 +55,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-完成 R5-A 阶段审查后，进行已冻结的 Small width=32 / Medium width=96 单因素容量对照，维持原始复 IQ、seed101、训练/验证 scene IDs、E1真值损失、pair plan、优化器、有效batch和12,800更新预算。Small臂可复用已训练的R5-A S0 checkpoint/history；Medium从同一初始化规则和配对计划训练。须把训练时间记为累计值，模型顺序使用CUDA，并继续显式报告C3 H0 Pfa与C2/C3 joint任务保护。未出现容量收益则不运行Large；不启动KD或final blind。
+按 R5-B 完成面向当前 GMTI 的非 CNN 学生架构证据调查，并预注册一个轻量、保留原始三通道复 IQ 的时频注意力 pilot。先核对物理/频率表示、模型规模、显存及 G1 可学习性，再决定是否进入有界训练比较；保留 Small/Medium CNN 作为容量参照，维持独立校准与开发评估，报告 C3 H0 Pfa 和 C2/C3 任务保护。Medium 的正向参数估计增益与失败的绝对虚警门均需进入比较；不运行 Large、KD 或 final blind。
 
 ## 关键材料
 
@@ -62,6 +66,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
 - D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
+- D2-A-R5-A [容量对照分析](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[指标](../experiments/D2-A-R5/R5-A/capacity/metrics.json)、[阶段自审](stage_reviews/D2-A-R5A-capacity_review.md)、[容量研究汇总](research/D2-A_student_capacity_study.md)
 - D2-A-E003 [实验协议](../experiments/D2-A-E003/protocol.md)、[固定特征设计](../experiments/D2-A-E003/feature_design.md)、[训练与指标](../experiments/D2-A-E003/training.json)、[分析](../experiments/D2-A-E003/analysis.md)、[审查请求](../experiments/D2-A-E003/review_request.md)、[阶段自审](stage_reviews/D2-A-E003_review.md)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。

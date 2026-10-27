@@ -1,0 +1,23 @@
+{
+  "git_sha": "1678a468d5c150ff734d80ad40cf75407a49651f",
+  "model": "Medium",
+  "width": 96,
+  "parameter_count": 82887,
+  "device": "cuda:0",
+  "updates": 200,
+  "paired_scenes": 16,
+  "initial_truth_task_loss": 4.1465229988098145,
+  "final_truth_task_loss": 0.0023767095990478992,
+  "loss_ratio_final_to_initial": 0.0005731813376484567,
+  "presence_accuracy_on_overfit_batch": 1.0,
+  "h1_range_cell_accuracy_on_overfit_batch": 1.0,
+  "task_gradient_norms": {
+    "range_cell": 30.4674358315897,
+    "doppler": 5.919771641630904
+  },
+  "cuda_peak_allocated_bytes": 1639974400,
+  "cuda_peak_reserved_bytes": 1702887424,
+  "passed": true,
+  "scientific_metrics": false,
+  "final_blind_generated": false
+}

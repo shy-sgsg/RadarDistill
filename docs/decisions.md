@@ -255,3 +255,10 @@
 - **证据：** A/B/C 选定 validation checkpoint 的预测 range 门错配率为 10.30%/11.14%/10.96%；改在真值门读同一模型的 Doppler 后 RMSE 为 40.95/56.03/59.55 Hz，正常预测门为 46.66/58.55/60.03 Hz。Development 错门率为 10.04%/11.02%/11.30%。
 - **判断：** 错门会额外增加一部分 Doppler 误差，A 臂差异最大；但 oracle 真值门下仍有约 41–60 Hz RMSE。H-OPT-D2-001 保持 INCONCLUSIVE，当前证据不足以把门错配判为主要瓶颈。E002 冻结损失和阶段门不变。
 - **决定：** 保持 E002 **REFINE** 和原定唯一优先任务：预注册有界诊断，区分 C3 条件虚警失稳与相位/频移等变失败的表示来源。此补充审计未启动新训练、未生成新盲测，也未修改研究总纲。
+
+## 2026-10-28：D2-A-R5-A容量门未通过，转向单一R5-B架构pilot
+
+- **证据：** Small width32 与 Medium width96 在匹配的 seed101、冻结 E003 IDs、E1 truth-only、有效batch64、FP32及12,800 updates下对照。Medium−Small 可辨识C2/C3 joint-success差`+0.13086`（95% paired-scene bootstrap CI `[+0.11230,+0.15088]`），C2/C3 range/Doppler RMSE比`0.839/0.713`。但C3 H0 Pfa分别为`0.20410/0.18896`，均高于协议0.10限值。
+- **决定：** 容量阶段 **REFINE**；有限支持 H-CAP-002 的任务增益，但 G3绝对虚警保护未通过。Medium不晋级，不运行Large、KD或final blind。保留Small/Medium结果作为R5-B CNN参照。
+- **下一步：** 在既有批准路线内，R5-B只开展一个保留三通道原始复IQ的轻量时频注意力候选；先完成适用性调查、物理/实现审查和CUDA显存/G1门，再按冻结任务保护评估。C3 H0 Pfa继续作为显式门，不基于当前开发数据调阈值。
+- **边界：** 本结果是单seed开发材料，不是盲测、跨seed泛化或正式非劣效结论。`docs/RESEARCH_CHARTER.md` 未修改；R3/E003/E002/R5-A历史阶段结果保持原样。实验和自审见 `experiments/D2-A-R5/R5-A/capacity/analysis.md` 与 `docs/stage_reviews/D2-A-R5A-capacity_review.md`。
