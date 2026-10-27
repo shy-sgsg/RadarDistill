@@ -68,6 +68,9 @@ def test_prediction_intervention_reports_h0_h1_and_condition_transitions() -> No
     summary = summarize_prediction_intervention(
         baseline,
         intervention,
+        scene_ids=np.asarray(["h0-a", "h0-b", "h1-a", "h1-b"]),
+        bootstrap_replicates=200,
+        bootstrap_seed=29,
         truth_presence=np.asarray([False, False, True, True]),
         condition=np.asarray(["C0", "C1", "C0", "C1"]),
         threshold=0.5,
@@ -84,6 +87,15 @@ def test_prediction_intervention_reports_h0_h1_and_condition_transitions() -> No
     assert summary["H1"]["intervention_joint_success_rate"] == 0.5
     assert summary["condition:C1/H1"]["baseline_detected_count"] == 0
     assert summary["condition:C1/H1"]["intervention_detected_count"] == 1
+    h0_bootstrap = summary["H0"]["paired_scene_bootstrap"]
+    h0_delta = h0_bootstrap["deltas"]["false_alarm_rate"]
+    assert h0_delta["mean_change"] == pytest.approx(0.5)
+    assert h0_delta["ci95"][0] <= 0.5
+    assert h0_delta["ci95"][1] >= 0.5
+    h1_bootstrap = summary["H1"]["paired_scene_bootstrap"]
+    assert h1_bootstrap["deltas"]["pd"]["mean_change"] == pytest.approx(0.5)
+    assert h1_bootstrap["deltas"]["parameter_localization_rate"]["mean_change"] == pytest.approx(-0.5)
+    assert h1_bootstrap["deltas"]["joint_success_rate"]["mean_change"] == pytest.approx(0.0)
 
 
 def test_doppler_shift_intervention_uses_shifted_truth_and_periodic_response() -> None:
@@ -121,6 +133,7 @@ def test_doppler_shift_intervention_uses_shifted_truth_and_periodic_response() -
     )
 
     response = summary["H1"]["doppler_response"]
+    assert summary["all"]["paired_scene_bootstrap"]["n_base_scenes"] == 4
     assert summary["H1"]["baseline_parameter_localization_rate"] == 1.0
     assert summary["H1"]["intervention_parameter_localization_rate"] == 0.75
     assert response["n_base_scenes"] == 4

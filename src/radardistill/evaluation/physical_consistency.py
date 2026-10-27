@@ -94,6 +94,26 @@ def _cluster_bootstrap_mean_ci(
     return [float(value) for value in np.quantile(bootstrap_means, [0.025, 0.975])]
 
 
+def _summarize_clustered_delta(
+    values: np.ndarray,
+    scene_ids: np.ndarray,
+    *,
+    replicates: int,
+    seed: int,
+) -> dict[str, object]:
+    delta = np.asarray(values, dtype=np.float64).reshape(-1)
+    ids = np.asarray(scene_ids).reshape(-1).astype(str)
+    return {
+        "mean_change": float(np.mean(delta)),
+        "ci95": _cluster_bootstrap_mean_ci(
+            delta,
+            ids,
+            replicates=replicates,
+            seed=seed,
+        ),
+    }
+
+
 def _summarize_paired_correctness(
     teacher_correct: np.ndarray,
     student_correct: np.ndarray,
@@ -362,9 +382,12 @@ def summarize_prediction_intervention(
 ) -> dict[str, object]:
     """Summarize paired prediction changes overall and by H0/H1/condition.
 
-    Besides decision agreement this reports logit changes, score threshold
-    crossings, H1 localization/joint success, and wrapped parameter changes.
-    The condition labels are diagnostic strata only and are never model inputs.
+    Besides decision agreement this reports score changes, threshold crossings,
+    H1 localization/joint success, and wrapped parameter changes. When
+    ``scene_ids`` are provided, paired deltas receive scene-cluster bootstrap
+    intervals. ``expected_doppler_shift_hz`` maps H1 truth by the specified
+    periodic shift and adds prediction-response residuals. Condition labels
+    are diagnostic strata only and are never model inputs.
     """
     presence = np.asarray(truth_presence, dtype=bool).reshape(-1)
     labels = np.asarray(condition).reshape(-1).astype(str)
@@ -385,16 +408,17 @@ def summarize_prediction_intervention(
         raise ValueError("prf_hz must be positive and finite")
 
     intervention_scene_ids: np.ndarray | None = None
-    if expected_doppler_shift_hz is not None:
-        if not np.isfinite(expected_doppler_shift_hz):
-            raise ValueError("expected_doppler_shift_hz must be finite")
-        if scene_ids is None:
-            raise ValueError("scene_ids are required for a Doppler-shift intervention")
+    if scene_ids is not None:
         intervention_scene_ids = np.asarray(scene_ids).reshape(-1).astype(str)
         if intervention_scene_ids.size != count or np.any(intervention_scene_ids == ""):
             raise ValueError("scene_ids must be nonempty and match the prediction rows")
         if bootstrap_replicates <= 0 or bootstrap_seed < 0:
             raise ValueError("bootstrap_replicates must be positive and bootstrap_seed nonnegative")
+    if expected_doppler_shift_hz is not None:
+        if not np.isfinite(expected_doppler_shift_hz):
+            raise ValueError("expected_doppler_shift_hz must be finite")
+        if intervention_scene_ids is None:
+            raise ValueError("scene_ids are required for a Doppler-shift intervention")
 
     def vector(
         source: Mapping[str, np.ndarray], name: str, *, finite_mask: np.ndarray | None = None
@@ -471,7 +495,7 @@ def summarize_prediction_intervention(
     masks["H1/baseline_parameter_mislocalized"] = presence & ~base_localized
 
     result: dict[str, object] = {}
-    for name, mask in masks.items():
+    for group_index, (name, mask) in enumerate(masks.items()):
         n = int(mask.sum())
         if not n:
             result[name] = {"n": 0}
@@ -524,6 +548,78 @@ def summarize_prediction_intervention(
                     ),
                     "bootstrap_unit": "base_scene_id",
                 }
+        if intervention_scene_ids is not None:
+            group_scene_ids = intervention_scene_ids[mask]
+            paired_bootstrap: dict[str, object] = {
+                "unit": "base_scene_id",
+                "replicates": int(bootstrap_replicates),
+                "n_base_scenes": int(np.unique(group_scene_ids).size),
+                "seed_base": int(bootstrap_seed + group_index * 100),
+                "interval": "two_sided_95_percentile",
+                "delta_convention": "intervention_minus_baseline",
+            }
+            paired_deltas: dict[str, object] = {
+                "detection_rate": _summarize_clustered_delta(
+                    changed_detected[mask].astype(np.float64)
+                    - base_detected[mask].astype(np.float64),
+                    group_scene_ids,
+                    replicates=bootstrap_replicates,
+                    seed=bootstrap_seed + group_index * 100,
+                )
+            }
+            h0_mask = mask & ~presence
+            if h0_mask.any():
+                h0_ids = intervention_scene_ids[h0_mask]
+                paired_deltas["false_alarm_rate"] = _summarize_clustered_delta(
+                    changed_detected[h0_mask].astype(np.float64)
+                    - base_detected[h0_mask].astype(np.float64),
+                    h0_ids,
+                    replicates=bootstrap_replicates,
+                    seed=bootstrap_seed + group_index * 100 + 1,
+                )
+            if h1_mask.any():
+                h1_ids = intervention_scene_ids[h1_mask]
+                paired_deltas.update(
+                    {
+                        "pd": _summarize_clustered_delta(
+                            changed_detected[h1_mask].astype(np.float64)
+                            - base_detected[h1_mask].astype(np.float64),
+                            h1_ids,
+                            replicates=bootstrap_replicates,
+                            seed=bootstrap_seed + group_index * 100 + 2,
+                        ),
+                        "parameter_localization_rate": _summarize_clustered_delta(
+                            changed_localized[h1_mask].astype(np.float64)
+                            - base_localized[h1_mask].astype(np.float64),
+                            h1_ids,
+                            replicates=bootstrap_replicates,
+                            seed=bootstrap_seed + group_index * 100 + 3,
+                        ),
+                        "joint_success_rate": _summarize_clustered_delta(
+                            changed_joint[h1_mask].astype(np.float64)
+                            - base_joint[h1_mask].astype(np.float64),
+                            h1_ids,
+                            replicates=bootstrap_replicates,
+                            seed=bootstrap_seed + group_index * 100 + 4,
+                        ),
+                        "mean_absolute_range_error_cells": _summarize_clustered_delta(
+                            np.abs(changed_range_error[h1_mask])
+                            - np.abs(base_range_error[h1_mask]),
+                            h1_ids,
+                            replicates=bootstrap_replicates,
+                            seed=bootstrap_seed + group_index * 100 + 5,
+                        ),
+                        "mean_absolute_doppler_error_hz": _summarize_clustered_delta(
+                            np.abs(changed_doppler_error[h1_mask])
+                            - np.abs(base_doppler_error[h1_mask]),
+                            h1_ids,
+                            replicates=bootstrap_replicates,
+                            seed=bootstrap_seed + group_index * 100 + 6,
+                        ),
+                    }
+                )
+            paired_bootstrap["deltas"] = paired_deltas
+            row["paired_scene_bootstrap"] = paired_bootstrap
         if np.all(~presence[mask]):
             row["baseline_h0_false_alarm_rate"] = float(np.mean(base_detected[mask]))
             row["intervention_h0_false_alarm_rate"] = float(np.mean(changed_detected[mask]))
