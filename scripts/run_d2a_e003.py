@@ -208,6 +208,23 @@ def run_preflight() -> dict[str, Any]:
     device = _require_cuda()
     estimated = _estimated_cache_bytes(config)
     free = shutil.disk_usage(ROOT).free
+    preflight_path = OUT / "preflight.json"
+    initial_preflight_path = OUT / "preflight_initial.json"
+    previous_preflight = (
+        json.loads(preflight_path.read_text(encoding="utf-8"))
+        if preflight_path.is_file()
+        else None
+    )
+    training_started = (OUT / "training.json").is_file() or any(
+        (OUT / "runs").glob("seed_*/S*/microbatch_*/training_history.csv")
+    )
+    if previous_preflight is not None and not initial_preflight_path.exists():
+        _write_json(initial_preflight_path, previous_preflight)
+    initial_preflight = (
+        json.loads(initial_preflight_path.read_text(encoding="utf-8"))
+        if initial_preflight_path.is_file()
+        else previous_preflight
+    )
     reserve_gib = 5.0
     need = estimated + int(reserve_gib * 1024**3)
     if free < need:
@@ -240,14 +257,27 @@ def run_preflight() -> dict[str, Any]:
         "pushed_to_origin_main": True,
         "device": str(device),
         "gpu": environment["gpu_name"],
-        "disk_free_bytes_before_generation": int(free),
+        "disk_free_bytes_before_generation": int(
+            initial_preflight.get("disk_free_bytes_before_generation", free)
+            if training_started and initial_preflight is not None
+            else free
+        ),
+        "disk_free_bytes_at_check": int(free),
         "estimated_cache_bytes": estimated,
         "required_reserve_gib": reserve_gib,
         "passed": True,
         "final_blind_generated": False,
-        "training_started": False,
+        "training_started": training_started,
+        "preflight_type": (
+            "post_training_evaluation_revalidation"
+            if training_started
+            else "before_data_generation"
+        ),
+        "initial_preflight_git_sha": (
+            initial_preflight.get("git_sha") if initial_preflight is not None else commit
+        ),
     }
-    _write_json(OUT / "preflight.json", result)
+    _write_json(preflight_path, result)
     return result
 
 
@@ -1567,18 +1597,19 @@ def _frequency_diagnostics(
 
 
 def _cuda_timing(function, *, warmup: int = 5, repeats: int = 30) -> dict[str, float]:
-    for _ in range(warmup):
-        function()
-    torch.cuda.synchronize()
-    start = torch.cuda.Event(enable_timing=True)
-    end = torch.cuda.Event(enable_timing=True)
-    samples: list[float] = []
-    for _ in range(repeats):
-        start.record()
-        function()
-        end.record()
-        end.synchronize()
-        samples.append(float(start.elapsed_time(end)))
+    with torch.inference_mode():
+        for _ in range(warmup):
+            function()
+        torch.cuda.synchronize()
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        samples: list[float] = []
+        for _ in range(repeats):
+            start.record()
+            function()
+            end.record()
+            end.synchronize()
+            samples.append(float(start.elapsed_time(end)))
     return {"mean_ms": float(np.mean(samples)), "median_ms": float(np.median(samples)), "p95_ms": float(np.quantile(samples, 0.95)), "repeats": repeats}
 
 
