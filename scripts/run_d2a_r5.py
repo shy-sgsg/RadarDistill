@@ -251,6 +251,29 @@ def _require_preflight() -> dict[str, Any]:
     return record
 
 
+def _require_posttraining_provenance(*, require_cuda: bool) -> tuple[dict[str, Any], dict[str, Any], str]:
+    """Allow a pushed evaluation-code fix while preserving the training source SHA."""
+    evaluation_sha = _require_frozen_main()
+    preflight_path = ARTIFACTS / "preflight.json"
+    training_path = ARTIFACTS / "training.json"
+    if not preflight_path.is_file() or not training_path.is_file():
+        raise RuntimeError("R5-A training preflight and completed training record are required")
+    preflight = json.loads(preflight_path.read_text(encoding="utf-8"))
+    training = json.loads(training_path.read_text(encoding="utf-8"))
+    if (
+        preflight.get("passed") is not True
+        or preflight.get("git_sha") != training.get("git_sha")
+        or training.get("protocol_version") != 1.1
+        or training.get("final_blind_generated") is not False
+        or training.get("distillation_run") is not False
+        or any(int(training.get("arms", {}).get(arm, {}).get("updates_completed", -1)) < 6400 for arm in ("S0", "S2"))
+    ):
+        raise RuntimeError("R5-A post-training provenance is incomplete or inconsistent")
+    if require_cuda:
+        _require_cuda()
+    return preflight, training, evaluation_sha
+
+
 def _cache_file_manifest(cache_root: Path) -> list[dict[str, Any]]:
     return [
         {"path": path.relative_to(cache_root).as_posix(), "size_bytes": int(path.stat().st_size)}
@@ -365,9 +388,21 @@ def run_generate_data() -> dict[str, Any]:
 
 def _load_split(cache_root: Path, name: str) -> dict[str, np.ndarray]:
     path = cache_root / name
-    if not (path / "e003_manifest.json").is_file():
-        raise FileNotFoundError(f"R5-A cache split is missing or incomplete: {path}")
-    return e003_runner._load_cached_split(cache_root, name)
+    if (path / "e003_manifest.json").is_file():
+        return e003_runner._load_cached_split(cache_root, name)
+    if name == "exact_overlap_boundary" and (path / "manifest.json").is_file():
+        manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
+        if manifest.get("split") != name or manifest.get("scenario") != "exact_overlap":
+            raise ValueError(f"R5-A exact-overlap cache identity differs from its manifest: {path}")
+        names = ("iq_h0", "iq_h1", "base_scene_id", "truth_range_cell", "truth_doppler_hz")
+        missing = [key for key in names if not (path / f"{key}.npy").is_file()]
+        if missing:
+            raise FileNotFoundError(f"R5-A exact-overlap cache is incomplete: {missing}")
+        arrays = {key: np.load(path / f"{key}.npy", mmap_mode="r") for key in names}
+        if any(len(value) != int(manifest.get("scenes", -1)) for value in arrays.values()):
+            raise ValueError(f"R5-A exact-overlap cache scene count differs from its manifest: {path}")
+        return arrays
+    raise FileNotFoundError(f"R5-A cache split is missing or incomplete: {path}")
 
 
 def _initial_student_state(seed: int, *, width: int = 32) -> dict[str, torch.Tensor]:
@@ -1086,12 +1121,11 @@ def run_training() -> dict[str, Any]:
 
 
 def run_evaluate() -> dict[str, Any]:
-    preflight = _require_preflight()
+    preflight, training, evaluation_sha = _require_posttraining_provenance(require_cuda=True)
     r5_config, e003_config, physics = _load_configs()
     training_path = ARTIFACTS / "training.json"
     if not training_path.is_file():
         raise RuntimeError("R5-A training must finish before evaluation")
-    training = json.loads(training_path.read_text(encoding="utf-8"))
     if (
         training.get("protocol_version") != 1.1
         or training.get("git_sha") != preflight["git_sha"]
@@ -1168,6 +1202,7 @@ def run_evaluate() -> dict[str, Any]:
     metrics = {
         "experiment": "D2-A-R5/R5-A",
         "git_sha": preflight["git_sha"],
+        "evaluation_git_sha": evaluation_sha,
         "protocol_version": 1.1,
         "supervision": "physical_truth_only_E1",
         "training": training,
@@ -1187,6 +1222,7 @@ def run_evaluate() -> dict[str, Any]:
     _save_prediction_archive(ARTIFACTS / "predictions.npz", arm_results)
     return {
         "git_sha": preflight["git_sha"],
+        "evaluation_git_sha": evaluation_sha,
         "G3_task_learning": comparison["G3_task_learning"],
         "G4_task_protection": comparison["G4_task_protection"],
         "G4_primary": comparison["G4_primary_C2_C3_joint_gain"],
@@ -1247,7 +1283,13 @@ def _save_prediction_archive(path: Path, arm_results: Mapping[str, Mapping[str, 
 
 def run_cleanup() -> dict[str, Any]:
     """Delete only this stage's manifest-listed reconstructible cache files."""
-    _require_preflight()
+    preflight, training, cleanup_sha = _require_posttraining_provenance(require_cuda=False)
+    metrics_path = ARTIFACTS / "metrics.json"
+    if not metrics_path.is_file():
+        raise RuntimeError("R5-A evaluation must finish before deleting reconstructible data")
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    if metrics.get("git_sha") != training.get("git_sha") or metrics.get("final_blind_generated") is not False:
+        raise RuntimeError("R5-A metrics provenance is inconsistent; preserve the cache")
     cache_root = ROOT / _read_yaml(R5_CONFIG_PATH)["data"]["cache_root"]
     manifest_path = ARTIFACTS / "cache_manifest.json"
     if not manifest_path.is_file():
@@ -1279,6 +1321,8 @@ def run_cleanup() -> dict[str, Any]:
     except OSError:
         pass
     audit = {
+        "training_git_sha": preflight["git_sha"],
+        "cleanup_code_git_sha": cleanup_sha,
         "cache_root": str(cache_root.relative_to(ROOT)),
         "removed_file_count": len(removed_files),
         "removed_bytes": removed_bytes,

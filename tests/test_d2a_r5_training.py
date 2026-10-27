@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import csv
+import json
 import sys
 
 import numpy as np
@@ -19,7 +20,7 @@ from radardistill.training.d2a_r5 import (
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "experiments/D2-A-R5/R5-A/config.yaml"
 sys.path.insert(0, str(ROOT / "scripts"))
-from run_d2a_r5 import _write_scene_predictions
+from run_d2a_r5 import _load_split, _write_scene_predictions
 
 
 def _config() -> dict:
@@ -177,3 +178,27 @@ def test_scene_prediction_csv_keeps_both_hypotheses_for_paired_splits(tmp_path):
     assert paired[0]["predicted_range_cell"] == ""
     assert paired[1]["predicted_range_cell"] == "4.0"
     assert len([row for row in rows if row["split"] == "h0_verification"]) == 1
+
+
+def test_exact_overlap_split_loads_e002_manifest_format(tmp_path):
+    split_dir = tmp_path / "exact_overlap_boundary"
+    split_dir.mkdir()
+    (split_dir / "manifest.json").write_text(
+        json.dumps({"split": "exact_overlap_boundary", "scenes": 2, "scenario": "exact_overlap"}),
+        encoding="utf-8",
+    )
+    expected = {
+        "iq_h0": np.zeros((2, 3), dtype=np.complex64),
+        "iq_h1": np.ones((2, 3), dtype=np.complex64),
+        "base_scene_id": np.asarray(["boundary-1", "boundary-2"]),
+        "truth_range_cell": np.asarray([2.0, 3.0], dtype=np.float32),
+        "truth_doppler_hz": np.asarray([-1.0, 1.0], dtype=np.float32),
+    }
+    for name, values in expected.items():
+        np.save(split_dir / f"{name}.npy", values)
+
+    loaded = _load_split(tmp_path, "exact_overlap_boundary")
+
+    assert set(loaded) == set(expected)
+    for name in expected:
+        np.testing.assert_array_equal(loaded[name], expected[name])
