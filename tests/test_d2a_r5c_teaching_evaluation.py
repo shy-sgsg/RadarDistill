@@ -204,6 +204,26 @@ def test_primary_bootstrap_resamples_only_identifiable_scene_ids(config: dict):
     assert result["primary"]["T1_minus_T0"]["point_difference"] == pytest.approx(0.5)
 
 
+def test_secondary_contrast_compares_local_teacher_with_truth_assisted_control(config: dict):
+    ids = np.asarray([f"scene-{i}" for i in range(10)])
+    courses = np.asarray(["C2"] * 4 + ["C3"] * 4 + ["C0", "C1"])
+    arms = {
+        "T0": _arm_prediction(ids, courses, np.zeros(10)),
+        "T1": _arm_prediction(ids, courses, np.ones(10)),
+        "T2": _arm_prediction(ids, courses, np.asarray([1] * 8 + [0, 0], dtype=float)),
+        "T3": _arm_prediction(
+            ids, courses, np.asarray([1, 1, 1, 1, 0, 0, 0, 0, 1, 1], dtype=float)
+        ),
+    }
+
+    result = paired_teaching_contrasts(arms, config)
+
+    contrast = result["secondary"]["T2_minus_T3"]
+    assert contrast["point_difference"] == pytest.approx(0.5)
+    assert contrast["n_paired_scenes"] == 8
+    assert contrast["role"] == "teacher_vs_truth_assisted_descriptive"
+
+
 def test_contrasts_reject_different_or_duplicate_scene_ids(config: dict):
     ids = np.asarray([f"scene-{i}" for i in range(8)])
     courses = np.asarray(["C2"] * 4 + ["C3"] * 4)

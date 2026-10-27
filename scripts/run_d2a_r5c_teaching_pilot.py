@@ -601,13 +601,17 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
             )
     contrasts = metrics["paired_contrasts"]
     decision_rows = []
-    for name in ("T1_minus_T0", "T2_minus_T0", "T3_minus_T0"):
+    for name in ("T1_minus_T0", "T2_minus_T0", "T3_minus_T0", "T2_minus_T3"):
         item = (
             contrasts["secondary"][name]
-            if name == "T3_minus_T0"
+            if name in {"T3_minus_T0", "T2_minus_T3"}
             else contrasts["primary"][name]
         )
-        gate = "descriptive" if name == "T3_minus_T0" else str(item["passed"])
+        gate = (
+            "descriptive"
+            if name in {"T3_minus_T0", "T2_minus_T3"}
+            else str(item["passed"])
+        )
         decision_rows.append(
             f"| {name} | {item['point_difference']:+.4f} | "
             f"[{item['nominal_95_ci'][0]:+.4f}, {item['nominal_95_ci'][1]:+.4f}] | "
@@ -678,7 +682,7 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
             "",
             recommendation,
             "",
-            "T3 是 truth-assisted 对照，不是教师输出。T1/T2 的辅助响应由 IQ-only K3 计算；所有臂保留物理真值任务监督。场景 bootstrap 仅描述场景抽样，不代表训练 seed 方差。",
+            "T3 是 truth-assisted 对照，不是教师输出；T2−T3 是描述性对照，不设晋级门。T1/T2 的辅助响应由 IQ-only K3 计算；所有臂保留物理真值任务监督。场景 bootstrap 仅描述场景抽样，不代表训练 seed 方差。",
             "",
         ]
     )

@@ -111,10 +111,10 @@
 
 **Interfaces:**
 - `summarize_pilot_arm(predictions, calibration, verification, config) -> dict` computes per-arm threshold/Pfa/Pd/AUC/range/Doppler/joint metrics.
-- `paired_teaching_contrasts(arm_predictions, config) -> dict` computes T1−T0, T2−T0, T3−T0 scene bootstrap intervals and Bonferroni simultaneous primary lower bounds.
+- `paired_teaching_contrasts(arm_predictions, config) -> dict` computes T1−T0, T2−T0, T3−T0 and T2−T3 scene bootstrap intervals and Bonferroni simultaneous primary lower bounds.
 - Evaluation streams generated scenarios and saves only IDs and per-scene predictions; no IQ/map cache or final blind.
 
-- [x] **Step 1: Write failing tests** for the higher quantile and `>=` comparator, exact one-sided Pfa interval, circular Doppler error, joint-failure-on-miss, paired bootstrap unit and 2.5th-percentile Bonferroni lower bounds.
+- [x] **Step 1: Write failing tests** for the higher quantile and `>=` comparator, exact one-sided Pfa interval, circular Doppler error, joint-failure-on-miss, paired bootstrap unit and 2.5th-percentile Bonferroni lower bounds, plus the descriptive T2−T3 contrast.
 - [x] **Step 2: Run tests and verify missing or incorrect evaluation behavior.**
 - [x] **Step 3: Implement evaluation using existing D2-A calibration/metrics helpers where compatible.**
 - [x] **Step 4: Run focused evaluation tests and R5 regression tests.**

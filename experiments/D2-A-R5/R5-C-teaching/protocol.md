@@ -144,8 +144,9 @@ are T1−T0 and T2−T0. A candidate needs a point gain of at least `+0.02` and 
 Bonferroni simultaneous one-sided 97.5% paired-scene bootstrap lower bound
 above zero (2,000 resamples, resampling `base_scene_id`). Also report nominal
 95% intervals. These intervals describe scene sampling for one trained seed;
-they are not training-seed uncertainty. T3 contrasts are secondary and
-descriptive.
+they are not training-seed uncertainty. T3−T0 and T2−T3 contrasts are secondary
+and descriptive; T2−T3 estimates the local teacher response arm relative to the
+matched truth-assisted auxiliary control and has no advancement gate.
 
 Task-protection screening is relative to the newly trained T0: overall Pd and
 joint point differences at least `-0.01`, with nominal 95% lower bounds above

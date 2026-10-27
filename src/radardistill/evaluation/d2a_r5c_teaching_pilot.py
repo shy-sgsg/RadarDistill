@@ -849,6 +849,23 @@ def paired_teaching_contrasts(
             primary[key] = contrast["primary"]
         protections[arm] = contrast["task_protection"]
 
+    t2 = aligned["T2"]
+    t3 = aligned["T3"]
+    identifiable = np.isin(t2["course_level"], ("C2", "C3"))
+    t2_t3_point, t2_t3_interval = _paired_bootstrap_summary(
+        t2["joint_success"][identifiable].astype(np.float64),
+        t3["joint_success"][identifiable].astype(np.float64),
+        reference_ids[identifiable],
+        replicates=int(config["evaluation"]["bootstrap_replicates"]),
+        seed=int(config["evaluation"]["bootstrap_seed"]) + 5000,
+    )
+    secondary["T2_minus_T3"] = {
+        "point_difference": t2_t3_point,
+        "nominal_95_ci": t2_t3_interval,
+        "n_paired_scenes": int(np.sum(identifiable)),
+        "role": "teacher_vs_truth_assisted_descriptive",
+    }
+
     candidate_decisions = {
         arm: bool(primary[f"{arm}_minus_T0"]["passed"] and protections[arm]["passed"])
         for arm in ("T1", "T2")
