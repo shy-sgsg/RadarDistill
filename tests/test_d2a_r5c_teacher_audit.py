@@ -12,6 +12,7 @@ from scripts.run_d2a_r5c_teacher_audit import (
     _local_response_metrics,
     _map_response_metrics,
     _manifest_seed_conflicts,
+    _reset_cuda_peak_memory_stats,
     _validate_config,
     _validate_pair_batch,
 )
@@ -28,6 +29,16 @@ def config() -> dict:
         (ROOT / "experiments/D2-A-E001/config.yaml").read_text()
     )
     return value
+
+
+def test_cuda_memory_tracking_initializes_the_explicit_device_first() -> None:
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("R5-C GPU initialization test requires CUDA")
+
+    _reset_cuda_peak_memory_stats("cuda:0")
+
+    assert torch.cuda.current_device() == 0
 
 
 def test_r5c_configuration_freezes_exact_sample_allocation(config: dict) -> None:

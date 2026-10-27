@@ -814,6 +814,14 @@ def _cuda_environment(device_name: str, minimum_free: int) -> dict[str, Any]:
     }
 
 
+def _reset_cuda_peak_memory_stats(device_name: str) -> None:
+    import torch
+
+    device = torch.device(device_name)
+    torch.cuda.set_device(device)
+    torch.cuda.reset_peak_memory_stats(device)
+
+
 def run_preflight() -> dict[str, Any]:
     config = _read_yaml(CONFIG_PATH)
     _validate_config(config)
@@ -912,7 +920,7 @@ def run_audit() -> dict[str, Any]:
     cuda_k3_seconds = 0.0
     import torch
 
-    torch.cuda.reset_peak_memory_stats(0)
+    _reset_cuda_peak_memory_stats("cuda:0")
     for batch_index, descriptor in enumerate(plan):
         started = time.perf_counter()
         batch = generate_d2a_paired_batch(
