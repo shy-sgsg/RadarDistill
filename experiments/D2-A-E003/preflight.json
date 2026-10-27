@@ -1,13 +1,16 @@
 {
-  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "git_sha": "af0f59690ae29f0b3d4638067efe663145c1d670",
   "branch": "main",
   "pushed_to_origin_main": true,
   "device": "cuda:0",
   "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
   "disk_free_bytes_before_generation": 75719106560,
+  "disk_free_bytes_at_check": 57458978816,
   "estimated_cache_bytes": 17408090112,
   "required_reserve_gib": 5.0,
   "passed": true,
   "final_blind_generated": false,
-  "training_started": false
+  "training_started": true,
+  "preflight_type": "post_training_evaluation_revalidation",
+  "initial_preflight_git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde"
 }
