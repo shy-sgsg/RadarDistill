@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-R5
   subphase: R5-A
-  protocol_version: 1.0
+  protocol_version: 1.1
   status: preregistered
   final_blind_generation_authorized: false
   distillation_authorized: false
@@ -33,6 +33,7 @@ training:
   optimizer: AdamW
   learning_rate_initial: 0.001
   learning_rate_final: 0.0001
+  extension_learning_rate_final: 0.00001
   learning_rate_schedule: cosine_over_6400_updates
   weight_decay: 0.0001
   gradient_clip_norm: 1.0

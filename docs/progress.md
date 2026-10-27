@@ -1,5 +1,12 @@
 # 研究进度
 
+## 2026-10-27：D2-A-R5 Phase 1 执行器与预注册门实现
+
+- **协议冻结：** R5-A 更新至 protocol/config v1.1，在任何 R5 数据生成或训练前量化续训保护门；除原有末段 validation loss 条件外，检查各任务损失与 RMSE 恶化不超过5%、AUC下降不超过0.01、range-cell mismatch增加不超过0.01。未查看 R5 结果。
+- **执行器：** 增加 CUDA-only R5 runner，包含冻结数据重建/分割审计、16-pair G1 overfit、同一配对场景计划、S0/S2 顺序训练、完整优化器/调度/RNG/数据游标恢复、OOM microbatch回退及复用 E003 的独立评价。checkpoint 绑定配置、protocol版本和源 SHA。
+- **输出正确性：** paired H0/H1 scene prediction CSV 分别记录两个假设，避免遗漏 paired H0 预测。
+- **验证：** AISAR 环境下 `py_compile` 通过，R5-A 定向测试 **10 passed**，R5/E003配置加载有效。当前尚未运行 CUDA preflight、R5 数据生成、G1 overfit 或训练；不存在 R5 实验结果。
+
 ## 2026-10-27：批准 D2-A-R5，Phase 0 设计与 R5-A 预注册
 
 - **研究总纲：** 根据用户明确授权将 `docs/RESEARCH_CHARTER.md` 由 v1.2 修订为 v1.3，限于学生训练充分性、模型容量、非 CNN 架构适用性、教师知识内容/时机/可靠性及吸收机制，并新增 Q10。Q1–Q9、主题、既有研究假设边界和冻结负结果保留。今后总纲继续受用户批准机制约束。

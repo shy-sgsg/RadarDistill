@@ -2,10 +2,10 @@
 
 **更新日期：** 2026-10-27
 **工作分支：** `main`
-**最新完成工作：** D2-A-E003 完成 R0/R1/R2、匹配 S0/S2 单 seed CUDA E1 pilot、独立 H0/H1 评价和阶段审查材料；完整结果见 [E003 分析](../experiments/D2-A-E003/analysis.md) 与 [Codex 阶段自审](stage_reviews/D2-A-E003_review.md)。
+**最新完成工作：** D2-A-R5 Phase 0 设计和总纲 v1.3 已在 `b521fad` 提交并推送；R5-A 执行器与定向测试已实现。历史阶段结果仍见 [E003 分析](../experiments/D2-A-E003/analysis.md) 与 [Codex 阶段自审](stage_reviews/D2-A-E003_review.md)。
 **阶段判断：** D2-A-E003 的 S2 候选 **STOP**（G4 任务保护和主要 joint-gain 门失败）；D2-A 学生路线 **REFINE**；D2-A-R3 **REFINE**；D2-A-E002 **REFINE**；D2-A-T001 教师候选 **STOP**（G1/G2 未通过，G3 未评估，未运行 S2）；D2-A-R4 **REFINE**。E003 的 S0/S2 均通过基础任务学习 G3，但 C3 条件虚警仍高，S2 公共相位不变性改善没有转化为任务收益。E003 完成时总纲为 v1.2 且未修改；R5 用户后续批准的总纲 v1.3 修订单独记录，不重写 E003 历史判断。
 
-**当前授权工作：** 用户已明确批准 D2-A-R5 和总纲 v1.3 有界修订。正在完成 Phase 0 设计、架构调研与 R5-A 预注册；R5 尚无训练或实验结果。E003/R4 旧结论及所有冻结记录保持不变。
+**当前授权工作：** Phase 0 已完成；R5-A protocol v1.1 在生成数据前冻结续训保护条件。R5-A runner 和 10 项定向测试已完成，CUDA preflight、R5 数据生成和训练尚未运行，因此尚无 R5 实验结果。E003/R4 旧结论及所有冻结记录保持不变。
 
 ## 当前结论
 
@@ -43,7 +43,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-完成 D2-A-R5 Phase 0 小提交：总纲 v1.3、动态路线、假设、对齐、架构/教师设计文档、R5-A protocol/config 与实现计划；检查差异、配置和 CUDA preflight，提交并推送后进入 R5-A。R5-A 先从头做 seed 101 的 S0/S2 6,400-update 真值监督训练；仅在预注册末段验证趋势满足条件时，才将两臂连续延长到 12,800 updates。不得把 1-epoch E003 结果称为充分训练结果；不开展 KD 或 final blind。
+R5-A Phase 1：提交并推送 runner、配置/协议 v1.1 和定向测试后运行 CUDA preflight、冻结 E003 数据重建与 G1 小样本过拟合门，再从头训练 seed 101 的 S0/S2 至 6,400 updates。仅在预注册验证趋势和任务保护同时满足时，才将两臂连续延长至 12,800 updates。当前不做 KD 或 final blind；E003 一遍训练仍只作为历史 pilot。
 
 ## 关键材料
 

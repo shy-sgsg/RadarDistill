@@ -1,8 +1,10 @@
 # D2-A-R5-A：训练充分性与首轮容量 pilot
 
-**版本：** 1.0
-**冻结状态：** Phase 0 文件先提交并推送；本 protocol 冻结后才生成/加载 R5 缓存、训练模型或查看 R5 结果。
+**版本：** 1.1
+**冻结状态：** v1.1 在生成/加载 R5 缓存、训练模型或查看 R5 结果之前冻结。
 **本次范围：** E003 S0/S2 训练充分性；之后 Small/Medium 容量对照。蒸馏、正式多 seed 和 final blind 未获此 protocol 授权。
+
+**修订记录：** v1.1（2026-10-27）把 12,800-update continuation 的任务保护条件操作化，要求末段 presence/range/offset/Doppler validation loss 与 range/Doppler RMSE 相对 update 4,800 不恶化超过 5%，AUC 不下降超过 0.01、range-cell mismatch 不增加超过 0.01。阈值沿用本 protocol 的任务保护尺度；此修订发生在 R5 数据生成和训练之前，未查看任何 R5 结果，也未更改样本、seed、预算或主端点。v1.0 内容由 Git 历史保留。
 
 ## 1. 研究问题与总纲映射
 
@@ -39,7 +41,7 @@ E003 每次 optimizer update 使用 32 个配对 H0/H1 scene，固定训练集�
 
 1. update 4,800 至 6,400 的 common validation truth-task loss 相对下降至少 1.0%；
 2. 末 5 个预定验证点中，至少 3/4 相邻区间 loss 不升高超过 0.5%；
-3. 无非有限 loss/gradient、训练崩溃或预先冻结任务保护指标的明确恶化。
+3. 无非有限 loss/gradient、训练崩溃或明确任务退化。按 v1.1，update 4,800 至 6,400 的 validation presence/range-cell/range-offset/Doppler loss 与全距离 RMSE、Doppler RMSE、真值距离门控 Doppler RMSE 均不得恶化超过 5%；AUC 不得下降超过 0.01，range-cell mismatch 不得增加超过 0.01。代码要求上述 5 个检查点均含完整有限的保护指标。
 
 扩展时保持模型、AdamW moments、scheduler 状态、RNG、pair sampler/epoch 和累计 updates 原样连续；不重置 optimizer。更新 6,400 后开始预注册扩展段 cosine `1e-4→1e-5`，结束于 12,800。最终 checkpoint 按所有预定验证点中的最小 common truth-task validation loss 选择。否则在 6,400 停止并说明原因。扩展结果不用于声称理论收敛。
 
