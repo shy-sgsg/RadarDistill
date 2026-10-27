@@ -11,10 +11,12 @@ import yaml
 
 from radardistill.training.d2a_r5 import (
     R5CosineSchedule,
+    build_r5_capacity_specs,
     build_r5_repeated_pair_plan,
     should_extend_r5_training,
     validate_r5a_config,
 )
+from radardistill.students.task_student import TaskStudent
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +28,7 @@ from run_d2a_r5 import (
     _map_r5a_protocol_gates,
     _write_scene_predictions,
 )
+from run_d2a_r5_capacity import _capacity_summary, _microbatch_candidates
 
 
 def _config() -> dict:
@@ -91,6 +94,130 @@ def test_repeated_pair_plan_rejects_partial_or_duplicate_epoch_ids():
         build_r5_repeated_pair_plan(
             np.asarray(["a", "a", "c", "d"]), updates=2, pairs_per_update=2, seed_base=1
         )
+
+
+def test_r5_capacity_specs_freeze_widths_parameters_and_matched_training_budget():
+    config = _config()
+    small_record = {
+        "arm": "S0",
+        "width": 32,
+        "parameter_count": 13383,
+        "updates_completed": 12800,
+        "best_checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/best_checkpoint.pt",
+    }
+
+    plan = build_r5_capacity_specs(
+        config,
+        extension_decision={
+            "extend_both_arms": True,
+            "arm_criteria": {"S0": True, "S2": True},
+        },
+        small_training_record=small_record,
+    )
+
+    assert plan["target_updates"] == 12800
+    assert plan["seed"] == 101
+    assert plan["arms"] == {
+        "Small": {"width": 32, "parameter_count": 13383, "updates": 12800, "reuse_existing": True},
+        "Medium": {"width": 96, "parameter_count": 82887, "updates": 12800, "reuse_existing": False},
+    }
+    small_parameters = sum(parameter.numel() for parameter in TaskStudent(width=32).parameters())
+    medium_parameters = sum(parameter.numel() for parameter in TaskStudent(width=96).parameters())
+    assert small_parameters == plan["arms"]["Small"]["parameter_count"]
+    assert medium_parameters == plan["arms"]["Medium"]["parameter_count"]
+
+
+def test_r5_capacity_specs_reject_a_small_baseline_with_mismatched_budget_or_width():
+    config = _config()
+    extension = {"extend_both_arms": True, "arm_criteria": {"S0": True, "S2": True}}
+    for field, value in (("updates_completed", 6400), ("width", 96)):
+        small_record = {
+            "arm": "S0",
+            "width": 32,
+            "parameter_count": 13383,
+            "updates_completed": 12800,
+            "best_checkpoint_path": "small.pt",
+        }
+        small_record[field] = value
+        with pytest.raises(ValueError):
+            build_r5_capacity_specs(config, extension_decision=extension, small_training_record=small_record)
+
+
+def test_r5_capacity_config_resolves_to_frozen_e003_and_r5_cache_paths():
+    capacity_config_path = ROOT / "experiments/D2-A-R5/R5-A/capacity/config.yaml"
+    capacity_config = yaml.safe_load(capacity_config_path.read_text(encoding="utf-8"))
+    e003_config = yaml.safe_load((ROOT / "experiments/D2-A-E003/config.yaml").read_text(encoding="utf-8"))
+    project_root = ROOT
+
+    assert (capacity_config_path.parent / capacity_config["data"]["source_config"]).resolve() == (
+        project_root / "experiments/D2-A-E003/config.yaml"
+    )
+    assert (capacity_config_path.parent / capacity_config["data"]["cache_root"]).resolve() == (
+        project_root / "experiments/D2-A-R5/data/cache"
+    )
+    assert capacity_config["training"]["target_updates"] == 12800
+    assert capacity_config["training"]["effective_batch_size"] == 64
+    assert capacity_config["training"]["precision"] == "FP32"
+    assert capacity_config["training"]["device"] == "cuda:0"
+    assert capacity_config["training"]["amp"] is False
+    assert capacity_config["training"]["cpu_fallback"] == "forbidden"
+    assert capacity_config["training"]["oom_microbatch_fallbacks"] == [8, 4]
+    assert capacity_config["models"]["vary_only"] == "trunk_width"
+    assert capacity_config["evaluation"]["target_pfa_cpi"] == e003_config["detection"]["target_pfa_cpi"]
+    assert capacity_config["evaluation"]["paired_bootstrap_replicates"] == e003_config["statistics"]["bootstrap_replicates"]
+
+
+def test_capacity_microbatch_candidates_preserve_effective_batch_and_deduplicate():
+    assert _microbatch_candidates({
+        "effective_batch_size": 64,
+        "initial_microbatch_size": 16,
+        "oom_microbatch_fallbacks": [8, 4],
+    }) == (16, 8, 4)
+    assert _microbatch_candidates({
+        "effective_batch_size": 64,
+        "initial_microbatch_size": 16,
+        "oom_microbatch_fallbacks": [8, 8, 4],
+    }) == (16, 8, 4)
+    with pytest.raises(ValueError, match="even divisor"):
+        _microbatch_candidates({
+            "effective_batch_size": 64,
+            "initial_microbatch_size": 12,
+            "oom_microbatch_fallbacks": [4],
+        })
+
+
+def test_capacity_summary_uses_medium_minus_small_and_requires_all_protections():
+    comparison = {
+        "G3_task_learning": {"S0": {"passed": True}, "S2": {"passed": True}},
+        "G4_task_protection": {"passed": True, "components": {"all": True}},
+        "G4_primary_C2_C3_joint_gain": {
+            "point_difference_s2_minus_s0": 0.04,
+            "paired_scene_bootstrap_ci95": [0.01, 0.07],
+            "passed": True,
+        },
+        "S2_route_candidate_passed": True,
+    }
+    summary = _capacity_summary(comparison)
+    assert summary["baseline"] == "Small"
+    assert summary["candidate"] == "Medium"
+    assert summary["primary_gain_medium_minus_small"] == {
+        "point_difference": 0.04,
+        "ci95": [0.01, 0.07],
+        "passed": True,
+    }
+    assert summary["candidate_eligible"] is True
+
+    comparison["G4_task_protection"]["passed"] = False
+    comparison["S2_route_candidate_passed"] = False
+    assert _capacity_summary(comparison)["candidate_eligible"] is False
+
+    comparison["G4_task_protection"]["passed"] = True
+    comparison["G4_primary_C2_C3_joint_gain"]["passed"] = False
+    assert _capacity_summary(comparison)["candidate_eligible"] is False
+
+    comparison["G4_primary_C2_C3_joint_gain"]["passed"] = True
+    comparison["G3_task_learning"]["S2"]["passed"] = False
+    assert _capacity_summary(comparison)["candidate_eligible"] is False
 
 
 def test_r5_extension_schedule_is_continuous_and_reproducible():

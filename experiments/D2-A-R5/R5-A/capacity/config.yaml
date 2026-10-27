@@ -1,0 +1,59 @@
+experiment:
+  id: D2-A-R5
+  subphase: R5-A-capacity
+  protocol_reference: ../protocol.md
+  protocol_version: 1.1
+  status: preregistered
+  final_blind_generation_authorized: false
+  distillation_authorized: false
+  training_seed: 101
+  training_code_source: existing R5-A truth-only runner
+models:
+  comparison: [Small, Medium]
+  architecture: TaskStudent raw-IQ baseline
+  vary_only: trunk_width
+  width: {Small: 32, Medium: 96}
+  expected_parameters: {Small: 13383, Medium: 82887}
+  checkpoint:
+    Small: reuse R5-A S0 selected checkpoint and history
+    Medium: initialize from scratch with seed 101
+data:
+  source_config: ../../../D2-A-E003/config.yaml
+  cache_root: ../../data/cache
+  reuse_frozen_training_and_validation_ids: true
+  paired_training_scenes: 51200
+  paired_validation_scenes: 5000
+  same_pair_plan_for_both_models: true
+  final_blind_generated: false
+training:
+  supervision: physical_truth_only_E1
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.0001
+  extension_learning_rate_final: 0.00001
+  initial_updates: 6400
+  target_updates: 12800
+  target_updates_reason: R5-A S0 and S2 both met the preregistered continuation rule
+  paired_scenes_per_update: 32
+  effective_batch_size: 64
+  validation_interval_updates: 400
+  selection: minimum_common_validation_truth_task_loss
+  precision: FP32
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  amp: false
+  simultaneous_models_on_gpu: 1
+  initial_microbatch_size: 16
+  oom_microbatch_fallbacks: [8, 4]
+  preserve_effective_batch_on_oom: true
+evaluation:
+  calibration_and_development_source: reused E003 splits; not blind
+  calibrate_each_model_separately: true
+  target_pfa_cpi: 0.05
+  threshold_comparator: ">="
+  paired_bootstrap_unit: base_scene_id
+  paired_bootstrap_replicates: 2000
+  primary_metric: identifiable_C2_C3_joint_success
+  meaningful_gain_minimum: 0.02
+  inherit_task_protection_rules_from: experiments/D2-A-E003/config.yaml

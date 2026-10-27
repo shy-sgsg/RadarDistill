@@ -114,6 +114,66 @@ def validate_r5a_config(config: Mapping[str, Any]) -> None:
         raise ValueError("R5-A required stage gates are missing")
 
 
+def build_r5_capacity_specs(
+    config: Mapping[str, Any],
+    *,
+    extension_decision: Mapping[str, Any],
+    small_training_record: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Freeze the width-only Small/Medium comparison against the completed R5-A run."""
+    validate_r5a_config(config)
+    training = config["training"]
+    capacity = config["capacity"]
+    arm_criteria = extension_decision.get("arm_criteria")
+    if not isinstance(arm_criteria, Mapping) or set(arm_criteria) != {"S0", "S2"}:
+        raise ValueError("R5 capacity requires the saved S0/S2 continuation decision")
+    if any(not isinstance(value, (bool, np.bool_)) for value in arm_criteria.values()):
+        raise ValueError("R5 continuation criteria must be boolean")
+    expected_extension = any(bool(value) for value in arm_criteria.values())
+    if extension_decision.get("extend_both_arms") is not expected_extension:
+        raise ValueError("R5 continuation decision is inconsistent with its arm criteria")
+
+    target_updates = int(
+        training["continuation_max_updates"]
+        if expected_extension
+        else training["max_updates_initial"]
+    )
+    expected_small = {
+        "arm": "S0",
+        "width": int(capacity["width_by_model"]["Small"]),
+        "parameter_count": int(capacity["parameter_count_expected"]["Small"]),
+        "updates_completed": target_updates,
+    }
+    if any(small_training_record.get(key) != value for key, value in expected_small.items()):
+        raise ValueError("the reused Small baseline does not match the frozen R5-A schedule/model")
+    if not small_training_record.get("best_checkpoint_path"):
+        raise ValueError("the reused Small baseline must identify its selected checkpoint")
+
+    return {
+        "protocol_version": float(config["experiment"]["protocol_version"]),
+        "seed": int(training["seed"]),
+        "target_updates": target_updates,
+        "pair_order_seed_base": int(training["pair_order_seed_base"]),
+        "supervision": str(training["supervision"]),
+        "width_only": bool(capacity["vary_width_only"]),
+        "small_checkpoint_path": str(small_training_record["best_checkpoint_path"]),
+        "arms": {
+            "Small": {
+                "width": expected_small["width"],
+                "parameter_count": expected_small["parameter_count"],
+                "updates": target_updates,
+                "reuse_existing": True,
+            },
+            "Medium": {
+                "width": int(capacity["width_by_model"]["Medium"]),
+                "parameter_count": int(capacity["parameter_count_expected"]["Medium"]),
+                "updates": target_updates,
+                "reuse_existing": False,
+            },
+        },
+    }
+
+
 def build_r5_repeated_pair_plan(
     scene_ids: Sequence[str] | np.ndarray,
     *,
