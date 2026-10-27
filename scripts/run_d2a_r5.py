@@ -1120,6 +1120,39 @@ def run_training() -> dict[str, Any]:
     return result
 
 
+def _map_r5a_protocol_gates(legacy_comparison: Mapping[str, Any]) -> dict[str, Any]:
+    """Translate inherited E003 gate labels into the frozen R5-A protocol terms."""
+    required = {
+        "G3_task_learning",
+        "G4_task_protection",
+        "G4_primary_C2_C3_joint_gain",
+        "S2_route_candidate_passed",
+    }
+    missing = required - set(legacy_comparison)
+    if missing:
+        raise KeyError(f"E003 comparison is missing expected fields: {sorted(missing)}")
+
+    mapped = {
+        key: value
+        for key, value in legacy_comparison.items()
+        if key not in required
+    }
+    mapped["G1_basic_learning"] = legacy_comparison["G3_task_learning"]
+    mapped["S2_task_protection_screen"] = legacy_comparison["G4_task_protection"]
+    mapped["S2_primary_C2_C3_joint_gain_screen"] = legacy_comparison[
+        "G4_primary_C2_C3_joint_gain"
+    ]
+    mapped["G3_architecture_value"] = {
+        "candidate": "S2",
+        "task_protection_passed": bool(legacy_comparison["G4_task_protection"]["passed"]),
+        "primary_gain_passed": bool(
+            legacy_comparison["G4_primary_C2_C3_joint_gain"]["passed"]
+        ),
+        "passed": bool(legacy_comparison["S2_route_candidate_passed"]),
+    }
+    return mapped
+
+
 def run_evaluate() -> dict[str, Any]:
     preflight, training, evaluation_sha = _require_posttraining_provenance(require_cuda=True)
     r5_config, e003_config, physics = _load_configs()
@@ -1198,7 +1231,9 @@ def run_evaluate() -> dict[str, Any]:
         del model
         torch.cuda.empty_cache()
 
-    comparison = e003_runner._compare_arms(arm_results, arrays, train_arrays, e003_config)
+    comparison = _map_r5a_protocol_gates(
+        e003_runner._compare_arms(arm_results, arrays, train_arrays, e003_config)
+    )
     metrics = {
         "experiment": "D2-A-R5/R5-A",
         "git_sha": preflight["git_sha"],
@@ -1223,9 +1258,12 @@ def run_evaluate() -> dict[str, Any]:
     return {
         "git_sha": preflight["git_sha"],
         "evaluation_git_sha": evaluation_sha,
-        "G3_task_learning": comparison["G3_task_learning"],
-        "G4_task_protection": comparison["G4_task_protection"],
-        "G4_primary": comparison["G4_primary_C2_C3_joint_gain"],
+        "G1_basic_learning": comparison["G1_basic_learning"],
+        "S2_task_protection_screen": comparison["S2_task_protection_screen"],
+        "S2_primary_C2_C3_joint_gain_screen": comparison[
+            "S2_primary_C2_C3_joint_gain_screen"
+        ],
+        "G3_architecture_value": comparison["G3_architecture_value"],
         "S2_route_candidate_passed": comparison["S2_route_candidate_passed"],
         "final_blind_generated": False,
         "distillation_run": False,

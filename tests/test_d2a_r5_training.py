@@ -20,7 +20,7 @@ from radardistill.training.d2a_r5 import (
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "experiments/D2-A-R5/R5-A/config.yaml"
 sys.path.insert(0, str(ROOT / "scripts"))
-from run_d2a_r5 import _load_split, _write_scene_predictions
+from run_d2a_r5 import _load_split, _map_r5a_protocol_gates, _write_scene_predictions
 
 
 def _config() -> dict:
@@ -202,3 +202,26 @@ def test_exact_overlap_split_loads_e002_manifest_format(tmp_path):
     assert set(loaded) == set(expected)
     for name in expected:
         np.testing.assert_array_equal(loaded[name], expected[name])
+
+
+def test_r5a_gate_view_uses_r5_protocol_numbering_without_mutating_legacy_metrics():
+    legacy = {
+        "G3_task_learning": {"S0": {"passed": True}, "S2": {"passed": True}},
+        "G4_task_protection": {"passed": False, "components": {"c3_pfa": False}},
+        "G4_primary_C2_C3_joint_gain": {"passed": False, "point_difference_s2_minus_s0": -0.39},
+        "S2_route_candidate_passed": False,
+        "paired_comparisons": {"overall_joint_success": {"point_difference_s2_minus_s0": -0.23}},
+    }
+    snapshot = json.loads(json.dumps(legacy))
+
+    mapped = _map_r5a_protocol_gates(legacy)
+
+    assert "G3_task_learning" not in mapped
+    assert mapped["G1_basic_learning"] == snapshot["G3_task_learning"]
+    assert mapped["G3_architecture_value"]["candidate"] == "S2"
+    assert mapped["G3_architecture_value"]["passed"] is False
+    assert mapped["G3_architecture_value"]["task_protection_passed"] is False
+    assert mapped["S2_task_protection_screen"] == snapshot["G4_task_protection"]
+    assert mapped["S2_primary_C2_C3_joint_gain_screen"] == snapshot["G4_primary_C2_C3_joint_gain"]
+    assert mapped["paired_comparisons"] == snapshot["paired_comparisons"]
+    assert legacy == snapshot
