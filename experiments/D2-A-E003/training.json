@@ -1,0 +1,78 @@
+{
+  "git_sha": "bd18df1f4fa818684bd28874c3ba96d23a1e7dde",
+  "training_seed": 101,
+  "supervision": "physical_truth_only_E1",
+  "teacher_losses_used": false,
+  "final_blind_generated": false,
+  "same_training_scene_multiset_and_order": true,
+  "same_effective_batch_and_update_budget": true,
+  "same_shared_taskstudent_initialization": true,
+  "parameter_counts": {
+    "S0": 13383,
+    "S2_total": 13557,
+    "S2_projection": 174,
+    "S2_increase_fraction": 0.013001569154898005
+  },
+  "S0": {
+    "arm": "S0",
+    "updates_completed": 1600,
+    "selected_update": 1500,
+    "selected_validation": {
+      "task_loss": 0.6133512260584677,
+      "presence_loss": 0.14115219435170293,
+      "range_cell_loss": 0.36692869119742455,
+      "range_offset_loss": 0.08715947837345302,
+      "doppler_loss": 0.018110862135887147,
+      "auc": 0.98501708,
+      "range_rmse_all_h1_cells": 3.1396336555480957,
+      "doppler_rmse_all_h1_hz": 43.156951904296875,
+      "true_cell_doppler_rmse_hz": 40.20387649536133,
+      "predicted_range_cell_mismatch_rate": 0.098
+    },
+    "microbatch_size": 16,
+    "effective_batch_size": 64,
+    "gradient_accumulation_steps": 4,
+    "training_seconds_including_validation": 349.8261861479841,
+    "cuda_peak_allocated_bytes": 275202560,
+    "cuda_peak_reserved_bytes": 337641472,
+    "parameter_count": 13383,
+    "history_path": "experiments/D2-A-E003/runs/seed_101/S0/microbatch_16/training_history.csv",
+    "checkpoint_paths": {
+      "initial_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S0/microbatch_16/initial_checkpoint.pt",
+      "best_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S0/microbatch_16/best_checkpoint.pt",
+      "last_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S0/microbatch_16/last_checkpoint.pt"
+    },
+    "prior_oom_attempts": []
+  },
+  "S2": {
+    "arm": "S2",
+    "updates_completed": 1600,
+    "selected_update": 1600,
+    "selected_validation": {
+      "task_loss": 1.099538403652259,
+      "presence_loss": 0.1813657897941768,
+      "range_cell_loss": 0.7832763820737834,
+      "range_offset_loss": 0.0696637726444751,
+      "doppler_loss": 0.06523245913982391,
+      "auc": 0.97717052,
+      "range_rmse_all_h1_cells": 4.1708197593688965,
+      "doppler_rmse_all_h1_hz": 82.12494659423828,
+      "true_cell_doppler_rmse_hz": 78.61375427246094,
+      "predicted_range_cell_mismatch_rate": 0.261
+    },
+    "microbatch_size": 16,
+    "effective_batch_size": 64,
+    "gradient_accumulation_steps": 4,
+    "training_seconds_including_validation": 494.25474227796076,
+    "cuda_peak_allocated_bytes": 285849600,
+    "cuda_peak_reserved_bytes": 373293056,
+    "parameter_count": 13557,
+    "history_path": "experiments/D2-A-E003/runs/seed_101/S2/microbatch_16/training_history.csv",
+    "checkpoint_paths": {
+      "initial_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S2/microbatch_16/initial_checkpoint.pt",
+      "best_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S2/microbatch_16/best_checkpoint.pt",
+      "last_checkpoint.pt": "experiments/D2-A-E003/runs/seed_101/S2/microbatch_16/last_checkpoint.pt"
+    },
+    "prior_oom_attempts": []
+  }
+}
