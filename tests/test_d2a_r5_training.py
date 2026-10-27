@@ -226,6 +226,7 @@ def test_r5a_gate_view_uses_r5_protocol_numbering_without_mutating_legacy_metric
     assert mapped["G3_architecture_value"]["candidate"] == "S2"
     assert mapped["G3_architecture_value"]["passed"] is False
     assert mapped["G3_architecture_value"]["task_protection_passed"] is False
+    assert mapped["S2_route_candidate_passed"] is False
     assert mapped["S2_task_protection_screen"] == snapshot["G4_task_protection"]
     assert mapped["S2_primary_C2_C3_joint_gain_screen"] == snapshot["G4_primary_C2_C3_joint_gain"]
     assert mapped["paired_comparisons"] == snapshot["paired_comparisons"]

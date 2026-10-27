@@ -1164,7 +1164,6 @@ def _map_r5a_protocol_gates(legacy_comparison: Mapping[str, Any]) -> dict[str, A
         "G3_task_learning",
         "G4_task_protection",
         "G4_primary_C2_C3_joint_gain",
-        "S2_route_candidate_passed",
     }
     missing = required - set(legacy_comparison)
     if missing:
