@@ -67,6 +67,33 @@ def wrap_periodic_difference(difference: np.ndarray | float, *, period: float) -
     return np.remainder(values + period / 2.0, period) - period / 2.0
 
 
+def _cluster_bootstrap_mean_ci(
+    values: np.ndarray,
+    scene_ids: np.ndarray,
+    *,
+    replicates: int,
+    seed: int,
+) -> list[float]:
+    observations = np.asarray(values, dtype=np.float64).reshape(-1)
+    ids = np.asarray(scene_ids).reshape(-1).astype(str)
+    if observations.size == 0 or ids.size != observations.size:
+        raise ValueError("bootstrap observations and scene IDs must have equal nonzero length")
+    if not np.all(np.isfinite(observations)):
+        raise ValueError("bootstrap observations must be finite")
+    if replicates <= 0 or seed < 0:
+        raise ValueError("bootstrap replicates must be positive and seed nonnegative")
+
+    unique_ids, inverse = np.unique(ids, return_inverse=True)
+    clusters = [np.flatnonzero(inverse == cluster) for cluster in range(unique_ids.size)]
+    rng = np.random.default_rng(seed)
+    bootstrap_means = np.empty(replicates, dtype=np.float64)
+    for replicate in range(replicates):
+        selected = rng.integers(0, unique_ids.size, size=unique_ids.size)
+        rows = np.concatenate([clusters[index] for index in selected])
+        bootstrap_means[replicate] = np.mean(observations[rows])
+    return [float(value) for value in np.quantile(bootstrap_means, [0.025, 0.975])]
+
+
 def _summarize_paired_correctness(
     teacher_correct: np.ndarray,
     student_correct: np.ndarray,
@@ -326,6 +353,10 @@ def summarize_prediction_intervention(
     truth_range_cell: np.ndarray,
     truth_doppler_hz: np.ndarray,
     prf_hz: float,
+    expected_doppler_shift_hz: float | None = None,
+    scene_ids: np.ndarray | None = None,
+    bootstrap_replicates: int = 2000,
+    bootstrap_seed: int = 0,
     range_gate_cells: float = 1.0,
     doppler_gate_hz: float = 20.0,
 ) -> dict[str, object]:
@@ -342,29 +373,83 @@ def summarize_prediction_intervention(
     count = presence.size
     if count == 0 or labels.size != count or range_truth.size != count or doppler_truth.size != count:
         raise ValueError("truth and condition arrays must have equal nonzero length")
-    if not np.isfinite(threshold) or range_gate_cells < 0.0 or doppler_gate_hz < 0.0:
+    if (
+        not np.isfinite(threshold)
+        or not np.isfinite(range_gate_cells)
+        or not np.isfinite(doppler_gate_hz)
+        or range_gate_cells < 0.0
+        or doppler_gate_hz < 0.0
+    ):
         raise ValueError("threshold and localization gates must be finite and nonnegative")
     if not np.isfinite(prf_hz) or prf_hz <= 0.0:
         raise ValueError("prf_hz must be positive and finite")
 
-    def vector(source: Mapping[str, np.ndarray], name: str) -> np.ndarray:
+    intervention_scene_ids: np.ndarray | None = None
+    if expected_doppler_shift_hz is not None:
+        if not np.isfinite(expected_doppler_shift_hz):
+            raise ValueError("expected_doppler_shift_hz must be finite")
+        if scene_ids is None:
+            raise ValueError("scene_ids are required for a Doppler-shift intervention")
+        intervention_scene_ids = np.asarray(scene_ids).reshape(-1).astype(str)
+        if intervention_scene_ids.size != count or np.any(intervention_scene_ids == ""):
+            raise ValueError("scene_ids must be nonempty and match the prediction rows")
+        if bootstrap_replicates <= 0 or bootstrap_seed < 0:
+            raise ValueError("bootstrap_replicates must be positive and bootstrap_seed nonnegative")
+
+    def vector(
+        source: Mapping[str, np.ndarray], name: str, *, finite_mask: np.ndarray | None = None
+    ) -> np.ndarray:
         result = np.asarray(source[name], dtype=np.float64).reshape(-1)
-        if result.size != count or not np.all(np.isfinite(result)):
-            raise ValueError(f"prediction field {name!r} must be finite and have length {count}")
+        mask = np.ones(count, dtype=bool) if finite_mask is None else finite_mask
+        if result.size != count or not np.all(np.isfinite(result[mask])):
+            raise ValueError(
+                f"prediction field {name!r} must be finite on required rows and have length {count}"
+            )
         return result
 
     base_score = vector(baseline, "score")
     changed_score = vector(intervention, "score")
-    base_range = vector(baseline, "range_cell")
-    changed_range = vector(intervention, "range_cell")
-    base_doppler = vector(baseline, "doppler_hz")
-    changed_doppler = vector(intervention, "doppler_hz")
+    base_range = vector(baseline, "range_cell", finite_mask=presence)
+    changed_range = vector(intervention, "range_cell", finite_mask=presence)
+    base_doppler = vector(baseline, "doppler_hz", finite_mask=presence)
+    changed_doppler = vector(intervention, "doppler_hz", finite_mask=presence)
+    if not np.all(np.isfinite(range_truth[presence])) or not np.all(
+        np.isfinite(doppler_truth[presence])
+    ):
+        raise ValueError("range and Doppler truth must be finite for every H1 row")
     base_detected = base_score >= threshold
     changed_detected = changed_score >= threshold
-    base_range_error = base_range - range_truth
-    changed_range_error = changed_range - range_truth
-    base_doppler_error = wrap_periodic_difference(base_doppler - doppler_truth, period=prf_hz)
-    changed_doppler_error = wrap_periodic_difference(changed_doppler - doppler_truth, period=prf_hz)
+    base_range_error = np.full(count, np.nan, dtype=np.float64)
+    base_range_error[presence] = base_range[presence] - range_truth[presence]
+    intervention_doppler_truth = doppler_truth.copy()
+    if expected_doppler_shift_hz is not None:
+        intervention_doppler_truth[presence] = wrap_periodic_difference(
+            doppler_truth[presence] + expected_doppler_shift_hz,
+            period=prf_hz,
+        )
+    changed_range_error = np.full(count, np.nan, dtype=np.float64)
+    changed_range_error[presence] = changed_range[presence] - range_truth[presence]
+    base_doppler_error = np.full(count, np.nan, dtype=np.float64)
+    changed_doppler_error = np.full(count, np.nan, dtype=np.float64)
+    base_doppler_error[presence] = wrap_periodic_difference(
+        base_doppler[presence] - doppler_truth[presence], period=prf_hz
+    )
+    changed_doppler_error[presence] = wrap_periodic_difference(
+        changed_doppler[presence] - intervention_doppler_truth[presence], period=prf_hz
+    )
+    doppler_response_residual: np.ndarray | None = None
+    wrapped_expected_shift: float | None = None
+    if expected_doppler_shift_hz is not None:
+        doppler_response_residual = np.full(count, np.nan, dtype=np.float64)
+        wrapped_expected_shift = float(
+            wrap_periodic_difference(expected_doppler_shift_hz, period=prf_hz)
+        )
+        observed_shift = wrap_periodic_difference(
+            changed_doppler[presence] - base_doppler[presence], period=prf_hz
+        )
+        doppler_response_residual[presence] = wrap_periodic_difference(
+            observed_shift - wrapped_expected_shift, period=prf_hz
+        )
     base_localized = (np.abs(base_range_error) <= range_gate_cells) & (
         np.abs(base_doppler_error) <= doppler_gate_hz
     )
@@ -413,6 +498,32 @@ def summarize_prediction_intervention(
                     "intervention_joint_success_rate": float(np.mean(changed_joint[h1_mask])),
                 }
             )
+            if doppler_response_residual is not None and intervention_scene_ids is not None:
+                residuals = doppler_response_residual[h1_mask]
+                h1_scene_ids = intervention_scene_ids[h1_mask]
+                absolute_residuals = np.abs(residuals)
+                row["doppler_response"] = {
+                    "n": int(residuals.size),
+                    "n_base_scenes": int(np.unique(h1_scene_ids).size),
+                    "expected_shift_hz": float(expected_doppler_shift_hz),
+                    "wrapped_expected_shift_hz": wrapped_expected_shift,
+                    "mean_signed_residual_hz": float(np.mean(residuals)),
+                    "mean_absolute_residual_hz": float(np.mean(absolute_residuals)),
+                    "p95_absolute_residual_hz": float(np.quantile(absolute_residuals, 0.95)),
+                    "mean_signed_residual_ci95_hz": _cluster_bootstrap_mean_ci(
+                        residuals,
+                        h1_scene_ids,
+                        replicates=bootstrap_replicates,
+                        seed=bootstrap_seed,
+                    ),
+                    "mean_absolute_residual_ci95_hz": _cluster_bootstrap_mean_ci(
+                        absolute_residuals,
+                        h1_scene_ids,
+                        replicates=bootstrap_replicates,
+                        seed=bootstrap_seed,
+                    ),
+                    "bootstrap_unit": "base_scene_id",
+                }
         if np.all(~presence[mask]):
             row["baseline_h0_false_alarm_rate"] = float(np.mean(base_detected[mask]))
             row["intervention_h0_false_alarm_rate"] = float(np.mean(changed_detected[mask]))
@@ -421,5 +532,15 @@ def summarize_prediction_intervention(
     result["threshold"] = float(threshold)
     result["comparator"] = ">="
     result["doppler_difference_interval_hz"] = [-float(prf_hz) / 2.0, float(prf_hz) / 2.0]
+    if expected_doppler_shift_hz is not None:
+        result["doppler_intervention"] = {
+            "expected_shift_hz": float(expected_doppler_shift_hz),
+            "wrapped_expected_shift_hz": wrapped_expected_shift,
+            "period_hz": float(prf_hz),
+            "truth_mapping": "wrap_periodic_difference(truth_doppler_hz + expected_shift_hz, period=prf_hz)",
+            "bootstrap_replicates": int(bootstrap_replicates),
+            "bootstrap_seed": int(bootstrap_seed),
+            "bootstrap_unit": "base_scene_id",
+        }
     return result
 

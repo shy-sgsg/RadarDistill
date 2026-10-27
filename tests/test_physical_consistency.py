@@ -86,6 +86,54 @@ def test_prediction_intervention_reports_h0_h1_and_condition_transitions() -> No
     assert summary["condition:C1/H1"]["intervention_detected_count"] == 1
 
 
+def test_doppler_shift_intervention_uses_shifted_truth_and_periodic_response() -> None:
+    scene_ids = np.asarray(
+        ["scene-a", "scene-a", "scene-b", "scene-b", "scene-c", "scene-c", "scene-d", "scene-d"]
+    )
+    truth_presence = np.asarray([False, True] * 4)
+    baseline = {
+        "score": np.asarray([0.1, 0.9, 0.1, 0.9, 0.1, 0.9, 0.1, 0.9]),
+        "range_cell": np.asarray([np.nan, 10.0] * 4),
+        "doppler_hz": np.asarray([np.nan, 649.0, np.nan, -649.0, np.nan, 50.0, np.nan, 200.0]),
+    }
+    shifted = {
+        "score": np.asarray([0.1, 0.9, 0.1, 0.9, 0.1, 0.9, 0.8, 0.9]),
+        "range_cell": np.asarray([np.nan, 10.0] * 4),
+        # Three exact +5 Hz responses, including both sides of the Nyquist edge;
+        # the last scene has a +11 Hz response and therefore a +6 Hz residual.
+        "doppler_hz": np.asarray([np.nan, -646.0, np.nan, -644.0, np.nan, 55.0, np.nan, 211.0]),
+    }
+
+    summary = summarize_prediction_intervention(
+        baseline,
+        shifted,
+        scene_ids=scene_ids,
+        expected_doppler_shift_hz=5.0,
+        truth_presence=truth_presence,
+        condition=np.asarray(["C3"] * 8),
+        threshold=0.5,
+        truth_range_cell=np.asarray([np.nan, 10.0] * 4),
+        truth_doppler_hz=np.asarray([np.nan, 649.0, np.nan, -649.0, np.nan, 50.0, np.nan, 200.0]),
+        prf_hz=1300.0,
+        doppler_gate_hz=3.0,
+        bootstrap_replicates=200,
+        bootstrap_seed=20261028,
+    )
+
+    response = summary["H1"]["doppler_response"]
+    assert summary["H1"]["baseline_parameter_localization_rate"] == 1.0
+    assert summary["H1"]["intervention_parameter_localization_rate"] == 0.75
+    assert response["n_base_scenes"] == 4
+    assert response["mean_signed_residual_hz"] == pytest.approx(1.5)
+    assert response["mean_absolute_residual_hz"] == pytest.approx(1.5)
+    assert response["mean_signed_residual_ci95_hz"][0] <= 1.5
+    assert response["mean_signed_residual_ci95_hz"][1] >= 1.5
+    assert response["mean_absolute_residual_ci95_hz"][0] <= 1.5
+    assert response["mean_absolute_residual_ci95_hz"][1] >= 1.5
+    assert summary["H0"]["intervention_h0_false_alarm_rate"] == 0.25
+    assert summary["doppler_intervention"]["expected_shift_hz"] == 5.0
+
+
 def test_teacher_student_error_matrix_separates_task_errors_and_bootstraps_scenes() -> None:
     scene_ids = np.asarray([f"scene-{index}" for index in range(8)])
     truth_presence = np.asarray([False] * 4 + [True] * 4)

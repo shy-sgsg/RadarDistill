@@ -20,6 +20,10 @@ R5-D准备阶段复用 `evaluation/physical_consistency.py` 汇总同一场景�
 
 H0只评价检测正确性；H0没有目标距离/Doppler真值，因此对应参数字段可以缺失或为非有限值，参数指标只使用H1记录。
 
+## Doppler 频移响应评估接口
+
+`summarize_prediction_intervention` 可选接收 `expected_doppler_shift_hz`、对齐的 `scene_ids` 和 bootstrap 设置，用于目标频率干预 `fd → fd + Δf`。它将干预后的 H1 真值按 PRF 周期回绕，分别计算基线/干预参数正确率，并对学生估计变化减去预期变化的残差进行 `base_scene_id` 簇 bootstrap。H0 不计算参数误差；H0 的参数输出和标签可为 NaN，仅检测分数需有效。频移幅度、输入变换方式、条件配额与任务门须在 R5-D 独立协议中冻结，当前代码准备不表示已运行物理干预。
+
 ## 停止条件
 
 若 R5-C 没有知识形式达到任务质量门，不启动教学时机/因果机制搜索；只报告 teacher/student error matrix 和已有物理监督机制证据。不得因为需要填满阶段表而继续。
