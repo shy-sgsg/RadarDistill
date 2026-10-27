@@ -932,13 +932,15 @@ def _train_arm(
 ) -> dict[str, Any]:
     arm_root = ARTIFACTS / "runs" / "seed_101" / arm
     record_path = arm_root / "training_record.json"
+    previous_record = None
     if record_path.is_file():
-        saved = json.loads(record_path.read_text(encoding="utf-8"))
-        if int(saved.get("updates_completed", -1)) >= target_updates:
-            return saved
+        previous_record = json.loads(record_path.read_text(encoding="utf-8"))
+        if int(previous_record.get("updates_completed", -1)) >= target_updates:
+            return previous_record
     training = r5_config["training"]
     fallback_batches = (int(training["initial_microbatch_size"]), *map(int, training["oom_microbatch_fallbacks"]))
     attempts: list[dict[str, Any]] = []
+    invocation_started = time.perf_counter()
     for microbatch in fallback_batches:
         try:
             result = _train_attempt(
@@ -956,6 +958,11 @@ def _train_arm(
                 arm_root=arm_root,
             )
             result["prior_oom_attempts"] = attempts
+            result = _accumulate_training_timing(
+                result,
+                previous_record=previous_record,
+                invocation_seconds=time.perf_counter() - invocation_started,
+            )
             _write_json(record_path, result)
             return result
         except torch.cuda.OutOfMemoryError as exc:
@@ -966,6 +973,37 @@ def _train_arm(
             print(f"[R5-A] {arm} OOM at microbatch={microbatch}; retrying smaller with latest full state", flush=True)
     _write_json(arm_root / "failed.json", {"arm": arm, "attempts": attempts, "cpu_fallback": False})
     raise RuntimeError(f"R5-A {arm} OOMed at microbatch 4; stopped without CPU/AMP/effective-batch changes")
+
+
+def _accumulate_training_timing(
+    result: Mapping[str, Any],
+    *,
+    previous_record: Mapping[str, Any] | None,
+    invocation_seconds: float,
+) -> dict[str, Any]:
+    """Retain wall time across the initial and continuation training segments."""
+    current = dict(result)
+    previous = dict(previous_record or {})
+    previous_seconds = float(
+        previous.get(
+            "training_seconds_cumulative",
+            previous.get("training_seconds_this_invocation", 0.0),
+        )
+    )
+    start_update = int(previous.get("updates_completed", 0))
+    end_update = int(current["updates_completed"])
+    elapsed = float(invocation_seconds)
+    current["training_seconds_this_invocation"] = elapsed
+    current["training_seconds_cumulative"] = previous_seconds + elapsed
+    current["training_segments"] = [
+        *previous.get("training_segments", []),
+        {
+            "start_update": start_update,
+            "end_update": end_update,
+            "wall_seconds": elapsed,
+        },
+    ]
+    return current
 
 
 def _read_arm_history(arm: str) -> list[dict[str, Any]]:

@@ -20,7 +20,12 @@ from radardistill.training.d2a_r5 import (
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "experiments/D2-A-R5/R5-A/config.yaml"
 sys.path.insert(0, str(ROOT / "scripts"))
-from run_d2a_r5 import _load_split, _map_r5a_protocol_gates, _write_scene_predictions
+from run_d2a_r5 import (
+    _accumulate_training_timing,
+    _load_split,
+    _map_r5a_protocol_gates,
+    _write_scene_predictions,
+)
 
 
 def _config() -> dict:
@@ -225,3 +230,24 @@ def test_r5a_gate_view_uses_r5_protocol_numbering_without_mutating_legacy_metric
     assert mapped["S2_primary_C2_C3_joint_gain_screen"] == snapshot["G4_primary_C2_C3_joint_gain"]
     assert mapped["paired_comparisons"] == snapshot["paired_comparisons"]
     assert legacy == snapshot
+
+
+def test_r5a_training_timing_preserves_initial_and_extension_segments():
+    initial = _accumulate_training_timing(
+        {"updates_completed": 6400, "training_seconds_this_invocation": 12.0},
+        previous_record=None,
+        invocation_seconds=12.0,
+    )
+    extended = _accumulate_training_timing(
+        {"updates_completed": 12800, "training_seconds_this_invocation": 9.0},
+        previous_record=initial,
+        invocation_seconds=9.0,
+    )
+
+    assert initial["training_seconds_cumulative"] == pytest.approx(12.0)
+    assert extended["training_seconds_this_invocation"] == pytest.approx(9.0)
+    assert extended["training_seconds_cumulative"] == pytest.approx(21.0)
+    assert extended["training_segments"] == [
+        {"start_update": 0, "end_update": 6400, "wall_seconds": 12.0},
+        {"start_update": 6400, "end_update": 12800, "wall_seconds": 9.0},
+    ]
