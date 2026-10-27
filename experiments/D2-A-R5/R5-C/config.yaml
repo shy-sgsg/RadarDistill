@@ -1,0 +1,98 @@
+experiment:
+  id: D2-A-R5-C
+  title: IQ-only teacher knowledge quality audit
+  protocol_version: 1.0
+  status: preregistered
+  charter: docs/RESEARCH_CHARTER.md
+  charter_version: 1.3
+  source_task_alignment: docs/task_alignments/D2-A-R5C_alignment.md
+  authorization_source: user-provided-D2-A-R5-task-brief-2026-10-28
+  phase: teacher_quality_only
+  student_training_authorized: false
+  distillation_authorized: false
+  final_blind_generation_authorized: false
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  simulation_config: experiments/D2-A-E001/config.yaml
+
+data:
+  independent_new_scenes: true
+  h0_h1_paired_same_noise_clutter: true
+  split_unit: base_scene_id
+  batch_size: 16
+  persist_iq_cache: false
+  persist_teacher_map_cache: false
+  conditions:
+    - {course: C0, scenario_id: separated, snr_db: 20.0, cnr_db: -5.0, scenes: 256}
+    - {course: C1, scenario_id: separated, snr_db: 15.0, cnr_db: 0.0, scenes: 128}
+    - {course: C1, scenario_id: near_clutter_edge, snr_db: 15.0, cnr_db: 0.0, scenes: 128}
+    - {course: C2, scenario_id: separated, snr_db: 10.0, cnr_db: 10.0, scenes: 256}
+    - {course: C2, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 10.0, scenes: 256}
+    - {course: C2, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 10.0, scenes: 256}
+    - {course: C3, scenario_id: separated, snr_db: 0.0, cnr_db: 20.0, scenes: 512}
+    - {course: C3, scenario_id: separated, snr_db: 10.0, cnr_db: 20.0, scenes: 512}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 0.0, cnr_db: 20.0, scenes: 512}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 20.0, scenes: 512}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 0.0, cnr_db: 20.0, scenes: 512}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 20.0, scenes: 512}
+  total_paired_base_scenes: 4352
+  seed_block_start: 726000000
+  seed_block_stride: 100000
+  chunk_seed_stride: 1009
+  final_blind_seed_range_used: false
+
+teacher:
+  backend: torch_complex128_cuda
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  input_fields: [observable_iq_only, frozen_physics_config]
+  forbidden_fields: [truth, target_location, scenario_id, course, snr, cnr, metadata]
+  dpca_channel_pair: [0, 1]
+  output_forms:
+    K1:
+      method: frozen_B3_DPCA
+      fft_length_factor: 1
+      output: normalized_full_rd_power_support
+    K3:
+      method: frozen_B3_DPCA
+      fft_length_factor: 4
+      output: normalized_full_rd_power_support
+      doppler_bin_spacing_hz: 2.5
+    K2_local:
+      method: K3_support_at_IQ_only_global_peak_range
+      output: normalized_doppler_support_at_predicted_range
+  complex_scale_factors: [0.5, 2.0, "0.6+1.2j"]
+
+evaluation:
+  target_window: {range_error_bins_max: 1.0, circular_doppler_error_hz_max: 20.0}
+  reliability_score: normalized_support_mass_within_teacher_peak_window
+  reliability_threshold_tuning: false
+  g4_identifiable_scope: [C2, C3]
+  bootstrap_unit: base_scene_id
+  bootstrap_replicates: 2000
+  bootstrap_seed: 2026102817
+  primary_contrast: K3_minus_K1_teacher_localization_and_circular_doppler_rmse
+  response_sum_tolerance: 1.0e-6
+  cpu_cuda_k1_max_abs_tolerance: 1.0e-6
+  complex_scale_max_abs_tolerance: 1.0e-6
+  analytic_tone_max_peak_error_hz: 2.5
+  g4_identifiable_c2_c3_target_window_lift_ci_lower_gt: 0.0
+  severe_subgroup_rule:
+    target_window_lift_ci_upper_lte: 0.0
+    and_top_cell_localization_lte: 0.05
+  reliability_salvage_minimum_auc: 0.65
+  fixed_threshold_teacher_qualification: false
+
+resources:
+  gpu: NVIDIA_GeForce_RTX_3050_Laptop_GPU
+  precision: complex128_FP64
+  models_resident_simultaneously: 1
+  max_batch_size: 16
+  project_size_final_limit_gib: 20
+  preserve_untracked_user_files: true
