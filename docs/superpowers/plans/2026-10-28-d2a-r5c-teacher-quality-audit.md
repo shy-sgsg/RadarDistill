@@ -95,10 +95,10 @@
 - Consumes the committed frozen protocol/config and runner on `main`.
 - Produces fresh R5-C metrics and compact per-scene rows from new independent synthetic scenes.
 
-- [ ] Run `preflight`; inspect that it records CUDA available on RTX 3050 Laptop `cuda:0`, seed disjointness, and sufficient disk.
-- [ ] Run the registered audit in fixed condition/batch order; abort on CPU fallback, OOM, seed collision, numeric/parity/invariance error, or teacher leakage.
-- [ ] Verify all 4,352 paired base-scene IDs exactly once, candidate outputs finite/normalized, expected condition counts, confidence intervals, and GPU peak allocation.
-- [ ] Keep temporary outputs and project total below 20 GiB; retain no reconstructible IQ, full support maps, or checkpoints.
+- [x] Run `preflight`; inspect that it records CUDA available on RTX 3050 Laptop `cuda:0`, seed disjointness, and sufficient disk.
+- [x] Run the registered audit in fixed condition/batch order; abort on CPU fallback, OOM, seed collision, numeric/parity/invariance error, or teacher leakage.
+- [x] Verify all 4,352 paired base-scene IDs exactly once, candidate outputs finite/normalized, expected condition counts, confidence intervals, and GPU peak allocation.
+- [x] Keep temporary outputs and project total below 20 GiB; retain no reconstructible IQ, full support maps, or checkpoints.
 
 ### Task 5: Analyze teacher eligibility and report the stage
 
@@ -112,10 +112,10 @@
 - Consumes frozen protocol, verified runner outputs, existing K2/T1/T001 history, and R5-A/B student evidence.
 - Produces a bounded G4 judgment, explicit limits, independent ChatGPT review package, and one evidence-based next action.
 
-- [ ] Compute all registered results without altering gates or omitting failed strata; distinguish soft-response eligibility from fixed-threshold teacher qualification.
-- [ ] Update H-TEACH-002 and H-TEACH-004 only if the registered evidence changes their status; do not modify the research charter.
-- [ ] Draft analysis and stage review answering whether any knowledge form is eligible for one new student pilot, whether reliability gating is justified, and what must stop.
-- [ ] Update dynamic state and decision records; preserve the current R5-B negative result and ChatGPT review request.
-- [ ] Create the review request beginning with the required charter-first instruction and include current commit SHA, protocol, code, metrics, analysis, historical K2/T1/T001 context, and route question.
-- [ ] Re-read the spec/protocol and inspect exact git diff; run focused/full required verification and `git diff --check`; commit/push exact paths to `main`.
-- [ ] Verify pushed SHA equals `origin/main` and final repository usage remains below 20 GiB.
+- [x] Compute all registered results without altering gates or omitting failed strata; distinguish soft-response eligibility from fixed-threshold teacher qualification.
+- [x] Update H-TEACH-002 and H-TEACH-004 only if the registered evidence changes their status; do not modify the research charter.
+- [x] Draft analysis and stage review answering whether any knowledge form is eligible for one new student pilot, whether reliability gating is justified, and what must stop.
+- [x] Update dynamic state and decision records; preserve the current R5-B negative result and ChatGPT review request.
+- [x] Create the review request beginning with the required charter-first instruction and include current commit SHA, protocol, code, metrics, analysis, historical K2/T1/T001 context, and route question.
+- [x] Re-read the spec/protocol and inspect exact git diff; run focused/full required verification and `git diff --check`; commit/push exact paths to `main`.
+- [x] Verify pushed SHA equals `origin/main` and final repository usage remains below 20 GiB.
