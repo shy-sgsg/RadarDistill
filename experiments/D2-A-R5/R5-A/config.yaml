@@ -1,0 +1,76 @@
+experiment:
+  id: D2-A-R5
+  subphase: R5-A
+  protocol_version: 1.0
+  status: preregistered
+  final_blind_generation_authorized: false
+  distillation_authorized: false
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+data:
+  source_config: experiments/D2-A-E003/config.yaml
+  cache_root: experiments/D2-A-R5/data/cache
+  paired_training_scenes: 51200
+  paired_validation_scenes: 5000
+  reuse_frozen_training_and_validation_ids: true
+  regenerate_from_frozen_source_config: true
+  development_source_config: experiments/D2-A-E003/config.yaml
+  development_is_final_blind: false
+  final_blind_generation_authorized: false
+  physical_diagnostic_scene_ids: experiments/D2-A-E003/selected_scene_ids.csv
+  physical_diagnostics_are_reused_development_only: true
+training:
+  models: [S0, S2]
+  seed: 101
+  pair_order_seed_base: 2026102711
+  shared_pair_permutation_by_model: true
+  matched_shared_initialization_for_S0_S2: true
+  supervision: physical_truth_only_E1
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.0001
+  learning_rate_schedule: cosine_over_6400_updates
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  max_updates_initial: 6400
+  continuation_max_updates: 12800
+  paired_scenes_per_update: 32
+  effective_batch_size: 64
+  validation_interval_updates: 400
+  checkpoint_every_updates: 400
+  selection: minimum_common_validation_truth_task_loss
+  precision: FP32
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  amp: false
+  model_order: [S0, S2]
+  simultaneous_models_on_gpu: 1
+  initial_microbatch_size: 16
+  oom_microbatch_fallbacks: [8, 4]
+  preserve_effective_batch_on_oom: true
+  save_optimizer_scheduler_rng_sampler_and_data_cursor: true
+  extension_requires_preregistered_validation_trend: true
+capacity:
+  first_comparison_only: [Small, Medium]
+  width_by_model: {Small: 32, Medium: 96}
+  parameter_count_expected: {Small: 13383, Medium: 82887}
+  vary_width_only: true
+  large_model_authorized: false
+metrics:
+  primary: paired_joint_success_on_identifiable_C2_C3
+  joint_success: detection_and_abs_range_error_le_1_cell_and_circular_doppler_error_le_20_hz
+  report: [Pd, Pfa, ROC_AUC, range_MAE_RMSE, circular_Doppler_MAE_RMSE_bias, joint_success, per_course, per_SNR_CNR, training_cost, inference_cost]
+  bootstrap_unit: paired_base_scene_id
+  bootstrap_replicates: 2000
+gates:
+  G0: governance_protocol_split_and_cuda_checks_pass
+  G1: basic_learning_numerics_gradients_and_small_subset_overfit_pass
+  G1_overfit: {paired_scenes: 16, updates: 200, required_train_truth_task_loss_relative_drop: 0.50, excluded_from_scientific_metrics: true}
+  G2: classify_learning_as_improving_plateau_overfit_or_optimization_issue
+  G3: capacity_or_architecture_requires_task_gain_without_major_task_regression
+  G7: formal_multiseed_requires_pilot_task_protection_and_pre_registered_gain
