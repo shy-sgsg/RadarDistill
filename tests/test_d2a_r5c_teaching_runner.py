@@ -111,6 +111,18 @@ def test_draft_validator_rejects_unregistered_extra_fields(config: dict) -> None
         validate_r5c_teaching_config(invalid)
 
 
+def test_frozen_input_manifest_covers_evaluation_and_scene_generation_dependencies():
+    required_inputs = {
+        "src/radardistill/baselines.py",
+        "src/radardistill/evaluation/d2a_e002.py",
+        "src/radardistill/simulation/d0.py",
+        "src/radardistill/simulation/d2a.py",
+        "scripts/run_d2a_r5c_teacher_audit.py",
+    }
+
+    assert required_inputs <= set(pilot.FROZEN_INPUTS)
+
+
 def test_seed_specs_have_exact_scene_counts_and_blocked_chunks(config: dict) -> None:
     validate_r5c_teaching_config(config)
     specs = build_split_seed_specs(config)
@@ -569,3 +581,89 @@ def test_overfit_retries_cuda_oom_with_smaller_microbatch(config: dict, monkeypa
 
     assert calls == [16, 8]
     assert result["microbatch_attempts"] == [16, 8]
+
+
+def test_evaluation_uses_and_persists_only_requested_presence_side(
+    monkeypatch, tmp_path, config: dict
+):
+    evaluation_config = deepcopy(config)
+    for split in evaluation_config["data"]["splits"].values():
+        split["scene_count"] = 1
+    monkeypatch.setattr(runner, "OUTPUT_ROOT", tmp_path)
+    monkeypatch.setattr(runner, "_require_training_authorization", lambda _: None)
+    monkeypatch.setattr(
+        runner,
+        "_require_preflight_complete",
+        lambda *args, **kwargs: {"git_sha": "a" * 40},
+    )
+    monkeypatch.setattr(runner, "_require_committed_main", lambda: "a" * 40)
+    monkeypatch.setattr(
+        runner,
+        "_load_evaluation_models",
+        lambda *_: {arm: torch.nn.Identity() for arm in evaluation_config["training"]["arms"]},
+    )
+    monkeypatch.setattr(runner, "_require_training_cuda", lambda _: torch.device("cpu"))
+    monkeypatch.setattr(runner, "_read_yaml", lambda _: {})
+    monkeypatch.setattr(runner, "summarize_pilot_arm", lambda *args: {})
+    monkeypatch.setattr(runner, "paired_teaching_contrasts", lambda *args: {})
+    saved_payloads = {}
+    monkeypatch.setattr(
+        runner,
+        "_save_arm_predictions",
+        lambda arm, payload: saved_payloads.setdefault(arm, payload),
+    )
+    monkeypatch.setattr(runner.torch.cuda, "reset_peak_memory_stats", lambda *_: None)
+    monkeypatch.setattr(runner.torch.cuda, "synchronize", lambda *_: None)
+    monkeypatch.setattr(runner.torch.cuda, "max_memory_allocated", lambda *_: 0)
+    monkeypatch.setattr(runner.torch.cuda, "max_memory_reserved", lambda *_: 0)
+    monkeypatch.setattr(runner.torch.cuda, "get_device_name", lambda *_: "mock CUDA")
+
+    split_names = (
+        "h0_calibration",
+        "h0_verification",
+        "c3_h0_verification",
+        "h1_development",
+    )
+
+    def fake_chunks(_, __, split_name):
+        course = "C3" if split_name == "c3_h0_verification" else "C0"
+        metadata = {
+            "base_scene_ids": np.asarray([f"{split_name}-scene"]),
+            "course_level": np.asarray([course]),
+            "scenario_id": np.asarray(["separated"]),
+            "snr_db": np.asarray([0.0]),
+            "requested_cnr_db": np.asarray([20.0]),
+            "condition_index": np.asarray([0]),
+        }
+        batch = SimpleNamespace(
+            iq_h0=np.zeros((1, 3, 130, 32), dtype=np.complex64),
+            iq_h1=np.ones((1, 3, 130, 32), dtype=np.complex64),
+            truth_target_range_cell=np.asarray([1.5]),
+            truth_target_doppler_hz=np.asarray([12.0]),
+        )
+        yield {"spec": {"split": split_name, "scene_count": 1}, "batch": batch, "metadata": metadata}
+
+    monkeypatch.setattr(runner, "iter_generated_split_chunks", fake_chunks)
+    calls = []
+
+    def fake_predict(_model, iq, _device, *, truth_range_cell=None, prf_hz=1300.0):
+        marker = float(np.asarray(iq).real.flat[0])
+        calls.append((marker, truth_range_cell is not None))
+        prediction = {
+            "score": np.asarray([0.5]),
+            "predicted_range_cell": np.asarray([1.5]),
+            "predicted_range_bin": np.asarray([1]),
+            "predicted_doppler_hz": np.asarray([12.0]),
+        }
+        if truth_range_cell is not None:
+            prediction["true_range_gated_doppler_hz"] = np.asarray([12.0])
+        return prediction
+
+    monkeypatch.setattr(runner, "predict_task_student_chunk", fake_predict)
+
+    result = runner.run_evaluation(evaluation_config)
+
+    assert result["split_scene_counts"] == {name: 1 for name in split_names}
+    assert len(calls) == 16
+    assert calls.count((1.0, True)) == 4
+    assert all("h0_score" not in payload["development"] for payload in saved_payloads.values())

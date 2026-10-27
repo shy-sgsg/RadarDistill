@@ -122,13 +122,22 @@ above. These evaluation scenes are development data, never final blind data.
 ## 5. Metrics, comparisons, and pilot gates
 
 For each arm, calibrate its presence threshold on its own H0 calibration split
-using the `higher` 95th empirical quantile and decision `score >= threshold`.
-Report calibration, overall H0 verification, and independent C3 H0 verification
-separately, including exact one-sided 95% false-alarm upper bounds and ties.
-Evaluate H1 with Pd/AUC, range and circular-Doppler MAE/RMSE/bias, predicted
-range mismatch, true-range-gated Doppler, and joint success by course and each
-C3 cell. Joint success requires detection, absolute range error at most one
-cell, and PRF-wrapped Doppler error at most 20 Hz; a miss is a joint failure.
+using the raw `presence_logit` score, the `higher` 95th empirical quantile and
+decision `score >= threshold`.
+For calibration, report the empirical false-alarm rates above and at/above the
+threshold, along with tie count; do not report a nominal exact confidence bound
+because the threshold is selected on those same samples. For the independent
+overall H0 verification and C3 H0 verification splits, report exact one-sided
+95% false-alarm upper bounds and ties.
+For each H1 development condition, calculate AUC against independent H0
+verification scores from the same condition, then weight condition-level AUCs
+by the H1 development counts. Use the dedicated C3 H0 verification split for
+C3 condition AUCs. Do not infer or retain the paired H0 side in the H1
+development split. Evaluate H1 with Pd/AUC, range and circular-Doppler
+MAE/RMSE/bias, predicted range mismatch, true-range-gated Doppler, and joint
+success by course and each C3 cell. Joint success requires detection, absolute
+range error at most one cell, and PRF-wrapped Doppler error at most 20 Hz; a
+miss is a joint failure.
 
 The primary endpoint is paired C2+C3 joint success. The only primary contrasts
 are T1−T0 and T2−T0. A candidate needs a point gain of at least `+0.02` and a

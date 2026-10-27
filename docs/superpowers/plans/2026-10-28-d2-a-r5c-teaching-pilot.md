@@ -114,11 +114,11 @@
 - `paired_teaching_contrasts(arm_predictions, config) -> dict` computes T1−T0, T2−T0, T3−T0 scene bootstrap intervals and Bonferroni simultaneous primary lower bounds.
 - Evaluation streams generated scenarios and saves only IDs and per-scene predictions; no IQ/map cache or final blind.
 
-- [ ] **Step 1: Write failing tests** for the higher quantile and `>=` comparator, exact one-sided Pfa interval, circular Doppler error, joint-failure-on-miss, paired bootstrap unit and 2.5th-percentile Bonferroni lower bounds.
-- [ ] **Step 2: Run tests and verify missing or incorrect evaluation behavior.**
-- [ ] **Step 3: Implement evaluation using existing D2-A calibration/metrics helpers where compatible.**
-- [ ] **Step 4: Run focused evaluation tests and R5 regression tests.**
-- [ ] **Step 5: Commit** the evaluation module, runner integration and tests.
+- [x] **Step 1: Write failing tests** for the higher quantile and `>=` comparator, exact one-sided Pfa interval, circular Doppler error, joint-failure-on-miss, paired bootstrap unit and 2.5th-percentile Bonferroni lower bounds.
+- [x] **Step 2: Run tests and verify missing or incorrect evaluation behavior.**
+- [x] **Step 3: Implement evaluation using existing D2-A calibration/metrics helpers where compatible.**
+- [x] **Step 4: Run focused evaluation tests and R5 regression tests.**
+- [x] **Step 5: Commit** the evaluation module, runner integration and tests.
 
 ### Task 6: Execute the one-seed pilot and complete the research report
 
