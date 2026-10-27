@@ -1,5 +1,13 @@
 # 技术决策记录
 
+## 2026-10-28：D2-A-R5-C 教师知识质量审计通过G4，限提教学内容pilot
+
+- **依据：** 按 protocol/config v1.1 完成4,352个独立新配对base scenes、三种冻结B3软响应形式和13,056条逐场景记录。数值、数据隔离与CUDA执行门通过；可辨识C2+C3上K1/K3/K2-local目标窗口lift均为正。K3−K1 top-cell localization为`+0.03125`（95% CI `[+0.02474,+0.03776]`），达到预注册`+0.02`增益门；全图归一化软质量未改善。C3 partial-overlap / 0 dB定位率仅2.1%–4.1%，须作为困难保护子组保留。
+- **边界：** K2-local lift按教师自选距离门局部归一化且峰位置继承K3，不能与K1/K3全图质量直接比较。置信AUC未经校准；没有固定阈值检测器资格、学生侧教学收益、蒸馏、多seed或final blind证据。Medium学生C3 H0 Pfa=`0.18896`仍未满足绝对0.10保护。R5-B TFAS冻结G3 STOP保持不变。
+- **决定：** Codex阶段建议 **CONTINUE**，但只支持提出一轮T0 truth-only、T1 truth+K3、T2 truth+K2-local、T3 matched truth-assisted的matched teaching-content pilot；不自动进入时机/可靠性机制搜索或正式多seed。先提交R5-C独立ChatGPT阶段审查，再据审查意见冻结pilot协议；保持总纲v1.3不变。
+- **下一项唯一优先任务：** 完成R5-C独立ChatGPT阶段审查；如方向获支持，冻结并运行上述单轮T0–T3 pilot，保留C3绝对Pfa与联合任务保护。若teacher arms没有相对matched truth-only带来预注册任务增益，或以保护指标明显退化换取单项改进，则停止进一步蒸馏机制扩展。
+- **证据文件：** `experiments/D2-A-R5/R5-C/{protocol.md,config.yaml,metrics.json,analysis.md,teacher_scene_metrics.csv}`、`docs/stage_reviews/D2-A-R5C_review.md`；运行代码SHA `58e422de7a9de1290d38ebbb206862e23b49ab42`。该独立合成开发审计不称为blind。
+
 ## 2026-10-28：停止 D2-A-R5-B TFAS 候选并提交独立审查
 
 - **结果：** 按冻结 protocol/config v1.0，TFAS seed101、E1 truth-only、12,800 updates在 RTX 3050 Laptop `cuda:0` 完成。G0/G1/G2通过；G3失败。TFAS相对Medium的C2/C3 joint-success差为`−0.60449`（paired 95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa=`0.15186`，高于0.10绝对保护。

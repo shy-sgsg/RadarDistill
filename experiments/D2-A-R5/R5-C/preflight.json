@@ -1,0 +1,27 @@
+{
+  "protocol_version": 1.1,
+  "git_sha": "58e422de7a9de1290d38ebbb206862e23b49ab42",
+  "branch": "main",
+  "pushed_to_origin_main": true,
+  "cuda_device": {
+    "device": "cuda:0",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "torch_version": "2.8.0+cu128",
+    "torch_cuda_version": "12.8",
+    "cuda_device_count": 1,
+    "free_bytes_before": 3149725696,
+    "total_bytes": 3942383616
+  },
+  "condition_count": 12,
+  "batch_count": 272,
+  "paired_base_scenes": 4352,
+  "scene_seed_block": [
+    726000000,
+    727199999
+  ],
+  "existing_scene_seed_collisions": 0,
+  "final_blind": false,
+  "student_training": false,
+  "distillation": false,
+  "passed": true
+}

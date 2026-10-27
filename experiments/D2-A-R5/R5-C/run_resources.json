@@ -1,0 +1,18 @@
+{
+  "git_sha": "58e422de7a9de1290d38ebbb206862e23b49ab42",
+  "batch_count": 272,
+  "paired_base_scenes": 4352,
+  "candidate_row_count": 13056,
+  "scene_generation_cpu_seconds": 41.82983957795659,
+  "K1_cuda_seconds": 1.3834282548632473,
+  "K3_cuda_seconds": 1.5796170316752978,
+  "cuda_peak_allocated_bytes": 23433216,
+  "cuda_peak_reserved_bytes": 44040192,
+  "process_max_rss_bytes": 859344896,
+  "project_size_bytes_after": 15090414383,
+  "project_size_gib_after": 14.054043575190008,
+  "iq_or_teacher_map_cache_written": false,
+  "student_training": false,
+  "distillation": false,
+  "final_blind": false
+}

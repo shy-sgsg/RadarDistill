@@ -2,14 +2,20 @@
 
 **更新日期：** 2026-10-28
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5-B TFAS seed101 E1 truth-only pilot 已在 CUDA 完成；模型/runner提交 `55e7c7810e6cbb0277f79b1b6b4c401052b559dc`。训练、指标、配对场景输出和阶段分析见 [R5-B analysis](../experiments/D2-A-R5/R5-B/analysis.md)；阶段自审见 [R5-B review](stage_reviews/D2-A-R5B_review.md)。ChatGPT 审查请求随结果归档提交提供。
-**阶段判断：** R5-B **REFINE**；TFAS候选依据冻结G3 **STOP**。G0/G1/G2通过，但相对Medium的C2/C3 joint-success差为`−0.60449`（95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa为`0.15186`，超过`0.10`保护。R5-A Small/Medium总体任务表现较好但C3 H0 Pfa亦超限，因此当前没有通过完整门的学生或获准教师。历史阶段结论保持不变。
+**最新完成工作：** D2-A-R5-C 教师知识质量审计已在 RTX 3050 Laptop `cuda:0` 完成，运行对应代码 SHA 为 `58e422de7a9de1290d38ebbb206862e23b49ab42`。新场景共4,352个配对 base scenes、13,056条候选记录。结果、协议和阶段自审见 [R5-C analysis](../experiments/D2-A-R5/R5-C/analysis.md)、[metrics](../experiments/D2-A-R5/R5-C/metrics.json) 与 [stage review](stage_reviews/D2-A-R5C_review.md)；ChatGPT审查请求在同目录归档。
+**阶段判断：** R5-C 三种软响应均通过冻结 G4 知识质量门，K3 相对 K1 的定位提升达到预注册有意义增益门；**不构成固定阈值检测器资格或学生蒸馏收益证据**。C3 partial-overlap / 0 dB 定位率仅2.1%–4.1%，且 Medium 学生已有 C3 H0 Pfa=`0.18896`，未满足0.10保护。R5-B TFAS 的冻结 G3 **STOP** 结论维持不变；R5-A/B学生均未通过完整绝对虚警保护，R5-C没有学生结果，当前没有取得固定阈值检测器资格的教师。
 
-**当前授权工作：** R5-A与R5-B已按预注册预算完成单seed CUDA E1训练；未运行KD、正式多seed或final blind。R5-B模型未通过G3，不追加TFAS seed、KD、Large、参数搜索或blind。阶段结果等待独立ChatGPT审查；项目最终体积上限为20 GiB。
+**当前工作：** 提交 R5-C 独立 ChatGPT 阶段审查材料；R5-B 的独立审查仍待反馈。R5-C 未训练学生、未做 KD、未生成 final blind。收到方向审查后，再决定是否冻结并运行一轮 T0–T3 匹配教学内容 pilot。项目最终占用保持低于20 GiB。
 
 ## 当前结论
 
 RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
+
+### D2-A-R5-C 教师软知识质量审计
+
+在三通道、PRF=1300 Hz、N=130、32距离单元静止杂波仿真中，使用独立新种子生成4,352个配对场景；K1原生全RD、K3固定4×全RD和K2-local均通过 G4。可辨识 C2+C3 上，K1/K3/K2-local 的 top-cell localization 为0.781/0.812/0.812；K3−K1为`+0.03125`（95% CI `[+0.02474,+0.03776]`），超过预注册的`+0.02`门。K2-local质量值采用教师选定距离门内的局部归一化，不可与全图归一化 K1/K3 直接比较，并继承K3全图峰位置。
+
+C3 partial-overlap / 0 dB 是显著薄弱组：三种候选定位率仅0.021/0.041/0.041；K1/K3置信分数AUC为0.404/0.326，K2-local为0.783但未经校准。G4通过只允许提出有保护门的学生教学内容 pilot；不证明检测阈值有效、学生会吸收软响应或教师优于匹配真值辅助。审计环境和资源、完整分层指标及边界见 [R5-C阶段审查](stage_reviews/D2-A-R5C_review.md)。
 
 ### D2-A-R5-A 阶段结果
 
@@ -61,7 +67,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-将R5-B结果提交独立ChatGPT阶段审查，先依据结果提交对应的`docs/RESEARCH_CHARTER.md`评估其对总纲目标的贡献、TFAS停止结论与下一条路线。审查前不启动R5-C/D、KD、额外架构或final blind；审查意见确定后再提出一个有界且独立预注册的后续任务。
+将 R5-C 结果提交独立 ChatGPT 审查，要求先读取目标提交中的 `docs/RESEARCH_CHARTER.md` v1.3，并结合 R5-A/B、E002、R3 与 T001 判断 R5-C 是否真正推进任务级 GMTI 学生目标。审查前不启动新一轮学生训练、KD或 final blind；若方向审查支持继续，下一项仅为预注册的 T0–T3 匹配教学内容 pilot，并保留 C3 绝对虚警保护。R5-B TFAS候选停止结论不变。
 
 ## 关键材料
 
@@ -75,6 +81,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - D2-A-R5-A [容量对照分析](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[指标](../experiments/D2-A-R5/R5-A/capacity/metrics.json)、[阶段自审](stage_reviews/D2-A-R5A-capacity_review.md)、[容量研究汇总](research/D2-A_student_capacity_study.md)
 - D2-A-R5-A [ChatGPT容量阶段审查请求](../experiments/D2-A-R5/R5-A/capacity/review_request.md)，审查目标结果SHA `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`
 - D2-A-R5-B [实验协议](../experiments/D2-A-R5/R5-B/protocol.md)、[配置](../experiments/D2-A-R5/R5-B/config.yaml)、[分析](../experiments/D2-A-R5/R5-B/analysis.md)、[阶段自审](stage_reviews/D2-A-R5B_review.md)与ChatGPT审查请求 `experiments/D2-A-R5/R5-B/review_request.md`
+- D2-A-R5-C [协议与配置](../experiments/D2-A-R5/R5-C/)、[分析](../experiments/D2-A-R5/R5-C/analysis.md)、[逐场景指标](../experiments/D2-A-R5/R5-C/teacher_scene_metrics.csv)、[汇总指标](../experiments/D2-A-R5/R5-C/metrics.json)、[阶段自审](stage_reviews/D2-A-R5C_review.md)与ChatGPT审查请求 `experiments/D2-A-R5/R5-C/review_request.md`
 - D2-A-E003 [实验协议](../experiments/D2-A-E003/protocol.md)、[固定特征设计](../experiments/D2-A-E003/feature_design.md)、[训练与指标](../experiments/D2-A-E003/training.json)、[分析](../experiments/D2-A-E003/analysis.md)、[审查请求](../experiments/D2-A-E003/review_request.md)、[阶段自审](stage_reviews/D2-A-E003_review.md)
 - D2-A 物理模型、可辨识性与传统基线审查：[物理模型](research/D2-A_physical_model.md)、[可辨识性](research/D2-A_identifiability.md)、[基线审查](research/D2-A_baseline_review.md)
 - 环境：AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU，4 GiB；R3 是 CPU 统计诊断，E002 学生 pilot 已在可见 `cuda:0` 上完成。

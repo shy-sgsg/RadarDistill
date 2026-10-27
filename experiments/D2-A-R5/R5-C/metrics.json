@@ -1,0 +1,2486 @@
+{
+  "candidate_summaries": {
+    "K1": {
+      "identifiable_C2_C3": {
+        "n_paired_scenes": 3840,
+        "target_window_mass_h0_mean": 0.002251336590515035,
+        "target_window_mass_h1_mean": 0.05386891970550752,
+        "target_window_mass_lift_mean": 0.051617583114992475,
+        "target_window_mass_lift_ci95": [
+          0.049432280653226655,
+          0.053826141259166786
+        ],
+        "teacher_top_cell_localization_rate": 0.7809895833333333,
+        "teacher_top_cell_localization_ci95": [
+          0.76796875,
+          0.79375
+        ],
+        "range_rmse_all_h1_cells": 5.4632344749554305,
+        "range_rmse_ci95": [
+          5.17907126707022,
+          5.729931718776179
+        ],
+        "doppler_rmse_all_h1_hz": 76.02042857212383,
+        "doppler_rmse_ci95": [
+          71.67311617537105,
+          80.0019882454237
+        ],
+        "range_rmse_when_jointly_localized": 0.29218871926315326,
+        "doppler_rmse_when_jointly_localized_hz": 2.948324653438191,
+        "h0_pseudo_target_top_hit_rate": 0.003125,
+        "confidence_auc": 0.7899406817730366,
+        "confidence_rank_correlation": 0.415388816580436,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 960,
+            "mean_confidence": 0.01042005289121184,
+            "localization_rate": 0.59375
+          },
+          {
+            "quartile": 2,
+            "n": 960,
+            "mean_confidence": 0.01663039441196501,
+            "localization_rate": 0.6208333333333333
+          },
+          {
+            "quartile": 3,
+            "n": 960,
+            "mean_confidence": 0.04428577197363787,
+            "localization_rate": 0.909375
+          },
+          {
+            "quartile": 4,
+            "n": 960,
+            "mean_confidence": 0.1669688087127734,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3": {
+        "n_paired_scenes": 3072,
+        "target_window_mass_h0_mean": 0.0023089485852403244,
+        "target_window_mass_h1_mean": 0.0378736724213501,
+        "target_window_mass_lift_mean": 0.03556472383610977,
+        "target_window_mass_lift_ci95": [
+          0.03385705020505995,
+          0.03730357612076914
+        ],
+        "teacher_top_cell_localization_rate": 0.7272135416666666,
+        "teacher_top_cell_localization_ci95": [
+          0.7115885416666666,
+          0.7428466796875
+        ],
+        "range_rmse_all_h1_cells": 6.105613477960062,
+        "range_rmse_ci95": [
+          5.813419087084889,
+          6.40208579156917
+        ],
+        "doppler_rmse_all_h1_hz": 84.94968476951442,
+        "doppler_rmse_ci95": [
+          80.27413356404399,
+          89.62543529917143
+        ],
+        "range_rmse_when_jointly_localized": 0.2908067953200545,
+        "doppler_rmse_when_jointly_localized_hz": 2.947627183685602,
+        "h0_pseudo_target_top_hit_rate": 0.0029296875,
+        "confidence_auc": 0.7497612296831566,
+        "confidence_rank_correlation": 0.3853523859612961,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 768,
+            "mean_confidence": 0.009841305154426763,
+            "localization_rate": 0.5833333333333334
+          },
+          {
+            "quartile": 2,
+            "n": 768,
+            "mean_confidence": 0.015148498857743747,
+            "localization_rate": 0.5299479166666666
+          },
+          {
+            "quartile": 3,
+            "n": 768,
+            "mean_confidence": 0.029965738350373475,
+            "localization_rate": 0.7955729166666666
+          },
+          {
+            "quartile": 4,
+            "n": 768,
+            "mean_confidence": 0.118750271310589,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C0_separated_snr_20_cnr_-5": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0019468336827447585,
+        "target_window_mass_h1_mean": 0.7063759983094497,
+        "target_window_mass_lift_mean": 0.704429164626705,
+        "target_window_mass_lift_ci95": [
+          0.6973395104152311,
+          0.7117521398048702
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29354528213353825,
+        "range_rmse_ci95": [
+          0.27676499520885256,
+          0.3101590459593438
+        ],
+        "doppler_rmse_all_h1_hz": 2.985483717186182,
+        "doppler_rmse_ci95": [
+          2.83311592301723,
+          3.12801541162005
+        ],
+        "range_rmse_when_jointly_localized": 0.29354528213353825,
+        "doppler_rmse_when_jointly_localized_hz": 2.985483717186182,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.6706864086957793,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.7193003113847709,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.7547145852496122,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.7992890029806263,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_separated_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.001959608561963977,
+        "target_window_mass_h1_mean": 0.5087592690319482,
+        "target_window_mass_lift_mean": 0.5067996604699843,
+        "target_window_mass_lift_ci95": [
+          0.4972493406520378,
+          0.5164970009990524
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.30167901910307804,
+        "range_rmse_ci95": [
+          0.27666523515175445,
+          0.32571624420742895
+        ],
+        "doppler_rmse_all_h1_hz": 2.6999353444377463,
+        "doppler_rmse_ci95": [
+          2.490684400275472,
+          2.899488420339988
+        ],
+        "range_rmse_when_jointly_localized": 0.30167901910307804,
+        "doppler_rmse_when_jointly_localized_hz": 2.6999353444377463,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.45843504842495975,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.5158437994710283,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.5550544689708623,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.5917629384410148,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_near_clutter_edge_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.002040144705067276,
+        "target_window_mass_h1_mean": 0.2623385360735102,
+        "target_window_mass_lift_mean": 0.2602983913684429,
+        "target_window_mass_lift_ci95": [
+          0.2522033378949478,
+          0.2679020090317949
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29487880064472166,
+        "range_rmse_ci95": [
+          0.2704292183535879,
+          0.31737123964551756
+        ],
+        "doppler_rmse_all_h1_hz": 3.0842603225095453,
+        "doppler_rmse_ci95": [
+          2.8601213765335083,
+          3.299335109797092
+        ],
+        "range_rmse_when_jointly_localized": 0.29487880064472166,
+        "doppler_rmse_when_jointly_localized_hz": 3.0842603225095453,
+        "h0_pseudo_target_top_hit_rate": 0.0078125,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.2143444264403911,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.2603417514560018,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.29359417913941144,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.33165135144193414,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_separated_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0018391142857824949,
+        "target_window_mass_h1_mean": 0.2417374209161265,
+        "target_window_mass_lift_mean": 0.239898306630344,
+        "target_window_mass_lift_ci95": [
+          0.23492325006646456,
+          0.2448111296592951
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29760675438127815,
+        "range_rmse_ci95": [
+          0.28057366426811325,
+          0.3150210808890433
+        ],
+        "doppler_rmse_all_h1_hz": 2.922033990608552,
+        "doppler_rmse_ci95": [
+          2.7561569617326596,
+          3.089603187400587
+        ],
+        "range_rmse_when_jointly_localized": 0.29760675438127815,
+        "doppler_rmse_when_jointly_localized_hz": 2.922033990608552,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.19865350390348813,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.23791332092587947,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.271742269722667,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.30247381858410494,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_near_clutter_edge_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0021033158212898223,
+        "target_window_mass_h1_mean": 0.09668354153609066,
+        "target_window_mass_lift_mean": 0.09458022571480083,
+        "target_window_mass_lift_ci95": [
+          0.09236688591583744,
+          0.09672956243869925
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2866822508181752,
+        "range_rmse_ci95": [
+          0.2697985180278558,
+          0.3021623070242853
+        ],
+        "doppler_rmse_all_h1_hz": 2.9336662682495214,
+        "doppler_rmse_ci95": [
+          2.7768910142165426,
+          3.0835699649770962
+        ],
+        "range_rmse_when_jointly_localized": 0.2866822508181752,
+        "doppler_rmse_when_jointly_localized_hz": 2.9336662682495214,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.0777513046322742,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.09729318907219081,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.11001744334503094,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.12436363550977014,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_partial_overlap_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.002120235727769315,
+        "target_window_mass_h1_mean": 0.015128764074194362,
+        "target_window_mass_lift_mean": 0.013008528346425047,
+        "target_window_mass_lift_ci95": [
+          0.012566581742874748,
+          0.013456269941859956
+        ],
+        "teacher_top_cell_localization_rate": 0.98828125,
+        "teacher_top_cell_localization_ci95": [
+          0.97265625,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.4370539153980094,
+        "range_rmse_ci95": [
+          0.3045893485189672,
+          0.610829118095169
+        ],
+        "doppler_rmse_all_h1_hz": 8.48831047067393,
+        "doppler_rmse_ci95": [
+          2.8862820850036703,
+          14.085022829213369
+        ],
+        "range_rmse_when_jointly_localized": 0.30410544968622044,
+        "doppler_rmse_when_jointly_localized_hz": 2.995386139955984,
+        "h0_pseudo_target_top_hit_rate": 0.01171875,
+        "confidence_auc": 0.924901185770751,
+        "confidence_rank_correlation": 0.15840278105432234,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.012807734498033074,
+            "localization_rate": 0.953125
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.01584034918568067,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.018681665122750934,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.022567421264355375,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_separated_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0015723007930577501,
+        "target_window_mass_h1_mean": 0.01795829501653424,
+        "target_window_mass_lift_mean": 0.016385994223476488,
+        "target_window_mass_lift_ci95": [
+          0.015977984544348872,
+          0.016793814173810217
+        ],
+        "teacher_top_cell_localization_rate": 0.990234375,
+        "teacher_top_cell_localization_ci95": [
+          0.98046875,
+          0.998046875
+        ],
+        "range_rmse_all_h1_cells": 0.9354144017943915,
+        "range_rmse_ci95": [
+          0.3549055733788975,
+          1.409378533427643
+        ],
+        "doppler_rmse_all_h1_hz": 40.549387364040506,
+        "doppler_rmse_ci95": [
+          17.354876429837518,
+          58.02414280236691
+        ],
+        "range_rmse_when_jointly_localized": 0.3001053677892363,
+        "doppler_rmse_when_jointly_localized_hz": 2.925295217478424,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.37712031558185405,
+        "confidence_rank_correlation": -0.04185916487562496,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.014006256073883616,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.01814325164872649,
+            "localization_rate": 0.9921875
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.021520472825688447,
+            "localization_rate": 0.984375
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.027002513967329944,
+            "localization_rate": 0.984375
+          }
+        ]
+      },
+      "C3_separated_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0016094288341371322,
+        "target_window_mass_h1_mean": 0.13799748699792058,
+        "target_window_mass_lift_mean": 0.13638805816378347,
+        "target_window_mass_lift_ci95": [
+          0.1336123455201284,
+          0.1390150879635894
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2991660852424162,
+        "range_rmse_ci95": [
+          0.2865090470116016,
+          0.3116126696289795
+        ],
+        "doppler_rmse_all_h1_hz": 2.8681931650229218,
+        "doppler_rmse_ci95": [
+          2.749744831356308,
+          2.97793301186523
+        ],
+        "range_rmse_when_jointly_localized": 0.2991660852424162,
+        "doppler_rmse_when_jointly_localized_hz": 2.8681931650229218,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.10413254389095128,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.1334974542229861,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.1561387492810412,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.1860336908239378,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0026822059769899577,
+        "target_window_mass_h1_mean": 0.0076949145617593515,
+        "target_window_mass_lift_mean": 0.005012708584769394,
+        "target_window_mass_lift_ci95": [
+          0.004851522917140539,
+          0.005180976558764163
+        ],
+        "teacher_top_cell_localization_rate": 0.59375,
+        "teacher_top_cell_localization_ci95": [
+          0.55078125,
+          0.63671875
+        ],
+        "range_rmse_all_h1_cells": 7.425273910266759,
+        "range_rmse_ci95": [
+          6.742104017364116,
+          8.116510393915965
+        ],
+        "doppler_rmse_all_h1_hz": 112.83338784839458,
+        "doppler_rmse_ci95": [
+          100.91799924177583,
+          124.4984508453438
+        ],
+        "range_rmse_when_jointly_localized": 0.28077657332628186,
+        "doppler_rmse_when_jointly_localized_hz": 2.9753054712634133,
+        "h0_pseudo_target_top_hit_rate": 0.0078125,
+        "confidence_auc": 0.2723779099190283,
+        "confidence_rank_correlation": -0.38726152961130117,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.007923338595133222,
+            "localization_rate": 0.8046875
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.010813341530793386,
+            "localization_rate": 0.734375
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.01382970479552903,
+            "localization_rate": 0.484375
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.019332725819442453,
+            "localization_rate": 0.3515625
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.002565250727405464,
+        "target_window_mass_h1_mean": 0.051180945415196966,
+        "target_window_mass_lift_mean": 0.048615694687791505,
+        "target_window_mass_lift_ci95": [
+          0.04745983150045102,
+          0.04975554561924402
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.28159327502807624,
+        "range_rmse_ci95": [
+          0.26861752020219537,
+          0.2932709343163398
+        ],
+        "doppler_rmse_all_h1_hz": 2.9426813916128562,
+        "doppler_rmse_ci95": [
+          2.8255823398215325,
+          3.0618963681223335
+        ],
+        "range_rmse_when_jointly_localized": 0.28159327502807624,
+        "doppler_rmse_when_jointly_localized_hz": 2.9426813916128562,
+        "h0_pseudo_target_top_hit_rate": 0.0078125,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.03877297564641813,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.0497344313372301,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.05948046540871266,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.07321872423590492,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0026412978154693317,
+        "target_window_mass_h1_mean": 0.0032308294282942795,
+        "target_window_mass_lift_mean": 0.0005895316128249476,
+        "target_window_mass_lift_ci95": [
+          0.000543343275173061,
+          0.000637320465641881
+        ],
+        "teacher_top_cell_localization_rate": 0.021484375,
+        "teacher_top_cell_localization_ci95": [
+          0.009765625,
+          0.03515625
+        ],
+        "range_rmse_all_h1_cells": 11.61716449766937,
+        "range_rmse_ci95": [
+          11.05314983246904,
+          12.196956390527445
+        ],
+        "doppler_rmse_all_h1_hz": 152.19938443316855,
+        "doppler_rmse_ci95": [
+          143.26414418567757,
+          161.48386611805432
+        ],
+        "range_rmse_when_jointly_localized": 0.3083686707462069,
+        "doppler_rmse_when_jointly_localized_hz": 4.569125224185836,
+        "h0_pseudo_target_top_hit_rate": 0.001953125,
+        "confidence_auc": 0.40446379967338053,
+        "confidence_rank_correlation": -0.047984907329140854,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.00879572433069864,
+            "localization_rate": 0.0234375
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.01160716734457301,
+            "localization_rate": 0.03125
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.01441645205082187,
+            "localization_rate": 0.0078125
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.019773311644008196,
+            "localization_rate": 0.0234375
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.002783207364382312,
+        "target_window_mass_h1_mean": 0.009179563108395183,
+        "target_window_mass_lift_mean": 0.0063963557440128715,
+        "target_window_mass_lift_ci95": [
+          0.006198028328239026,
+          0.006601626656171857
+        ],
+        "teacher_top_cell_localization_rate": 0.7578125,
+        "teacher_top_cell_localization_ci95": [
+          0.720654296875,
+          0.79296875
+        ],
+        "range_rmse_all_h1_cells": 5.7038668307476215,
+        "range_rmse_ci95": [
+          4.956697390483232,
+          6.401719134638568
+        ],
+        "doppler_rmse_all_h1_hz": 75.77287706068789,
+        "doppler_rmse_ci95": [
+          65.10109721529393,
+          86.34649970962117
+        ],
+        "range_rmse_when_jointly_localized": 0.28641529896837,
+        "doppler_rmse_when_jointly_localized_hz": 3.0056530161270567,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.2659211839042235,
+        "confidence_rank_correlation": -0.3473843970816931,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.00863030704709744,
+            "localization_rate": 0.9140625
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.011501652894182254,
+            "localization_rate": 0.859375
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.01411980932788115,
+            "localization_rate": 0.7265625
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.019809817295826537,
+            "localization_rate": 0.53125
+          }
+        ]
+      }
+    },
+    "K3": {
+      "identifiable_C2_C3": {
+        "n_paired_scenes": 3840,
+        "target_window_mass_h0_mean": 0.002262072081300741,
+        "target_window_mass_h1_mean": 0.053559610728985886,
+        "target_window_mass_lift_mean": 0.05129753864768515,
+        "target_window_mass_lift_ci95": [
+          0.049104719591819154,
+          0.05349613446588393
+        ],
+        "teacher_top_cell_localization_rate": 0.8122395833333333,
+        "teacher_top_cell_localization_ci95": [
+          0.8002604166666667,
+          0.8247395833333333
+        ],
+        "range_rmse_all_h1_cells": 5.05668450648191,
+        "range_rmse_ci95": [
+          4.770460896979812,
+          5.315179715029937
+        ],
+        "doppler_rmse_all_h1_hz": 69.61606471519688,
+        "doppler_rmse_ci95": [
+          65.48408203112862,
+          73.65561367135682
+        ],
+        "range_rmse_when_jointly_localized": 0.29265002868698164,
+        "doppler_rmse_when_jointly_localized_hz": 1.1759307145778013,
+        "h0_pseudo_target_top_hit_rate": 0.0015625,
+        "confidence_auc": 0.8033892757867644,
+        "confidence_rank_correlation": 0.4104260882415074,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 960,
+            "mean_confidence": 0.009133970276385002,
+            "localization_rate": 0.6072916666666667
+          },
+          {
+            "quartile": 2,
+            "n": 960,
+            "mean_confidence": 0.014932259234902956,
+            "localization_rate": 0.6864583333333333
+          },
+          {
+            "quartile": 3,
+            "n": 960,
+            "mean_confidence": 0.042755418318926194,
+            "localization_rate": 0.9552083333333333
+          },
+          {
+            "quartile": 4,
+            "n": 960,
+            "mean_confidence": 0.16396502404979366,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3": {
+        "n_paired_scenes": 3072,
+        "target_window_mass_h0_mean": 0.002324609918670865,
+        "target_window_mass_h1_mean": 0.03763909358194061,
+        "target_window_mass_lift_mean": 0.03531448366326974,
+        "target_window_mass_lift_ci95": [
+          0.03359835162646381,
+          0.03708555166503567
+        ],
+        "teacher_top_cell_localization_rate": 0.765625,
+        "teacher_top_cell_localization_ci95": [
+          0.7496744791666666,
+          0.7809244791666666
+        ],
+        "range_rmse_all_h1_cells": 5.651529467981553,
+        "range_rmse_ci95": [
+          5.359329181879597,
+          5.9419977725367685
+        ],
+        "doppler_rmse_all_h1_hz": 77.70864915054453,
+        "doppler_rmse_ci95": [
+          72.93504462814668,
+          82.3460387662243
+        ],
+        "range_rmse_when_jointly_localized": 0.29106468468024527,
+        "doppler_rmse_when_jointly_localized_hz": 1.2585416713792454,
+        "h0_pseudo_target_top_hit_rate": 0.0013020833333333333,
+        "confidence_auc": 0.7596005763416478,
+        "confidence_rank_correlation": 0.38094299673493076,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 768,
+            "mean_confidence": 0.008632216898245075,
+            "localization_rate": 0.6184895833333334
+          },
+          {
+            "quartile": 2,
+            "n": 768,
+            "mean_confidence": 0.013256012873478112,
+            "localization_rate": 0.5703125
+          },
+          {
+            "quartile": 3,
+            "n": 768,
+            "mean_confidence": 0.02836712860549605,
+            "localization_rate": 0.8736979166666666
+          },
+          {
+            "quartile": 4,
+            "n": 768,
+            "mean_confidence": 0.11635469249314927,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C0_separated_snr_20_cnr_-5": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0019541828367796443,
+        "target_window_mass_h1_mean": 0.703779116792402,
+        "target_window_mass_lift_mean": 0.7018249339556224,
+        "target_window_mass_lift_ci95": [
+          0.6952011679456254,
+          0.7082707452421145
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29354528213353825,
+        "range_rmse_ci95": [
+          0.2760211791307862,
+          0.3103627141348134
+        ],
+        "doppler_rmse_all_h1_hz": 0.6921081653747818,
+        "doppler_rmse_ci95": [
+          0.6530313415826826,
+          0.7311949361969404
+        ],
+        "range_rmse_when_jointly_localized": 0.29354528213353825,
+        "doppler_rmse_when_jointly_localized_hz": 0.6921081653747818,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.6658175917305413,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.7102468096581138,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.7440251788696672,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.7835797230446293,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_separated_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.0019528457572944857,
+        "target_window_mass_h1_mean": 0.504096624644458,
+        "target_window_mass_lift_mean": 0.5021437788871635,
+        "target_window_mass_lift_ci95": [
+          0.4924648264915289,
+          0.5110952150057463
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.30167901910307804,
+        "range_rmse_ci95": [
+          0.27670274404130946,
+          0.3264642688192765
+        ],
+        "doppler_rmse_all_h1_hz": 0.7290681548843346,
+        "doppler_rmse_ci95": [
+          0.6758034199458536,
+          0.7817637025815776
+        ],
+        "range_rmse_when_jointly_localized": 0.30167901910307804,
+        "doppler_rmse_when_jointly_localized_hz": 0.7290681548843346,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.4498286120801558,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.5076110697148861,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.5431739194141807,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.5808062570666901,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_near_clutter_edge_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.0020408664946175575,
+        "target_window_mass_h1_mean": 0.26166291857011403,
+        "target_window_mass_lift_mean": 0.2596220520754965,
+        "target_window_mass_lift_ci95": [
+          0.2519995432709946,
+          0.266659237284606
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29378396591031236,
+        "range_rmse_ci95": [
+          0.2706938407968224,
+          0.31705424560539536
+        ],
+        "doppler_rmse_all_h1_hz": 0.7046363101265951,
+        "doppler_rmse_ci95": [
+          0.6444651087805711,
+          0.7619413084249482
+        ],
+        "range_rmse_when_jointly_localized": 0.29378396591031236,
+        "doppler_rmse_when_jointly_localized_hz": 0.7046363101265951,
+        "h0_pseudo_target_top_hit_rate": 0.0078125,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.2116561031233095,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.2580955788773761,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.2901857978465383,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.3234588264923304,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_separated_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0018088680791928686,
+        "target_window_mass_h1_mean": 0.24029674325917735,
+        "target_window_mass_lift_mean": 0.2384878751799845,
+        "target_window_mass_lift_ci95": [
+          0.2333699081647956,
+          0.24341214385280485
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29862520114833085,
+        "range_rmse_ci95": [
+          0.2811754204789349,
+          0.315865445546078
+        ],
+        "doppler_rmse_all_h1_hz": 0.7037258737792661,
+        "doppler_rmse_ci95": [
+          0.659623615033802,
+          0.7455094922556645
+        ],
+        "range_rmse_when_jointly_localized": 0.29862520114833085,
+        "doppler_rmse_when_jointly_localized_hz": 0.7037258737792661,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.1946151209547125,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.23448476424760323,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.2673316446510332,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.2974743018191851,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_near_clutter_edge_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.002064072419917521,
+        "target_window_mass_h1_mean": 0.09625962409123906,
+        "target_window_mass_lift_mean": 0.09419555167132154,
+        "target_window_mass_lift_ci95": [
+          0.09199703871855314,
+          0.09630867301677487
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2866822508181752,
+        "range_rmse_ci95": [
+          0.27005009624131915,
+          0.3033256795929053
+        ],
+        "doppler_rmse_all_h1_hz": 0.7639698746611658,
+        "doppler_rmse_ci95": [
+          0.7124647357902775,
+          0.8127589283625389
+        ],
+        "range_rmse_when_jointly_localized": 0.2866822508181752,
+        "doppler_rmse_when_jointly_localized_hz": 0.7639698746611658,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.07570144483637381,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.09572234333042877,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.10794662850639303,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.1221349629753628,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_partial_overlap_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0021628216963503425,
+        "target_window_mass_h1_mean": 0.015168670601084708,
+        "target_window_mass_lift_mean": 0.013005848904734366,
+        "target_window_mass_lift_ci95": [
+          0.012591496361603598,
+          0.013458294615275366
+        ],
+        "teacher_top_cell_localization_rate": 0.99609375,
+        "teacher_top_cell_localization_ci95": [
+          0.984375,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.3195079312814218,
+        "range_rmse_ci95": [
+          0.2938025051833982,
+          0.35049547522371644
+        ],
+        "doppler_rmse_all_h1_hz": 15.207178658557899,
+        "doppler_rmse_ci95": [
+          1.0146342326488016,
+          26.296438273803318
+        ],
+        "range_rmse_when_jointly_localized": 0.30676285092180444,
+        "doppler_rmse_when_jointly_localized_hz": 1.1050755625655524,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 1.0,
+        "confidence_rank_correlation": 0.10804236090984295,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.012237044892741133,
+            "localization_rate": 0.984375
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.015252532882836387,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.017904146532655957,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.021674532126369044,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_separated_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0015440613426944633,
+        "target_window_mass_h1_mean": 0.017761289335098476,
+        "target_window_mass_lift_mean": 0.016217227992404014,
+        "target_window_mass_lift_ci95": [
+          0.015808233869417973,
+          0.01663082943291158
+        ],
+        "teacher_top_cell_localization_rate": 0.99609375,
+        "teacher_top_cell_localization_ci95": [
+          0.990234375,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 1.1608001273147728,
+        "range_rmse_ci95": [
+          0.2943192282823725,
+          1.8085413798625785
+        ],
+        "doppler_rmse_all_h1_hz": 23.278976336197218,
+        "doppler_rmse_ci95": [
+          0.9240436046152811,
+          38.15553407186864
+        ],
+        "range_rmse_when_jointly_localized": 0.2987328662870363,
+        "doppler_rmse_when_jointly_localized_hz": 0.9461082267838679,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.31862745098039214,
+        "confidence_rank_correlation": -0.039191612541643196,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.013396645755102937,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.017332220616061357,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.020613419709963356,
+            "localization_rate": 0.984375
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.02562005438013086,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_separated_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.001586821137609724,
+        "target_window_mass_h1_mean": 0.13701311235587757,
+        "target_window_mass_lift_mean": 0.13542629121826782,
+        "target_window_mass_lift_ci95": [
+          0.13283554410296045,
+          0.13817177441090697
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2986827362435814,
+        "range_rmse_ci95": [
+          0.28622294076677024,
+          0.3107890388371977
+        ],
+        "doppler_rmse_all_h1_hz": 0.7647695045747013,
+        "doppler_rmse_ci95": [
+          0.731532032444025,
+          0.7971700097644787
+        ],
+        "range_rmse_when_jointly_localized": 0.2986827362435814,
+        "doppler_rmse_when_jointly_localized_hz": 0.7647695045747013,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.10270992881221852,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.13135799653441424,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.1527992213263246,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.18212992156382296,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.002677194695857456,
+        "target_window_mass_h1_mean": 0.007663619286472096,
+        "target_window_mass_lift_mean": 0.00498642459061464,
+        "target_window_mass_lift_ci95": [
+          0.004843952485229021,
+          0.005139613406099631
+        ],
+        "teacher_top_cell_localization_rate": 0.708984375,
+        "teacher_top_cell_localization_ci95": [
+          0.666015625,
+          0.7480957031249997
+        ],
+        "range_rmse_all_h1_cells": 6.430638421319379,
+        "range_rmse_ci95": [
+          5.6907316596884385,
+          7.152069975224571
+        ],
+        "doppler_rmse_all_h1_hz": 101.95036403262499,
+        "doppler_rmse_ci95": [
+          88.83104601723417,
+          115.29864686354115
+        ],
+        "range_rmse_when_jointly_localized": 0.2858318317779892,
+        "doppler_rmse_when_jointly_localized_hz": 1.6835088043980624,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.26923290254589827,
+        "confidence_rank_correlation": -0.3631130226959471,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.007081570778332807,
+            "localization_rate": 0.9140625
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.009420988432704995,
+            "localization_rate": 0.8046875
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.011691967347585375,
+            "localization_rate": 0.640625
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.016291482360842435,
+            "localization_rate": 0.4765625
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0026564135274151682,
+        "target_window_mass_h1_mean": 0.05100789652986171,
+        "target_window_mass_lift_mean": 0.048351483002446544,
+        "target_window_mass_lift_ci95": [
+          0.047269530678718336,
+          0.04947709173500219
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.28077854012935327,
+        "range_rmse_ci95": [
+          0.2690378246823499,
+          0.29250802016320565
+        ],
+        "doppler_rmse_all_h1_hz": 0.8913529131469763,
+        "doppler_rmse_ci95": [
+          0.8258610091857569,
+          0.9654319265874102
+        ],
+        "range_rmse_when_jointly_localized": 0.28077854012935327,
+        "doppler_rmse_when_jointly_localized_hz": 0.8913529131469763,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.0379714355321841,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.048616026039356636,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.057895439042675224,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.07123564767944007,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0026613022583359906,
+        "target_window_mass_h1_mean": 0.0032507854914020006,
+        "target_window_mass_lift_mean": 0.0005894832330660102,
+        "target_window_mass_lift_ci95": [
+          0.000547853191758568,
+          0.0006295587808203964
+        ],
+        "teacher_top_cell_localization_rate": 0.041015625,
+        "teacher_top_cell_localization_ci95": [
+          0.025390625,
+          0.05859375
+        ],
+        "range_rmse_all_h1_cells": 11.334948833984509,
+        "range_rmse_ci95": [
+          10.737799224674527,
+          11.92755558148867
+        ],
+        "doppler_rmse_all_h1_hz": 146.76342840136576,
+        "doppler_rmse_ci95": [
+          138.06588136215478,
+          155.1376581860144
+        ],
+        "range_rmse_when_jointly_localized": 0.30558360193464074,
+        "doppler_rmse_when_jointly_localized_hz": 3.959915018815557,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": 0.3258655804480652,
+        "confidence_rank_correlation": -0.11963451861968813,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.007527597128479738,
+            "localization_rate": 0.078125
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.009914394371845804,
+            "localization_rate": 0.046875
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.012152219537790276,
+            "localization_rate": 0.015625
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.016631919729616446,
+            "localization_rate": 0.0234375
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.002821866550112388,
+        "target_window_mass_h1_mean": 0.009137858492931767,
+        "target_window_mass_lift_mean": 0.006315991942819378,
+        "target_window_mass_lift_ci95": [
+          0.006135330688897129,
+          0.006508057007921147
+        ],
+        "teacher_top_cell_localization_rate": 0.84765625,
+        "teacher_top_cell_localization_ci95": [
+          0.81640625,
+          0.876953125
+        ],
+        "range_rmse_all_h1_cells": 4.504334744319768,
+        "range_rmse_ci95": [
+          3.771286961244364,
+          5.199792511258913
+        ],
+        "doppler_rmse_all_h1_hz": 61.279149411809314,
+        "doppler_rmse_ci95": [
+          51.24264220135984,
+          71.57605785294155
+        ],
+        "range_rmse_when_jointly_localized": 0.28835535346791824,
+        "doppler_rmse_when_jointly_localized_hz": 1.665955176162839,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.2881956752924495,
+        "confidence_rank_correlation": -0.2636625693944442,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.00785795565570054,
+            "localization_rate": 0.9375
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.01007905302723611,
+            "localization_rate": 0.8984375
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.01233048399576741,
+            "localization_rate": 0.875
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.017002715864614243,
+            "localization_rate": 0.6796875
+          }
+        ]
+      }
+    },
+    "K2_local": {
+      "identifiable_C2_C3": {
+        "n_paired_scenes": 3840,
+        "target_window_mass_h0_mean": 0.002040466743077855,
+        "target_window_mass_h1_mean": 0.4032600253699029,
+        "target_window_mass_lift_mean": 0.401219558626825,
+        "target_window_mass_lift_ci95": [
+          0.3918167565242369,
+          0.4108189496712963
+        ],
+        "teacher_top_cell_localization_rate": 0.8122395833333333,
+        "teacher_top_cell_localization_ci95": [
+          0.7999934895833334,
+          0.8242252604166667
+        ],
+        "range_rmse_all_h1_cells": 5.05668450648191,
+        "range_rmse_ci95": [
+          4.799483116183645,
+          5.316129714316509
+        ],
+        "doppler_rmse_all_h1_hz": 69.61606471519688,
+        "doppler_rmse_ci95": [
+          65.58406760895332,
+          73.85256248291003
+        ],
+        "range_rmse_when_jointly_localized": 0.29265002868698164,
+        "doppler_rmse_when_jointly_localized_hz": 1.1759307145778013,
+        "h0_pseudo_target_top_hit_rate": 0.0015625,
+        "confidence_auc": 0.9949226231423973,
+        "confidence_rank_correlation": 0.6695330798090837,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 960,
+            "mean_confidence": 0.07078785614818456,
+            "localization_rate": 0.24895833333333334
+          },
+          {
+            "quartile": 2,
+            "n": 960,
+            "mean_confidence": 0.24531526671394394,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 960,
+            "mean_confidence": 0.5318530920977292,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 960,
+            "mean_confidence": 0.8141166970391271,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3": {
+        "n_paired_scenes": 3072,
+        "target_window_mass_h0_mean": 0.0019978130463332413,
+        "target_window_mass_h1_mean": 0.3513549317585761,
+        "target_window_mass_lift_mean": 0.3493571187122429,
+        "target_window_mass_lift_ci95": [
+          0.33893306496170716,
+          0.36000412458919806
+        ],
+        "teacher_top_cell_localization_rate": 0.765625,
+        "teacher_top_cell_localization_ci95": [
+          0.75,
+          0.7802734375
+        ],
+        "range_rmse_all_h1_cells": 5.651529467981553,
+        "range_rmse_ci95": [
+          5.361280518711574,
+          5.937087950756596
+        ],
+        "doppler_rmse_all_h1_hz": 77.70864915054453,
+        "doppler_rmse_ci95": [
+          73.07964287092305,
+          82.4171371206566
+        ],
+        "range_rmse_when_jointly_localized": 0.29106468468024527,
+        "doppler_rmse_when_jointly_localized_hz": 1.2585416713792454,
+        "h0_pseudo_target_top_hit_rate": 0.0013020833333333333,
+        "confidence_auc": 0.9932622354497355,
+        "confidence_rank_correlation": 0.7238227156364275,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 768,
+            "mean_confidence": 0.06163197519891576,
+            "localization_rate": 0.07421875
+          },
+          {
+            "quartile": 2,
+            "n": 768,
+            "mean_confidence": 0.19156862558144316,
+            "localization_rate": 0.98828125
+          },
+          {
+            "quartile": 3,
+            "n": 768,
+            "mean_confidence": 0.4418309948804833,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 768,
+            "mean_confidence": 0.7707381325863846,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C0_separated_snr_20_cnr_-5": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0022929228730174138,
+        "target_window_mass_h1_mean": 0.9403759812320924,
+        "target_window_mass_lift_mean": 0.9380830583590751,
+        "target_window_mass_lift_ci95": [
+          0.9365264599194286,
+          0.9394198042737881
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29354528213353825,
+        "range_rmse_ci95": [
+          0.2748377441637976,
+          0.31092107169140965
+        ],
+        "doppler_rmse_all_h1_hz": 0.6921081653747818,
+        "doppler_rmse_ci95": [
+          0.6512504770155274,
+          0.7291212225676745
+        ],
+        "range_rmse_when_jointly_localized": 0.29354528213353825,
+        "doppler_rmse_when_jointly_localized_hz": 0.6921081653747818,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.9345760373482772,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.9397662532868104,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.9425854600815589,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.9454920714594793,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_separated_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.0015684735780317144,
+        "target_window_mass_h1_mean": 0.9214131574365025,
+        "target_window_mass_lift_mean": 0.9198446838584708,
+        "target_window_mass_lift_ci95": [
+          0.9176873614478331,
+          0.9219356826844467
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.30167901910307804,
+        "range_rmse_ci95": [
+          0.2758239099037405,
+          0.3262448122527656
+        ],
+        "doppler_rmse_all_h1_hz": 0.7290681548843346,
+        "doppler_rmse_ci95": [
+          0.6733938153421315,
+          0.7815513465824353
+        ],
+        "range_rmse_when_jointly_localized": 0.30167901910307804,
+        "doppler_rmse_when_jointly_localized_hz": 0.7290681548843346,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.9068070843395588,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.9208335505757642,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.92685641267201,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.9324575644787427,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C1_near_clutter_edge_snr_15_cnr_0": {
+        "n_paired_scenes": 128,
+        "target_window_mass_h0_mean": 0.001845082971710755,
+        "target_window_mass_h1_mean": 0.851229107274489,
+        "target_window_mass_lift_mean": 0.8493840243027782,
+        "target_window_mass_lift_ci95": [
+          0.8439869819079164,
+          0.8547282869989812
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29378396591031236,
+        "range_rmse_ci95": [
+          0.2706453290427212,
+          0.3150306340010255
+        ],
+        "doppler_rmse_all_h1_hz": 0.7046363101265951,
+        "doppler_rmse_ci95": [
+          0.6436482201029277,
+          0.7606718643674898
+        ],
+        "range_rmse_when_jointly_localized": 0.29378396591031236,
+        "doppler_rmse_when_jointly_localized_hz": 0.7046363101265951,
+        "h0_pseudo_target_top_hit_rate": 0.0078125,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 32,
+            "mean_confidence": 0.8127982351202576,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 32,
+            "mean_confidence": 0.8452258491807174,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 32,
+            "mean_confidence": 0.864754545628734,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 32,
+            "mean_confidence": 0.8840377052114542,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_separated_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0009637423678484555,
+        "target_window_mass_h1_mean": 0.8552797104137151,
+        "target_window_mass_lift_mean": 0.8543159680458666,
+        "target_window_mass_lift_ci95": [
+          0.8496614162365468,
+          0.8588021924846857
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.29862520114833085,
+        "range_rmse_ci95": [
+          0.2806201921744331,
+          0.31644165951108955
+        ],
+        "doppler_rmse_all_h1_hz": 0.7037258737792661,
+        "doppler_rmse_ci95": [
+          0.6603506651859232,
+          0.7454572017287378
+        ],
+        "range_rmse_when_jointly_localized": 0.29862520114833085,
+        "doppler_rmse_when_jointly_localized_hz": 0.7037258737792661,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.80370174391181,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.8536044049603311,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.8728766696326087,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.8924926674576998,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_near_clutter_edge_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.0032894489223467146,
+        "target_window_mass_h1_mean": 0.7021287356072476,
+        "target_window_mass_lift_mean": 0.6988392866849009,
+        "target_window_mass_lift_ci95": [
+          0.6895415815987171,
+          0.7081375483449132
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2866822508181752,
+        "range_rmse_ci95": [
+          0.2689613678301459,
+          0.3023737951616192
+        ],
+        "doppler_rmse_all_h1_hz": 0.7639698746611658,
+        "doppler_rmse_ci95": [
+          0.7135008477726339,
+          0.813911373305767
+        ],
+        "range_rmse_when_jointly_localized": 0.2866822508181752,
+        "doppler_rmse_when_jointly_localized_hz": 0.7639698746611658,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.6051176974135386,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.6901480953817891,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.7355208276722802,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.7808216559765525,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C2_partial_overlap_snr_10_cnr_10": {
+        "n_paired_scenes": 256,
+        "target_window_mass_h0_mean": 0.002380053299973754,
+        "target_window_mass_h1_mean": 0.27523275342466735,
+        "target_window_mass_lift_mean": 0.2728527001246936,
+        "target_window_mass_lift_ci95": [
+          0.26304719153550415,
+          0.28197851885491143
+        ],
+        "teacher_top_cell_localization_rate": 0.99609375,
+        "teacher_top_cell_localization_ci95": [
+          0.98828125,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.3195079312814218,
+        "range_rmse_ci95": [
+          0.29277956054240606,
+          0.35069774110959606
+        ],
+        "doppler_rmse_all_h1_hz": 15.207178658557899,
+        "doppler_rmse_ci95": [
+          1.0069081888629745,
+          26.299495871155845
+        ],
+        "range_rmse_when_jointly_localized": 0.30676285092180444,
+        "doppler_rmse_when_jointly_localized_hz": 1.1050755625655524,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 1.0,
+        "confidence_rank_correlation": 0.10804236090984295,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 64,
+            "mean_confidence": 0.18146200413546726,
+            "localization_rate": 0.984375
+          },
+          {
+            "quartile": 2,
+            "n": 64,
+            "mean_confidence": 0.24893468805526042,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 64,
+            "mean_confidence": 0.30201275783486387,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 64,
+            "mean_confidence": 0.3751637285858495,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_separated_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0011215115996773568,
+        "target_window_mass_h1_mean": 0.3835146045478363,
+        "target_window_mass_lift_mean": 0.38239309294815893,
+        "target_window_mass_lift_ci95": [
+          0.37057320298183744,
+          0.3939425308204767
+        ],
+        "teacher_top_cell_localization_rate": 0.99609375,
+        "teacher_top_cell_localization_ci95": [
+          0.990234375,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 1.1608001273147728,
+        "range_rmse_ci95": [
+          0.29335901602808084,
+          1.8270536735275869
+        ],
+        "doppler_rmse_all_h1_hz": 23.278976336197218,
+        "doppler_rmse_ci95": [
+          0.9207337183140046,
+          38.63195497001024
+        ],
+        "range_rmse_when_jointly_localized": 0.2987328662870363,
+        "doppler_rmse_when_jointly_localized_hz": 0.9461082267838679,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.996078431372549,
+        "confidence_rank_correlation": 0.10719435646525113,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.19232494632121688,
+            "localization_rate": 0.984375
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.35643580512105616,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.4435821989017565,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.5472597604311634,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_separated_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0014337053772365237,
+        "target_window_mass_h1_mean": 0.7802485400099671,
+        "target_window_mass_lift_mean": 0.7788148346327306,
+        "target_window_mass_lift_ci95": [
+          0.7681297713573887,
+          0.7890858833010297
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.2986827362435814,
+        "range_rmse_ci95": [
+          0.28603779269011814,
+          0.3109240223347468
+        ],
+        "doppler_rmse_all_h1_hz": 0.7647695045747013,
+        "doppler_rmse_ci95": [
+          0.7307590604753047,
+          0.7989582513323873
+        ],
+        "range_rmse_when_jointly_localized": 0.2986827362435814,
+        "doppler_rmse_when_jointly_localized_hz": 0.7647695045747013,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.6106071279911428,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.7848704514483393,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.8448066276668211,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.8825652173810314,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.001991067845343568,
+        "target_window_mass_h1_mean": 0.14126176967938608,
+        "target_window_mass_lift_mean": 0.13927070183404253,
+        "target_window_mass_lift_ci95": [
+          0.12998922705649738,
+          0.14892582267412466
+        ],
+        "teacher_top_cell_localization_rate": 0.708984375,
+        "teacher_top_cell_localization_ci95": [
+          0.671875,
+          0.74609375
+        ],
+        "range_rmse_all_h1_cells": 6.430638421319379,
+        "range_rmse_ci95": [
+          5.69625043780437,
+          7.143844054855219
+        ],
+        "doppler_rmse_all_h1_hz": 101.95036403262499,
+        "doppler_rmse_ci95": [
+          88.41853078340769,
+          114.92136815362215
+        ],
+        "range_rmse_when_jointly_localized": 0.2858318317779892,
+        "doppler_rmse_when_jointly_localized_hz": 1.6835088043980624,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.9829718786399689,
+        "confidence_rank_correlation": 0.7599583331630716,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.05893275996103543,
+            "localization_rate": 0.0703125
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.10047688740775512,
+            "localization_rate": 0.765625
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.19331452948187572,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.2891549848488357,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_near_clutter_edge_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0021102337825918685,
+        "target_window_mass_h1_mean": 0.61087038941535,
+        "target_window_mass_lift_mean": 0.6087601556327582,
+        "target_window_mass_lift_ci95": [
+          0.594844617642291,
+          0.6218042190636891
+        ],
+        "teacher_top_cell_localization_rate": 1.0,
+        "teacher_top_cell_localization_ci95": [
+          1.0,
+          1.0
+        ],
+        "range_rmse_all_h1_cells": 0.28077854012935327,
+        "range_rmse_ci95": [
+          0.26877103724823104,
+          0.2925064141087103
+        ],
+        "doppler_rmse_all_h1_hz": 0.8913529131469763,
+        "doppler_rmse_ci95": [
+          0.8204326833569328,
+          0.9650662635685866
+        ],
+        "range_rmse_when_jointly_localized": 0.28077854012935327,
+        "doppler_rmse_when_jointly_localized_hz": 0.8913529131469763,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": null,
+        "confidence_rank_correlation": null,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.40676914130859476,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.5944383757132541,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.6839776378446831,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.7628243418438847,
+            "localization_rate": 1.0
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_0_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.0025698841820662646,
+        "target_window_mass_h1_mean": 0.004698309664926446,
+        "target_window_mass_lift_mean": 0.0021284254828601813,
+        "target_window_mass_lift_ci95": [
+          0.0011185319893522942,
+          0.0032640897655400627
+        ],
+        "teacher_top_cell_localization_rate": 0.041015625,
+        "teacher_top_cell_localization_ci95": [
+          0.025390625,
+          0.060546875
+        ],
+        "range_rmse_all_h1_cells": 11.334948833984509,
+        "range_rmse_ci95": [
+          10.75540115363076,
+          11.920926810708137
+        ],
+        "doppler_rmse_all_h1_hz": 146.76342840136576,
+        "doppler_rmse_ci95": [
+          138.02753674072113,
+          155.39713814768822
+        ],
+        "range_rmse_when_jointly_localized": 0.30558360193464074,
+        "doppler_rmse_when_jointly_localized_hz": 3.959915018815557,
+        "h0_pseudo_target_top_hit_rate": 0.00390625,
+        "confidence_auc": 0.7833381825235186,
+        "confidence_rank_correlation": 0.19466012038285654,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.05381450727376551,
+            "localization_rate": 0.0078125
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.059664857494611305,
+            "localization_rate": 0.0234375
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.06339753066624351,
+            "localization_rate": 0.03125
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.07135685952301657,
+            "localization_rate": 0.1015625
+          }
+        ]
+      },
+      "C3_partial_overlap_snr_10_cnr_20": {
+        "n_paired_scenes": 512,
+        "target_window_mass_h0_mean": 0.002760475491083865,
+        "target_window_mass_h1_mean": 0.1875359772339906,
+        "target_window_mass_lift_mean": 0.18477550174290674,
+        "target_window_mass_lift_ci95": [
+          0.17466447233130258,
+          0.1949636589942846
+        ],
+        "teacher_top_cell_localization_rate": 0.84765625,
+        "teacher_top_cell_localization_ci95": [
+          0.81640625,
+          0.87890625
+        ],
+        "range_rmse_all_h1_cells": 4.504334744319768,
+        "range_rmse_ci95": [
+          3.704405574550052,
+          5.271279412316734
+        ],
+        "doppler_rmse_all_h1_hz": 61.279149411809314,
+        "doppler_rmse_ci95": [
+          50.65816725811386,
+          71.85359793030335
+        ],
+        "range_rmse_when_jointly_localized": 0.28835535346791824,
+        "doppler_rmse_when_jointly_localized_hz": 1.665955176162839,
+        "h0_pseudo_target_top_hit_rate": 0.0,
+        "confidence_auc": 0.9930284768994446,
+        "confidence_rank_correlation": 0.61374174103114,
+        "quartiles": [
+          {
+            "quartile": 1,
+            "n": 128,
+            "mean_confidence": 0.07074045953030422,
+            "localization_rate": 0.390625
+          },
+          {
+            "quartile": 2,
+            "n": 128,
+            "mean_confidence": 0.1557455564268408,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 3,
+            "n": 128,
+            "mean_confidence": 0.23878117272746513,
+            "localization_rate": 1.0
+          },
+          {
+            "quartile": 4,
+            "n": 128,
+            "mean_confidence": 0.32877663216866815,
+            "localization_rate": 1.0
+          }
+        ]
+      }
+    }
+  },
+  "primary_contrasts": {
+    "identifiable_C2_C3": {
+      "n_paired_scenes": 3840,
+      "K3_minus_K1_localization_rate": 0.03125,
+      "K3_minus_K1_localization_rate_ci95": [
+        0.024739583333333332,
+        0.037760416666666664
+      ],
+      "K3_minus_K1_target_window_lift": -0.0003200444673073267,
+      "K3_minus_K1_target_window_lift_ci95": [
+        -0.00042054938681383686,
+        -0.0002192588377680999
+      ],
+      "K3_minus_K1_doppler_rmse_hz": -6.404363856926949,
+      "K3_minus_K1_doppler_rmse_ci95_hz": [
+        -10.893035257390396,
+        -2.169028412022557
+      ]
+    },
+    "C3": {
+      "n_paired_scenes": 3072,
+      "K3_minus_K1_localization_rate": 0.038411458333333336,
+      "K3_minus_K1_localization_rate_ci95": [
+        0.03026529947916668,
+        0.046549479166666664
+      ],
+      "K3_minus_K1_target_window_lift": -0.0002502401728400347,
+      "K3_minus_K1_target_window_lift_ci95": [
+        -0.00033251386507831757,
+        -0.00016670411110836816
+      ],
+      "K3_minus_K1_doppler_rmse_hz": -7.241035618969889,
+      "K3_minus_K1_doppler_rmse_ci95_hz": [
+        -12.198494472800036,
+        -2.16929961761466
+      ]
+    },
+    "K3_gain_gate": {
+      "identifiable_C2_C3": true,
+      "C3": true
+    }
+  },
+  "g4": {
+    "K1": {
+      "identifiable_pooled_information_pass": true,
+      "severe_C3_subgroups": [],
+      "unconditional_all_C3_quality_pass": true,
+      "reliability_gated_candidate_pass": false,
+      "G4_knowledge_quality_pass": true,
+      "fixed_threshold_detector_qualification": false,
+      "student_KD_authorized": false
+    },
+    "K3": {
+      "identifiable_pooled_information_pass": true,
+      "severe_C3_subgroups": [],
+      "unconditional_all_C3_quality_pass": true,
+      "reliability_gated_candidate_pass": false,
+      "G4_knowledge_quality_pass": true,
+      "fixed_threshold_detector_qualification": false,
+      "student_KD_authorized": false
+    },
+    "K2_local": {
+      "identifiable_pooled_information_pass": true,
+      "severe_C3_subgroups": [],
+      "unconditional_all_C3_quality_pass": true,
+      "reliability_gated_candidate_pass": false,
+      "G4_knowledge_quality_pass": true,
+      "fixed_threshold_detector_qualification": false,
+      "student_KD_authorized": false
+    }
+  },
+  "experiment": "D2-A-R5-C",
+  "protocol_version": 1.1,
+  "git_sha": "58e422de7a9de1290d38ebbb206862e23b49ab42",
+  "research_charter": "docs/RESEARCH_CHARTER.md v1.3",
+  "paired_base_scenes": 4352,
+  "candidate_rows": 13056,
+  "environment": {
+    "timestamp_local": "2026-10-28 04:48:04 +0800",
+    "git_sha": "58e422de7a9de1290d38ebbb206862e23b49ab42",
+    "python": "3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0]",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "processor": "",
+    "cuda": {
+      "device": "cuda:0",
+      "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "torch_version": "2.8.0+cu128",
+      "torch_cuda_version": "12.8",
+      "cuda_device_count": 1,
+      "free_bytes_before": 3149725696,
+      "total_bytes": 3942383616
+    },
+    "disk_free_bytes": 48547307520,
+    "project_size_bytes_before": 15086777315,
+    "project_size_gib_before": 14.050656291656196,
+    "scene_seed_block": [
+      726000000,
+      727199999
+    ],
+    "existing_scene_seed_collisions": 0
+  },
+  "runtime_resources": {
+    "git_sha": "58e422de7a9de1290d38ebbb206862e23b49ab42",
+    "batch_count": 272,
+    "paired_base_scenes": 4352,
+    "candidate_row_count": 13056,
+    "scene_generation_cpu_seconds": 41.82983957795659,
+    "K1_cuda_seconds": 1.3834282548632473,
+    "K3_cuda_seconds": 1.5796170316752978,
+    "cuda_peak_allocated_bytes": 23433216,
+    "cuda_peak_reserved_bytes": 44040192,
+    "process_max_rss_bytes": 859344896,
+    "project_size_bytes_after": 15090414383,
+    "project_size_gib_after": 14.054043575190008,
+    "iq_or_teacher_map_cache_written": false,
+    "student_training": false,
+    "distillation": false,
+    "final_blind": false
+  },
+  "blind": false,
+  "student_training": false,
+  "distillation": false,
+  "fixed_threshold_teacher_qualification": false,
+  "figure": "experiments/D2-A-R5/R5-C/figures/teacher_quality_c3.png"
+}

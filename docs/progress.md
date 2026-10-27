@@ -1,5 +1,16 @@
 # 研究进度
 
+# 2026-10-28：D2-A-R5-C 教师软知识质量审计完成
+
+- **总纲对齐：** 按 `docs/RESEARCH_CHARTER.md` v1.3，检验B3教师响应中的目标定位/Doppler信息与可观测可靠性信号，服务任务级GMTI学生和后续有界知识迁移判断；未修改研究总纲、R5-B冻结门或既有负结果。
+- **协议与数据：** 按 `experiments/D2-A-R5/R5-C/protocol.md` / `config.yaml` v1.1，在3通道、PRF=1300 Hz、N=130、32距离单元静止杂波条件下，对4,352个新配对base scenes比较K1原生全RD、K3 4×全RD和K2-local，共13,056条候选记录。H0/H1共享背景噪声；教师仅接收IQ与冻结物理配置；场景按16 CPI流式处理，未缓存IQ或全量教师图。
+- **环境/执行：** AISAR Python 3.13.7、PyTorch 2.8.0+cu128、CUDA 12.8、RTX 3050 Laptop `cuda:0`；教师complex128/FP64，无CPU回退。CPU场景生成41.83秒，K1/K3 CUDA阶段1.38/1.58秒，峰值allocated/reserved 23.43/44.04 MB，进程峰值RSS 859 MB；这不是完整端到端/实时成本。项目占用14.054 GiB，低于20 GiB限制。
+- **主要结果：** 可辨识C2+C3中K1/K3/K2-local localization分别0.7810/0.8122/0.8122；K3−K1为`+0.03125`（95% CI `[+0.02474,+0.03776]`），达到预注册定位增益门。K3相对K1的全图target-window lift差为`−0.000320`（`[−0.000421,−0.000219]`），细网格没有提高全图归一化软质量。K2-local lift为局部条件归一化，不能与K1/K3直接比较，且峰位置继承K3。
+- **困难子组与解释：** C3 partial-overlap / 0 dB定位率K1/K3/K2-local为0.021/0.041/0.041；同组置信AUC为0.404/0.326/0.783，K2-local分数未经校准。按冻结联合严重子组规则，三者均通过G4；这不表示该困难子组可靠。未认证固定阈值检测器、未训练学生、未运行KD或final blind。
+- **假设/决定：** R5-C支持教师软响应含有可定位目标信息及K3定位相对K1有冻结幅度的提升；不支持学生已吸收知识或蒸馏有效。H-TEACH-002/H-TEACH-004继续PROPOSED，H-LEARN-002继续INCONCLUSIVE；R5-B TFAS限定候选STOP不变。Codex阶段建议为 CONTINUE 但仅限一轮匹配T0–T3教学内容pilot，须保留Medium学生C3 H0 Pfa=`0.18896`的绝对保护。当前先提交独立ChatGPT阶段审查，再按审查意见确定后续。
+- **交付：** `experiments/D2-A-R5/R5-C/` protocol/config、preflight/environment、scene IDs、逐场景指标、metrics、analysis和图；`docs/stage_reviews/D2-A-R5C_review.md`；研究状态/路线/假设/决策登记。运行代码SHA `58e422de7a9de1290d38ebbb206862e23b49ab42`；完整报告提交SHA与ChatGPT请求见 `experiments/D2-A-R5/R5-C/review_request.md`。
+- **验证：** 定向测试覆盖R5-C审计、CUDA K2、E002 teacher与D2-A baselines；修复代码提交后为34 passed。报告包入库前重新运行定向测试、编译及差异检查。
+
 # 2026-10-28：D2-A-R5-B 架构调查与 TFAS pilot 预注册
 
 - **主线对齐：** 服务于研究总纲 v1.3 的 Q3/Q4/Q6/Q8/Q10，检验原始三通道复 IQ 的时序/距离注意力能否在任务级检测和连续参数估计中胜过预算匹配 CNN；不涉及教师和蒸馏。

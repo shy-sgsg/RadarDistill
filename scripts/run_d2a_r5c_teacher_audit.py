@@ -1034,27 +1034,41 @@ def _plot_metrics(summary: dict[str, Any]) -> Path:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    full_map_candidates = ("K1", "K3")
     candidates = ("K1", "K3", "K2_local")
+    full_map_labels = ("K1 full RD", "K3 4× RD")
     labels = ("K1 full RD", "K3 4× RD", "K2 local FD")
     c3 = summary["candidate_summaries"]
-    lift_values = [c3[name]["C3"]["target_window_mass_lift_mean"] for name in candidates]
-    lift_intervals = [c3[name]["C3"]["target_window_mass_lift_ci95"] for name in candidates]
+    lift_values = [c3[name]["C3"]["target_window_mass_lift_mean"] for name in full_map_candidates]
+    lift_intervals = [c3[name]["C3"]["target_window_mass_lift_ci95"] for name in full_map_candidates]
     localization = [c3[name]["C3"]["teacher_top_cell_localization_rate"] for name in candidates]
     localization_intervals = [c3[name]["C3"]["teacher_top_cell_localization_ci95"] for name in candidates]
-    positions = np.arange(len(candidates))
-    figure, axes = plt.subplots(1, 2, figsize=(10, 4.2), constrained_layout=True)
-    for axis, values, intervals, title, ylabel in (
-        (axes[0], lift_values, lift_intervals, "C3 paired target-window lift", "H1−H0 support mass"),
-        (axes[1], localization, localization_intervals, "C3 teacher top-cell localization", "Rate"),
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4.7))
+    for axis, values, intervals, plot_labels, colors, title, ylabel in (
+        (
+            axes[0], lift_values, lift_intervals, full_map_labels,
+            ("#4776a8", "#cf6d3b"), "C3 full-map target-window lift", "H1−H0 support mass",
+        ),
+        (
+            axes[1], localization, localization_intervals, labels,
+            ("#4776a8", "#cf6d3b", "#6a9c70"), "C3 teacher top-cell localization", "Rate",
+        ),
     ):
+        positions = np.arange(len(values))
         lower = np.asarray([value - ci[0] for value, ci in zip(values, intervals)])
         upper = np.asarray([ci[1] - value for value, ci in zip(values, intervals)])
-        axis.bar(positions, values, color=("#4776a8", "#cf6d3b", "#6a9c70"))
+        axis.bar(positions, values, color=colors)
         axis.errorbar(positions, values, yerr=np.vstack([lower, upper]), fmt="none", color="black", capsize=3)
-        axis.set_xticks(positions, labels, rotation=15, ha="right")
+        axis.set_xticks(positions, plot_labels, rotation=15, ha="right")
         axis.set_title(title)
         axis.set_ylabel(ylabel)
         axis.grid(axis="y", alpha=0.25)
+    figure.text(
+        0.5, 0.015,
+        "K2-local support is normalized only within its teacher-selected range; its lift is not on the full-map scale.",
+        ha="center", fontsize=8,
+    )
+    figure.tight_layout(rect=(0.0, 0.06, 1.0, 1.0))
     path = OUTPUT_ROOT / "figures/teacher_quality_c3.png"
     path.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(path, dpi=160)
@@ -1139,7 +1153,9 @@ def _write_analysis(summary: dict[str, Any]) -> None:
         "",
         "## 预注册结果摘要",
         "",
-        "| 候选 | scope | H1−H0 target support lift (95% CI) | top-cell localization (95% CI) | Doppler RMSE Hz (95% CI) | confidence AUC | G4 |",
+        "`K2_local` 的每个场景响应只在教师自行选择的距离门上归一化，因此其 target-window lift 与全图归一化的 K1/K3 不可直接比较。",
+        "",
+        "| 候选 | scope | H1−H0 target support lift (95% CI) | top-cell localization (95% CI) | all-H1 Doppler RMSE Hz (95% CI) | confidence AUC | G4 |",
         "|---|---|---:|---:|---:|---:|---|",
     ]
     for candidate in ("K1", "K3", "K2_local"):
@@ -1160,8 +1176,8 @@ def _write_analysis(summary: dict[str, Any]) -> None:
             "",
             "## K3 相对 K1 的预注册配对对比",
             "",
-            "| scope | localization difference, K3−K1 (95% CI) | Doppler RMSE difference Hz, K3−K1 (95% CI) | meaningful gain gate |",
-            "|---|---:|---:|---|",
+            "| scope | localization difference, K3−K1 (95% CI) | target-window lift difference (95% CI) | Doppler RMSE difference Hz, K3−K1 (95% CI) | meaningful gain gate |",
+            "|---|---:|---:|---:|---|",
         ]
     )
     contrast = summary["primary_contrasts"]
@@ -1170,16 +1186,44 @@ def _write_analysis(summary: dict[str, Any]) -> None:
         lines.append(
             f"| {scope} | {value['K3_minus_K1_localization_rate']:.4f} "
             f"[{value['K3_minus_K1_localization_rate_ci95'][0]:.4f}, {value['K3_minus_K1_localization_rate_ci95'][1]:.4f}] | "
+            f"{value['K3_minus_K1_target_window_lift']:.6g} "
+            f"[{value['K3_minus_K1_target_window_lift_ci95'][0]:.6g}, {value['K3_minus_K1_target_window_lift_ci95'][1]:.6g}] | "
             f"{value['K3_minus_K1_doppler_rmse_hz']:.3f} "
             f"[{value['K3_minus_K1_doppler_rmse_ci95_hz'][0]:.3f}, {value['K3_minus_K1_doppler_rmse_ci95_hz'][1]:.3f}] | "
             f"{contrast['K3_gain_gate'][scope]} |"
         )
+    c3_scopes = [scope for scope in candidates["K1"] if scope.startswith("C3_")]
     lines.extend(
         [
             "",
+            "K3 在 C2+C3 与 C3 的 localization 增益均通过冻结的 +0.02 门；all-H1 Doppler RMSE 点估计虽更低，但配对区间上界未达到预设至少 2.5 Hz 的改善。K3 全图 target-window lift 略低于 K1。",
+            "",
+            "## C3 六个预注册子组",
+            "",
+            "| 条件 | K1 lift / localization / AUC | K3 lift / localization / AUC | K2-local 条件lift / localization / AUC |",
+            "|---|---:|---:|---:|",
+        ]
+    )
+    for scope in c3_scopes:
+        cells = [scope]
+        for candidate in ("K1", "K3", "K2_local"):
+            metric = candidates[candidate][scope]
+            cells.append(
+                f"{metric['target_window_mass_lift_mean']:.6g} "
+                f"[{metric['target_window_mass_lift_ci95'][0]:.6g}, {metric['target_window_mass_lift_ci95'][1]:.6g}] / "
+                f"{metric['teacher_top_cell_localization_rate']:.4f} / {metric['confidence_auc']}"
+            )
+        lines.append("| " + " | ".join(cells) + " |")
+    lines.extend(
+        [
+            "",
+            "K2-local 的 top-cell 与 Doppler 点估计继承 K3 全图最大值：它提供的是更集中的局部软分布，并不是独立的峰值估计器。`C3_partial_overlap_snr_0_cnr_20` 定位率仅 K1/K3/K2-local=`0.0215/0.0410/0.0410`；lift 很小但区间高于0。该子组 K1/K3 固定置信分数 AUC=`0.404/0.326`，K2-local=`0.783`。这些分数未校准、未筛阈值，也未在学生侧验证，不能视为可部署可靠性 gate。",
+            "",
+            "全 H1 Doppler RMSE 把漏定位计入并反映其大误差。正确定位子集的条件 RMSE 另见 `metrics.json`；候选子集不同且它不是预注册主门。",
+            "",
             "## 教师资格与结论边界",
             "",
-            "- `G4_knowledge_quality_pass` 只代表满足协议中 IQ 输入隔离、数值正确和可辨识 target-window 信息门；出现的 C3 严重误导子组及可观测置信信号逐一见 `metrics.json`。",
+            "- `G4_knowledge_quality_pass` 只代表按冻结规则通过 IQ 输入隔离、数值正确性和 C2+C3 目标窗口信息门。协议定义的 severe-subgroup 组合条件未触发；这不等于每个 C3 条件都有高定位率。",
             "- 任何 G4 结果都不授予固定阈值 detector 资格，不代表学生能吸收该响应，也不构成蒸馏收益。教师固定阈值历史结论保持不变。",
             "- 对 K3 的复杂性保留只按冻结最小有意义增益门判断；没有通过时不继续搜索 FFT 倍率、温度或窗口。",
             "- R5-A Medium 的 C3 虚警保护失败、R5-B TFAS G3 失败及 E002 K2 未显示 student-side 增益均保持历史结果。",
