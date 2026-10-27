@@ -5,7 +5,7 @@
 **最新完成工作：** D2-A-R5-A Small/Medium width-only capacity pilot 已在 CUDA 完成；代码提交 `1678a468d5c150ff734d80ad40cf75407a49651f`，结果与状态归档提交 `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`。结果、训练曲线、分层指标和 Codex 阶段自审见 [capacity analysis](../experiments/D2-A-R5/R5-A/capacity/analysis.md) 与 [stage review](stage_reviews/D2-A-R5A-capacity_review.md)；ChatGPT 审查请求见 [review request](../experiments/D2-A-R5/R5-A/capacity/review_request.md)。
 **阶段判断：** R5-A **REFINE**：延长训练在固定 seed/data 下持续改善；Medium width=96 相对 Small width=32 的 C2/C3 joint-success 提升 `+0.1309`（95% CI `[+0.1123,+0.1509]`），range/Doppler RMSE 亦改善；但两者 C3 H0 Pfa 分别 `0.2041/0.1890`，均超 0.10 门，因此 G3 任务保护失败，Medium 不晋级、不运行 Large。E003、R3、E002、T001、R4 和旧 R5-A 结论保持不变。
 
-**当前授权工作：** R5-A Phase 1/2 已完成：S0/S2 及 Small/Medium 均按12,800-update预算使用RTX 3050 Laptop `cuda:0` FP32训练；未运行KD、正式多 seed 或 final blind。Medium 未通过C3 Pfa绝对保护。按既有授权进入R5-B单一轻量原始IQ时频注意力候选；大型可重建缓存不提交，整个项目最终须低于20 GiB。
+**当前授权工作：** R5-A Phase 1/2 已完成：S0/S2 及 Small/Medium 均按12,800-update预算使用RTX 3050 Laptop `cuda:0` FP32训练；未运行KD、正式多 seed 或 final blind。Medium 未通过C3 Pfa绝对保护。R5-B 架构调查与单一轻量原始IQ时频注意力候选 protocol/config v1.0 已冻结；代码、G1与CUDA pilot 尚未运行。大型可重建缓存不提交，整个项目最终须低于20 GiB。
 
 ## 当前结论
 
@@ -55,7 +55,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-按 R5-B 完成面向当前 GMTI 的非 CNN 学生架构证据调查，并预注册一个轻量、保留原始三通道复 IQ 的时频注意力 pilot。先核对物理/频率表示、模型规模、显存及 G1 可学习性，再决定是否进入有界训练比较；保留 Small/Medium CNN 作为容量参照，维持独立校准与开发评估，报告 C3 H0 Pfa 和 C2/C3 任务保护。Medium 的正向参数估计增益与失败的绝对虚警门均需进入比较；不运行 Large、KD 或 final blind。
+按冻结的 R5-B protocol/config v1.0 实现 TFAS 轻量时频注意力学生、CUDA-only runner 和定向测试。先核对物理/频率表示、模型规模、显存及 G1 可学习性，再完成与 R5-A Small/Medium 的单 seed、同数据同暴露比较；维持独立校准与开发评估，报告 C3 H0 Pfa 和 C2/C3 任务保护。Medium 的正向参数估计增益与失败的绝对虚警门均需进入比较；不运行 Large、KD 或 final blind。当前仅完成架构调查/预注册，没有 R5-B 运行结果。
 
 ## 关键材料
 

@@ -1,5 +1,13 @@
 # 研究进度
 
+# 2026-10-28：D2-A-R5-B 架构调查与 TFAS pilot 预注册
+
+- **主线对齐：** 服务于研究总纲 v1.3 的 Q3/Q4/Q6/Q8/Q10，检验原始三通道复 IQ 的时序/距离注意力能否在任务级检测和连续参数估计中胜过预算匹配 CNN；不涉及教师和蒸馏。
+- **证据审查：** R5-A Medium 对 C2/C3 joint 与参数误差有单 seed 开发收益，但 Small/Medium 的 C3 H0 Pfa 均超过0.10。雷达Transformer、复数网络、SSM、深度展开和物理前端文献已按体制/输入/任务匹配程度归纳；各自结果不外推为本GMTI收益。
+- **冻结设计：** 只选一个约79,638参数的实值 I/Q temporal-frequency attention student：两层130脉冲注意力、每距离门时间池化、一层32距离注意力，使用完整六平面输入；physics unfolding 仅作数学适配审查。
+- **预注册：** `experiments/D2-A-R5/R5-B/protocol.md`、`config.yaml` 与 `architecture_survey.md` v1.0；seed101、E1真值、复用冻结数据和R5-A pair plan、12,800 updates、FP32 RTX3050 `cuda:0`，匹配Small/Medium CNN，C3 Pfa绝对门≤0.10；失败即停止扩架构、KD与blind。
+- **当前状态：** 仅完成调查/预注册；未实现、未运行 CUDA preflight/G1/训练、无 R5-B 指标或结果。研究总纲未修改。
+
 # 2026-10-27：D2-A-R5-A 训练充分性 pilot 已完成
 
 - **训练：** 按 protocol/config v1.1，在 RTX 3050 Laptop `cuda:0`、FP32 顺序训练 seed101 的 S0/S2。固定51,200对训练数据，microbatch16、有效batch64；每臂先6,400 updates，两臂均满足预注册延长规则后连续训练至12,800 updates。两臂G1小样本过拟合门通过；未用教师/蒸馏，不生成final blind。

@@ -1,5 +1,12 @@
 # 技术决策记录
 
+## 2026-10-28：冻结 D2-A-R5-B 单一原始 IQ 时频注意力候选
+
+- **决定：** 从非 CNN/复数/SSM/展开候选中，仅预注册约79.6K参数的分解式时域/距离轴 TFAS；对物理模型驱动展开只作数学适配审查，本轮不训练第二结构。
+- **依据：** R5-A capacity pilot 显示 Medium CNN 有 C2/C3 参数与 joint 任务增益，但 C3 H0 Pfa绝对门失败；现有证据足以检验一个 matched raw-IQ 非CNN候选，不支持扩大模型或进入KD。相关雷达文献体制覆盖脉冲检测、R-D clutter、FMCW DOA/分类和sub-Nyquist sensing，均不是当前任务的直接收益证据。
+- **冻结约束：** E1 truth-only，seed101，同一 frozen train/validation/calibration/verification/development ID与 R5-A 12,800-update pair schedule；Medium参数量±20%；主端点 C2/C3 joint gain≥0.02、paired bootstrap CI下界>0，继承任务保护且 candidate C3 H0 Pfa≤0.10。训练失败或保护失败即停止此候选，不做调参网格、KD、Large或final blind。
+- **影响：** H-ARCH-003 进入 TESTING（目前只冻结协议，没有实现/结果）；R5-C/D 仍待学生任务和教师质量前置门。研究总纲保持 v1.3 不变。
+
 ## 2026-10-27：R5-A训练充分性结果支持扩展容量对照，停止当前固定相干候选
 
 - **证据：** R5-A protocol v1.1 seed101、E1 truth-only S0/S2 均完成12,800 updates；两臂在6,400 updates均满足冻结续训规则。相同长程schedule下任务验证指标继续改善，支持H-CAP-001在本seed/数据范围内，但仍未观察到平台，不能断言容量或架构上限。

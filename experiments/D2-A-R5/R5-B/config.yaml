@@ -1,0 +1,122 @@
+experiment:
+  id: D2-A-R5
+  subphase: R5-B
+  protocol_version: 1.0
+  status: preregistered
+  charter: docs/RESEARCH_CHARTER.md
+  charter_version: 1.3
+  final_blind_generation_authorized: false
+  distillation_authorized: false
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  identifiable_conditions: [A, B, C]
+  exact_overlap_condition: D_descriptive_only
+
+model:
+  name: TemporalFrequencyAttentionStudent
+  input_layout: [batch, 6, 130, 32]
+  input_channels: "three real planes followed by three imaginary planes"
+  magnitude_only: false
+  fixed_coherence_frontend: false
+  embedding_width: 56
+  attention_heads: 4
+  temporal_encoder_layers: 2
+  range_encoder_layers: 1
+  feedforward_width: 112
+  temporal_pool: learned_scalar_attention_per_range
+  pulse_position_encoding: fixed_sinusoidal
+  range_position_encoding: learned
+  dropout: 0.0
+  expected_parameters: 79638
+  parameter_match_reference: Medium_CNN_82887
+  parameter_match_relative_tolerance: 0.20
+  outputs: [presence_logit, range_logits_32, range_offset_32, doppler_vector_32x2]
+
+data:
+  source_config: experiments/D2-A-E003/config.yaml
+  r5a_config: experiments/D2-A-R5/R5-A/config.yaml
+  cache_root: experiments/D2-A-R5/data/cache
+  pair_plan: experiments/D2-A-R5/R5-A/training_pair_plan.npz
+  reuse_frozen_e003_r5a_splits: [train, validation, h0_calibration, h0_verification, c3_h0_verification, development, exact_overlap_boundary]
+  candidate_training_pairs: 51200
+  candidate_validation_pairs: 5000
+  final_blind_generated: false
+
+reference_models:
+  reuse_capacity_stage: experiments/D2-A-R5/R5-A/capacity
+  models: [Small, Medium]
+  retrain: false
+  medium_c3_h0_pfa_absolute_protection: 0.10
+  same_training_seed: 101
+  same_supervision: physical_truth_only_E1
+
+training:
+  supervision: physical_truth_only_E1
+  teacher_hard_labels: false
+  teacher_soft_responses: false
+  truth_assisted_teacher_windows: false
+  seed: 101
+  optimizer: AdamW
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  target_updates: 12800
+  paired_scenes_per_update: 32
+  effective_batch_size: 64
+  fixed_training_dataset_passes: 8
+  pair_order: reuse_R5A_training_pair_plan
+  learning_rate_schedule:
+    - updates: [1, 6400]
+      type: cosine
+      start: 0.001
+      end: 0.0001
+    - updates: [6401, 12800]
+      type: cosine
+      start: 0.0001
+      end: 0.00001
+  validation_interval_updates: 400
+  checkpoint_selection: minimum_common_validation_truth_task_loss
+  precision: FP32
+  device: cuda:0
+  cuda_required: true
+  cpu_fallback: forbidden
+  amp: false
+  simultaneous_models_on_gpu: 1
+  initial_microbatch_size: 16
+  oom_microbatch_fallbacks: [8, 4]
+  preserve_effective_batch_on_oom: true
+  overfit_sanity:
+    paired_scenes: 16
+    updates: 200
+    minimum_relative_loss_reduction: 0.50
+    required_presence_accuracy: 1.0
+    minimum_h1_range_cell_accuracy: 0.95
+
+evaluation:
+  target_pfa_cpi: 0.05
+  calibration_quantile: higher
+  threshold_comparator: ">="
+  calibrate_each_model_separately: true
+  bootstrap_unit: paired_base_scene_id
+  bootstrap_replicates: 2000
+  bootstrap_seed: 2026102801
+  primary_metric: C2_C3_paired_joint_success
+  minimum_primary_gain_vs_medium: 0.02
+  primary_ci_lower_minimum: 0.0
+  max_c3_h0_pfa_absolute: 0.10
+  inherit_task_protection_from: experiments/D2-A-E003/config.yaml
+  phase_rotations: 32
+  physical_diagnostic_ids: experiments/D2-A-E003/selected_scene_ids.csv
+  physical_diagnostics_are_development_only: true
+  final_blind: false
+
+gates:
+  G0_engineering_cuda_data_and_parameter_count: required
+  G1_finite_gradients_and_16_pair_overfit: required
+  G2_auc_and_parameter_rmse_beat_truth_constant: required
+  G3_primary_gain_task_protection_and_c3_pfa: required
+  G3_failure_stops_more_seeds_kd_large_and_blind: true
