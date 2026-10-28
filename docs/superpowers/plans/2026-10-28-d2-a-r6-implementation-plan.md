@@ -46,7 +46,7 @@
 - [x] Evaluate frozen H0 calibration/verification and H1 development, including C3 partial-overlap/0 dB and teacher-correct/incorrect strata.
 - [x] Analyze the frozen primary contrasts and protections, and write the stage report.
 - [x] Remove only manifest-authorized IQ files; resulting project size is below 20 GiB.
-- [ ] Write the final ChatGPT review request against the result commit, then commit and push the result package.
+- [x] Write the final ChatGPT review request against the result commit, then commit and push the result package.
 
 ### Task 1: R6-A same-scene detector/estimator baseline
 

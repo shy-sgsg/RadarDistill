@@ -7,7 +7,7 @@
 - **训练：** RTX 3050 Laptop `cuda:0`、FP32、seed303、有效batch64、microbatch16，T0/T1/T2/T3各12,800 updates顺序运行，无OOM或CPU回退。四臂训练参数120,717、推理参数70,277；训练耗时分别6,745.77/4,446.82/4,295.96/3,781.71秒，峰值allocated约821 MB。T0为0.527秒/update，较R5-A Medium记录的0.307秒/update慢约1.72倍；已确认T0跳过520-bin头前向，但现有计时不足以确定减速的唯一原因。训练期间每步写日志开销未做独立对照；按用户要求后续新实验默认只在验证/检查点记录。
 - **Batch设置：** 本pilot及已预注册R6-A/B保持原batch。用户允许后续全新训练实验在显存允许时评估至多两倍batch；前提是匹配对照不受影响，必要时把batch作为独立匹配因素。
 - **主要结果：** T1−T0与T2−T0 C2+C3 joint差为−0.01042（95% CI`[−0.01849,−0.00208]`）与−0.01380（`[−0.02292,−0.00391]`），均未通过+0.02主增益门；T1/T2未通过综合任务保护。四臂C3 H0 Pfa为0.182–0.203，均超0.10绝对门。T3 truth-assisted对照差+0.01563，仅作描述性结果，不能归因于教师。新C3 partial-overlap/SNR0/CNR20子组K3定位正确24/512（4.69%）。完整分层与统计区间见`experiments/D2-A-R5/R5-C-teaching/metrics.json`、`analysis.md`及`docs/stage_reviews/D2-A-R5C-teaching_pilot_review.md`。
-- **研究决定：** 按冻结协议停止当前K3/K2-local教学内容分支，不启动其多seed、教师时机/可靠性搜索、完整R5-D机制实验或final blind。H-TEACH-002在本pilot范围内记为NOT_SUPPORTED。总体方向REFINE；下一项唯一优先任务为R6-A同场景检测/参数估计基线。
+- **研究决定：** 按冻结协议停止当前K3/K2-local教学内容分支，不启动其多seed、教师时机/可靠性搜索、完整R5-D机制实验或final blind。H-TEACH-002在本pilot范围内记为NOT_SUPPORTED。总体方向REFINE；下一项唯一优先任务为R6-A同场景检测/参数估计基线。结果提交SHA为`896e7de4a20c8c0f96a8eb28760617423a2efc95`；ChatGPT审查请求见`experiments/D2-A-R5/R5-C-teaching/review_request.md`。
 - **资源清理：** 只删除manifest列出的四个本阶段IQ memmap，共11,222,016,512 bytes；保留场景/seed清单、truth metadata、pair plan、预测、训练记录及其他未跟踪用户文件。清理后项目15,160,472,696 bytes（约14.12 GiB），低于20 GiB限制；记录在`cleanup.json`。
 
 # 2026-10-28：批准并冻结D2-A-R6分阶段研究设计

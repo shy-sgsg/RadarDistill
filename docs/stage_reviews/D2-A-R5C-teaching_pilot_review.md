@@ -1,6 +1,6 @@
 # D2-A-R5-C Teaching Content Pilot 阶段审查
 
-**结果提交基线：** `a97ad36877d04dff8d2c8499e4bf783e0435714c`
+**运行代码 SHA（G0 绑定）：** `a97ad36877d04dff8d2c8499e4bf783e0435714c`
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3（本阶段未修改）
 **协议：** `experiments/D2-A-R5/R5-C-teaching/protocol.md` v1.0
 **阶段结论：** 当前教师内容分支 **STOP**；RadarDistill 总体路线 **REFINE**，转入已批准的 R6-A 同场景基线。
