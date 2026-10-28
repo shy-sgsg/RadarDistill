@@ -49,7 +49,8 @@ def test_520_bin_response_head_is_removed_from_inference_export():
 
 
 def test_identical_full_response_distribution_has_zero_kl():
-    teacher = torch.rand(2, 520, 32)
+    torch.manual_seed(1102)
+    teacher = torch.rand(2, 520, 32).clamp_min(1e-6)
     teacher = teacher / teacher.sum(dim=(1, 2), keepdim=True)
     logits = teacher.log()
 
@@ -102,6 +103,18 @@ def test_t2_local_kl_uses_teacher_selected_range():
     assert 0.0 <= loss.item() < 0.1
 
 
+def test_t2_local_kl_penalizes_probability_at_another_range_gate():
+    teacher = torch.zeros(1, 520, 32)
+    teacher[0, 13, 6] = 1.0
+    logits = torch.full_like(teacher, -20.0)
+    logits[0, 13, 6] = 20.0
+    logits[0, 13, 7] = 30.0
+
+    loss = response_kl(logits, "T2", teacher_map=teacher)
+
+    assert loss.item() > 1.0
+
+
 def test_truth_dirichlet_target_is_normalized_and_periodic_at_nyquist():
     range_cells = torch.tensor([2.7, 31.2])
     doppler = torch.tensor([-649.5, 649.75])
@@ -122,6 +135,7 @@ def test_t3_local_kl_uses_truth_range_and_normalized_dirichlet_response():
     doppler = torch.tensor([123.0])
     selected_range, target = truth_dirichlet_targets(range_cells, doppler)
     logits = torch.zeros(1, 520, 32)
+    logits.fill_(-100.0)
     logits[0, :, 11] = target[0].clamp_min(1e-12).log()
 
     loss = response_kl(
@@ -132,7 +146,7 @@ def test_t3_local_kl_uses_truth_range_and_normalized_dirichlet_response():
     )
 
     assert selected_range.item() == 11
-    assert loss.item() == pytest.approx(0.0, abs=1e-6)
+    assert loss.item() == pytest.approx(0.0, abs=2e-6)
 
 
 def test_t0_is_zero_and_rejects_auxiliary_supervision_inputs():

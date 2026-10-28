@@ -1,145 +1,101 @@
-# D2-A-R5-C Teaching Content Pilot Implementation Plan
+# D2-A-R5-C Teaching Pilot Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox syntax for tracking.
+> **For agentic workers:** Execute inline on the user-authorized `main` branch. Each completed work package is committed and pushed to `origin/main` before moving to the next gate.
 
-**Goal:** Implement and run one matched T0–T3 pilot to test whether R5-C teacher responses improve Medium TaskStudent's final detection/range/Doppler task beyond physical-truth supervision.
+**Goal:** Freeze and execute one matched, single-seed T0–T3 student teaching pilot on fresh R5-C-independent scenes, then report whether teacher soft knowledge adds task-level GMTI value beyond truth supervision.
 
-**Architecture:** Keep the width-96 TaskStudent task trunk and task heads unchanged; expose a configurable training-only response head with 520 Doppler bins. Add pure response-target/KL helpers, a stage-specific CUDA runner, and independent streamed evaluation; reuse the existing R5-A pair plan, TaskStudent losses, schedule, K3 CUDA teacher, and D2-A evaluation primitives without modifying their frozen protocols.
+**Architecture:** Keep the width-96 TaskStudent, frozen truth task loss, 12,800 updates, effective batch 64, and sequential CUDA execution. Generate new train/validation pairs into stage-owned CPU memmaps, create one deterministic shared eight-pass pair plan, and compute K3 teacher responses online on `cuda:0`. Use a shared `[520,32]` response head and categorical KL over the same joint map for T1, T2, and T3; embed the IQ-selected local response or truth-assisted local response at its selected range gate.
 
-**Tech Stack:** Python, PyTorch FP32 training, CUDA complex128 K3 teacher, NumPy scene/cache data, pytest.
+**Tech Stack:** Python, NumPy memmaps, PyTorch/AISAR, CUDA, pytest.
 
-**Spec:** `docs/superpowers/specs/2026-10-28-d2-a-r5c-teaching-pilot-design.md`
+**Spec:** `experiments/D2-A-R5/R5-C-teaching/protocol.md`
 
 ## Global Constraints
 
-- Preserve `docs/RESEARCH_CHARTER.md` v1.3 and every frozen R5-A/R5-B/R5-C result.
-- R5-C independent ChatGPT review is pending; keep the new protocol as draft and do not freeze or start training until that review is returned and the stage decision supports the pilot.
-- Use four arms T0/T1/T2/T3, identical initial state (seed 303), 51,200 fixed training pairs, frozen pair plan seed base 2026102711, 12,800 updates, 32 pairs per update, effective batch 64, FP32, two-segment R5 cosine schedule, and one model resident at a time.
-- T1/T2 teachers receive only H1 IQ and frozen config; generate K3 responses online on `cuda:0` with complex128; never cache complete IQ or teacher maps; apply auxiliary loss only on H1 rows.
-- Use `lambda=0.05` fixed for T1/T2/T3; T3 is analytic truth-assisted rectangular-DFT response, not teacher output; no reliability weighting or timing search.
-- Use separate new seed ranges 728M/748M/768M/788M for H0 calibration/overall verification/C3 verification/H1 development, exact split counts from the design, chunk size 16, condition stride 1M, chunk seed stride 1009; any collision stops without auto-renumbering.
-- Calibrate each arm on 8,192 H0 using an equal-course mixture, target Pfa 0.05, `higher` quantile and `score >= threshold`; verify on new 8,192 H0 plus independent C3 H0 n=4,096; evaluate H1 on new 4,352 scenes. These are development data, never final blind.
-- C2+C3 joint success is the primary endpoint. T1−T0/T2−T0 gains must be ≥0.02 and each Bonferroni simultaneous one-sided 97.5% paired-scene bootstrap lower bound >0; report nominal 95% intervals as well. Task-protection deltas compare with T0; Holm is not used.
-- RTX 3050 Laptop `cuda:0` is mandatory, CPU fallback forbidden, FP32 only; on OOM reduce microbatch 16→8→4 while maintaining effective batch, otherwise stop. Preserve all untracked user files and keep the post-stage repository below 20 GiB.
+- Preserve `docs/RESEARCH_CHARTER.md` v1.3 and all historical R5-A/B/C results and gates.
+- Bind independent review to result commit `7563c822e70afe761897ddd5e91bb64207720f89`, decision `REFINE`, pilot support `true`.
+- New training, validation, calibration, verification, and development scene IDs must be disjoint from all registered scene IDs and each other.
+- T0–T3 use identical initialization, scene order, task loss, optimizer, 12,800 updates, and effective CPI batch 64.
+- Preserve the C3 partial-overlap / 0 dB hard subgroup, all physical truth, and teacher outputs separately.
+- CUDA is mandatory; no CPU fallback. One student model at a time. Reduce microbatch on OOM while preserving effective batch and updates.
+- Keep generated IQ and teacher maps out of Git; remove only this stage's verified IQ cache after evaluation, preserving manifests, pair plan, checkpoints, logs, metrics, and audit outputs. Final project size must remain below 20 GiB.
+- No teacher-timing, reliability-weight, multiseed, final-blind, or full R5-D mechanism experiment in this pilot.
 
 ## Review Focus
 
-- Nyquist wrap in T3's analytic Dirichlet target: test equivalent Doppler values across ±PRF/2 produce the same normalized target.
-- K2-local leakage: test its selected range comes only from the K3 teacher map, not range/Doppler truth.
-- H0 teacher supervision: test all teacher/auxiliary losses exclude H0 rows while H0 still contributes to truth presence loss.
-- Split reproducibility: test fixed condition counts and seed formulas are unique, and any manifest collision is rejected.
-- Legacy compatibility: test default `TaskStudent` still emits `[B,130,32]`, while the pilot option emits `[B,520,32]` and inference export omits the training head.
+- Fresh training and validation scenes — tests must reject reuse of R5-A cache IDs and verify seed-block disjointness.
+- T2/T3 range-gate supervision — tests must show the common joint-map KL penalizes mass at an incorrect range gate.
+- H0 teacher leakage — tests must show auxiliary response loss uses H1 rows only and T1/T2 inputs exclude truth.
+- Stage authorization — tests must keep data generation and training blocked until the exact reviewed commit is recorded and the protocol/config is pushed.
+- CUDA and resumability — tests must reject CPU fallback and preserve matched updates/effective batch after microbatch fallback.
 
 ---
 
-### Task 1: Add the configurable 520-bin training-only response head
+### Task 1: Freeze the reviewed protocol and fresh data plan
 
 **Files:**
-- Modify: `src/radardistill/students/task_student.py`
-- Test: `tests/test_d2a_r5c_teaching.py`
-
-**Interfaces:**
-- `TaskStudent(width=96, spectrum_frequency_bins=520)` returns `spectrum_logits` with shape `[B,520,32]` when `compute_spectrum=True`.
-- Default `spectrum_frequency_bins=130` preserves existing R5-A/E002 behavior.
-
-- [x] **Step 1: Add failing tests** for the legacy default, 520-bin shape, and export without the auxiliary head.
-- [x] **Step 2: Run the tests and confirm the new constructor option is missing.**
-- [x] **Step 3: Implement the optional frequency-bin count** with positive-integer validation; leave task heads and existing default unchanged.
-- [x] **Step 4: Run `pytest tests/test_d2a_r5c_teaching.py -q`.**
-- [x] **Step 5: Commit** only the model and test files.
-
-### Task 2: Implement full, local, and truth-assisted response targets/losses
-
-**Files:**
-- Create: `src/radardistill/distillation/r5c_teaching.py`
-- Test: `tests/test_d2a_r5c_teaching.py`
-
-**Interfaces:**
-- `k2_local_targets(teacher_map: Tensor) -> tuple[Tensor, Tensor]` returns IQ-only teacher range indices and normalized local frequency distributions from `[B,520,32]` maps.
-- `truth_dirichlet_targets(range_cell: Tensor, doppler_hz: Tensor, *, prf_hz: float=1300.0, pulse_count: int=130) -> tuple[Tensor, Tensor]` returns `floor(range_cell)` and normalized 520-bin rectangular coherent-integration power responses.
-- `response_kl(student_logits: Tensor, arm: str, *, teacher_map: Tensor | None, truth_range_cell: Tensor | None, truth_doppler_hz: Tensor | None) -> Tensor` implements T1 full-map KL, T2 teacher-selected local KL, T3 truth-selected local KL, and T0 zero loss.
-
-- [x] **Step 1: Write failing tests** for KL zero on identical categorical distributions, T1 normalization, T2 IQ-only argmax selection, and T3 Dirichlet normalization/periodicity.
-- [x] **Step 2: Run the focused tests and verify expected missing-function failures.**
-- [x] **Step 3: Implement the pure target and KL functions** with strict shapes, finite/nonnegative checks, and no truth arguments on the teacher-target path.
-- [x] **Step 4: Run the focused tests and ensure all pass.**
-- [x] **Step 5: Commit** the loss module and tests.
-
-### Task 3: Draft pilot protocol/config and validate seeds/splits
-
-**Files:**
-- Create: `experiments/D2-A-R5/R5-C-teaching/protocol.md`
-- Create: `experiments/D2-A-R5/R5-C-teaching/config.yaml`
+- Modify: `experiments/D2-A-R5/R5-C-teaching/protocol.md`
+- Modify: `experiments/D2-A-R5/R5-C-teaching/config.yaml`
+- Modify: `docs/task_alignments/2026-10-28-D2-A-R5C-teaching-pilot.md`
+- Modify: `tests/test_d2a_r5c_teaching_runner.py`
 - Modify: `src/radardistill/training/d2a_r5c_teaching_pilot.py`
-- Test: `tests/test_d2a_r5c_teaching_runner.py`
 
-**Interfaces:**
-- `validate_r5c_teaching_config(config) -> None` rejects changes to arms, data, schedules, losses, seed ranges, CUDA, or gates.
-- `build_split_seed_specs(config) -> list[dict]` enumerates the exact split/condition/chunk seeds in the design.
-- `assert_split_seed_disjoint(specs, existing_manifest_seeds) -> None` raises on any overlap; it never picks replacement seeds.
+- [x] Record the returned independent review and its exact target commit; freeze version 1.0 before generation.
+- [x] Specify fresh train/validation seed blocks, cell allocations, evaluation blocks, and one fixed pair plan.
+- [x] Add tests that reject reused R5-A scene IDs, seed collisions, and changes to the review-linked design.
+- [x] Update the exact config validator and verify the tests in AISAR.
+- [x] Commit and push the reviewed preregistration and implementation package before preflight.
 
-- [x] **Step 1: Write failing tests** for exact per-course counts, per-condition seed formula, split disjointness, collision rejection, and frozen config values.
-- [x] **Step 2: Run the focused tests and verify they fail for missing validator/seed helpers.**
-- [x] **Step 3: Implement config and split helpers** and write a protocol/config explicitly marked `draft` until independent R5-C review is returned.
-- [x] **Step 4: Run the focused tests.**
-- [x] **Step 5: Commit** the draft protocol/config, helper/tests, and matching task-alignment/design records.
-
-### Task 4: Implement matched CUDA training with online teacher responses
+### Task 2: Match T1–T3 auxiliary response support
 
 **Files:**
-- Modify: `src/radardistill/training/d2a_r5c_teaching_pilot.py`
-- Create: `scripts/run_d2a_r5c_teaching_pilot.py`
-- Test: `tests/test_d2a_r5c_teaching_runner.py`
+- Modify: `src/radardistill/distillation/r5c_teaching.py`
+- Modify: `tests/test_d2a_r5c_teaching.py`
+- Modify: `experiments/D2-A-R5/R5-C-teaching/protocol.md`
 
-**Interfaces:**
-- `train_arm(arm, initial_state, train_arrays, pair_plan, config, device, microbatch) -> dict` runs one arm for 12,800 updates, uses the common validation truth-task loss for checkpoint selection, and saves resumable model/optimizer/scheduler/RNG/data-cursor state.
-- `compute_h1_teacher_maps(iq_h1, config, device) -> Tensor` calls the existing strict-CUDA K3 response (factor 4), returns only the current update's temporary targets, and does not persist them.
-- Runner phases: `preflight`, `overfit`, `train`, `evaluate`, `analyze`.
+- [x] Add a test proving T2/T3 loss penalizes a response placed at an incorrect range gate.
+- [x] Embed T2 teacher-local and T3 truth-assisted Doppler distributions in the shared normalized `[520,32]` map.
+- [x] Keep truth task losses active for all arms and teacher map generation IQ-only.
+- [x] Run the focused response tests, then the pilot unit tests; commit and push.
 
-- [x] **Step 1: Write failing CPU unit tests** for matched initialization, paired H0/H1 ordering, H1-only K3 calls/loss, accumulation scale, sequential arm selection, and review-gated preflight.
-- [x] **Step 2: Run the focused tests and confirm missing pilot behavior.**
-- [x] **Step 3: Implement a stage-specific runner** that reuses `make_paired_examples`, `scale_d2a_e002_microbatch_loss`, `R5CosineSchedule`, `TaskStudent`, `task_loss`, and `k2_response_cuda`; do not modify R5-A runner behavior.
-- [x] **Step 4: Run focused tests plus the existing R5 student/teacher regression tests.**
-- [x] **Step 5: Commit and push this implementation while the protocol/config remain draft.** Do not run preflight, overfit, or training before the independent R5-C review supports proceeding.
-
-### Task 5: Implement independent streamed evaluation and pilot gates
+### Task 3: Implement fresh train/validation cache generation
 
 **Files:**
-- Create: `src/radardistill/evaluation/d2a_r5c_teaching_pilot.py`
 - Modify: `scripts/run_d2a_r5c_teaching_pilot.py`
-- Test: `tests/test_d2a_r5c_teaching_evaluation.py`
+- Modify: `src/radardistill/training/d2a_r5c_teaching_pilot.py`
+- Modify: `tests/test_d2a_r5c_teaching_runner.py`
 
-**Interfaces:**
-- `summarize_pilot_arm(predictions, calibration, verification, config) -> dict` computes per-arm threshold/Pfa/Pd/AUC/range/Doppler/joint metrics.
-- `paired_teaching_contrasts(arm_predictions, config) -> dict` computes T1−T0, T2−T0, T3−T0 and T2−T3 scene bootstrap intervals and Bonferroni simultaneous primary lower bounds.
-- Evaluation streams generated scenarios and saves only IDs and per-scene predictions; no IQ/map cache or final blind.
+- [x] Add a committed `prepare-data` phase gated by a passing preflight.
+- [x] Use the existing paired scene materializer to write only stage-owned CPU memmaps and a deterministic shared pair plan.
+- [x] Add tests for seed-derived IDs, exact quotas, cache manifests, and preserving unrelated files.
+- [x] Estimate required disk before generation; record generated files and seed metadata without committing IQ arrays.
+- [x] Run focused tests and commit/push before invoking preflight.
 
-- [x] **Step 1: Write failing tests** for the higher quantile and `>=` comparator, exact one-sided Pfa interval, circular Doppler error, joint-failure-on-miss, paired bootstrap unit and 2.5th-percentile Bonferroni lower bounds, plus the descriptive T2−T3 contrast.
-- [x] **Step 2: Run tests and verify missing or incorrect evaluation behavior.**
-- [x] **Step 3: Implement evaluation using existing D2-A calibration/metrics helpers where compatible.**
-- [x] **Step 4: Run focused evaluation tests and R5 regression tests.**
-- [x] **Step 5: Commit** the evaluation module, runner integration and tests.
-
-### Task 6: Execute the one-seed pilot and complete the research report
+### Task 4: Preflight, G1, and one-seed matched training
 
 **Files:**
-- Generate under: `experiments/D2-A-R5/R5-C-teaching/`
-- Update: `docs/CURRENT_STATUS.md`, `docs/RESEARCH_ROADMAP.md`, `docs/research/ASSUMPTION_REGISTER.md`, `docs/progress.md`, `docs/decisions.md`, `README.md` only where evidence requires it.
-- Create: `docs/stage_reviews/D2-A-R5C-teaching_review.md`
-- Create: `experiments/D2-A-R5/R5-C-teaching/review_request.md`
+- Modify as required: pilot runner/trainer and focused tests.
+- Create runtime records under `experiments/D2-A-R5/R5-C-teaching/`.
 
-- [ ] **Step 1: After the independent R5-C review supports proceeding, record its decision and freeze protocol/config in a separate commit; verify the frozen code is pushed, then run preflight and G0/G1 and record environment, CUDA, disk and model parameter counts.**
-- [ ] **Step 2: Train T0, T1, T2, T3 sequentially** using one seed and the frozen 12,800-update schedule; preserve checkpoints, per-update history, resource data and failure logs.
-- [ ] **Step 3: Run separate H0 calibration, H0 verification, C3 H0 verification and new H1 development evaluation.**
-- [ ] **Step 4: Analyze T1/T2 versus T0 and T2 versus truth-assisted T3; evaluate C3 Pfa and all task protections; distinguish scenario bootstrap from seed uncertainty.**
-- [ ] **Step 5: Decide whether any teacher content passes G5.** If none passes, stop timing/reliability/mechanism expansion. If exactly one passes, propose a separate ≥3-seed confirmation; do not auto-run blind.
-- [ ] **Step 6: Update only evidence-supported dynamic status/assumptions, preserve R5-C/R5-A/R5-B historical results, run the requested tests and diff/size review, commit to `main`, and push.**
+- [ ] Run preflight from pushed `main`; verify RTX 3050 `cuda:0`, seed isolation, exact config, storage, and model parameter counts.
+- [ ] Generate the fresh train/validation data, then run the frozen 16-pair/200-update G1 overfit check for all arms.
+- [ ] If G1 passes, train T0, T1, T2, T3 sequentially for 12,800 updates each using the same pair plan and validation selection rule.
+- [ ] Save best and resumable checkpoints, per-update histories, environment, and CUDA resources.
+- [ ] Stop without modifying scientific settings on implementation errors or failure gates; commit/push runtime records only after the run evidence is reviewed.
 
-## Self-Review
+### Task 5: Independent evaluation, hard-subgroup analysis, and stage decision
 
-- **Spec coverage:** All four arms, 520-bin representation, H1-only teachers, fixed training budget, seed isolation, CUDA-only execution, false-alarm protection, paired statistics, report, and stop gates have an owning task.
-- **Scope boundary:** External review of the completed R5-C teacher audit remains a required decision point before protocol freeze/training. The design/code work can be prepared, but the pilot cannot be described as preregistered or executed before that review.
-- **Compatibility:** 130-bin behavior stays the default; R5-A/E002 frozen configs and outputs are not changed.
-- **Data/compute:** The selected new seed ranges and exact split allocations are frozen in the design; target maps are online and temporary; models train sequentially on `cuda:0`.
-- **Multiple comparisons:** Only the two teacher-vs-T0 primary contrasts use Bonferroni simultaneous lower bounds; all protection intervals are nominal screening intervals.
-- **Limitations:** One training seed gives no cross-seed claim; pilot development is not blind; C3 Pfa gate remains absolute.
+**Files:**
+- Modify as required: evaluation/analysis and focused tests.
+- Create: `metrics.json`, prediction summaries, figures, `analysis.md`, stage review, review request.
+- Modify: `docs/CURRENT_STATUS.md`, `docs/RESEARCH_ROADMAP.md`, `docs/research/ASSUMPTION_REGISTER.md`, `docs/progress.md`, `docs/decisions.md`.
+
+- [ ] Evaluate independent H0 calibration/verification and H1 development scenes; no final blind.
+- [ ] Report T1−T0/T2−T0 primary C2+C3 joint contrasts, task and C3-Pfa protection, T3 truth-assisted controls, and the C3 partial-overlap/0 dB subgroup.
+- [ ] Report teacher-correct/incorrect strata as offline analysis only and keep truth separate from teacher inputs.
+- [ ] Remove only cache files listed by this stage's completed data manifest; keep audit manifests and final project under 20 GiB.
+- [ ] Write a four-layer stage review, one overall decision, and a ChatGPT review request bound to the new commit; commit and push the completed package.
+
+---
+
+**Research ruling:** The previously suggested 808M–920M seed region produces false collision reports because the existing manifest scanner interprets unrelated `size_bytes` integers as seeds. Use the scanned-clean 1.008B–1.120B region instead; this preserves the scanner and avoids a nonessential infrastructure change. Cost if wrong: a real collision outside the scanned manifests would compromise nominal data independence, so the preflight must repeat the full seed/ID scan immediately before generation.

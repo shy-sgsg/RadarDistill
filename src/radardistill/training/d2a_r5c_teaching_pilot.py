@@ -1,4 +1,4 @@
-"""Draft protocol and disjoint seed allocation for the R5-C teaching pilot."""
+"""Frozen protocol and data-plan helpers for the R5-C teaching pilot."""
 
 from __future__ import annotations
 
@@ -56,9 +56,8 @@ FROZEN_INPUTS = (
     "experiments/D2-A-R5/R5-C/protocol.md",
     "experiments/D2-A-R5/R5-C/config.yaml",
     "experiments/D2-A-R5/R5-C/review_request.md",
-    "docs/stage_reviews/D2-A-R5C_review.md",
     "experiments/D2-A-R5/R5-A/config.yaml",
-    "experiments/D2-A-R5/R5-A/training_pair_plan.npz",
+    "docs/stage_reviews/D2-A-R5C_review.md",
     "experiments/D2-A-E003/config.yaml",
     "experiments/D2-A-E001/config.yaml",
     "src/radardistill/students/task_student.py",
@@ -69,6 +68,7 @@ FROZEN_INPUTS = (
     "src/radardistill/baselines.py",
     "src/radardistill/teachers/d2a_k2_cuda.py",
     "src/radardistill/training/d2a_e002.py",
+    "src/radardistill/training/d2a_e002_data.py",
     "src/radardistill/training/d2a_r5.py",
     "src/radardistill/evaluation/d2a_e001.py",
     "src/radardistill/evaluation/d2a_e002.py",
@@ -90,28 +90,28 @@ _SPLITS = {
         "scene_count": 8192,
         "condition_indices": list(range(12)),
         "condition_counts": [2048, 1024, 1024, 683, 683, 682, 342, 342, 341, 341, 341, 341],
-        "seed_base": 728_000_000,
+        "seed_base": 1_048_000_000,
     },
     "h0_verification": {
         "presence": "H0",
         "scene_count": 8192,
         "condition_indices": list(range(12)),
         "condition_counts": [2048, 1024, 1024, 683, 683, 682, 342, 342, 341, 341, 341, 341],
-        "seed_base": 748_000_000,
+        "seed_base": 1_068_000_000,
     },
     "c3_h0_verification": {
         "presence": "H0",
         "scene_count": 4096,
         "condition_indices": list(range(6, 12)),
         "condition_counts": [683, 683, 683, 683, 682, 682],
-        "seed_base": 768_000_000,
+        "seed_base": 1_088_000_000,
     },
     "h1_development": {
         "presence": "H1",
         "scene_count": 4352,
         "condition_indices": list(range(12)),
         "condition_counts": [256, 128, 128, 256, 256, 256, 512, 512, 512, 512, 512, 512],
-        "seed_base": 788_000_000,
+        "seed_base": 1_108_000_000,
     },
 }
 
@@ -154,7 +154,7 @@ def _matches(actual: Any, expected: Any) -> bool:
 
 
 def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
-    """Validate the exact draft pilot design and keep execution unauthorized."""
+    """Validate the frozen pilot design and the exact returned review record."""
     if not isinstance(config, Mapping):
         raise ValueError("R5-C teaching config must be a mapping")
     _expect_keys(
@@ -181,7 +181,9 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
             "remove_spectrum_head_at_inference",
         },
         "data": {
-            "training_source", "training_pairs", "validation_source", "validation_pairs",
+            "training_source", "training_pairs", "validation_source", "validation_pairs", "pair_plan_source",
+            "training_seed_bases_by_course", "training_assignment_seed", "training_cell_counts",
+            "validation_seed_bases_by_course", "validation_assignment_seed", "validation_cell_counts",
             "pair_plan_seed_base", "fixed_pair_dataset_passes", "reuse_same_pair_order_for_all_arms",
             "chunk_size", "condition_seed_stride", "chunk_seed_stride", "split_seed_bases",
             "conditions", "splits", "persist_full_iq", "persist_teacher_maps",
@@ -194,7 +196,8 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
             "effective_batch_size_cpi", "initial_microbatch_size", "oom_microbatch_fallbacks",
             "preserve_effective_batch_on_oom", "optimizer", "weight_decay", "gradient_clip_norm",
             "learning_rate_initial", "learning_rate_at_update_6400", "learning_rate_final", "schedule",
-            "validation_interval_updates", "selection", "precision", "amp", "execution_authorized",
+            "validation_interval_updates", "selection", "precision", "amp",
+            "auxiliary_response_support", "auxiliary_target_embedding", "execution_authorized",
         },
         "evaluation": {
             "threshold_target_pfa_cpi", "calibration_quantile", "calibration_quantile_method",
@@ -231,37 +234,21 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
     if not isinstance(review, Mapping):
         raise ValueError("R5-C teaching config requires an explicit independent review record")
     _expect_keys(review, {"status", "target_commit", "decision", "supports_pilot"}, "independent_chatgpt_review")
-    status = experiment.get("status")
-    if status == "draft":
-        if (
-            experiment.get("protocol_version") != 0.1
-            or review.get("status") != "pending"
-            or review.get("target_commit") is not None
-            or review.get("decision") is not None
-            or review.get("supports_pilot") is not False
-            or experiment.get("run_authorized") is not False
-            or config["training"].get("execution_authorized") is not False
-        ):
-            raise ValueError("R5-C teaching draft must remain blocked pending independent review")
-    elif status == "preregistered":
-        if review.get("target_commit") != _REQUIRED_R5C_REVIEW_TARGET_COMMIT:
-            raise ValueError(
-                "R5-C teaching review target commit must equal the frozen teacher-audit commit "
-                f"{_REQUIRED_R5C_REVIEW_TARGET_COMMIT}"
-            )
-        if (
-            experiment.get("protocol_version") != 1.0
-            or review.get("status") != "returned"
-            or not isinstance(review.get("target_commit"), str)
-            or not review["target_commit"].strip()
-            or review.get("decision") not in {"CONTINUE", "REFINE"}
-            or review.get("supports_pilot") is not True
-            or experiment.get("run_authorized") is not True
-            or config["training"].get("execution_authorized") is not True
-        ):
-            raise ValueError("R5-C teaching run requires a returned supportive independent review")
-    else:
-        raise ValueError("R5-C teaching status must be draft or preregistered")
+    if review.get("target_commit") != _REQUIRED_R5C_REVIEW_TARGET_COMMIT:
+        raise ValueError(
+            "R5-C teaching review target commit must equal the frozen teacher-audit commit "
+            f"{_REQUIRED_R5C_REVIEW_TARGET_COMMIT}"
+        )
+    if (
+        experiment.get("status") != "preregistered"
+        or experiment.get("protocol_version") != 1.0
+        or review.get("status") != "returned"
+        or review.get("decision") != "REFINE"
+        or review.get("supports_pilot") is not True
+        or experiment.get("run_authorized") is not True
+        or config["training"].get("execution_authorized") is not True
+    ):
+        raise ValueError("R5-C teaching run requires the returned REFINE review to authorize this pilot")
 
     for key, value in {
         "channel_count": 3,
@@ -284,11 +271,36 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
         _expect(model, key, value, "model")
 
     for key, value in {
-        "training_source": "experiments/D2-A-R5/R5-A/training_pair_plan.npz",
+        "training_source": "experiments/D2-A-R5/R5-C-teaching/data/cache/train",
         "training_pairs": 51200,
-        "validation_source": "frozen_R5-A_common_validation_ids",
+        "validation_source": "experiments/D2-A-R5/R5-C-teaching/data/cache/validation",
         "validation_pairs": 5000,
-        "pair_plan_seed_base": 2026102711,
+        "pair_plan_source": "experiments/D2-A-R5/R5-C-teaching/training_pair_plan.npz",
+        "training_seed_bases_by_course": [1_008_000_000, 1_013_000_000, 1_018_000_000, 1_023_000_000],
+        "training_assignment_seed": 2_026_102_831,
+        "training_cell_counts": {
+            "C0": {"separated": 12800},
+            "C1": {"separated": 6400, "near_clutter_edge": 6400},
+            "C2": {"separated": 4288, "near_clutter_edge": 4256, "partial_overlap": 4256},
+            "C3": {
+                "separated_0db": 2144, "separated_10db": 2144,
+                "near_clutter_edge_0db": 2128, "near_clutter_edge_10db": 2128,
+                "partial_overlap_0db": 2128, "partial_overlap_10db": 2128,
+            },
+        },
+        "validation_seed_bases_by_course": [1_028_000_000, 1_033_000_000, 1_038_000_000, 1_043_000_000],
+        "validation_assignment_seed": 2_026_102_832,
+        "validation_cell_counts": {
+            "C0": {"separated": 1250},
+            "C1": {"separated": 625, "near_clutter_edge": 625},
+            "C2": {"separated": 417, "near_clutter_edge": 417, "partial_overlap": 416},
+            "C3": {
+                "separated_0db": 209, "separated_10db": 208,
+                "near_clutter_edge_0db": 208, "near_clutter_edge_10db": 209,
+                "partial_overlap_0db": 208, "partial_overlap_10db": 208,
+            },
+        },
+        "pair_plan_seed_base": 2026102821,
         "fixed_pair_dataset_passes": 8,
         "reuse_same_pair_order_for_all_arms": True,
         "chunk_size": 16,
@@ -367,6 +379,8 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
         "selection": "minimum_common_validation_truth_task_loss",
         "precision": "FP32",
         "amp": False,
+        "auxiliary_response_support": "shared_normalized_520x32_joint_map",
+        "auxiliary_target_embedding": "local_frequency_target_at_teacher_or_truth_range_gate",
     }.items():
         _expect(training, key, value, "training")
 
@@ -408,7 +422,7 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
         "cpu_fallback": "forbidden",
         "simultaneous_models_on_gpu": 1,
         "minimum_free_vram_bytes": 536870912,
-        "minimum_free_disk_bytes": 2147483648,
+        "minimum_free_disk_bytes": 16106127360,
         "persist_full_iq": False,
         "persist_teacher_maps": False,
         "project_size_final_limit_gib": 20,
@@ -426,6 +440,7 @@ def validate_r5c_teaching_config(config: Mapping[str, Any]) -> None:
         "minimum_presence_accuracy": 1.0,
         "minimum_h1_range_cell_accuracy": 0.95,
         "task_head_gradients_finite_and_nonzero": True,
+        "auxiliary_response_head_gradients_finite_and_nonzero": True,
         "excluded_from_scientific_metrics": True,
     }.items():
         _expect(overfit, key, value, "gates.g1_overfit")
@@ -473,6 +488,51 @@ def build_split_seed_specs(config: Mapping[str, Any]) -> list[dict[str, Any]]:
     if len(seeds) != len(set(seeds)):
         raise ValueError("R5-C teaching generated duplicate chunk seeds")
     return specs
+
+
+def build_paired_seed_specs(config: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Expand fresh paired train/validation generation into reserved seed blocks."""
+    validate_r5c_teaching_config(config)
+    data = config["data"]
+    chunk_size = int(data["chunk_size"])
+    chunk_stride = int(data["chunk_seed_stride"])
+    specs: list[dict[str, Any]] = []
+    for split_name, bases_key, counts_key in (
+        ("training", "training_seed_bases_by_course", "training_cell_counts"),
+        ("validation", "validation_seed_bases_by_course", "validation_cell_counts"),
+    ):
+        bases = data[bases_key]
+        counts_by_course = data[counts_key]
+        for course_index, course in enumerate(("C0", "C1", "C2", "C3")):
+            count = sum(int(value) for value in counts_by_course[course].values())
+            block_start = int(bases[course_index])
+            block_end = block_start + int(data["condition_seed_stride"])
+            for chunk_index, start in enumerate(range(0, count, chunk_size)):
+                seed = block_start + chunk_index * chunk_stride
+                if seed >= block_end:
+                    raise ValueError(f"R5-C teaching {split_name} chunks overflow {course} seed block")
+                specs.append(
+                    {
+                        "split": split_name,
+                        "presence": "paired_H0_H1",
+                        "condition_index": course_index,
+                        "course": course,
+                        "chunk_index": chunk_index,
+                        "scene_count": min(chunk_size, count - start),
+                        "seed_block_start": block_start,
+                        "seed_block_end_exclusive": block_end,
+                        "seed": seed,
+                    }
+                )
+    seeds = [spec["seed"] for spec in specs]
+    if len(seeds) != len(set(seeds)):
+        raise ValueError("R5-C teaching paired splits contain duplicate chunk seeds")
+    return specs
+
+
+def build_all_seed_specs(config: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return train, validation, calibration, verification, and development seeds."""
+    return build_paired_seed_specs(config) + build_split_seed_specs(config)
 
 
 def assert_split_seed_disjoint(
@@ -886,6 +946,26 @@ def _task_head_gradient_norms(
     return norms
 
 
+def _auxiliary_head_gradient_norm(model: TaskStudent, loss: torch.Tensor) -> float:
+    """Measure the spectrum head's response to its auxiliary objective."""
+    head = getattr(model, "spectrum_head", None)
+    if head is None:
+        return 0.0
+    gradients = torch.autograd.grad(
+        loss, tuple(head.parameters()), retain_graph=True, allow_unused=True
+    )
+    squared_norms = [
+        gradient.detach().double().square().sum()
+        for gradient in gradients
+        if gradient is not None
+    ]
+    return (
+        float(torch.sqrt(torch.stack(squared_norms).sum()).item())
+        if squared_norms
+        else 0.0
+    )
+
+
 def _git_head() -> str:
     return subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -1252,14 +1332,37 @@ def run_overfit_sanity(
         model = build_arm_model(arm, initial_state).to(selected)
         model.eval()
         x = torch.as_tensor(paired["iq_ri"], dtype=torch.float32, device=selected)
-        initial_outputs = model(x, compute_spectrum=(arm != "T0"))
-        initial_terms = task_loss(
-            initial_outputs, initial_truth, _pilot_task_config(config), teacher_weight=0.0
+        initial_h1_iq = (
+            _h1_iq_for_microbatch(train_arrays, pair_ids, 0, effective_batch_size)
+            if arm in {"T1", "T2"}
+            else None
+        )
+        initial_scaled_loss, initial_terms = compute_training_microbatch_loss(
+            model,
+            paired,
+            arm,
+            config,
+            selected,
+            physics_config=physics_config,
+            h1_iq=initial_h1_iq,
+            effective_batch_size=effective_batch_size,
+            effective_h1=pair_count,
         )
         initial_task_loss = float(initial_terms["task_total"].detach().item())
         gradient_norms = _task_head_gradient_norms(model, initial_terms)
-        gradients_passed = all(np.isfinite(value) and value > 0.0 for value in gradient_norms.values())
-        del initial_outputs, initial_terms
+        auxiliary_gradient_norm = _auxiliary_head_gradient_norm(
+            model, initial_terms["teacher_kl"]
+        )
+        auxiliary_gradient_passed = (
+            auxiliary_gradient_norm == 0.0
+            if arm == "T0"
+            else np.isfinite(auxiliary_gradient_norm) and auxiliary_gradient_norm > 0.0
+        )
+        gradients_passed = (
+            all(np.isfinite(value) and value > 0.0 for value in gradient_norms.values())
+            and auxiliary_gradient_passed
+        )
+        del initial_scaled_loss, initial_terms
 
         optimizer = torch.optim.AdamW(
             model.parameters(),
@@ -1339,6 +1442,8 @@ def run_overfit_sanity(
             "presence_accuracy": presence_accuracy,
             "h1_range_cell_accuracy": h1_range_accuracy,
             "initial_task_head_gradient_norms": gradient_norms,
+            "initial_auxiliary_response_head_gradient_norm": auxiliary_gradient_norm,
+            "auxiliary_response_gradient_passed": bool(auxiliary_gradient_passed),
             "last_gradient_norm": last_gradient_norm,
             "passed": passed,
         }

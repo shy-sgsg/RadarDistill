@@ -29,6 +29,7 @@ from radardistill.students.task_student import TaskStudent, export_inference_mod
 from radardistill.evaluation.d2a_r5c_teaching_pilot import (
     iter_generated_split_chunks,
     paired_teaching_contrasts,
+    predict_k3_teacher_localization,
     predict_task_student_chunk,
     summarize_pilot_arm,
 )
@@ -39,16 +40,25 @@ from radardistill.training.d2a_r5c_teaching_pilot import (
     _require_training_preflight,
     assert_split_seed_disjoint,
     build_initial_state,
-    build_split_seed_specs,
+    build_all_seed_specs,
+    _validate_pair_plan,
     run_overfit_sanity,
     train_arms_sequentially,
     validate_r5c_teaching_config,
 )
+from radardistill.training.d2a_e002_data import materialize_paired_split
+from radardistill.training.d2a_r5 import build_r5_repeated_pair_plan
 
 CONFIG_PATH = ROOT / "experiments/D2-A-R5/R5-C-teaching/config.yaml"
 OUTPUT_ROOT = ROOT / "experiments/D2-A-R5/R5-C-teaching"
 R5_CONFIG_PATH = ROOT / "experiments/D2-A-R5/R5-A/config.yaml"
 PHYSICS_CONFIG_PATH = ROOT / "experiments/D2-A-E001/config.yaml"
+E003_CONFIG_PATH = ROOT / "experiments/D2-A-E003/config.yaml"
+STAGE_ROOT = ROOT / "experiments/D2-A-R5/R5-C-teaching"
+DATA_GENERATION_PATH = STAGE_ROOT / "data_generation.json"
+SCENE_MANIFEST_PATH = STAGE_ROOT / "scene_manifest.csv"
+SEED_MANIFEST_PATH = STAGE_ROOT / "seed_manifest.csv"
+STAGE_REVIEW_PATH = ROOT / "docs/stage_reviews/D2-A-R5C-teaching_pilot_review.md"
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
@@ -98,6 +108,171 @@ def _project_size_bytes() -> int:
     return int(result.stdout.split()[0])
 
 
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(path)
+
+
+def _old_r5a_scene_ids() -> set[str]:
+    """Read only the scene-ID columns from the historical R5-A train/validation caches."""
+    r5_config = _read_yaml(R5_CONFIG_PATH)
+    cache_root = ROOT / r5_config["data"]["cache_root"]
+    arrays = {
+        split: r5_runner._load_split(cache_root, split)
+        for split in ("train", "validation")
+    }
+    expected = {
+        "train": int(r5_config["data"]["paired_training_scenes"]),
+        "validation": int(r5_config["data"]["paired_validation_scenes"]),
+    }
+    result: set[str] = set()
+    for split, values in arrays.items():
+        ids = np.asarray(values["base_scene_id"]).reshape(-1).astype(str)
+        if ids.size != expected[split] or np.unique(ids).size != ids.size:
+            raise RuntimeError(f"historical R5-A {split} IDs are missing or invalid")
+        result.update(ids.tolist())
+    return result
+
+
+def _cache_file_records(cache_root: Path) -> list[dict[str, Any]]:
+    records = []
+    for split in ("train", "validation"):
+        directory = cache_root / split
+        if not directory.is_dir():
+            raise FileNotFoundError(f"R5-C teaching cache split is missing: {directory}")
+        for path in sorted(directory.iterdir()):
+            if path.is_file():
+                records.append(
+                    {
+                        "path": str(path.relative_to(ROOT)),
+                        "size_bytes": int(path.stat().st_size),
+                    }
+                )
+    return records
+
+
+def _load_stage_cache(config: dict[str, Any], split: str) -> dict[str, np.ndarray]:
+    if split not in {"train", "validation"}:
+        raise ValueError(f"unsupported R5-C teaching cache split: {split}")
+    configured_path = config["data"]["training_source" if split == "train" else "validation_source"]
+    directory = ROOT / configured_path
+    manifest_path = directory / "manifest.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"R5-C teaching {split} cache has no generation manifest")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    expected_count = int(config["data"]["training_pairs" if split == "train" else "validation_pairs"])
+    if manifest.get("split") != split or manifest.get("total_paired_scenes") != expected_count:
+        raise ValueError(f"R5-C teaching {split} cache identity/count differs from its config")
+    names = (
+        "iq_h0", "iq_h1", "base_scene_id", "course_level", "scenario_id",
+        "truth_range_cell", "truth_doppler_hz", "truth_radial_velocity_mps",
+        "truth_azimuth_deg", "truth_phase_rad", "truth_amplitude", "snr_db",
+        "requested_cnr_db", "noise_power", "measured_snr_db", "measured_cnr_db",
+        "measured_scnr_db",
+    )
+    missing = [name for name in names if not (directory / f"{name}.npy").is_file()]
+    if missing:
+        raise FileNotFoundError(f"R5-C teaching {split} cache is incomplete: {missing}")
+    arrays = {name: np.load(directory / f"{name}.npy", mmap_mode="r") for name in names}
+    if any(len(value) != expected_count for value in arrays.values()):
+        raise ValueError(f"R5-C teaching {split} cache array length differs from its manifest")
+    return arrays
+
+
+def _require_data_generation(config: dict[str, Any], head: str, *, require_iq: bool) -> dict[str, Any]:
+    if not DATA_GENERATION_PATH.is_file():
+        raise RuntimeError("R5-C teaching fresh train/validation data must be generated after preflight")
+    record = json.loads(DATA_GENERATION_PATH.read_text(encoding="utf-8"))
+    preflight_path = OUTPUT_ROOT / "preflight.json"
+    if not preflight_path.is_file():
+        raise RuntimeError("R5-C teaching generated data has no preflight provenance")
+    preflight = json.loads(preflight_path.read_text(encoding="utf-8"))
+    source_head = preflight.get("git_sha")
+    if (
+        record.get("git_sha") != source_head
+        or preflight.get("config") != config
+        or (require_iq and head != source_head)
+        or record.get("config") != config
+    ):
+        raise RuntimeError("R5-C teaching generated data does not match this pushed code/config")
+    for split, key in (("train", "training_source"), ("validation", "validation_source")):
+        directory = ROOT / config["data"][key]
+        manifest = directory / "manifest.json"
+        if not manifest.is_file():
+            raise FileNotFoundError(f"R5-C teaching {split} cache manifest is missing")
+        actual_manifest = json.loads(manifest.read_text(encoding="utf-8"))
+        if record.get("cache_manifests", {}).get(split) != actual_manifest:
+            raise ValueError(f"R5-C teaching {split} cache manifest changed after data generation")
+        if require_iq:
+            _load_stage_cache(config, split)
+    if require_iq:
+        for item in record.get("cache_files", []):
+            path = (ROOT / item["path"]).resolve()
+            try:
+                path.relative_to(STAGE_ROOT.resolve())
+            except ValueError as error:
+                raise RuntimeError("R5-C teaching data manifest points outside its stage directory") from error
+            if not path.is_file() or path.stat().st_size != int(item["size_bytes"]):
+                raise RuntimeError(f"R5-C teaching generated cache file is missing/changed: {path}")
+    pair_plan_path = ROOT / config["data"]["pair_plan_source"]
+    if not pair_plan_path.is_file():
+        raise FileNotFoundError("R5-C teaching fixed pair plan is missing")
+    if not SCENE_MANIFEST_PATH.is_file() or not SEED_MANIFEST_PATH.is_file():
+        raise FileNotFoundError("R5-C teaching scene/seed audit manifests are missing")
+    return record
+
+
+def _training_validation_scene_ids(config: dict[str, Any]) -> set[str]:
+    if not SCENE_MANIFEST_PATH.is_file():
+        raise FileNotFoundError("R5-C teaching train/validation scene manifest is missing")
+    seen: set[str] = set()
+    counts = {"train": 0, "validation": 0}
+    with SCENE_MANIFEST_PATH.open(encoding="utf-8", newline="") as stream:
+        reader = csv.DictReader(stream)
+        required = {"split", "base_scene_id"}
+        if not reader.fieldnames or not required.issubset(reader.fieldnames):
+            raise ValueError("R5-C teaching scene manifest lacks split or base_scene_id")
+        for row in reader:
+            split = row["split"]
+            scene_id = row["base_scene_id"]
+            if split not in counts or not scene_id or scene_id in seen:
+                raise ValueError("R5-C teaching train/validation scene manifest has invalid/duplicate IDs")
+            seen.add(scene_id)
+            counts[split] += 1
+    expected = {
+        "train": int(config["data"]["training_pairs"]),
+        "validation": int(config["data"]["validation_pairs"]),
+    }
+    if counts != expected:
+        raise ValueError(f"R5-C teaching scene manifest counts differ: {counts}")
+    return seen
+
+
+def _assert_fresh_scene_ids(
+    train_ids: np.ndarray,
+    validation_ids: np.ndarray,
+    historical_ids: set[str],
+    *,
+    train_count: int,
+    validation_count: int,
+) -> None:
+    train_values = np.asarray(train_ids).reshape(-1).astype(str)
+    validation_values = np.asarray(validation_ids).reshape(-1).astype(str)
+    if train_values.size != train_count or validation_values.size != validation_count:
+        raise RuntimeError("R5-C teaching train/validation scene count differs from the frozen protocol")
+    if np.unique(train_values).size != train_values.size or np.unique(validation_values).size != validation_values.size:
+        raise RuntimeError("R5-C teaching generated duplicate base_scene_id values")
+    if set(train_values).intersection(validation_values):
+        raise RuntimeError("R5-C teaching train and validation scene IDs overlap")
+    if set(train_values).intersection(historical_ids) or set(validation_values).intersection(historical_ids):
+        raise RuntimeError("R5-C teaching generated scenes overlap frozen R5-A train/validation IDs")
+
+
 def _model_parameter_counts() -> tuple[int, int]:
     training_model = TaskStudent(width=96, spectrum_frequency_bins=520)
     training_count = sum(parameter.numel() for parameter in training_model.parameters())
@@ -108,11 +283,16 @@ def _model_parameter_counts() -> tuple[int, int]:
 
 
 def run_preflight(config: dict[str, Any]) -> dict[str, Any]:
-    """Check review/freeze, seed isolation, data inputs, CUDA and disk; generate nothing."""
+    """Check review/freeze, all seed blocks, CUDA and disk; generate nothing."""
     _require_training_authorization(config)
     head = _require_committed_main()
     _require_committed_config(config)
-    specs = build_split_seed_specs(config)
+    if (OUTPUT_ROOT / "preflight.json").is_file():
+        previous = json.loads((OUTPUT_ROOT / "preflight.json").read_text(encoding="utf-8"))
+        if previous.get("git_sha") != head or previous.get("config") != config:
+            raise RuntimeError("existing R5-C teaching preflight belongs to another frozen run")
+        return previous
+    specs = build_all_seed_specs(config)
     collisions = _existing_seed_collisions(specs)
     assert_split_seed_disjoint(specs, [seed for _, seed, _ in collisions])
 
@@ -123,28 +303,25 @@ def run_preflight(config: dict[str, Any]) -> dict[str, Any]:
         raise RuntimeError(f"R5-C teaching needs {minimum_free_vram} free VRAM bytes; found {free_vram}")
     free_disk = shutil.disk_usage(ROOT).free
     minimum_free_disk = int(config["resources"]["minimum_free_disk_bytes"])
-    if free_disk < minimum_free_disk:
-        raise RuntimeError(f"R5-C teaching needs {minimum_free_disk} free disk bytes; found {free_disk}")
+    train_count = int(config["data"]["training_pairs"])
+    validation_count = int(config["data"]["validation_pairs"])
+    iq_bytes_per_pair = 2 * 3 * 130 * 32 * np.dtype(np.complex64).itemsize
+    estimated_iq_bytes = (train_count + validation_count) * iq_bytes_per_pair
+    required_free_disk = max(minimum_free_disk, estimated_iq_bytes + 3 * 1024**3)
+    if free_disk < required_free_disk:
+        raise RuntimeError(
+            f"R5-C teaching needs {required_free_disk / 1024**3:.2f} GiB free for new paired caches "
+            f"and working reserve; found {free_disk / 1024**3:.2f} GiB"
+        )
     project_size = _project_size_bytes()
+    old_ids = _old_r5a_scene_ids()
 
-    r5_config = _read_yaml(R5_CONFIG_PATH)
-    cache_root = ROOT / r5_config["data"]["cache_root"]
-    train_arrays = r5_runner._load_split(cache_root, "train")
-    validation_arrays = r5_runner._load_split(cache_root, "validation")
-    if len(train_arrays["base_scene_id"]) != int(config["data"]["training_pairs"]):
-        raise RuntimeError("R5-C teaching frozen training cache does not have 51,200 pairs")
-    if len(validation_arrays["base_scene_id"]) != int(config["data"]["validation_pairs"]):
-        raise RuntimeError("R5-C teaching frozen validation cache does not have 5,000 pairs")
-    with np.load(ROOT / config["data"]["training_source"], allow_pickle=False) as archive:
-        pair_plan = archive["plan"]
-        pair_scene_ids = archive["scene_ids"].astype(str)
-        seed_base = int(archive["seed_base"])
-    if seed_base != int(config["data"]["pair_plan_seed_base"]):
-        raise RuntimeError("R5-C teaching shared training pair plan seed differs from config")
-    if not np.array_equal(pair_scene_ids, np.asarray(train_arrays["base_scene_id"]).astype(str)):
-        raise RuntimeError("R5-C teaching pair plan IDs differ from the frozen R5-A training cache")
-    if pair_plan.shape != (12800, 32):
-        raise RuntimeError("R5-C teaching pair plan does not contain 12,800 fixed updates")
+    for key in ("training_source", "validation_source", "pair_plan_source"):
+        path = (ROOT / config["data"][key]).resolve()
+        try:
+            path.relative_to(STAGE_ROOT.resolve())
+        except ValueError as error:
+            raise RuntimeError(f"R5-C teaching {key} must remain inside the stage directory") from error
 
     initial_state = build_initial_state(int(config["training"]["initialization_seed"]))
     training_parameters, inference_parameters = _model_parameter_counts()
@@ -168,24 +345,277 @@ def run_preflight(config: dict[str, Any]) -> dict[str, Any]:
         "cuda_free_bytes_before": int(free_vram),
         "cuda_total_bytes": int(total_vram),
         "disk_free_bytes": int(free_disk),
+        "estimated_new_paired_iq_bytes": int(estimated_iq_bytes),
+        "required_free_disk_bytes": int(required_free_disk),
         "project_size_bytes_before": int(project_size),
-        "training_pair_plan_shape": list(pair_plan.shape),
-        "training_pair_plan_seed_base": seed_base,
+        "training_pair_plan_shape_expected": [12800, 32],
+        "training_pair_plan_seed_base": int(config["data"]["pair_plan_seed_base"]),
         "training_parameter_count": training_parameters,
         "inference_parameter_count": inference_parameters,
         "initial_state_tensor_count": len(initial_state),
-        "new_evaluation_chunks": len(specs),
-        "new_evaluation_scenes": sum(int(spec["scene_count"]) for spec in specs),
+        "new_train_validation_evaluation_chunks": len(specs),
+        "new_train_validation_evaluation_scenes": sum(int(spec["scene_count"]) for spec in specs),
+        "historical_r5a_scene_ids_checked": len(old_ids),
+        "training_data_reused": False,
+        "validation_data_reused": False,
         "config": config,
         "seed_collisions": 0,
         "final_blind_generated": False,
         "passed": True,
     }
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_ROOT / "preflight.json").write_text(
-        json.dumps(environment, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    _write_json(OUTPUT_ROOT / "preflight.json", environment)
     return environment
+
+
+def _write_csv_once(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
+    if path.exists():
+        with path.open(encoding="utf-8", newline="") as stream:
+            reader = csv.DictReader(stream)
+            existing = list(reader)
+            if reader.fieldnames != fieldnames or len(existing) != len(rows):
+                raise FileExistsError(f"existing R5-C teaching audit manifest differs; preserving: {path}")
+            for existing_row, row in zip(existing, rows, strict=True):
+                if any(str(existing_row[key]) != str(row[key]) for key in fieldnames):
+                    raise FileExistsError(
+                        f"existing R5-C teaching audit manifest differs; preserving: {path}"
+                    )
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    with temporary.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def _save_pair_plan_once(path: Path, plan: np.ndarray, scene_ids: np.ndarray, seed_base: int) -> None:
+    if path.exists():
+        with np.load(path, allow_pickle=False) as archive:
+            if (
+                int(archive["seed_base"]) != int(seed_base)
+                or not np.array_equal(archive["plan"], plan)
+                or not np.array_equal(archive["scene_ids"].astype(str), scene_ids.astype(str))
+            ):
+                raise FileExistsError(f"existing R5-C teaching pair plan differs; preserving: {path}")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    with temporary.open("wb") as stream:
+        np.savez_compressed(
+            stream,
+            plan=np.asarray(plan, dtype=np.int64),
+            scene_ids=np.asarray(scene_ids).astype("U96"),
+            seed_base=np.asarray(seed_base, dtype=np.int64),
+        )
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def run_prepare_data(config: dict[str, Any]) -> dict[str, Any]:
+    """Generate new R5-C train/validation pairs and audit metadata after G0."""
+    preflight = _require_preflight_complete(config)
+    head = preflight["git_sha"]
+    if DATA_GENERATION_PATH.exists():
+        record = _require_data_generation(config, head, require_iq=True)
+        return record
+
+    train_path = (ROOT / config["data"]["training_source"]).resolve()
+    validation_path = (ROOT / config["data"]["validation_source"]).resolve()
+    cache_root = train_path.parent
+    try:
+        validation_path.relative_to(cache_root)
+        cache_root.relative_to(STAGE_ROOT.resolve())
+    except ValueError as error:
+        raise RuntimeError("R5-C teaching train/validation caches must remain under the stage cache root") from error
+    if train_path.name != "train" or validation_path.name != "validation":
+        raise RuntimeError("R5-C teaching cache leaf names must be train and validation")
+
+    physics_config = _read_yaml(PHYSICS_CONFIG_PATH)
+    e003 = _read_yaml(E003_CONFIG_PATH)
+    course_levels = e003["scenarios"]
+    started = time.perf_counter()
+    train_arrays = materialize_paired_split(
+        cache_root,
+        "train",
+        physics_config,
+        course_levels,
+        config["data"]["training_cell_counts"],
+        config["data"]["training_seed_bases_by_course"],
+        assignment_seed=int(config["data"]["training_assignment_seed"]),
+        chunk_size=int(config["data"]["chunk_size"]),
+        chunk_seed_stride=int(config["data"]["chunk_seed_stride"]),
+        include_k2=False,
+    )
+    validation_arrays = materialize_paired_split(
+        cache_root,
+        "validation",
+        physics_config,
+        course_levels,
+        config["data"]["validation_cell_counts"],
+        config["data"]["validation_seed_bases_by_course"],
+        assignment_seed=int(config["data"]["validation_assignment_seed"]),
+        chunk_size=int(config["data"]["chunk_size"]),
+        chunk_seed_stride=int(config["data"]["chunk_seed_stride"]),
+        include_k2=False,
+    )
+    train_ids = np.asarray(train_arrays["base_scene_id"]).reshape(-1).astype(str)
+    validation_ids = np.asarray(validation_arrays["base_scene_id"]).reshape(-1).astype(str)
+    old_ids = _old_r5a_scene_ids()
+    _assert_fresh_scene_ids(
+        train_ids,
+        validation_ids,
+        old_ids,
+        train_count=int(config["data"]["training_pairs"]),
+        validation_count=int(config["data"]["validation_pairs"]),
+    )
+
+    plan = build_r5_repeated_pair_plan(
+        train_ids,
+        updates=int(config["training"]["updates"]),
+        pairs_per_update=int(config["training"]["paired_scenes_per_update"]),
+        seed_base=int(config["data"]["pair_plan_seed_base"]),
+    )
+    plan = _validate_pair_plan(plan, train_ids.size)
+    pair_plan_path = ROOT / config["data"]["pair_plan_source"]
+    _save_pair_plan_once(
+        pair_plan_path,
+        plan,
+        train_ids,
+        int(config["data"]["pair_plan_seed_base"]),
+    )
+
+    scene_rows: list[dict[str, Any]] = []
+    for split_name, arrays in (("train", train_arrays), ("validation", validation_arrays)):
+        count = len(arrays["base_scene_id"])
+        for index in range(count):
+            scene_rows.append(
+                {
+                    "split": split_name,
+                    "row_index": index,
+                    "base_scene_id": str(arrays["base_scene_id"][index]),
+                    "course_level": str(arrays["course_level"][index]),
+                    "scenario_id": str(arrays["scenario_id"][index]),
+                    "snr_db": float(arrays["snr_db"][index]),
+                    "requested_cnr_db": float(arrays["requested_cnr_db"][index]),
+                    "truth_range_cell": float(arrays["truth_range_cell"][index]),
+                    "truth_doppler_hz": float(arrays["truth_doppler_hz"][index]),
+                    "truth_amplitude": float(arrays["truth_amplitude"][index]),
+                }
+            )
+    scene_fields = list(scene_rows[0])
+    _write_csv_once(SCENE_MANIFEST_PATH, scene_fields, scene_rows)
+
+    seed_specs = build_all_seed_specs(config)
+    seed_fields = sorted({key for spec in seed_specs for key in spec})
+    seed_rows = [
+        {
+            key: json.dumps(spec[key], ensure_ascii=False, sort_keys=True)
+            if isinstance(value, (dict, list, tuple))
+            else value
+            for key, value in ((key, spec.get(key, "")) for key in seed_fields)
+        }
+        for spec in seed_specs
+    ]
+    _write_csv_once(SEED_MANIFEST_PATH, seed_fields, seed_rows)
+    cache_records = _cache_file_records(cache_root)
+    cache_manifests = {
+        split: json.loads((cache_root / split / "manifest.json").read_text(encoding="utf-8"))
+        for split in ("train", "validation")
+    }
+    result = {
+        "experiment": "D2-A-R5-C-teaching",
+        "git_sha": head,
+        "config": config,
+        "source_e003_config": str(E003_CONFIG_PATH.relative_to(ROOT)),
+        "source_physics_config": str(PHYSICS_CONFIG_PATH.relative_to(ROOT)),
+        "train_scene_count": int(train_ids.size),
+        "validation_scene_count": int(validation_ids.size),
+        "train_validation_scene_ids_disjoint": True,
+        "historical_r5a_train_validation_ids_checked": len(old_ids),
+        "historical_r5a_overlap_count": 0,
+        "train_scene_ids_unique": True,
+        "validation_scene_ids_unique": True,
+        "training_pair_plan_seed_base": int(config["data"]["pair_plan_seed_base"]),
+        "training_pair_plan_shape": list(plan.shape),
+        "training_pair_plan_full_passes": 8,
+        "training_pair_plan_reuses_exact_scene_ids": True,
+        "scene_manifest_rows": len(scene_rows),
+        "seed_manifest_rows": len(seed_rows),
+        "cache_files": cache_records,
+        "cache_bytes": int(sum(item["size_bytes"] for item in cache_records)),
+        "cache_manifests": cache_manifests,
+        "generation_seconds": float(time.perf_counter() - started),
+        "generation_backend": "CPU simulation memmaps; no IQ cache on GPU",
+        "final_blind_generated": False,
+    }
+    _write_json(DATA_GENERATION_PATH, result)
+    return result
+
+
+def run_cleanup_data(config: dict[str, Any]) -> dict[str, Any]:
+    """Remove only the R5-C train/validation IQ arrays after analysis is complete."""
+    head = _require_committed_main()
+    _require_committed_config(config)
+    if not (OUTPUT_ROOT / "training.json").is_file():
+        raise RuntimeError("R5-C teaching data cleanup requires completed T0–T3 training")
+    if not (OUTPUT_ROOT / "metrics.json").is_file() or not (OUTPUT_ROOT / "analysis.md").is_file():
+        raise RuntimeError("R5-C teaching data cleanup requires completed evaluation and analysis")
+    if not STAGE_REVIEW_PATH.is_file():
+        raise RuntimeError("R5-C teaching data cleanup requires a committed stage review record")
+    record = _require_data_generation(config, head, require_iq=False)
+    expected_paths = {
+        str((ROOT / config["data"]["training_source"] / name).relative_to(ROOT))
+        for name in ("iq_h0.npy", "iq_h1.npy")
+    } | {
+        str((ROOT / config["data"]["validation_source"] / name).relative_to(ROOT))
+        for name in ("iq_h0.npy", "iq_h1.npy")
+    }
+    recorded = {item["path"]: item for item in record["cache_files"]}
+    if expected_paths - set(recorded):
+        raise RuntimeError("R5-C teaching cache manifest does not authorize all four IQ files")
+    for key in ("training_source", "validation_source"):
+        directory = ROOT / config["data"][key]
+        try:
+            directory.resolve().relative_to(STAGE_ROOT.resolve())
+        except ValueError as error:
+            raise RuntimeError("R5-C teaching cleanup cache resolves outside its stage directory") from error
+        if directory.resolve() != directory.absolute():
+            raise RuntimeError("R5-C teaching cleanup refuses a symlinked cache path")
+    deleted = []
+    for relative in sorted(expected_paths):
+        path = ROOT / relative
+        if path.is_symlink() or path.resolve() != path.absolute():
+            raise RuntimeError(f"refusing to remove a symlinked R5-C teaching cache path: {path}")
+        if path.is_file():
+            size = int(path.stat().st_size)
+            if size != int(recorded[relative]["size_bytes"]):
+                raise RuntimeError(
+                    f"R5-C teaching cache file changed after generation; preserving: {path}"
+                )
+            path.unlink()
+            deleted.append({"path": relative, "size_bytes": size})
+    result = {
+        "git_sha": head,
+        "deleted_stage_owned_iq_files": deleted,
+        "preserved_cache_manifests_and_truth_metadata": True,
+        "preserved_untracked_user_files": True,
+        "project_size_bytes_after_iq_cleanup": _project_size_bytes(),
+        "project_size_final_limit_bytes": int(config["resources"]["project_size_final_limit_gib"] * 1024**3),
+    }
+    _write_json(OUTPUT_ROOT / "cleanup.json", result)
+    result["project_size_bytes_after_iq_cleanup"] = _project_size_bytes()
+    _write_json(OUTPUT_ROOT / "cleanup.json", result)
+    if result["project_size_bytes_after_iq_cleanup"] > result["project_size_final_limit_bytes"]:
+        raise RuntimeError(
+            "R5-C stage IQ cleanup completed, but the project still exceeds the frozen final size limit; "
+            f"current bytes={result['project_size_bytes_after_iq_cleanup']}"
+        )
+    return result
 
 
 def _require_preflight_complete(
@@ -210,18 +640,31 @@ def _require_preflight_complete(
 
 def _load_training_inputs(config: dict[str, Any]):
     _require_training_authorization(config)
-    r5_config = _read_yaml(R5_CONFIG_PATH)
-    cache_root = ROOT / r5_config["data"]["cache_root"]
-    train_arrays = r5_runner._load_split(cache_root, "train")
-    validation_arrays = r5_runner._load_split(cache_root, "validation")
-    with np.load(ROOT / config["data"]["training_source"], allow_pickle=False) as archive:
+    head = _require_committed_main()
+    _require_data_generation(config, head, require_iq=True)
+    train_arrays = _load_stage_cache(config, "train")
+    validation_arrays = _load_stage_cache(config, "validation")
+    train_ids = np.asarray(train_arrays["base_scene_id"]).reshape(-1).astype(str)
+    validation_ids = np.asarray(validation_arrays["base_scene_id"]).reshape(-1).astype(str)
+    if set(train_ids).intersection(validation_ids):
+        raise RuntimeError("R5-C teaching train and validation scene IDs overlap")
+    with np.load(ROOT / config["data"]["pair_plan_source"], allow_pickle=False) as archive:
         pair_plan = archive["plan"].copy()
         pair_scene_ids = archive["scene_ids"].astype(str)
         seed_base = int(archive["seed_base"])
     if seed_base != int(config["data"]["pair_plan_seed_base"]):
         raise RuntimeError("R5-C teaching training pair-plan seed does not match config")
-    if not np.array_equal(pair_scene_ids, np.asarray(train_arrays["base_scene_id"]).astype(str)):
-        raise RuntimeError("R5-C teaching training pair-plan IDs differ from the R5-A cache")
+    if not np.array_equal(pair_scene_ids, train_ids):
+        raise RuntimeError("R5-C teaching training pair-plan IDs differ from the fresh R5-C cache")
+    pair_plan = _validate_pair_plan(pair_plan, train_ids.size)
+    expected_plan = build_r5_repeated_pair_plan(
+        train_ids,
+        updates=int(config["training"]["updates"]),
+        pairs_per_update=int(config["training"]["paired_scenes_per_update"]),
+        seed_base=seed_base,
+    )
+    if not np.array_equal(pair_plan, expected_plan):
+        raise RuntimeError("R5-C teaching pair plan differs from its frozen seed schedule")
     return train_arrays, validation_arrays, pair_plan, _read_yaml(PHYSICS_CONFIG_PATH)
 
 
@@ -389,6 +832,8 @@ def run_evaluation(config: dict[str, Any]) -> dict[str, Any]:
     _require_training_authorization(config)
     preflight = _require_preflight_complete(config, require_g1=True)
     head = _require_committed_main()
+    _require_data_generation(config, head, require_iq=False)
+    training_validation_ids = _training_validation_scene_ids(config)
     if (OUTPUT_ROOT / "metrics.json").exists() or (OUTPUT_ROOT / "split_manifest.json").exists():
         raise FileExistsError(
             "R5-C teaching evaluation records already exist; preserve and inspect before rerun"
@@ -431,6 +876,18 @@ def run_evaluation(config: dict[str, Any]) -> dict[str, Any]:
             if split_scene_ids[split_name].intersection(ids.tolist()):
                 raise RuntimeError(f"R5-C teaching split {split_name} generated duplicate scene IDs")
             split_scene_ids[split_name].update(ids.tolist())
+            if split_name == "h1_development":
+                teacher_quality = predict_k3_teacher_localization(
+                    batch.iq_h1,
+                    batch.truth_target_range_cell,
+                    batch.truth_target_doppler_hz,
+                    physics_config,
+                    device,
+                    prf_hz=float(config["radar"]["prf_hz"]),
+                )
+                torch.cuda.synchronize(device)
+            else:
+                teacher_quality = None
             for arm in config["training"]["arms"]:
                 model = models[arm].to(device)
                 try:
@@ -484,6 +941,7 @@ def run_evaluation(config: dict[str, Any]) -> dict[str, Any]:
                             "true_range_gated_doppler_hz": h1[
                                 "true_range_gated_doppler_hz"
                             ],
+                            **teacher_quality,
                         },
                     )
                 del model
@@ -503,6 +961,9 @@ def run_evaluation(config: dict[str, Any]) -> dict[str, Any]:
         for right in split_names[index + 1 :]
     ):
         raise RuntimeError("R5-C teaching generated split IDs overlap")
+    evaluation_ids = set().union(*split_scene_ids.values())
+    if training_validation_ids.intersection(evaluation_ids):
+        raise RuntimeError("R5-C teaching train/validation IDs overlap independent evaluation IDs")
 
     summarized: dict[str, dict[str, Any]] = {}
     paired_payloads: dict[str, dict[str, Any]] = {}
@@ -575,6 +1036,7 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
         raise RuntimeError("R5-C teaching metrics do not match the pushed code/config")
     rows = []
     c3_cell_rows = []
+    teacher_strata_rows = []
     for arm in config["training"]["arms"]:
         result = metrics["per_arm"][arm]
         dev = result["development"]["overall"]
@@ -598,6 +1060,21 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
                 f"| {arm} | {condition} | {cell['pd']:.4f} | {cell['joint_success']:.4f} | "
                 f"{cell['range_rmse_all_h1_cells']:.3f} | {cell['doppler_rmse_all_h1_hz']:.3f} | "
                 f"{h0_pfa} | {h0_upper} |"
+            )
+        for subgroup, strata in result["development"]["k3_teacher_quality_and_student_strata"].items():
+            group_n = strata["n_base_scenes"]
+            teacher_rate = strata["k3_localization_rate"]
+            correct = strata["student_metrics_by_teacher_correctness"]["teacher_correct"]
+            incorrect = strata["student_metrics_by_teacher_correctness"]["teacher_incorrect"]
+            def _stratum_value(row: dict[str, Any], key: str) -> str:
+                return "n/a" if row["n_base_scenes"] == 0 else f"{row[key]:.4f}"
+            teacher_strata_rows.append(
+                f"| {arm} | {subgroup} | {group_n} | "
+                f"{'n/a' if teacher_rate is None else f'{teacher_rate:.4f}'} | "
+                f"{correct['n_base_scenes']} / {_stratum_value(correct, 'joint_success')} / "
+                f"{_stratum_value(correct, 'pd')} / {_stratum_value(correct, 'doppler_rmse_all_h1_hz')} | "
+                f"{incorrect['n_base_scenes']} / {_stratum_value(incorrect, 'joint_success')} / "
+                f"{_stratum_value(incorrect, 'pd')} / {_stratum_value(incorrect, 'doppler_rmse_all_h1_hz')} |"
             )
     contrasts = metrics["paired_contrasts"]
     decision_rows = []
@@ -672,6 +1149,14 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
             "|---|---:|---:|---|",
             *decision_rows,
             "",
+            "## K3 教师正确/错误分层（离线评价）",
+            "",
+            "教师正确性定义为 K3 峰值同时满足距离误差 ≤1 cell、周期 Doppler 误差 ≤20 Hz。该标签只用于本表离线分层，不进入训练、推理或模型选择。",
+            "",
+            "| 臂 | 子组 | N | K3 定位正确率 | 教师正确：N / joint / Pd / Doppler RMSE Hz | 教师错误：N / joint / Pd / Doppler RMSE Hz |",
+            "|---|---|---:|---:|---|---|",
+            *teacher_strata_rows,
+            "",
             "## T1/T2 任务保护",
             "",
             "| 臂 | C2+C3 joint 差 | simultaneous 97.5% lower | overall Pd 差 | overall joint 差 | range RMSE ratio [95% CI] | Doppler RMSE ratio [95% CI] | C3 H0 Pfa | C3 Pfa 差 95% upper | 全部保护 |",
@@ -696,7 +1181,8 @@ def run_analysis(config: dict[str, Any]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "phase", choices=("preflight", "overfit", "train", "evaluate", "analyze")
+        "phase",
+        choices=("preflight", "prepare-data", "overfit", "train", "evaluate", "analyze", "cleanup-data"),
     )
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     args = parser.parse_args(argv)
@@ -705,14 +1191,18 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.phase == "preflight":
         result = run_preflight(config)
+    elif args.phase == "prepare-data":
+        result = run_prepare_data(config)
     elif args.phase == "overfit":
         result = run_overfit(config)
     elif args.phase == "train":
         result = run_training(config)
     elif args.phase == "evaluate":
         result = run_evaluation(config)
-    else:
+    elif args.phase == "analyze":
         result = run_analysis(config)
+    else:
+        result = run_cleanup_data(config)
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0
 

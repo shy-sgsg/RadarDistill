@@ -1,15 +1,15 @@
 experiment:
   id: D2-A-R5
   subphase: R5-C-teaching
-  protocol_version: 0.1
-  status: draft
+  protocol_version: 1.0
+  status: preregistered
   charter_version: 1.3
   independent_chatgpt_review:
-    status: pending
-    target_commit: null
-    decision: null
-    supports_pilot: false
-  run_authorized: false
+    status: returned
+    target_commit: 7563c822e70afe761897ddd5e91bb64207720f89
+    decision: REFINE
+    supports_pilot: true
+  run_authorized: true
   final_blind_generation_authorized: false
 
 radar:
@@ -30,21 +30,48 @@ model:
   remove_spectrum_head_at_inference: true
 
 data:
-  training_source: experiments/D2-A-R5/R5-A/training_pair_plan.npz
+  training_source: experiments/D2-A-R5/R5-C-teaching/data/cache/train
   training_pairs: 51200
-  validation_source: frozen_R5-A_common_validation_ids
+  validation_source: experiments/D2-A-R5/R5-C-teaching/data/cache/validation
   validation_pairs: 5000
-  pair_plan_seed_base: 2026102711
+  pair_plan_source: experiments/D2-A-R5/R5-C-teaching/training_pair_plan.npz
+  training_seed_bases_by_course: [1008000000, 1013000000, 1018000000, 1023000000]
+  training_assignment_seed: 2026102831
+  training_cell_counts:
+    C0: {separated: 12800}
+    C1: {separated: 6400, near_clutter_edge: 6400}
+    C2: {separated: 4288, near_clutter_edge: 4256, partial_overlap: 4256}
+    C3:
+      separated_0db: 2144
+      separated_10db: 2144
+      near_clutter_edge_0db: 2128
+      near_clutter_edge_10db: 2128
+      partial_overlap_0db: 2128
+      partial_overlap_10db: 2128
+  validation_seed_bases_by_course: [1028000000, 1033000000, 1038000000, 1043000000]
+  validation_assignment_seed: 2026102832
+  validation_cell_counts:
+    C0: {separated: 1250}
+    C1: {separated: 625, near_clutter_edge: 625}
+    C2: {separated: 417, near_clutter_edge: 417, partial_overlap: 416}
+    C3:
+      separated_0db: 209
+      separated_10db: 208
+      near_clutter_edge_0db: 208
+      near_clutter_edge_10db: 209
+      partial_overlap_0db: 208
+      partial_overlap_10db: 208
+  pair_plan_seed_base: 2026102821
   fixed_pair_dataset_passes: 8
   reuse_same_pair_order_for_all_arms: true
   chunk_size: 16
   condition_seed_stride: 1000000
   chunk_seed_stride: 1009
   split_seed_bases:
-    h0_calibration: 728000000
-    h0_verification: 748000000
-    c3_h0_verification: 768000000
-    h1_development: 788000000
+    h0_calibration: 1048000000
+    h0_verification: 1068000000
+    c3_h0_verification: 1088000000
+    h1_development: 1108000000
   conditions:
     - {course: C0, scenario_id: separated, snr_db: 20.0, cnr_db: -5.0}
     - {course: C1, scenario_id: separated, snr_db: 15.0, cnr_db: 0.0}
@@ -117,7 +144,9 @@ training:
   selection: minimum_common_validation_truth_task_loss
   precision: FP32
   amp: false
-  execution_authorized: false
+  auxiliary_response_support: shared_normalized_520x32_joint_map
+  auxiliary_target_embedding: local_frequency_target_at_teacher_or_truth_range_gate
+  execution_authorized: true
 
 evaluation:
   threshold_target_pfa_cpi: 0.05
@@ -155,6 +184,7 @@ gates:
     minimum_presence_accuracy: 1.0
     minimum_h1_range_cell_accuracy: 0.95
     task_head_gradients_finite_and_nonzero: true
+    auxiliary_response_head_gradients_finite_and_nonzero: true
     excluded_from_scientific_metrics: true
 
 resources:
@@ -164,7 +194,7 @@ resources:
   cpu_fallback: forbidden
   simultaneous_models_on_gpu: 1
   minimum_free_vram_bytes: 536870912
-  minimum_free_disk_bytes: 2147483648
+  minimum_free_disk_bytes: 16106127360
   persist_full_iq: false
   persist_teacher_maps: false
   project_size_final_limit_gib: 20

@@ -23,6 +23,7 @@ from radardistill.training.d2a_r5c_teaching_pilot import (
     build_split_seed_specs,
     validate_r5c_teaching_config,
 )
+from radardistill.teachers.d2a_k2_cuda import k2_response_cuda
 
 
 _H1_FIELDS = (
@@ -33,6 +34,11 @@ _H1_FIELDS = (
     "truth_doppler_hz",
     "predicted_doppler_hz",
     "true_range_gated_doppler_hz",
+    "teacher_predicted_range_bin",
+    "teacher_predicted_doppler_hz",
+    "teacher_range_abs_error_cells",
+    "teacher_doppler_wrapped_error_hz",
+    "teacher_correct",
 )
 _METADATA_FIELDS = (
     "base_scene_ids",
@@ -70,13 +76,83 @@ def _validate_h1_payload(data: Mapping[str, Any]) -> dict[str, np.ndarray]:
             data, name, dtype=str if name in {"course_level", "scenario_id"} else np.float64
         )
     for name in _H1_FIELDS:
+        if name == "teacher_correct":
+            if name not in data:
+                raise ValueError("R5-C teaching prediction is missing teacher_correct")
+            raw = np.asarray(data.get(name)).reshape(-1)
+            if raw.dtype == np.bool_:
+                values[name] = raw.astype(bool, copy=False)
+            else:
+                numeric = np.asarray(raw, dtype=np.float64)
+                if np.any(~np.isfinite(numeric)) or np.any(~np.isin(numeric, (0.0, 1.0))):
+                    raise ValueError("R5-C teaching teacher_correct must contain only finite booleans")
+                values[name] = numeric.astype(bool)
+            continue
         values[name] = _finite_vector(
-            data, name, dtype=np.int64 if name == "predicted_range_bin" else np.float64
+            data,
+            name,
+            dtype=np.int64 if name in {"predicted_range_bin", "teacher_predicted_range_bin"} else np.float64,
         )
     count = values["base_scene_ids"].size
     if any(array.size != count for array in values.values()):
         raise ValueError("R5-C teaching H1 predictions and metadata must have equal lengths")
     return values
+
+
+def predict_k3_teacher_localization(
+    iq: np.ndarray,
+    truth_range_cell: np.ndarray,
+    truth_doppler_hz: np.ndarray,
+    physics_config: Mapping[str, Any],
+    device: torch.device,
+    *,
+    prf_hz: float = 1300.0,
+) -> dict[str, np.ndarray]:
+    """Measure offline K3 peak correctness from IQ using the required CUDA teacher."""
+    if device.type != "cuda" or not torch.cuda.is_available():
+        raise RuntimeError("R5-C teaching K3 quality analysis requires CUDA")
+    values = np.asarray(iq)
+    ranges = np.asarray(truth_range_cell, dtype=np.float64).reshape(-1)
+    doppler = np.asarray(truth_doppler_hz, dtype=np.float64).reshape(-1)
+    if (
+        values.ndim != 4
+        or values.shape[0] <= 0
+        or values.shape[1:] != (3, 130, 32)
+        or not np.iscomplexobj(values)
+        or np.any(~np.isfinite(values))
+    ):
+        raise ValueError("R5-C teaching K3 localization requires finite complex [B,3,130,32] IQ")
+    if ranges.shape != (values.shape[0],) or doppler.shape != ranges.shape:
+        raise ValueError("R5-C teaching K3 localization requires one truth row per IQ")
+    if np.any(~np.isfinite(ranges)) or np.any(~np.isfinite(doppler)):
+        raise ValueError("R5-C teaching K3 localization truth must be finite")
+    if not np.isfinite(prf_hz) or prf_hz <= 0.0:
+        raise ValueError("R5-C teaching PRF must be positive and finite")
+    response = k2_response_cuda(
+        values,
+        dict(physics_config),
+        device=str(device),
+        oversampling_factor=4,
+    )
+    if response.shape != (values.shape[0], 520, 32):
+        raise ValueError("R5-C teaching K3 response must have shape [B,520,32]")
+    if np.any(~np.isfinite(response)) or np.any(response < 0.0):
+        raise ValueError("R5-C teaching K3 response must be finite and nonnegative")
+    peaks = np.argmax(response.reshape(values.shape[0], -1), axis=1)
+    predicted_doppler_bin = peaks // 32
+    predicted_range_bin = peaks % 32
+    frequency_axis = np.fft.fftshift(np.fft.fftfreq(520, d=1.0 / prf_hz))
+    predicted_doppler = frequency_axis[predicted_doppler_bin]
+    doppler_error = np.asarray(wrap_frequency(predicted_doppler - doppler, prf_hz), dtype=np.float64)
+    range_error = np.abs(predicted_range_bin.astype(np.float64) - ranges)
+    correct = (range_error <= 1.0) & (np.abs(doppler_error) <= 20.0)
+    return {
+        "teacher_predicted_range_bin": predicted_range_bin.astype(np.int64),
+        "teacher_predicted_doppler_hz": predicted_doppler.astype(np.float64),
+        "teacher_range_abs_error_cells": range_error.astype(np.float64),
+        "teacher_doppler_wrapped_error_hz": doppler_error,
+        "teacher_correct": correct.astype(bool),
+    }
 
 
 def _condition_key(course: str, scenario: str, snr_db: float, cnr_db: float) -> str:
@@ -328,6 +404,52 @@ def summarize_pilot_arm(
             **metric_kwargs,
         )
 
+    teacher_strata: dict[str, Any] = {}
+    hard_teacher_mask = (
+        (courses == "C3")
+        & (development["scenario_id"] == "partial_overlap")
+        & np.isclose(development["snr_db"], 0.0)
+        & np.isclose(development["requested_cnr_db"], 20.0)
+    )
+    for subgroup, subgroup_mask in (
+        ("all_H1", np.ones(development["base_scene_ids"].size, dtype=bool)),
+        ("C3_partial_overlap_SNR0_CNR20", hard_teacher_mask),
+    ):
+        strata: dict[str, Any] = {}
+        for label, correctness in (("teacher_correct", True), ("teacher_incorrect", False)):
+            mask = subgroup_mask & (development["teacher_correct"] == correctness)
+            if np.any(mask):
+                strata[label] = _mask_summary(
+                    development,
+                    mask,
+                    threshold,
+                    prf_hz=prf_hz,
+                    range_gate_bins=float(evaluation["range_gate_bins"]),
+                    doppler_gate_hz=float(evaluation["doppler_gate_hz"]),
+                    **metric_kwargs,
+                )
+            else:
+                strata[label] = {"n_base_scenes": 0}
+        teacher_strata[subgroup] = {
+            "n_base_scenes": int(np.count_nonzero(subgroup_mask)),
+            "k3_localization_rate": (
+                float(np.mean(development["teacher_correct"][subgroup_mask]))
+                if np.any(subgroup_mask)
+                else None
+            ),
+            "k3_range_rmse_all_h1_cells": (
+                float(np.sqrt(np.mean(development["teacher_range_abs_error_cells"][subgroup_mask] ** 2)))
+                if np.any(subgroup_mask)
+                else None
+            ),
+            "k3_doppler_rmse_all_h1_hz": (
+                float(np.sqrt(np.mean(development["teacher_doppler_wrapped_error_hz"][subgroup_mask] ** 2)))
+                if np.any(subgroup_mask)
+                else None
+            ),
+            "student_metrics_by_teacher_correctness": strata,
+        }
+
     return {
         "threshold_calibration": threshold_record,
         "h0_verification": verification_result,
@@ -336,6 +458,7 @@ def summarize_pilot_arm(
             "identifiable_C2_C3": identifiable_metrics,
             "by_course": course_metrics,
             "c3_cells": c3_cells,
+            "k3_teacher_quality_and_student_strata": teacher_strata,
         },
         "development_split_is_blind": False,
     }
@@ -449,7 +572,12 @@ def _aligned_by_scene(
 def _metadata_equal(
     first: Mapping[str, np.ndarray], second: Mapping[str, np.ndarray], *, label: str
 ) -> None:
-    for name in ("course_level", "scenario_id", "snr_db", "requested_cnr_db", "truth_range_cell", "truth_doppler_hz"):
+    for name in (
+        "course_level", "scenario_id", "snr_db", "requested_cnr_db",
+        "truth_range_cell", "truth_doppler_hz", "teacher_predicted_range_bin",
+        "teacher_predicted_doppler_hz", "teacher_range_abs_error_cells",
+        "teacher_doppler_wrapped_error_hz", "teacher_correct",
+    ):
         if not np.array_equal(first[name], second[name]):
             raise ValueError(f"R5-C teaching arms have mismatched {name} for {label}")
 

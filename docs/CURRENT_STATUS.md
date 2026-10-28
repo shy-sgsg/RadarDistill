@@ -5,7 +5,7 @@
 **最新完成工作：** D2-A-R5-C 教师知识质量审计已在 RTX 3050 Laptop `cuda:0` 完成，运行对应代码 SHA 为 `58e422de7a9de1290d38ebbb206862e23b49ab42`。新场景共4,352个配对 base scenes、13,056条候选记录。结果、协议和阶段自审见 [R5-C analysis](../experiments/D2-A-R5/R5-C/analysis.md)、[metrics](../experiments/D2-A-R5/R5-C/metrics.json) 与 [stage review](stage_reviews/D2-A-R5C_review.md)；ChatGPT审查请求在同目录归档。
 **阶段判断：** R5-C 三种软响应均通过冻结 G4 知识质量门，K3 相对 K1 的定位提升达到预注册有意义增益门；**不构成固定阈值检测器资格或学生蒸馏收益证据**。C3 partial-overlap / 0 dB 定位率仅2.1%–4.1%，且 Medium 学生已有 C3 H0 Pfa=`0.18896`，未满足0.10保护。R5-B TFAS 的冻结 G3 **STOP** 结论维持不变；R5-A/B学生均未通过完整绝对虚警保护，R5-C没有学生结果，当前没有取得固定阈值检测器资格的教师。
 
-**当前工作：** 提交 R5-C 独立 ChatGPT 阶段审查材料；R5-B 的独立审查仍待反馈。R5-C 未训练学生、未做 KD、未生成 final blind。收到方向审查后，再决定是否冻结并运行一轮 T0–T3 匹配教学内容 pilot。项目最终占用保持低于20 GiB。
+**当前工作：** R5-C 独立 ChatGPT 阶段审查已返回 **REFINE**，支持一轮带保护门的 T0–T3 单种子教学内容 pilot。R5-C teaching protocol/config v1.0 已按审查条件冻结，训练与数据代码、定向测试已实现；提交前验证为72项定向测试通过，compileall与`git diff --check`通过。协议/代码推送后，尚须通过 G0 才能生成新训练/验证数据，随后通过 G1 才能训练。当前没有生成本 pilot 数据、运行 G1 或训练学生；不启动正式多种子、可靠性权重/时机搜索、完整 R5-D 机制实验或 final blind。项目最终占用保持低于20 GiB。
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价；并可由已保存分量构造目标/杂波强度、目标单独频移、通道相位扰动和通道遮蔽输入。这些都是诊断工具而非实验结果。目前没有同场景匹配学生预测，也未运行机制比较。R5-C 独立审查门和当前阶段优先级不变。
 
 ## 当前结论
@@ -68,7 +68,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-将 R5-C 结果提交独立 ChatGPT 审查，要求先读取目标提交中的 `docs/RESEARCH_CHARTER.md` v1.3，并结合 R5-A/B、E002、R3 与 T001 判断 R5-C 是否真正推进任务级 GMTI 学生目标。审查前不启动新一轮学生训练、KD或 final blind；若方向审查支持继续，下一项仅为预注册的 T0–T3 匹配教学内容 pilot，并保留 C3 绝对虚警保护。R5-B TFAS候选停止结论不变。
+在将 R5-C teaching protocol/config v1.0、实现及状态文件提交并推送到 `main` 后，运行 G0 前置检查。只有 G0 通过才生成全新 train/validation 场景；只有四组均通过 G1 才按冻结预算顺序训练 T0–T3。重点保留 C3 partial-overlap / 0 dB 教师错误组和学生 C3 H0 Pfa≤0.10 晋级保护。R5-B TFAS停止结论、R5-C原G4及研究总纲v1.3保持不变。
 
 ## 关键材料
 

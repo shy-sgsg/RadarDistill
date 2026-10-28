@@ -1,8 +1,10 @@
 # D2-A-R5-C Teaching Content Pilot
 
-**Status: DRAFT — not frozen and not authorized to run.** The independent
-ChatGPT review of R5-C is still required. This document must remain a draft
-until that review has returned and the stage decision supports this pilot.
+**Status: FROZEN / PREREGISTERED — version 1.0.** Independent ChatGPT review
+of R5-C result commit `7563c822e70afe761897ddd5e91bb64207720f89` returned
+**REFINE** and explicitly supports one T0–T3 single-seed pilot. The review is
+recorded in the committed config. Data generation and training remain gated on
+a passing preflight and G1; final blind generation remains unauthorized.
 
 **Research charter:** `docs/RESEARCH_CHARTER.md` v1.3. This draft does not
 modify the charter or any frozen R5-A/R5-B/R5-C result.
@@ -13,8 +15,11 @@ R5-C found task-related information in the K1, K3, and K2-local response forms,
 but did not test whether a student can use that information. This one-seed,
 development-only pilot asks whether K3's full response or K2-local response
 improves the final detection/range/Doppler task beyond matched physical-truth
-supervision. A truth-assisted response arm controls for the extra auxiliary
-head and response objective.
+supervision. A truth-assisted response arm controls for extra auxiliary
+supervision. The review found only 4.1% teacher localization in the C3 /
+partial-overlap / 0 dB / CNR 20 dB subgroup; this pilot isolates that subgroup
+and reports student performance conditional on the teacher's offline
+correctness.
 
 The work serves the charter's task-level GMTI student objective; it is not a
 standalone detector or CFAR study. It does not test teacher timing, reliability
@@ -47,8 +52,8 @@ weighted by `lambda=0.05` on T1–T3.
 |---|---|---|
 | T0 | Presence, range and Doppler truth | None; response head is instantiated but unused |
 | T1 | Same | Full K3 `[520,32]` normalized relative-power support KL |
-| T2 | Same | K3 response conditioned on the IQ-only global-peak range cell |
-| T3 | Same | Analytic truth-assisted local rectangular-DFT response KL |
+| T2 | Same | K3 local frequency response embedded at its IQ-only global-peak range cell in a normalized `[520,32]` map |
+| T3 | Same | Analytic truth-assisted local rectangular-DFT response embedded at the true range cell in a normalized `[520,32]` map |
 
 K3/K2 inputs use only H1 IQ and the frozen physical configuration. T2 selects
 its range cell from the K3 map's global maximum; it is not an independent range
@@ -58,6 +63,15 @@ form the length-130 rectangular coherent-integration response on the centered
 normalized; the response is PRF-periodic at the Nyquist boundary. T3 is an
 oracle auxiliary-supervision control, not a teacher output.
 
+T1, T2, and T3 use the same full `[520,32]` response head and categorical KL
+over its flattened map. T2's normalized local frequency response is embedded
+at the IQ-only teacher-selected range gate; T3's analytic response is
+embedded at `floor(true_range_cell)`. A wrong T2 gate is erroneous auxiliary
+soft supervision, never a replacement for the physical range truth. This
+common support prevents the local arms from receiving a smaller output space
+or a different loss definition; per-arm task and auxiliary losses and G1
+gradient norms will be recorded.
+
 Auxiliary response loss is applied only to H1 rows. H0 rows still contribute to
 the physical-truth presence loss. Truth labels are not passed into T1/T2 target
 selection. All auxiliary arms use fixed `lambda=0.05`; no temperature,
@@ -65,11 +79,20 @@ weight, timing, or reliability search is allowed.
 
 ## 3. Training data, updates, and compute
 
-- Reuse the fixed R5-A 51,200 paired training scenes, the frozen pair plan
-  (`training_pair_plan.npz`, seed base `2026102711`), and the shared R5-A
-  5,000-scene validation set. No arm resumes an R5-A checkpoint. At 32 paired
-  scenes per update, 12,800 updates are eight full traversals of the fixed
-  51,200-pair cohort.
+- Generate a fresh 51,200-pair training cohort and 5,000-pair validation
+  cohort from `experiments/D2-A-E001/config.yaml`, retaining the R5-A condition
+  quotas but using new seed bases. Training course seed bases are
+  `[1008000000,1013000000,1018000000,1023000000]`; validation bases are
+  `[1028000000,1033000000,1038000000,1043000000]`. Assignment seeds are
+  `2026102831` and `2026102832`.
+- The fixed pair plan is stored at
+  `experiments/D2-A-R5/R5-C-teaching/training_pair_plan.npz`; its embedded
+  scene IDs must equal the freshly generated training cache in order.
+- Write training and validation IQ/metadata once to stage-owned CPU memmaps in
+  `data/cache/{train,validation}`. Create and retain a deterministic shared
+  eight-pass pair plan with seed base `2026102821`. No arm resumes an R5-A
+  checkpoint. At 32 paired scenes per update, 12,800 updates are eight full
+  traversals of the fixed 51,200-pair cohort.
 - Train four arms sequentially, one model resident on the GPU at a time, for
   12,800 optimizer updates. Each update uses 32 paired base scenes (64 CPI
   examples), with effective batch size 64 and gradient accumulation.
@@ -86,7 +109,9 @@ weight, timing, or reliability search is allowed.
   overfit sanity check per arm, excluded from scientific metrics. It passes
   only if truth-task loss drops by at least 50%, presence accuracy is 100%,
   H1 range-cell accuracy is at least 95%, and task-head gradients are finite
-  and nonzero. Keep checkpoints, resumable state, RNG state, update history,
+  and nonzero. For T1–T3, the response head must also have a finite, nonzero
+  gradient from its auxiliary objective; for T0 that response gradient must
+  be zero. Keep checkpoints, resumable state, RNG state, update history,
   CUDA/resource records, and failure logs.
 
 ## 4. New evaluation splits and seed allocation
@@ -110,14 +135,16 @@ condition order. The H1 development counts are
 `[256,128,128,256,256,256,512,512,512,512,512,512]`. C3-only verification
 uses only the six C3 conditions, indexed 0–5 within that split.
 
-Each split uses its own seed base: H0 calibration `728,000,000`, overall H0
-verification `748,000,000`, C3 H0 verification `768,000,000`, and H1
-development `788,000,000`. Within a split, condition seed blocks are spaced by
+Evaluation splits use their own seed bases: H0 calibration `1,048,000,000`,
+overall H0 verification `1,068,000,000`, C3 H0 verification `1,088,000,000`,
+and H1 development `1,108,000,000`. Within a split, condition seed blocks are spaced by
 1,000,000; generation chunks contain at most 16 scenes and use
-`split_base + condition_index*1,000,000 + chunk_index*1009`. Any collision with
-known manifests or another registered split stops preflight; seeds are never
-silently renumbered. Training and validation IDs are reused only as specified
-above. These evaluation scenes are development data, never final blind data.
+`split_base + condition_index*1,000,000 + chunk_index*1009`. The train,
+validation, calibration, verification, and development seed blocks are
+mutually disjoint. Any collision with known manifests or another registered
+split stops preflight; seeds are never silently renumbered. Training and
+validation IDs are newly generated and independent of R5-A. Evaluation scenes
+are development data, never final blind data.
 
 ## 5. Metrics, comparisons, and pilot gates
 
@@ -138,6 +165,13 @@ MAE/RMSE/bias, predicted range mismatch, true-range-gated Doppler, and joint
 success by course and each C3 cell. Joint success requires detection, absolute
 range error at most one cell, and PRF-wrapped Doppler error at most 20 Hz; a
 miss is a joint failure.
+
+On the independent H1 development scenes, compute K3 teacher top-cell outputs
+from IQ only and record teacher localization correctness for offline analysis.
+Report student metrics in the predeclared C3 partial-overlap / 0 dB / CNR 20 dB
+cell, and by teacher-correct versus teacher-incorrect groups. These strata are
+analysis labels only; they are never model inputs, training weights, or
+selection features.
 
 The primary endpoint is paired C2+C3 joint success. The only primary contrasts
 are T1−T0 and T2−T0. A candidate needs a point gain of at least `+0.02` and a
@@ -160,7 +194,8 @@ reported. These are pilot-screening limits, not formal non-inferiority claims.
   disk/VRAM, and visible RTX 3050 `cuda:0` all pass; no CPU fallback.
 - **G1:** Four arms have finite forward/backward and gradients; teacher inputs
   exclude truth; T2 selection is IQ-only; T3 normalization and PRF periodicity
-  pass; the fixed-batch overfit sanity check passes.
+  pass; T1–T3 auxiliary response gradients are nonzero; the fixed-batch
+  overfit sanity check passes.
 - **G2/G5:** A teacher arm passes only if its primary contrast and all task and
   C3 false-alarm protections pass. Loss reduction alone cannot pass the gate.
 
@@ -177,16 +212,16 @@ frozen multi-seed confirmation protocol.
 The run should retain protocol/config, split manifests, training history,
 selected checkpoints, per-scene predictions, metrics, analysis, phase review,
 environment/resource records, and failure logs. It should not retain complete
-IQ or response-map caches. The 20 GiB project-size limit applies after the
-stage's cleanup; intermediate size may exceed it. Preserve all user data and
-historical negative results.
+IQ or response-map caches after stage cleanup. Preserve scene IDs, split and
+seed manifests, the pair plan, and truth metadata. The cleanup command may
+remove only the `iq_h0.npy` and `iq_h1.npy` files named by this stage's
+completed data manifest. The 20 GiB project-size limit applies after cleanup;
+intermediate size may exceed it. Preserve all user data and historical
+negative results.
 
-Current execution state is **not authorized**: external R5-C ChatGPT review is
-pending. Do not run `preflight`, `overfit`, or `train` until the returned review
-has been considered and a preregistered config/protocol is committed and
-pushed. The returned review must identify the exact result commit named in
-`experiments/D2-A-R5/R5-C/review_request.md`:
-`7563c822e70afe761897ddd5e91bb64207720f89`. The config validator rejects a
-preregistration that cites another target commit. A later update must record
-the review decision, update the protocol version/status before any data
-generation or training, and retain this draft history.
+The independent review is recorded against the exact R5-C result commit
+`7563c822e70afe761897ddd5e91bb64207720f89`, with decision `REFINE` and support
+for one pilot. Run preflight only after this version-1.0 protocol, config, and
+code are committed and pushed. Generate data only after preflight passes; run
+G1 only after data generation completes; train only after every arm passes G1.
+Final blind generation remains unauthorized.

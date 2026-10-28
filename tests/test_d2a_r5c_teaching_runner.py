@@ -22,6 +22,7 @@ from radardistill.training.d2a_r5c_teaching_pilot import (
     compute_training_microbatch_loss,
     h1_response_loss,
     make_paired_examples,
+    _auxiliary_head_gradient_norm,
     scale_pilot_microbatch_loss,
     train_arm,
     train_arms_sequentially,
@@ -42,33 +43,58 @@ def config() -> dict:
         return yaml.safe_load(handle)
 
 
-def test_draft_config_freezes_four_matched_arms_and_resource_budget(config: dict) -> None:
+def test_frozen_config_records_review_and_four_matched_arms(config: dict) -> None:
     validate_r5c_teaching_config(config)
 
-    assert config["experiment"]["status"] == "draft"
-    assert config["experiment"]["run_authorized"] is False
+    assert config["experiment"]["status"] == "preregistered"
+    assert config["experiment"]["run_authorized"] is True
     assert config["training"]["arms"] == ["T0", "T1", "T2", "T3"]
     assert config["training"]["updates"] == 12800
     assert config["training"]["effective_batch_size_cpi"] == 64
     assert config["resources"]["device"] == "cuda:0"
+    assert config["training"]["auxiliary_response_support"] == "shared_normalized_520x32_joint_map"
+
+
+def test_reviewed_protocol_uses_fresh_train_validation_and_evaluation_scenes(config: dict) -> None:
+    validate_r5c_teaching_config(config)
+
+    assert config["experiment"]["status"] == "preregistered"
+    assert config["experiment"]["independent_chatgpt_review"] == {
+        "status": "returned",
+        "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
+        "decision": "REFINE",
+        "supports_pilot": True,
+    }
+    assert config["experiment"]["run_authorized"] is True
+    assert config["training"]["execution_authorized"] is True
+    assert config["data"]["training_source"] == "experiments/D2-A-R5/R5-C-teaching/data/cache/train"
+    assert config["data"]["validation_source"] == "experiments/D2-A-R5/R5-C-teaching/data/cache/validation"
+    assert config["data"]["training_seed_bases_by_course"] == [
+        1008000000, 1013000000, 1018000000, 1023000000
+    ]
+    assert config["data"]["validation_seed_bases_by_course"] == [
+        1028000000, 1033000000, 1038000000, 1043000000
+    ]
+    assert config["data"]["split_seed_bases"] == {
+        "h0_calibration": 1048000000,
+        "h0_verification": 1068000000,
+        "c3_h0_verification": 1088000000,
+        "h1_development": 1108000000,
+    }
+    assert "R5-A" not in config["data"]["training_source"]
+    assert "R5-A" not in config["data"]["validation_source"]
 
 
 def test_validator_accepts_review_supported_preregistration_record(config: dict) -> None:
-    approved = deepcopy(config)
-    approved["experiment"].update(
-        status="preregistered",
-        protocol_version=1.0,
-        independent_chatgpt_review={
-            "status": "returned",
-            "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
-            "decision": "CONTINUE",
-            "supports_pilot": True,
-        },
-        run_authorized=True,
-    )
-    approved["training"]["execution_authorized"] = True
+    validate_r5c_teaching_config(config)
 
-    validate_r5c_teaching_config(approved)
+
+@pytest.mark.parametrize("decision", ["CONTINUE", "GO", "STOP"])
+def test_validator_rejects_review_decision_other_than_returned_refine(config: dict, decision: str) -> None:
+    invalid = deepcopy(config)
+    invalid["experiment"]["independent_chatgpt_review"]["decision"] = decision
+    with pytest.raises(ValueError, match="returned REFINE review"):
+        validate_r5c_teaching_config(invalid)
 
 
 def test_validator_rejects_review_for_a_different_r5c_commit(config: dict) -> None:
@@ -137,6 +163,7 @@ def test_frozen_input_manifest_covers_evaluation_and_scene_generation_dependenci
         "src/radardistill/simulation/d0.py",
         "src/radardistill/simulation/d2a.py",
         "scripts/run_d2a_r5c_teacher_audit.py",
+        "experiments/D2-A-R5/R5-A/config.yaml",
     }
 
     assert required_inputs <= set(pilot.FROZEN_INPUTS)
@@ -161,29 +188,197 @@ def test_seed_specs_have_exact_scene_counts_and_blocked_chunks(config: dict) -> 
     }
 
 
+def test_fresh_paired_seed_specs_have_expected_counts_and_course_ranges(config: dict) -> None:
+    specs = pilot.build_paired_seed_specs(config)
+
+    assert sum(s["scene_count"] for s in specs if s["split"] == "training") == 51200
+    assert sum(s["scene_count"] for s in specs if s["split"] == "validation") == 5000
+    assert len({s["seed"] for s in specs}) == len(specs)
+    assert {s["course"] for s in specs} == {"C0", "C1", "C2", "C3"}
+    assert all(s["seed_block_start"] <= s["seed"] < s["seed_block_end_exclusive"] for s in specs)
+    assert specs[0]["seed"] == 1_008_000_000
+    assert specs[3200]["split"] == "validation"
+    assert specs[3200]["seed"] == 1_028_000_000
+
+
+def test_prepare_data_uses_only_stage_paths_and_records_fresh_scene_ids(
+    config: dict, monkeypatch, tmp_path
+):
+    stage = tmp_path / "experiments/D2-A-R5/R5-C-teaching"
+    monkeypatch.setattr(runner, "ROOT", tmp_path)
+    monkeypatch.setattr(runner, "OUTPUT_ROOT", stage)
+    monkeypatch.setattr(runner, "STAGE_ROOT", stage)
+    monkeypatch.setattr(runner, "DATA_GENERATION_PATH", stage / "data_generation.json")
+    monkeypatch.setattr(runner, "SCENE_MANIFEST_PATH", stage / "scene_manifest.csv")
+    monkeypatch.setattr(runner, "SEED_MANIFEST_PATH", stage / "seed_manifest.csv")
+    monkeypatch.setattr(runner, "PHYSICS_CONFIG_PATH", tmp_path / "physics.yaml")
+    monkeypatch.setattr(runner, "E003_CONFIG_PATH", tmp_path / "e003.yaml")
+    monkeypatch.setattr(
+        runner, "_require_preflight_complete", lambda *_: {"git_sha": "b" * 40}
+    )
+    monkeypatch.setattr(runner, "_old_r5a_scene_ids", lambda: {"old-r5a-id"})
+    monkeypatch.setattr(runner, "_cache_file_records", lambda _root: [])
+    monkeypatch.setattr(
+        runner,
+        "_read_yaml",
+        lambda path: {"scenarios": {}} if path == tmp_path / "e003.yaml" else {"radar": {"prf_hz": 1300.0}},
+    )
+    materialized = []
+
+    def fake_materialize(cache_root, split_name, *_args, **_kwargs):
+        materialized.append((cache_root, split_name))
+        directory = cache_root / split_name
+        directory.mkdir(parents=True)
+        (directory / "manifest.json").write_text(
+            json.dumps({"split": split_name}), encoding="utf-8"
+        )
+        count = 51200 if split_name == "train" else 5000
+        return {
+            "base_scene_id": np.asarray([f"{split_name}-id-{i}" for i in range(count)]),
+            "course_level": np.full(count, "C2", dtype="U2"),
+            "scenario_id": np.full(count, "partial_overlap", dtype="U32"),
+            "snr_db": np.full(count, 10.0, dtype=np.float32),
+            "requested_cnr_db": np.full(count, 10.0, dtype=np.float32),
+            "truth_range_cell": np.full(count, 7.5, dtype=np.float32),
+            "truth_doppler_hz": np.full(count, 20.0, dtype=np.float32),
+            "truth_amplitude": np.ones(count, dtype=np.float32),
+        }
+
+    monkeypatch.setattr(runner, "materialize_paired_split", fake_materialize)
+
+    result = runner.run_prepare_data(config)
+
+    assert [split for _, split in materialized] == ["train", "validation"]
+    assert all(path == stage / "data/cache" for path, _ in materialized)
+    assert result["train_validation_scene_ids_disjoint"] is True
+    assert result["historical_r5a_overlap_count"] == 0
+    assert result["training_pair_plan_shape"] == [12800, 32]
+    assert result["cache_manifests"] == {
+        "train": {"split": "train"},
+        "validation": {"split": "validation"},
+    }
+    assert (stage / "training_pair_plan.npz").is_file()
+    assert sum(1 for _ in (stage / "scene_manifest.csv").open(encoding="utf-8")) == 56201
+
+
+def test_cleanup_removes_only_manifested_stage_iq_and_preserves_other_files(
+    config: dict, monkeypatch, tmp_path
+):
+    stage = tmp_path / "experiments/D2-A-R5/R5-C-teaching"
+    train = stage / "data/cache/train"
+    validation = stage / "data/cache/validation"
+    train.mkdir(parents=True)
+    validation.mkdir(parents=True)
+    cache_manifests = {"train": {"split": "train"}, "validation": {"split": "validation"}}
+    paths = []
+    cache_files = []
+    for split, directory in (("train", train), ("validation", validation)):
+        (directory / "manifest.json").write_text(
+            json.dumps(cache_manifests[split]), encoding="utf-8"
+        )
+        for name in ("iq_h0.npy", "iq_h1.npy"):
+            path = directory / name
+            path.write_bytes(b"iq-cache")
+            relative = str(path.relative_to(tmp_path))
+            paths.append(path)
+            cache_files.append({"path": relative, "size_bytes": path.stat().st_size})
+        (directory / "operator-note.txt").write_text("keep", encoding="utf-8")
+    plan = stage / "training_pair_plan.npz"
+    plan.write_bytes(b"plan")
+    (stage / "scene_manifest.csv").write_text("base_scene_id\nscene\n", encoding="utf-8")
+    (stage / "seed_manifest.csv").write_text("seed\n1\n", encoding="utf-8")
+    (stage / "training.json").write_text("{}", encoding="utf-8")
+    (stage / "metrics.json").write_text("{}", encoding="utf-8")
+    (stage / "analysis.md").write_text("analysis", encoding="utf-8")
+    review_path = tmp_path / "docs/stage_reviews/D2-A-R5C-teaching_pilot_review.md"
+    review_path.parent.mkdir(parents=True)
+    review_path.write_text("review", encoding="utf-8")
+    config_path = tmp_path / config["data"]["training_source"]
+    assert config_path == train
+    monkeypatch.setattr(runner, "ROOT", tmp_path)
+    monkeypatch.setattr(runner, "OUTPUT_ROOT", stage)
+    monkeypatch.setattr(runner, "STAGE_ROOT", stage)
+    monkeypatch.setattr(runner, "DATA_GENERATION_PATH", stage / "data_generation.json")
+    monkeypatch.setattr(runner, "SCENE_MANIFEST_PATH", stage / "scene_manifest.csv")
+    monkeypatch.setattr(runner, "SEED_MANIFEST_PATH", stage / "seed_manifest.csv")
+    monkeypatch.setattr(runner, "STAGE_REVIEW_PATH", review_path)
+    monkeypatch.setattr(runner, "_require_committed_main", lambda: "b" * 40)
+    monkeypatch.setattr(runner, "_require_committed_config", lambda _: None)
+    monkeypatch.setattr(runner, "_project_size_bytes", lambda: 1234)
+    (stage / "preflight.json").write_text(
+        json.dumps({"git_sha": "a" * 40, "config": config}), encoding="utf-8"
+    )
+    (stage / "data_generation.json").write_text(
+        json.dumps(
+            {
+                "git_sha": "a" * 40,
+                "config": config,
+                "cache_files": cache_files,
+                "cache_manifests": cache_manifests,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = runner.run_cleanup_data(config)
+
+    assert len(result["deleted_stage_owned_iq_files"]) == 4
+    assert all(not path.exists() for path in paths)
+    assert (train / "operator-note.txt").is_file()
+    assert (train / "manifest.json").is_file()
+    assert plan.is_file()
+
+
+def test_all_reserved_seed_blocks_are_mutually_disjoint(config: dict) -> None:
+    specs = pilot.build_all_seed_specs(config)
+    blocks = sorted({(int(s["seed_block_start"]), int(s["seed_block_end_exclusive"])) for s in specs})
+    assert len(blocks) == 50
+    for (_, previous_end), (next_start, _) in zip(blocks, blocks[1:]):
+        assert previous_end <= next_start
+
+
+def test_fresh_scene_id_guard_rejects_historical_or_repeated_ids():
+    train = np.asarray(["new-0", "new-1"])
+    validation = np.asarray(["new-2"])
+
+    runner._assert_fresh_scene_ids(
+        train, validation, {"old-r5a"}, train_count=2, validation_count=1
+    )
+    with pytest.raises(RuntimeError, match="overlap frozen R5-A"):
+        runner._assert_fresh_scene_ids(
+            np.asarray(["old-r5a", "new-1"]), validation, {"old-r5a"},
+            train_count=2, validation_count=1,
+        )
+    with pytest.raises(RuntimeError, match="duplicate base_scene_id"):
+        runner._assert_fresh_scene_ids(
+            np.asarray(["duplicate", "duplicate"]), validation, set(),
+            train_count=2, validation_count=1,
+        )
+
+
 def test_seed_formula_uses_local_condition_indices_and_fixed_strides(config: dict) -> None:
     specs = build_split_seed_specs(config)
     calibration = [spec for spec in specs if spec["split"] == "h0_calibration"]
     c3_verification = [spec for spec in specs if spec["split"] == "c3_h0_verification"]
 
-    assert calibration[0]["seed"] == 728_000_000
-    assert calibration[1]["seed"] == 728_001_009
+    assert calibration[0]["seed"] == 1_048_000_000
+    assert calibration[1]["seed"] == 1_048_001_009
     assert calibration[128]["condition_index"] == 1
-    assert calibration[128]["seed"] == 729_000_000
+    assert calibration[128]["seed"] == 1_049_000_000
     assert c3_verification[0]["condition_index"] == 0
-    assert c3_verification[0]["seed"] == 768_000_000
+    assert c3_verification[0]["seed"] == 1_088_000_000
     assert c3_verification[43]["condition_index"] == 1
-    assert c3_verification[43]["seed"] == 769_000_000
+    assert c3_verification[43]["seed"] == 1_089_000_000
 
 
 def test_split_seed_disjointness_rejects_any_reserved_block_collision(config: dict) -> None:
     specs = build_split_seed_specs(config)
 
-    assert_split_seed_disjoint(specs, [727_999_999, 729_000_000_000])
+    assert_split_seed_disjoint(specs, [1_047_999_999, 1_089_000_000_000])
     with pytest.raises(ValueError, match="collision"):
-        assert_split_seed_disjoint(specs, [728_000_123])
+        assert_split_seed_disjoint(specs, [1_048_000_123])
     with pytest.raises(ValueError, match="duplicate"):
-        assert_split_seed_disjoint(specs, [727_999_999, 727_999_999])
+        assert_split_seed_disjoint(specs, [1_047_999_999, 1_047_999_999])
 
 
 def test_split_seed_disjointness_does_not_auto_renumber_collisions(config: dict) -> None:
@@ -396,16 +591,20 @@ def test_training_arms_run_sequentially_in_preregistered_order(config: dict, mon
     ]
 
 
-def test_draft_config_blocks_training_before_cuda_or_data_access(config: dict):
-    with pytest.raises(RuntimeError, match="independent R5-C review"):
+def test_pending_review_blocks_training_before_cuda_or_data_access(config: dict):
+    pending = deepcopy(config)
+    pending["experiment"]["independent_chatgpt_review"]["supports_pilot"] = False
+    with pytest.raises(ValueError, match="returned REFINE review"):
         train_arm(
-            "T0", {}, {}, np.empty((0, 0), dtype=np.int64), config,
+            "T0", {}, {}, np.empty((0, 0), dtype=np.int64), pending,
             torch.device("cpu"), 16, validation_arrays={}, arm_root=Path("unused"),
             physics_config={},
         )
 
 
-def test_draft_config_blocks_preflight_before_git_cuda_or_data_access(config: dict, monkeypatch):
+def test_pending_review_blocks_preflight_before_git_cuda_or_data_access(config: dict, monkeypatch):
+    pending = deepcopy(config)
+    pending["experiment"]["independent_chatgpt_review"]["supports_pilot"] = False
     monkeypatch.setattr(
         runner,
         "_require_committed_main",
@@ -417,8 +616,8 @@ def test_draft_config_blocks_preflight_before_git_cuda_or_data_access(config: di
         lambda *_: pytest.fail("preflight reached CUDA checks before review authorization"),
     )
 
-    with pytest.raises(RuntimeError, match="independent R5-C review"):
-        runner.run_preflight(config)
+    with pytest.raises(ValueError, match="returned REFINE review"):
+        runner.run_preflight(pending)
 
 
 def test_preflight_freezes_the_k2_teachers_baseline_dependency():
@@ -431,28 +630,12 @@ def test_preflight_freezes_the_k2_teachers_baseline_dependency():
 
 def test_preflight_rejects_authorized_config_not_equal_to_committed_config(config: dict, monkeypatch):
     authorized = deepcopy(config)
-    authorized["experiment"].update(
-        status="preregistered",
-        protocol_version=1.0,
-        independent_chatgpt_review={
-            "status": "returned",
-            "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
-            "decision": "CONTINUE",
-            "supports_pilot": True,
-        },
-        run_authorized=True,
-    )
-    authorized["training"]["execution_authorized"] = True
+    authorized["training"]["updates"] += 1
     monkeypatch.setattr(runner, "_require_committed_main", lambda: "a" * 40)
     monkeypatch.setattr(runner, "_read_yaml", lambda _path: config)
-    monkeypatch.setattr(
-        runner,
-        "_require_training_cuda",
-        lambda *_: pytest.fail("preflight reached CUDA before checking committed config"),
-    )
 
     with pytest.raises(RuntimeError, match="must match the committed config"):
-        runner.run_preflight(authorized)
+        runner._require_committed_config(authorized)
 
 
 def test_low_level_training_requires_preflight_and_passing_g1(config: dict, monkeypatch, tmp_path):
@@ -463,7 +646,7 @@ def test_low_level_training_requires_preflight_and_passing_g1(config: dict, monk
         independent_chatgpt_review={
             "status": "returned",
             "target_commit": "7563c822e70afe761897ddd5e91bb64207720f89",
-            "decision": "CONTINUE",
+            "decision": "REFINE",
             "supports_pilot": True,
         },
         run_authorized=True,
@@ -580,6 +763,22 @@ def test_g1_checks_gradient_norms_for_all_four_task_heads():
     assert norms["doppler"] > 0.0
 
 
+def test_g1_measures_spectrum_head_gradient_for_auxiliary_supervision():
+    class Heads(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.spectrum_head = torch.nn.Linear(2, 3, bias=False)
+
+    model = Heads()
+    logits = model.spectrum_head(torch.ones(1, 2))
+    loss = torch.nn.functional.cross_entropy(logits, torch.tensor([1]))
+
+    norm = _auxiliary_head_gradient_norm(model, loss)
+
+    assert np.isfinite(norm)
+    assert norm > 0.0
+
+
 def test_overfit_retries_cuda_oom_with_smaller_microbatch(config: dict, monkeypatch, tmp_path):
     calls = []
     monkeypatch.setattr(runner, "_require_preflight_complete", lambda _config: {})
@@ -610,6 +809,8 @@ def test_evaluation_uses_and_persists_only_requested_presence_side(
         split["scene_count"] = 1
     monkeypatch.setattr(runner, "OUTPUT_ROOT", tmp_path)
     monkeypatch.setattr(runner, "_require_training_authorization", lambda _: None)
+    monkeypatch.setattr(runner, "_require_data_generation", lambda *args, **kwargs: {})
+    monkeypatch.setattr(runner, "_training_validation_scene_ids", lambda _: set())
     monkeypatch.setattr(
         runner,
         "_require_preflight_complete",
@@ -625,6 +826,17 @@ def test_evaluation_uses_and_persists_only_requested_presence_side(
     monkeypatch.setattr(runner, "_read_yaml", lambda _: {})
     monkeypatch.setattr(runner, "summarize_pilot_arm", lambda *args: {})
     monkeypatch.setattr(runner, "paired_teaching_contrasts", lambda *args: {})
+    monkeypatch.setattr(
+        runner,
+        "predict_k3_teacher_localization",
+        lambda iq, *_args, **_kwargs: {
+            "teacher_predicted_range_bin": np.full(len(iq), 1, dtype=np.int64),
+            "teacher_predicted_doppler_hz": np.full(len(iq), 12.0),
+            "teacher_range_abs_error_cells": np.zeros(len(iq)),
+            "teacher_doppler_wrapped_error_hz": np.zeros(len(iq)),
+            "teacher_correct": np.ones(len(iq), dtype=bool),
+        },
+    )
     saved_payloads = {}
     monkeypatch.setattr(
         runner,
@@ -686,3 +898,4 @@ def test_evaluation_uses_and_persists_only_requested_presence_side(
     assert len(calls) == 16
     assert calls.count((1.0, True)) == 4
     assert all("h0_score" not in payload["development"] for payload in saved_payloads.values())
+    assert all("teacher_correct" in payload["development"] for payload in saved_payloads.values())

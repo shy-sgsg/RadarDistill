@@ -123,10 +123,12 @@ def response_kl(
 ) -> torch.Tensor:
     """Compute the arm-specific response KL; callers pass H1 rows only.
 
-    T1 matches the complete normalized RD support map. T2 matches the
-    teacher-selected range slice. T3 matches the truth-selected analytic
-    rectangular-DFT response. T0 returns a differentiable zero. Truth values
-    are rejected on teacher arms so they cannot affect teacher target selection.
+    T1 matches the complete normalized RD support map. T2 embeds its
+    teacher-selected conditional frequency response at the selected range
+    gate; T3 embeds the truth-selected analytic rectangular-DFT response at
+    the truth range gate. T2/T3 then use the same flattened joint-map KL as
+    T1. T0 returns a differentiable zero. Truth values are rejected on
+    teacher arms so they cannot affect teacher target selection.
     """
     if not isinstance(student_logits, torch.Tensor):
         raise ValueError("student_logits must be a torch.Tensor")
@@ -176,5 +178,9 @@ def response_kl(
     range_index = range_index.to(device=student_logits.device)
     target = target.to(device=student_logits.device)
     rows = torch.arange(student_logits.shape[0], device=student_logits.device)
-    local_logits = student_logits[rows, :, range_index]
-    return _categorical_kl(local_logits, target)
+    joint_target = torch.zeros_like(student_logits)
+    joint_target[rows, :, range_index] = target
+    return _categorical_kl(
+        student_logits.reshape(student_logits.shape[0], -1),
+        joint_target.reshape(joint_target.shape[0], -1),
+    )

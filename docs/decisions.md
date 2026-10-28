@@ -1,5 +1,12 @@
 # 技术决策记录
 
+## 2026-10-28：依据R5-C独立审查冻结一次T0–T3 teaching pilot
+
+- **依据：** 独立审查针对结果提交 `7563c822e70afe761897ddd5e91bb64207720f89`、研究总纲 `docs/RESEARCH_CHARTER.md` v1.3，结论为 **REFINE**。审查同意开展一次受保护的T0–T3教学内容pilot，并指出R5-C G4通过不代表困难子组教师可靠；C3 partial-overlap / SNR 0 dB / CNR 20 dB的K3/K2-local正确定位率约4.1%。
+- **决定：** 冻结独立 protocol/config v1.0：T0 truth-only、T1 truth+K3、T2 truth+K2-local、T3匹配truth-assisted控制；相同Medium width=96学生、初始化、新训练/验证数据、优化预算、truth任务损失、有效batch64及12,800 updates。T3不是教师组；物理真值持续作为主监督，教师错误位置仅进入其预注册辅助目标并保留离线分层。保留C3绝对Pfa≤0.10晋级门和困难教师错误子组报告。
+- **门控：** 当前工作包提交并推送后先运行G0；通过后生成全新数据；T0–T3全部通过G1后，才运行一次匹配单seed pilot。若teacher arms未达到预注册joint增益或触发任务/虚警保护，则停止本教学内容分支，不做时机、可靠性权重、多seed或final blind搜索。完整R5-D机制研究等待pilot结果与独立审查。
+- **边界：** 不修改研究总纲v1.3、R5-C G4、旧协议或任何历史结果。当前协议/实现提交尚未包含pilot运行结果；实际数据与训练状态须在后续动态记录中更新。
+
 ## 2026-10-28：D2-A-R5-C 教师知识质量审计通过G4，限提教学内容pilot
 
 - **依据：** 按 protocol/config v1.1 完成4,352个独立新配对base scenes、三种冻结B3软响应形式和13,056条逐场景记录。数值、数据隔离与CUDA执行门通过；可辨识C2+C3上K1/K3/K2-local目标窗口lift均为正。K3−K1 top-cell localization为`+0.03125`（95% CI `[+0.02474,+0.03776]`），达到预注册`+0.02`增益门；全图归一化软质量未改善。C3 partial-overlap / 0 dB定位率仅2.1%–4.1%，须作为困难保护子组保留。
