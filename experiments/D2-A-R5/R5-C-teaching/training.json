@@ -1,0 +1,94 @@
+[
+  {
+    "arm": "T0",
+    "updates_completed": 12800,
+    "unique_training_pairs": 51200,
+    "training_pair_scene_exposures": 409600,
+    "cpi_example_exposures": 819200,
+    "fixed_pair_dataset_passes": 8,
+    "effective_cpi_per_update": 64,
+    "best_update": 12800,
+    "best_validation_task_loss": 0.23984823837854805,
+    "microbatch_size": 16,
+    "effective_batch_size_cpi": 64,
+    "parameter_count": 120717,
+    "training_seconds": 6745.769295638,
+    "cuda_peak_allocated_bytes": 820877824,
+    "cuda_peak_reserved_bytes": 897581056,
+    "history_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T0/training_history.csv",
+    "best_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T0/best_checkpoint.pt",
+    "resume_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T0/latest_training_state.pt",
+    "oom_microbatch_attempts": [
+      16
+    ]
+  },
+  {
+    "arm": "T1",
+    "updates_completed": 12800,
+    "unique_training_pairs": 51200,
+    "training_pair_scene_exposures": 409600,
+    "cpi_example_exposures": 819200,
+    "fixed_pair_dataset_passes": 8,
+    "effective_cpi_per_update": 64,
+    "best_update": 12800,
+    "best_validation_task_loss": 0.24024075078148704,
+    "microbatch_size": 16,
+    "effective_batch_size_cpi": 64,
+    "parameter_count": 120717,
+    "training_seconds": 4446.815301739,
+    "cuda_peak_allocated_bytes": 821484544,
+    "cuda_peak_reserved_bytes": 901775360,
+    "history_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T1/training_history.csv",
+    "best_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T1/best_checkpoint.pt",
+    "resume_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T1/latest_training_state.pt",
+    "oom_microbatch_attempts": [
+      16
+    ]
+  },
+  {
+    "arm": "T2",
+    "updates_completed": 12800,
+    "unique_training_pairs": 51200,
+    "training_pair_scene_exposures": 409600,
+    "cpi_example_exposures": 819200,
+    "fixed_pair_dataset_passes": 8,
+    "effective_cpi_per_update": 64,
+    "best_update": 12800,
+    "best_validation_task_loss": 0.23614276952260385,
+    "microbatch_size": 16,
+    "effective_batch_size_cpi": 64,
+    "parameter_count": 120717,
+    "training_seconds": 4295.962431370001,
+    "cuda_peak_allocated_bytes": 821484544,
+    "cuda_peak_reserved_bytes": 901775360,
+    "history_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T2/training_history.csv",
+    "best_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T2/best_checkpoint.pt",
+    "resume_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T2/latest_training_state.pt",
+    "oom_microbatch_attempts": [
+      16
+    ]
+  },
+  {
+    "arm": "T3",
+    "updates_completed": 12800,
+    "unique_training_pairs": 51200,
+    "training_pair_scene_exposures": 409600,
+    "cpi_example_exposures": 819200,
+    "fixed_pair_dataset_passes": 8,
+    "effective_cpi_per_update": 64,
+    "best_update": 12400,
+    "best_validation_task_loss": 0.23518052981716725,
+    "microbatch_size": 16,
+    "effective_batch_size_cpi": 64,
+    "parameter_count": 120717,
+    "training_seconds": 3781.7062608729975,
+    "cuda_peak_allocated_bytes": 821484544,
+    "cuda_peak_reserved_bytes": 901775360,
+    "history_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T3/training_history.csv",
+    "best_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T3/best_checkpoint.pt",
+    "resume_checkpoint_path": "/home/shy/AIR/SAR+AI/project/RadarDistill/experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T3/latest_training_state.pt",
+    "oom_microbatch_attempts": [
+      16
+    ]
+  }
+]

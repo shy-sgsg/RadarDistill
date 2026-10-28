@@ -1,0 +1,25 @@
+{
+  "git_sha": "a97ad36877d04dff8d2c8499e4bf783e0435714c",
+  "deleted_stage_owned_iq_files": [
+    {
+      "path": "experiments/D2-A-R5/R5-C-teaching/data/cache/train/iq_h0.npy",
+      "size_bytes": 5111808128
+    },
+    {
+      "path": "experiments/D2-A-R5/R5-C-teaching/data/cache/train/iq_h1.npy",
+      "size_bytes": 5111808128
+    },
+    {
+      "path": "experiments/D2-A-R5/R5-C-teaching/data/cache/validation/iq_h0.npy",
+      "size_bytes": 499200128
+    },
+    {
+      "path": "experiments/D2-A-R5/R5-C-teaching/data/cache/validation/iq_h1.npy",
+      "size_bytes": 499200128
+    }
+  ],
+  "preserved_cache_manifests_and_truth_metadata": true,
+  "preserved_untracked_user_files": true,
+  "project_size_bytes_after_iq_cleanup": 15160472696,
+  "project_size_final_limit_bytes": 21474836480
+}

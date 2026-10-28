@@ -1,0 +1,115 @@
+experiment:
+  id: D2-A-R6
+  subphase: R6-A
+  protocol_version: 1.0
+  status: preregistered
+  charter_version: 1.3
+  execution_authorized: true
+  execution_gate: implement_and_pass_R6-A_G0
+  final_blind_authorized: false
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  source_config: experiments/D2-A-E001/config.yaml
+  condition_source: this_config
+  conditions:
+    - {course: C0, scenario_id: separated, snr_db: 20.0, cnr_db: -5.0}
+    - {course: C1, scenario_id: separated, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C1, scenario_id: near_clutter_edge, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C2, scenario_id: separated, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C3, scenario_id: separated, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: separated, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 20.0}
+
+methods:
+  detector_primary: [B3, R3_T1, Medium_CNN_width96]
+  detector_diagnostics: [B0, B1, B2, R3_T2]
+  detector_thresholds:
+    target_pfa_cpi: [0.05, 0.01]
+    quantile_method: higher
+    comparator: ">="
+    threshold_scope: per_method_global_equal_condition_mixture
+  estimators:
+    - fft_peak
+    - fft_interpolation
+    - fft_zero_pad_4x
+    - lag_one_phase_difference
+    - local_profile_ml
+    - medium_cnn_direct
+  checkpoint_source: experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt
+  checkpoint_record: experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/training_record.json
+  checkpoint_training_seed: 101
+  checkpoint_training_updates: 12800
+  checkpoint_architecture: TaskStudent_width96
+  checkpoint_training_spectrum_bins: 130
+  checkpoint_training_parameter_count: 82887
+  checkpoint_inference_export: remove_training_only_spectrum_head_only
+  checkpoint_inference_parameter_count: 70277
+  checkpoint_retrained: false
+  truth_available_to_method: false
+  oracle_metrics_offline_only: true
+
+data:
+  condition_count: 12
+  condition_seed_stride: 1000000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  splits:
+    h0_calibration:
+      presence: H0
+      scene_count: 12000
+      count_per_condition: 1000
+      seed_base: 1208000000
+    h0_verification:
+      presence: H0
+      scene_count: 12000
+      count_per_condition: 1000
+      seed_base: 1228000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 1248000000
+  new_scene_ids_required: true
+  reuse_same_iq_across_methods: true
+  split_ids_disjoint: true
+  r5c_ids_reused: false
+  persist_full_iq: false
+  persist_teacher_maps: false
+
+evaluation:
+  primary_h0_unit: one_max_candidate_decision_per_cpi
+  report_condition_pfa: true
+  report_ties: true
+  pfa_interval: one_sided_clopper_pearson_95
+  bootstrap_unit: base_scene_id
+  bootstrap_replicates: 2000
+  thresholds_from_verification: false
+  development_data_is_final_blind: false
+  range_gate_cells: 1.0
+  doppler_gate_hz: 20.0
+  doppler_error: PRF_wrapped
+  estimator_metrics:
+    - all_h1
+    - detection_hit
+    - correct_candidate
+    - oracle_candidate_offline_only
+  primary_joint_metric: detection_and_range_and_doppler_success
+
+resources:
+  gpu: NVIDIA_GeForce_RTX_3050_Laptop_GPU
+  device: cuda:0
+  cuda_required_for_student_inference: true
+  cpu_fallback: forbidden
+  wait_until_r5c_gpu_release: true
+  persist_full_iq: false
+  project_final_limit_gib: 20

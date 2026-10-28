@@ -24,7 +24,7 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 的 R0 T1–T12 全通过；后续 R3 固定阈值迁移决定为 **REFINE**，T1 未获固定阈值教师资格。
 
-**当前状态：** D2-A-R5-A 的训练充分性与 Small/Medium 容量对照、R5-B 单个原始 IQ 时频注意力 TFAS pilot 均已按单 seed CUDA 方案完成。R5-A Medium 相对 Small 在 C2/C3 joint-success 提升 `+0.13086`，但二者 C3 H0 Pfa=`0.20410/0.18896`，未达到绝对 `0.10` 保护。R5-B TFAS 完成 12,800 updates，G0/G1/G2 通过、G3 失败：相对 Medium 的 C2/C3 joint-success 差为 `−0.60449`（95% CI `[-0.62598,-0.58350]`），自身 C3 H0 Pfa=`0.15186`。因此停止当前 TFAS 扩展；没有模型通过所有任务保护门。结果限于一个训练 seed 和复用的 E003 开发数据，不是盲测；未运行 R5-C/D、KD 或 final blind。R5-B 正在等待独立 ChatGPT 方向审查。历史 E003/R3/E002/T001/R4 结论保持原样。
+**当前状态：** D2-A-R5-A 的训练充分性与 Small/Medium 容量对照、R5-B TFAS、R5-C教师知识质量审计及 T0–T3 teaching pilot 均已完成。R5-C pilot按seed303在RTX 3050 Laptop `cuda:0`顺序训练四臂，各12,800 updates；T1/T2相对truth-only T0的C2+C3 joint差为`−0.0104/−0.0138`，均未过预注册增益门。四臂C3 H0 Pfa=`0.182–0.203`，仍超绝对`0.10`保护，故停止当前教师内容分支，不做教师时机/可靠性搜索、多seed或final blind。R5-A Medium与R5-B TFAS也未通过C3绝对虚警保护。R5-C stage-owned IQ缓存按manifest清理后项目占用为15.16 GB（约14.12 GiB），低于20 GiB；其他用户数据保留。下一优先任务是R6-A同场景检测/参数估计基线；R6分阶段研究设计见[研究计划](docs/superpowers/specs/2026-10-28-d2-a-r6-research-design.md)。研究总纲v1.3和历史负结果保持原样。
 
 **近期历史：** D2-A-E002 v2.1 的 A/B/C 单 seed pilot 曾显示 G3 分层虚警和 G6 公共相位/频移一致性门失败，课程与 K2 未达到预注册增益；其 **REFINE** 结论保留，不由 E003 覆盖。
 

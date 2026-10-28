@@ -1,3 +1,19 @@
+## 2026-10-28：停止R5-C当前教师内容分支，优先推进R6-A
+
+- **证据：** seed303的T1/T2相对T0，C2+C3 joint差分别为`−0.0104`和`−0.0138`，两者均未达到预注册`+0.02`门；T1/T2均未通过全部任务/C3虚警保护。T3 truth-assisted控制差`+0.0156`为描述性结果，不能计为教师收益。四臂C3 H0 Pfa为`0.182–0.203`，均高于0.10晋级门。
+- **决定：** 停止K3/K2-local当前教学内容分支；不进行教师知识多seed确认、教学时机/可靠性权重搜索、完整R5-D机制实验或final blind。原R5-C教师审计G4 PASS及全部历史负结果保持不变。
+- **研究方向：** 整体判断为 **REFINE**。教师软知识的学生收益假设H-TEACH-002在本pilot范围内记为NOT_SUPPORTED；T3结果保留为truth-assisted描述性对照。下一项唯一优先任务是已批准的R6-A同场景检测与参数估计基线，诊断条件内可分性、阈值迁移和实际候选估计误差。
+- **清理/范围：** 按stage manifest删除四个stage-owned train/validation IQ memmap，总项目占用15,160,472,696 bytes；总纲v1.3未修改，未删除其他未跟踪用户文件。
+- **材料：** `experiments/D2-A-R5/R5-C-teaching/`、`docs/stage_reviews/D2-A-R5C-teaching_pilot_review.md`、`docs/CURRENT_STATUS.md`、`docs/RESEARCH_ROADMAP.md`。
+
+## 2026-10-28：R6分阶段路线纳入动态计划，研究总纲保持v1.3
+
+- **依据：** R5独立审查认为下一项优先工作是受保护的T0–T3教师教学pilot；用户另外批准R6研究设计与分阶段执行，不要求等待R5-D机制研究。当前固定阈值跨条件问题、检测与候选参数误差的相对贡献尚未由新同场景数据确定。
+- **决定：** P0先完成独立冻结的R5-C T0–T3；P1开展R6-A同scene基线和R6-B大样本低Pfa诊断；之后按证据依次评估容量/训练/数据规模、联合D/P/J、有限架构代表、混合处理链和教师协作。R6 GPU运行与当前R5-C学生训练串行，R6-D科学pilot依赖R6-A/B瓶颈证据。
+- **总纲审查：** Charter v1.3已足以覆盖低虚警检测、容量/架构、联合任务、教师学生知识和混合链研究；R6的协议与阶段安排属于动态执行细节，本次不改 `docs/RESEARCH_CHARTER.md`。
+- **停止/证伪：** R6-A条件ROC差时不以阈值校准替代表示改进；R6-B只运行一个由非verification证据选出的候选，任务保护失败即停止；R6-D实现/资源门失败则停止具体候选，不外推到模型家族。
+- **材料：** `docs/superpowers/specs/2026-10-28-d2-a-r6-research-design.md`、`docs/superpowers/plans/2026-10-28-d2-a-r6-implementation-plan.md`、`docs/task_alignments/D2-A-R6_alignment.md`、`experiments/D2-A-R6/`。当前仅完成设计和协议准备，未产生R6实验结果。
+
 # 技术决策记录
 
 ## 2026-10-28：依据R5-C独立审查冻结一次T0–T3 teaching pilot

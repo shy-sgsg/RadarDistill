@@ -2,11 +2,11 @@
 
 **更新日期：** 2026-10-28
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5-C 教师知识质量审计已在 RTX 3050 Laptop `cuda:0` 完成，运行对应代码 SHA 为 `58e422de7a9de1290d38ebbb206862e23b49ab42`。新场景共4,352个配对 base scenes、13,056条候选记录。结果、协议和阶段自审见 [R5-C analysis](../experiments/D2-A-R5/R5-C/analysis.md)、[metrics](../experiments/D2-A-R5/R5-C/metrics.json) 与 [stage review](stage_reviews/D2-A-R5C_review.md)；ChatGPT审查请求在同目录归档。
-**阶段判断：** R5-C 三种软响应均通过冻结 G4 知识质量门，K3 相对 K1 的定位提升达到预注册有意义增益门；**不构成固定阈值检测器资格或学生蒸馏收益证据**。C3 partial-overlap / 0 dB 定位率仅2.1%–4.1%，且 Medium 学生已有 C3 H0 Pfa=`0.18896`，未满足0.10保护。R5-B TFAS 的冻结 G3 **STOP** 结论维持不变；R5-A/B学生均未通过完整绝对虚警保护，R5-C没有学生结果，当前没有取得固定阈值检测器资格的教师。
+**最新完成工作：** D2-A-R5-C 教师知识质量审计及其后经独立审查放行的 T0–T3 教学内容 pilot 均已完成。Pilot 代码/训练/评价绑定提交 `a97ad36877d04dff8d2c8499e4bf783e0435714c`；四臂各12,800 updates，使用 RTX 3050 Laptop `cuda:0`。新数据、逐场景预测、指标、训练记录和阶段审查见 [`R5-C teaching analysis`](../experiments/D2-A-R5/R5-C-teaching/analysis.md)、[`metrics`](../experiments/D2-A-R5/R5-C-teaching/metrics.json) 和 [阶段审查](stage_reviews/D2-A-R5C-teaching_pilot_review.md)。
+**阶段判断：** T1−T0 与 T2−T0 的 C2+C3 joint 差分别为−0.0104、−0.0138，均未达到预注册 +0.02 增益门；T1/T2 也未通过所有保护门。四臂 C3 H0 Pfa 为0.182–0.203，均高于绝对0.10门。故当前教师内容分支 **STOP**，H-TEACH-002 在该 pilot 范围内为 NOT_SUPPORTED。R5-C 原 G4 PASS 与教师质量结论保持不变；它不构成学生教学增益或固定阈值检测器资格。项目总体路线 **REFINE**，R5-B TFAS 的 STOP 和研究总纲 v1.3 保持不变。
 
-**当前工作：** R5-C 独立 ChatGPT 阶段审查已返回 **REFINE**，支持一轮带保护门的 T0–T3 单种子教学内容 pilot。R5-C teaching protocol/config v1.0 已按审查条件冻结，训练与数据代码、定向测试已实现；提交前验证为72项定向测试通过，compileall与`git diff --check`通过。协议/代码推送后，尚须通过 G0 才能生成新训练/验证数据，随后通过 G1 才能训练。当前没有生成本 pilot 数据、运行 G1 或训练学生；不启动正式多种子、可靠性权重/时机搜索、完整 R5-D 机制实验或 final blind。项目最终占用保持低于20 GiB。
-**R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价；并可由已保存分量构造目标/杂波强度、目标单独频移、通道相位扰动和通道遮蔽输入。这些都是诊断工具而非实验结果。目前没有同场景匹配学生预测，也未运行机制比较。R5-C 独立审查门和当前阶段优先级不变。
+**当前工作：** R5-C pilot 已完成 G0/G1、四臂训练、独立校准/验证/development评价、配对分析和阶段审查；没有生成 final blind。仅按清理manifest删除了四个 stage-owned IQ memmap，项目占用为15,160,472,696 bytes（约14.12 GiB），低于20 GiB；其他未跟踪用户数据未删除。当前不启动教师多seed、时机/可靠性权重搜索或完整R5-D机制实验。下一项唯一优先任务为已批准的R6-A同场景检测/参数估计基线。
+**R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
 ## 当前结论
 
@@ -17,6 +17,10 @@ RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识�
 在三通道、PRF=1300 Hz、N=130、32距离单元静止杂波仿真中，使用独立新种子生成4,352个配对场景；K1原生全RD、K3固定4×全RD和K2-local均通过 G4。可辨识 C2+C3 上，K1/K3/K2-local 的 top-cell localization 为0.781/0.812/0.812；K3−K1为`+0.03125`（95% CI `[+0.02474,+0.03776]`），超过预注册的`+0.02`门。K2-local质量值采用教师选定距离门内的局部归一化，不可与全图归一化 K1/K3 直接比较，并继承K3全图峰位置。
 
 C3 partial-overlap / 0 dB 是显著薄弱组：三种候选定位率仅0.021/0.041/0.041；K1/K3置信分数AUC为0.404/0.326，K2-local为0.783但未经校准。G4通过只允许提出有保护门的学生教学内容 pilot；不证明检测阈值有效、学生会吸收软响应或教师优于匹配真值辅助。审计环境和资源、完整分层指标及边界见 [R5-C阶段审查](stage_reviews/D2-A-R5C_review.md)。
+
+### D2-A-R5-C Teaching Content Pilot
+
+独立审查以结果提交 `7563c822e70afe761897ddd5e91bb64207720f89` 为基准返回 **REFINE**，有条件支持一次 T0–T3 pilot。按冻结 v1.0 协议，四臂使用 seed303、同一 Medium width96 学生、truth主损失、有效batch64和12,800 updates；数据为51,200训练对、5,000验证对及独立 H0/H1评价集。T1/T2的主对比均为负值；T3 truth-assisted控制 C2+C3 joint 差为+0.0156（描述性、低于+0.02门），不能归因于教师。K3在新的 C3 partial-overlap/SNR0/CNR20 组仅24/512正确定位。完整指标和边界见 [阶段审查](stage_reviews/D2-A-R5C-teaching_pilot_review.md)。
 
 ### D2-A-R5-A 阶段结果
 
@@ -68,7 +72,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-在将 R5-C teaching protocol/config v1.0、实现及状态文件提交并推送到 `main` 后，运行 G0 前置检查。只有 G0 通过才生成全新 train/validation 场景；只有四组均通过 G1 才按冻结预算顺序训练 T0–T3。重点保留 C3 partial-overlap / 0 dB 教师错误组和学生 C3 H0 Pfa≤0.10 晋级保护。R5-B TFAS停止结论、R5-C原G4及研究总纲v1.3保持不变。
+按已批准的 R6-A protocol/config，在新的 scene/seed blocks 上对 B0–B3、R3 T1/T2、Medium学生与 FFT/插值/相位差/profile-ML 估计器开展同 IQ 对照。先完成 R6-A 实现和前置正确性检查，再运行独立 H0 calibration、verification 及 H1 development；不复用 R5-C 评价 IDs，不生成 final blind。R5-C教学分支停止；R6-B低Pfa诊断与R6-D模型继续按其各自阶段门执行，研究总纲v1.3不变。
 
 ## 关键材料
 

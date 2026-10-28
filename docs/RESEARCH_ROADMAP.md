@@ -5,15 +5,15 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003与R5-A/B/C均已完成当前冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP。R5-B TFAS按G3停止。R5-C三种软响应均通过预注册G4，K3相对K1的定位增益达到冻结门；这只是一次有界学生教学内容 pilot 的教师知识前置证据，不代表阈值检测器合格或学生蒸馏收益成立。旧阶段门和负结果保持不变。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计与R5-C teaching pilot均已完成当前冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP，R5-B TFAS按G3停止。R5-C原教师软响应审计的G4 PASS和K3相对K1定位提升保持原结论，但后续 T0–T3 pilot 未发现 K3/K2-local 在匹配truth-only之外改善最终joint任务，故停止当前教师内容分支。旧阶段门和负结果均保留。
 
-R5-A/B单seed学生结果均未通过C3绝对虚警率保护；其中Medium CNN的C3 H0 Pfa为0.18896，故教学内容pilot保留该保护作为学生侧晋级门。R5-C教师审计发现C3 partial-overlap / 0 dB定位率仅2.1%–4.1%，不能把全域G4通过解释为所有困难子组都可靠。独立 ChatGPT 审查已返回 **REFINE**，支持一次带保护门的T0–T3单种子pilot；独立协议v1.0和实现已冻结，本轮提交推送后才运行G0。尚未生成该pilot场景或训练学生；不自动启动时机/可靠性机制搜索、多种子确认、完整机制实验或final blind。
+R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3 的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与新pilot development均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。当前不启动教师时机/可靠性搜索、多seed确认、完整R5-D机制实验或final blind。已批准的下一优先路线为R6-A同场景检测/参数估计基线，R6-B、R6-D继续按各自阶段门推进，研究总纲v1.3不变。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
 ## 已完成实验与证据
 
-### D2-A-R5（R5-A/B学生pilot与R5-C教师审计完成；R5-C teaching pilot 已预注册、待G0）
+### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
 - 设计依据、路线和用户授权见 `docs/superpowers/specs/2026-10-27-d2-a-r5-design.md`、执行计划 `docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md` 与 `docs/task_alignments/D2-A-R5_alignment.md`。
 - R5-A 使用 E003 冻结 train/validation IDs，seed101、E1 truth-only、RTX 3050 `cuda:0` FP32。S0/S2各训练12,800 updates（8遍）；两臂均在6,400步满足预注册延长条件。复用的E003开发材料不作盲测。验证任务指标持续改善；H-CAP-001在该单seed范围内得到支持，但尚不能声称训练收敛或跨seed稳定。
@@ -21,7 +21,7 @@ R5-A/B单seed学生结果均未通过C3绝对虚警率保护；其中Medium CNN�
 - R5-A容量对照中，Medium−Small C2/C3 joint-success差为`+0.13086`（95% CI `[+0.11230,+0.15088]`），range/Doppler RMSE比分别`0.839/0.713`；但C3 H0 Pfa为`0.2041/0.1890`，G3 absolute protection失败，因此不运行Large。结果见容量分析和阶段审查。
 - R5-B TFAS以79,638参数、seed101、E1 truth-only在RTX3050 `cuda:0`完成12,800 updates。G0/G1/G2通过，但C2/C3 joint相对Medium差`−0.60449`（95% CI `[-0.62598,-0.58350]`），自身C3 H0 Pfa=`0.15186`，绝对0.10门失败；按协议停止TFAS扩展，不做额外seed、KD、Large或blind。phase/frequency敏感性与错误集中于C2/C3，均来自复用开发ID的描述性诊断。完整结果见 `experiments/D2-A-R5/R5-B/analysis.md`、`metrics.json` 和 `docs/stage_reviews/D2-A-R5B_review.md`。
 - R5-C按独立 protocol v1.1 对4,352个新配对base scenes进行B3软响应质量审计，RTX 3050 Laptop `cuda:0` complex128，无CPU教师回退，无IQ/map cache。K1/K3/K2-local的G4均通过；K3−K1可辨识C2+C3定位率差`+0.03125`（95% CI `[+0.02474,+0.03776]`），target-window全图归一化质量无改善；K2-local采用局部归一化且峰位置继承K3，不能按其较大lift宣称优于全图响应。C3 partial-overlap / 0 dB定位率仅0.021/0.041/0.041；K2-local置信AUC=0.783但未经校准。详细结果见 `experiments/D2-A-R5/R5-C/analysis.md`、`metrics.json` 和 `docs/stage_reviews/D2-A-R5C_review.md`。
-- R5-C审计不是固定阈值 detector 认证，也没有学生训练、KD、教师/student误差对应关系、多训练seed或final blind。独立审查按原规则保留R5-C G4 PASS，同时指出严重困难子组不能据此判为全域可靠，并以 **REFINE** 支持一轮匹配的T0 truth-only、T1 truth+K3、T2 truth+K2-local、T3 matched truth-assisted四臂pilot。对应新 protocol/config v1.0 已冻结：使用新训练/验证和评估种子，固定12,800 updates及有效batch64、共用初始化/顺序，并保护C3绝对Pfa和C3 partial-overlap/0 dB子组。当前代码和协议提交推送后运行G0；尚未生成新pilot场景或训练。pilot不启动时机/可靠性搜索、多种子确认、完整机制实验或final blind。R5-A/B与R5-C历史结果保持原样，研究总纲v1.3不变。
+- R5-C独立审查以教师审计结果为基准返回 **REFINE**，支持一次匹配的T0 truth-only、T1 truth+K3、T2 truth+K2-local、T3 matched truth-assisted四臂pilot。新protocol/config v1.0使用seed303、51,200训练对/5,000验证对、有效batch64与12,800 updates；G0/G1和CUDA训练/评价完成。T1/T2相对T0主joint差为−0.0104/−0.0138，未过+0.02门；四臂C3 H0 Pfa均为0.182–0.203，未过0.10保护。T3描述性joint差+0.0156是truth-assisted结果，不能归因于教师。当前停止T1/T2教师内容分支，不开展教师时机/可靠性搜索、多seed或final blind；R5-A/B与R5-C历史审计结果保持原样，研究总纲v1.3不变。阶段结果见 `experiments/D2-A-R5/R5-C-teaching/analysis.md` 和 `docs/stage_reviews/D2-A-R5C-teaching_pilot_review.md`。
 - 当前总纲 v1.3 修订内容仅新增训练/容量/架构/知识吸收原则与 Q10、事实更新 D2 状态；Q1–Q9 和历史结果不变。
 
 - **D0-E001：** 12/12 简化仿真与 APX15 慢时间 FFT 子链正确性检查通过；不覆盖完整生产链。
@@ -73,7 +73,7 @@ R5-A/B单seed学生结果均未通过C3绝对虚警率保护；其中Medium CNN�
 
 ## 当前唯一优先任务
 
-按已返回的 R5-C **REFINE** 审查决定，将teaching pilot v1.0、实现和状态文件提交并推送后运行G0。G0通过后才生成新训练/验证数据，G1全部通过后才按冻结预算顺序训练T0–T3；评价必须报告C3 partial-overlap / 0 dB教师错误组和C3绝对Pfa保护。pilot完成后再决定是否继续教师知识迁移；在此之前不做多种子确认、可靠性/时机搜索、完整R5-D机制实验或final blind。R5-B TFAS停止结论及总纲v1.3保持不变。
+按已批准的 R6-A protocol/config，在新的scene/seed blocks上实现同IQ对照，比较B0–B3、R3 T1/T2、Medium学生与FFT/插值/相位差/profile-ML估计器。先完成代码与前置正确性检查，再生成独立H0 calibration/verification和H1 development；报告条件ROC/Pfa、Pd、实际候选及oracle候选参数误差和joint success。不得复用R5-C评价IDs，不生成final blind；R6-A开发结果不得称为盲测。R5-C教师内容分支STOP，后续不扩展该教师候选；研究总纲v1.3及既有负结果不变。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

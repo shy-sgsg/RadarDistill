@@ -1,0 +1,135 @@
+experiment:
+  id: D2-A-R6
+  subphase: R6-B
+  protocol_version: 1.0
+  status: preregistered
+  charter_version: 1.3
+  execution_authorized: true
+  execution_gate: complete_R6-A_and_pass_R6-B_resource_gate
+  final_blind_authorized: false
+  branch_selection_source: R6-A_H0_calibration_and_H1_development_only
+  branches:
+    scale_shift: per_scene_observable_IQ_scale_normalization_only
+    scale_estimator: sqrt_median_complex_IQ_power_over_channel_pulse_range
+    scale_floor: 1.0e-12
+    branch_selection_rule:
+      c3_pooled_auc_minimum: 0.75
+      c3_pooled_auc_95_lower_minimum: 0.65
+      hard_cell_auc_minimum: 0.70
+      hard_cell_auc_95_lower_minimum: 0.55
+      c3_calibration_cell_pfa_range_minimum: 0.05
+      score_scale_spearman_abs_minimum: 0.30
+      spearman_95_ci_excludes_zero: true
+      do_not_read_r6a_h0_verification_for_branch_choice: true
+    poor_conditional_roc: training_split_only_h0_hard_negative_resampling
+    hard_negative_baseline: matched_truth_only_medium_retrained
+    hard_negative_intervention: same_init_and_budget_medium_retrained
+    inconclusive: additional_frozen_h0_score_diagnostic_no_training
+  run_only_one_selected_branch: true
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  source_config: experiments/D2-A-E001/config.yaml
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+
+data:
+  condition_count: 12
+  condition_seed_stride: 1000000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  splits:
+    train:
+      paired_scenes: 51200
+      seed_bases_by_course: [1408000000, 1413000000, 1418000000, 1423000000]
+      assignment_seed: 2026102911
+    validation:
+      paired_scenes: 5000
+      seed_bases_by_course: [1428000000, 1433000000, 1438000000, 1443000000]
+      assignment_seed: 2026102912
+    h0_calibration:
+      presence: H0
+      scenes: 120000
+      count_per_condition: 10000
+      seed_base: 1508000000
+    h0_verification:
+      presence: H0
+      scenes: 120000
+      count_per_condition: 10000
+      seed_base: 1528000000
+    h1_development:
+      presence: H1
+      scenes: 6144
+      count_per_condition: 512
+      seed_base: 1548000000
+  target_pfa_cpi: [0.05, 0.01, 0.001]
+  exploratory_pfa_cpi: [0.0001]
+  exploratory_0001_enabled_only_after_resource_gate: true
+  zero_event_sample_sizes_one_sided_95:
+    "0.05": 59
+    "0.01": 299
+    "0.001": 2995
+    "0.0001": 29956
+    "1e-6": 2995731
+  new_scene_ids_required: true
+  reuse_r5c_or_r6a_ids: false
+  reuse_same_iq_across_methods: true
+  persist_full_iq: false
+  persist_teacher_maps: false
+
+training:
+  baseline_model: same_seed303_truth_only_medium_retrained_when_branch_R
+  intervention_model: hard_negative_resampled_medium_when_branch_R
+  branch_S_or_U_training: not_run
+  initialization_and_training_data_matched: true
+  updates: 12800
+  effective_batch_size_cpi: 64
+  fixed_training_pair_plan: true
+  oom_reduce_microbatch_preserve_effective_batch: true
+  precision: FP32
+  amp: false
+  models_simultaneously_on_gpu: 1
+  h0_hard_mining_uses_training_split_only: true
+  per_update_examples: {H0: 32, H1: 32}
+  h0_baseline_sampling: uniform_within_registered_condition
+  h0_intervention_hard_fraction: 0.5
+  h0_hard_pool_top_score_fraction: 0.25
+  h0_hard_sampling_scope: within_registered_condition
+  h0_sampler_seed: 2026102913
+  h1_order_and_condition_quotas_matched: true
+  hardness_teacher_checkpoint: experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt
+  evaluation_iq_persisted: false
+  paired_train_validation_iq_estimated_bytes_if_branch_R: 11222016000
+  r5c_measured_cpu_scene_generation_rate_scenes_per_second: 113.0
+  estimated_240k_h0_generation_minutes: 35
+  estimated_full_iq_cache_removed_after_stage: true
+  verification_used_for_training_or_selection: false
+
+evaluation:
+  threshold_source: h0_calibration_only
+  quantile_method: higher
+  comparator: ">="
+  pfa_interval: one_sided_clopper_pearson_95
+  c3_cells: 6
+  c3_familywise_alpha: 0.05
+  c3_cell_interval_method: bonferroni_exact
+  bootstrap_unit: base_scene_id
+  bootstrap_replicates: 2000
+  primary_protection_conditions: [C3_pooled, C3_partial_overlap_SNR0_CNR20]
+  report_all_h1_metrics: true
+  report_detection_hit_and_correct_candidate_metrics: true
+  final_blind: false
+
+resources:
+  gpu: NVIDIA_GeForce_RTX_3050_Laptop_GPU
+  device: cuda:0
+  cuda_required_for_training: true
+  cuda_required_for_medium_inference: true
+  cpu_fallback: forbidden
+  wait_until_r5c_gpu_release: true
+  streaming_scene_generation: true
+  persist_full_iq: false
+  project_final_limit_gib: 20
