@@ -81,6 +81,40 @@ def test_seed303_medium_state_loads_identically_into_both_matched_arms():
     assert all(torch.equal(first.state_dict()[key], value) for key, value in second.state_dict().items())
 
 
+def test_r6b_evaluation_loader_uses_frozen_checkpoint_from_r6a_config(monkeypatch):
+    import torch
+
+    from radardistill.students.task_student import TaskStudent
+    from scripts import run_d2a_r6b_low_pfa as runner
+
+    frozen_paths = []
+
+    def fake_load_frozen_medium(checkpoint_source, checkpoint_record):
+        frozen_paths.append((checkpoint_source, checkpoint_record))
+        return TaskStudent(width=96, include_spectrum_head=False)
+
+    training_model = TaskStudent(width=96, include_spectrum_head=True)
+    training_state = training_model.state_dict()
+    monkeypatch.setattr(runner, "load_frozen_medium", fake_load_frozen_medium)
+    monkeypatch.setattr(
+        torch,
+        "load",
+        lambda *_args, **_kwargs: {"model_state_dict": training_state},
+    )
+
+    states = runner._load_evaluation_states({
+        "truth_only": {"output_dir": "unused/truth_only"},
+        "hard_negative": {"output_dir": "unused/hard_negative"},
+    })
+
+    assert frozen_paths == [(
+        str(runner.ROOT / "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt"),
+        str(runner.ROOT / "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/training_record.json"),
+    )]
+    assert set(states) == {"Medium_Frozen", "Medium_TruthOnly", "Medium_HardNegative"}
+    assert sum(value.numel() for value in states["Medium_TruthOnly"].values()) == 70277
+
+
 def test_hard_pools_are_top_quartile_with_deterministic_tie_breaking():
     scores = np.asarray([1, 9, 9, 2, 3, 3, 0, 0], dtype=float)
     conditions = np.asarray([0, 0, 0, 0, 1, 1, 1, 1])

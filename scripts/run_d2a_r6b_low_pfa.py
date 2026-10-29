@@ -1068,10 +1068,10 @@ def run_formal_training() -> dict[str, Any]:
 def _load_evaluation_states(training_record: Mapping[str, Any]) -> dict[str, dict[str, torch.Tensor]]:
     from radardistill.students.task_student import TaskStudent
 
-    config, _, _, _ = _configs()
+    _, r6a, _, _ = _configs()
     frozen = load_frozen_medium(
-        str(ROOT / config["methods"]["checkpoint_source"]),
-        str(ROOT / config["methods"]["checkpoint_record"]),
+        str(ROOT / r6a["methods"]["checkpoint_source"]),
+        str(ROOT / r6a["methods"]["checkpoint_record"]),
     )
     states: dict[str, dict[str, torch.Tensor]] = {
         "Medium_Frozen": {key: value.detach().cpu().clone()
