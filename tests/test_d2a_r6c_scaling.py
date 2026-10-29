@@ -146,6 +146,17 @@ def test_r6c_evaluation_plan_omits_extension_arms_when_gate_stops(tmp_path, monk
     assert set(arms) == {"scale_Medium", "scale_Large", "scale_XLarge", "data_extended_Medium"}
 
 
+def test_r6c_disk_usage_reads_free_and_total_fields(monkeypatch, tmp_path):
+    from scripts import run_d2a_r6c_scaling as runner
+
+    monkeypatch.setattr(
+        runner.shutil,
+        "disk_usage",
+        lambda _path: type("Usage", (), {"total": 1000, "used": 700, "free": 300})(),
+    )
+    assert runner._disk_usage_bytes(tmp_path) == (300, 1000)
+
+
 def test_r6c_h1_exposure_plan_uses_all_scenes_each_epoch():
     from radardistill.training.d2a_r6c_scaling import build_r6c_h1_plan
 

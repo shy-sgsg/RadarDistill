@@ -75,6 +75,11 @@ def _git(*args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
 
+def _disk_usage_bytes(path: Path) -> tuple[int, int]:
+    usage = shutil.disk_usage(path)
+    return int(usage.free), int(usage.total)
+
+
 def _configs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     r6c = _read_yaml("experiments/D2-A-R6/R6-C/config.yaml")
     r6a = _read_yaml("experiments/D2-A-R6/R6-A/config.yaml")
@@ -187,7 +192,7 @@ def preflight() -> dict[str, Any]:
     prior_overlap = (new_ids | g1_test_ids) & prior_ids
     if prior_overlap:
         raise RuntimeError(f"R6-C scene plan reuses {len(prior_overlap)} previously registered scene IDs")
-    free, total_disk = shutil.disk_usage(STAGE)
+    free, total_disk = _disk_usage_bytes(STAGE)
     required_disk = int(r6c["data"]["minimum_free_disk_bytes_before_data_generation"])
     if free < required_disk:
         raise RuntimeError(
