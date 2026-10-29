@@ -1,11 +1,11 @@
 # D2-A-R6-C：模型规模、训练预算与训练数据规模
 
-**协议版本：** 1.1
+**协议版本：** 1.2
 **状态：** 预注册；实现和G0/G1尚未完成，未生成R6-C实验数据。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3。
 **最终盲测：** 未授权生成。
 
-**版本记录：** v1.1于2026-10-29在任何R6-C数据生成前，将续训设计明确为Medium与一个validation筛选的大模型组成匹配延长对；两臂共同满足门时一起延长，否则一起停止。该修订落实R6执行计划的matched-extension要求；v1.0保留在提交历史中。
+**版本记录：** v1.1于2026-10-29在任何R6-C数据生成前，将续训设计明确为Medium与一个validation筛选的大模型组成匹配延长对；两臂共同满足门时一起延长，否则一起停止。v1.2于2026-10-29在任何数据生成前，修订确定性分块seed布局，使Train core可由Train extended按同一条件分块精确嵌套，且所有课程/条件seed区间互不重叠。matched-extension要求落实R6执行计划；v1.0和v1.1均保留在Git历史中。
 
 ## 1. 研究问题与假设
 
@@ -32,7 +32,7 @@
 | H0 verification | 120,000个CPI，每个注册条件10,000 | 独立阈值迁移/条件虚警评价；不得参与选择 |
 | H1 development | 6,144个场景，每格512 | Pd、距离、Doppler及joint开发评价；不得称为盲测 |
 
-Train core为Train extended的确定性嵌套子集。Train/validation按H0与H1平衡采样；每个有效batch含32个H0、32个H1 CPI。H0仅使用presence真值；range/Doppler损失只对H1计算。训练代码不得使用场景条件以外的真值生成困难样本或改变采样权重。
+Train core为Train extended的确定性嵌套子集。训练分配按课程/条件分层到16场景配对块，训练块种子按“该split课程seed base + 课程内条件序号×850,000 + 条件内块序号×1,009”生成。课程seed base间隔5,000,000；Train core与Train extended使用相同训练seed base和条件配额规则，core的每个块与extended中同条件、同seed、同16场景块逐一相同。按已注册条件数和最大扩展块数，课程内各条件的seed区间不重叠，最大总偏移为4,518,394，小于5,000,000课程间隔；train/validation使用不相交seed blocks。数据生成后再独立核验scene ID、条件和seed集合。Train/validation按H0与H1平衡采样；每个有效batch含32个H0、32个H1 CPI。H0仅使用presence真值；range/Doppler损失只对H1计算。训练代码不得使用场景条件以外的真值生成困难样本或改变采样权重。
 
 训练IQ可由stage-owned memmap暂存。仅按R6-C owner manifest在阶段结束删除可重建训练缓存；保留scene/seed manifest、配置、审计、checkpoint、history、预测和结果。数据容量不足时不得删除用户文件，先停止数据扩展并记录；最终整项目占用须低于20 GiB。
 

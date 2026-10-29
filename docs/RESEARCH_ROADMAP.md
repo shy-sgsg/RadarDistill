@@ -28,11 +28,11 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - 全局Pfa=0.05下HardNegative−TruthOnly joint差−0.00212（paired CI `[-0.00651,+0.00195]`），C3差−0.00260、困难格差−0.00391，未证明收益；C3/困难格虚警上界也未过0.10。当前分支不进入多seed、KD或blind。
 - R6-B自身不再追加训练；R6-C是路线中独立冻结的下一工作包，不以缺少R6-B ChatGPT审查为阻塞。R6-C对比应匹配更新预算、有效batch、数据暴露、验证与checkpoint规则，区分模型规模、训练预算与独立训练数据规模效应；batch对比作为单独的匹配因素。
 
-### D2-A-R6-C（模型规模、训练预算与数据规模；协议v1.1已冻结）
+### D2-A-R6-C（模型规模、训练预算与数据规模；协议v1.2已冻结）
 
 - 研究总纲映射：Q3/Q4/Q6/Q10；单一原始复IQ TaskStudent拓扑宽度96/200/376，对应活动参数70,277/292,005/1,012,197。使用E1物理真值，不含物理前端、教师或蒸馏损失。
 - 三个模型同训练seed404、Train core 51,200对、Validation5,000对、effective batch64、12,800初始updates、FP32和共同truth-task优化/选择规则。12,800筛选后只按validation task loss选择一个较大模型与Medium组成matched extension pair；两臂共同通过验证趋势和训练-验证gap门才一起延至25,600，再最多51,200。每400步保存指标，每800步保存resume状态，不逐update落盘。三模型顺序训练。
-- 另有Medium同seed、同effective batch、固定12,800 updates的嵌套数据量对照：51,200 vs102,400唯一训练场景对；两臂总训练样本暴露匹配，分别反映重复遍历和场景多样性。训练/验证缓存预计21,445,632,000 bytes，执行前要求至少预留4GiB额外磁盘空间；阶段后仅按owner manifest清除缓存，项目最终保持<20GiB。
+- 另有Medium同seed、同effective batch、固定12,800 updates的嵌套数据量对照：51,200 vs102,400唯一训练场景对；两臂总训练样本暴露匹配，分别反映重复遍历和场景多样性。v1.2在生成前修正课程/条件分块seed布局以保证嵌套场景逐块一致且seed区间不重叠。训练/验证缓存预计21,445,632,000 bytes，执行前要求至少预留4GiB额外磁盘空间；阶段后仅按owner manifest清除缓存，项目最终保持<20GiB。
 - H0 calibration/verification各120,000、H1 development6,144；verification不参与模型/阈值选择。主任务指标为global Pfa 0.05下C2+C3 joint，绝对C3 Pfa仍是后续正式晋级保护。协议/配置见 `experiments/D2-A-R6/R6-C/`；实现与运行尚未开始。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
