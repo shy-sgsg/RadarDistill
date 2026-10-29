@@ -1,0 +1,67 @@
+{
+  "experiment": "D2-A-R6-B",
+  "protocol_version": 1.0,
+  "selection_git_sha": "58ba8bdc7c069fcbb8276039a3de1cf80bf4b122",
+  "r6a_prediction_run_git_sha": "e3972ae94430abd3d79eae7e1ee9179f68062648",
+  "r6a_metrics_git_sha": "f91da92c455af072accb38cac529e48bce684b3b",
+  "input_splits": [
+    "R6-A H0 calibration",
+    "R6-A H1 development"
+  ],
+  "r6a_h0_verification_read": false,
+  "final_blind_read_or_generated": false,
+  "bootstrap": {
+    "unit": "independent base_scene_id resampling within H0 and H1",
+    "replicates": 2000,
+    "seed_c3": 2026102901,
+    "seed_hard_cell": 2026102902
+  },
+  "method": "frozen Medium width96",
+  "c3_pooled": {
+    "condition_indices": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "h0_calibration_n": 6000,
+    "h1_development_n": 3072,
+    "auc": 0.9316448567708333,
+    "ci95": [
+      0.9244003662109375,
+      0.9387063774956597
+    ]
+  },
+  "hard_cell": {
+    "condition_index": 10,
+    "definition": "C3 partial_overlap / SNR=0 dB / CNR=20 dB",
+    "h0_calibration_n": 1000,
+    "h1_development_n": 512,
+    "auc": 0.603240234375,
+    "ci95": [
+      0.57085185546875,
+      0.632945703125
+    ]
+  },
+  "c3_h0_calibration_pfa_by_condition_at_global_0.05_threshold": {
+    "6": 0.09,
+    "7": 0.119,
+    "8": 0.086,
+    "9": 0.097,
+    "10": 0.1,
+    "11": 0.106
+  },
+  "c3_h0_calibration_pfa_range": 0.033,
+  "score_scale_spearman": {
+    "status": "not computed: C3 calibration-Pfa range already fails the preregistered S-branch conjunction",
+    "value": null,
+    "ci95": null
+  },
+  "selected_branch": "R",
+  "selection_reasons": [
+    "hard-cell AUC 95% upper bound is below 0.70"
+  ],
+  "action": "Run only the preregistered matched truth-only vs training-H0 hard-negative-resampled Medium comparison."
+}
