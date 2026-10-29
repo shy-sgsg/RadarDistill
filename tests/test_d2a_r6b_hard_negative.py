@@ -115,6 +115,25 @@ def test_r6b_evaluation_loader_uses_frozen_checkpoint_from_r6a_config(monkeypatc
     assert sum(value.numel() for value in states["Medium_TruthOnly"].values()) == 70277
 
 
+def test_r6b_review_request_writes_literal_protocol_config_path(tmp_path, monkeypatch):
+    import json
+
+    from scripts import run_d2a_r6b_low_pfa as runner
+
+    stage = tmp_path / "R6-B"
+    runs = tmp_path / "runs" / "seed_303"
+    stage.mkdir(parents=True)
+    runs.mkdir(parents=True)
+    (runs / "training.json").write_text(json.dumps({}), encoding="utf-8")
+    monkeypatch.setattr(runner, "STAGE", stage)
+    monkeypatch.setattr(runner, "RUNS", runs)
+
+    runner._write_chatgpt_review_request({"git_sha": "test-commit"})
+
+    review = (stage / "review_request.md").read_text(encoding="utf-8")
+    assert "experiments/D2-A-R6/R6-B/{protocol.md,config.yaml}" in review
+
+
 def test_hard_pools_are_top_quartile_with_deterministic_tie_breaking():
     scores = np.asarray([1, 9, 9, 2, 3, 3, 0, 0], dtype=float)
     conditions = np.asarray([0, 0, 0, 0, 1, 1, 1, 1])

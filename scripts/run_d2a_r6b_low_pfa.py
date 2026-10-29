@@ -1842,7 +1842,7 @@ def _write_chatgpt_review_request(metrics: Mapping[str, Any]) -> None:
 
 ## 本阶段材料
 
-- protocol/config：`experiments/D2-A-R6/R6-B/{protocol.md,config.yaml}`
+- protocol/config：`experiments/D2-A-R6/R6-B/{{protocol.md,config.yaml}}`
 - 实现：`scripts/run_d2a_r6b_low_pfa.py`、`src/radardistill/training/d2a_r6b_hard_negative.py`、`tests/test_d2a_r6b_hard_negative.py`
 - 选支/G0/G1/训练/资源：`branch_selection.json`、`preflight.json`、`g1.json`、`runs/seed_303/training.json`、各臂训练历史与检查点
 - 结果：`metrics.json`、`analysis.md`、`figures/`、`scene_manifest_*.csv`、`environment_*.json`
