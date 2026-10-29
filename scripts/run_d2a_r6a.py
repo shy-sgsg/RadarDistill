@@ -625,6 +625,19 @@ def _save_figure_once(fig, path: Path) -> None:
     path.write_bytes(content)
 
 
+def _joint_success_by_condition(method_metrics: dict, method: str,
+                                condition_ids: list[str]) -> list[float]:
+    native = 'medium_cnn_direct' if method == 'Medium' else 'detector_native'
+    per_condition = method_metrics['workpoints']['0.05']['h1']['parameter_metrics_by_condition']
+    return [float(per_condition[condition]['estimators'][native]['joint_success'])
+            for condition in condition_ids]
+
+
+def _condition_plot_labels(conditions: list[dict]) -> list[str]:
+    return [f"{index}: {item['course']} {item['scenario_id']}\nSNR {float(item['snr_db']):g} dB"
+            for index, item in enumerate(conditions)]
+
+
 def _write_figures(metrics: dict) -> list[str]:
     import matplotlib
     matplotlib.use('Agg')
@@ -661,7 +674,7 @@ def _write_figures(metrics: dict) -> list[str]:
 
     methods_metrics = metrics['methods']
     condition_ids = sorted(methods_metrics['B3']['workpoints']['0.05']['verification_by_condition'], key=int)
-    labels = [f"{item['course']} {item['scenario_id']}" for item in config['radar']['conditions']]
+    labels = _condition_plot_labels(config['radar']['conditions'])
     fig, ax = plt.subplots(figsize=(12, 5))
     x = np.arange(len(condition_ids))
     for method in METHODS:
@@ -680,9 +693,7 @@ def _write_figures(metrics: dict) -> list[str]:
 
     fig, ax = plt.subplots(figsize=(12, 5))
     for method in METHODS:
-        vals = [methods_metrics[method]['workpoints']['0.05']['h1']['estimators'][
-            'medium_cnn_direct' if method == 'Medium' else 'detector_native']['joint_success']
-                for condition in condition_ids]
+        vals = _joint_success_by_condition(methods_metrics[method], method, condition_ids)
         ax.plot(x, vals, marker='o', label=method)
     ax.set(xticks=x, xticklabels=labels, ylim=(0, 1), ylabel='Joint success',
            title='H1 joint success by condition at globally calibrated Pfa 0.05')

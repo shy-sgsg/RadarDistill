@@ -58,3 +58,4 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 - **影响范围：** 仅原始预测CSV的 `oracle_*` 列及其派生 oracle-only Doppler 指标/图可能错误。所有真实方法的预测、候选距离、检测分数、阈值、命中和联合任务输出均未更改。未依据预更正 oracle 指标选择模型/方法或更改方案。
 - **修正与审计：** 实现最近可用整数距离中心映射（半格向上、越界裁到有效轴），增加确定性H1重建的独立 sidecar 和严格scene ID/truth核对；原预更正 `metrics.json`、`analysis.md` 与四张图保存在 `experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/`，旧CSV oracle列继续作为审计值，不再作为规范指标输入。使用同一组6,144个注册H1 IDs，不生成新划分、不称blind。
 - **验证/下一步：** 新增nearest-bin与边界规则回归测试（先因floor映射失败，修复后通过）；完整验证、sidecar重算、指标/图更新和阶段审查仍待完成。
+- **图表核验：** 重新查看曲线时发现 joint-success 图误取全局汇总值，导致每个条件重复同一数值；原始 `parameter_metrics_by_condition` 表无此错误。绘图现读取分条件 joint 指标，横轴增加条件序号与SNR；为两种场景新增测试并确认图像已反映各条件差异。历史重复值图留在 pre-correction 审计目录。

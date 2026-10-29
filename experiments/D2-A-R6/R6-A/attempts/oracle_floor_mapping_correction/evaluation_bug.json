@@ -24,6 +24,13 @@
     "detection, Pd, Pfa, ROC/AUC, and native joint-success metrics"
   ],
   "selection_use": "No model or method selection, threshold adjustment, or protocol change was based on pre-correction oracle metrics.",
+  "secondary_visualization_issue": {
+    "finding": "The first joint_success_by_condition plot repeated the pooled joint-success value at every condition instead of reading the condition-specific values; repeated course/scenario labels also hid the two C3 SNR levels.",
+    "affected": "Visualization only; condition-specific metrics in metrics.json were correct.",
+    "preserved_old_plot": "experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/pre_correction/figures/joint_success_by_condition.png",
+    "correction": "Plot now reads parameter_metrics_by_condition and labels each condition index and SNR.",
+    "status": "corrected; unit-tested and regenerated"
+  },
   "preserved_pre_correction_artifacts": "experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/pre_correction/",
   "corrected_sidecar": "experiments/D2-A-R6/R6-A/predictions/h1_oracle_nearest_bin.csv",
   "corrected_recompute_status": "pending"

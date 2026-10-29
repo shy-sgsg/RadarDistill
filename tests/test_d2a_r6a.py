@@ -339,3 +339,31 @@ def test_postrun_summary_accepts_separate_analysis_sha_but_run_does_not():
     assert runner._validate_preflight_head(
         'prediction-sha', 'analysis-sha', allow_analysis_code_update=True
     ) == {'prediction_run_git_sha': 'prediction-sha', 'analysis_git_sha': 'analysis-sha'}
+
+
+def test_joint_success_figure_reads_condition_specific_metrics():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location('r6a_runner_joint_test', Path('scripts/run_d2a_r6a.py'))
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    metrics = {'workpoints': {'0.05': {'h1': {'parameter_metrics_by_condition': {
+        '0': {'estimators': {'medium_cnn_direct': {'joint_success': 0.25}}},
+        '1': {'estimators': {'medium_cnn_direct': {'joint_success': 0.75}}},
+    }}}}}
+    assert runner._joint_success_by_condition(metrics, 'Medium', ['0', '1']) == [0.25, 0.75]
+
+
+def test_condition_plot_labels_distinguish_snr_repeats():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location('r6a_runner_label_test', Path('scripts/run_d2a_r6a.py'))
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    labels = runner._condition_plot_labels([
+        {'course': 'C3', 'scenario_id': 'partial_overlap', 'snr_db': 0.0},
+        {'course': 'C3', 'scenario_id': 'partial_overlap', 'snr_db': 10.0},
+    ])
+    assert len(set(labels)) == 2
+    assert 'SNR 0 dB' in labels[0]
+    assert 'SNR 10 dB' in labels[1]
