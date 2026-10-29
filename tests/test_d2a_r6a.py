@@ -284,3 +284,12 @@ def test_detection_summary_uses_global_calibration_and_reports_condition_migrati
     assert wp['verification_by_condition']['1']['pfa'] == 0.
     assert wp['h1']['pd'] == .5
     assert result['roc_auc_global'] == pytest.approx(.5625)
+
+
+def test_runner_imports_the_registered_streamed_scene_iterator():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location('r6a_runner_test', Path('scripts/run_d2a_r6a.py'))
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    assert callable(runner.iter_scene_chunks)

@@ -34,6 +34,7 @@ from radardistill.evaluation.d2a_r6a import (
     audit_seed_isolation,
     build_split_plan,
     evaluate_chunk,
+    iter_scene_chunks,
     load_frozen_medium,
     summarize_detection_method,
     summarize_parameter_estimator,

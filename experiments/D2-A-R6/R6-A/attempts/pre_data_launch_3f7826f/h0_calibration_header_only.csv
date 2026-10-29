@@ -1,0 +1,1 @@
+scene_id,split,seed,condition_index,method,score,range_cell,range_bin,doppler_hz,truth_range_cell,truth_doppler_hz,fft_peak,oracle_fft_peak,fft_interpolation,oracle_fft_interpolation,fft_zero_pad_4x,oracle_fft_zero_pad_4x,lag_one_phase_difference,oracle_lag_one_phase_difference,local_profile_ml,oracle_local_profile_ml

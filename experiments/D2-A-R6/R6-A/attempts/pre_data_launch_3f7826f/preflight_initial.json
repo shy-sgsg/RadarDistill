@@ -1,0 +1,28 @@
+{
+  "status": "PASS_WITH_RECORDED_PROTOCOL_ORDER_DEVIATION",
+  "git_sha": "3f7826fb10b36bf1dc104f44217e1a44db62dc71",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cuda_free_bytes": 2804875264,
+  "cuda_total_bytes": 3942383616,
+  "disk_free_bytes": 35423952896,
+  "student_inference_parameters": 70277,
+  "seed_audit": {
+    "r6a_chunk_seeds": 1896,
+    "r5c_known_seeds": 5080,
+    "r5c_seed_overlap": 0,
+    "r6b_reserved_overlap": 0
+  },
+  "scene_id_audit": {
+    "planned_scene_ids": 30144,
+    "known_scene_ids": 166672,
+    "overlap": 0
+  },
+  "test_output": ".................                                                        [100%]\n17 passed in 3.45s",
+  "split_counts": {
+    "h0_calibration": 12000,
+    "h0_verification": 12000,
+    "h1_development": 6144
+  },
+  "protocol_deviation": "Before G0 two registered scenes were generated in engineering tests, with only shapes and IDs inspected; no IQ/label values or predictions were inspected or retained. Tests now use independent engineering seeds. See docs/task_alignments/D2-A-R6_alignment.md.",
+  "final_blind_generated": false
+}

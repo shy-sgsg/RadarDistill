@@ -1,0 +1,13 @@
+{
+  "attempt": "pre_data_launch_3f7826f",
+  "code_git_sha": "3f7826fb10b36bf1dc104f44217e1a44db62dc71",
+  "status": "STOPPED_BEFORE_SCENE_GENERATION",
+  "error": "NameError: name 'iter_scene_chunks' is not defined",
+  "root_cause": "run_d2a_r6a.py omitted the implemented iterator from its import list",
+  "completed_chunks": 0,
+  "prediction_rows": 0,
+  "csv_contains_only_header": true,
+  "registered_scenes_generated": 0,
+  "registered_scene_values_or_predictions_observed": false,
+  "recovery": "Added an import regression test and imported iter_scene_chunks; a new G0 is required before resuming under the corrected commit."
+}

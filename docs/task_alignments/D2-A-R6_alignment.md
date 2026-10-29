@@ -49,3 +49,4 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 - **公平性：** 保持R6-A的 `chunk_size=16`（仅评估流式分块）和R6-B已冻结的有效训练batch64不变。R5-C历史batch不改。新训练协议可将batch作为有界、预注册、各比较组匹配的实验因素；若扩大batch会改变有效batch、optimizer更新或数据暴露而破坏可比性，则保持原值。
 - **重采样复现：** R6-A原协议规定2,000次base-scene bootstrap但未指定随机种子；在任何正式数据生成前补充固定seed `2026102901`，同时更新config，保证阶段指标可复现。
 - **资源检查：** 当前CUDA设备为RTX 3050 Laptop GPU；检查时约3.0 GiB显存空闲。桌面与一个独立GMTI应用仍占少量显存，实际每split空闲显存及R6-A峰值将在环境记录中留档；实验不并行训练模型。
+- **启动回归：** 首次runner调用在构造场景迭代器前因未导入已实现的 `iter_scene_chunks` 而报 `NameError`。CSV仅有表头，checkpoint记录0 chunks/0 rows，未进入数据生成、预测或统计；原G0与空输出保存在 `experiments/D2-A-R6/R6-A/attempts/pre_data_launch_3f7826f/`。新增导入回归测试（先失败后通过），全套测试451项通过；修复提交后重新执行G0。
