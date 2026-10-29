@@ -94,6 +94,33 @@ def _task_config(e003: Mapping[str, Any]) -> dict[str, Any]:
     return {"radar": e003["radar"], "training": training}
 
 
+def _technical_batch_task_loss(
+    model: torch.nn.Module,
+    x_cpu: torch.Tensor,
+    truth_cpu: Mapping[str, torch.Tensor],
+    *,
+    device: torch.device,
+    microbatch: int,
+    loss_config: Mapping[str, Any],
+) -> float:
+    """Evaluate the complete balanced G1 batch in bounded device chunks."""
+    if microbatch <= 0 or microbatch % 2 or len(x_cpu) % microbatch:
+        raise ValueError("technical evaluation microbatch must be even and divide the balanced batch")
+    total = 0.0
+    model.eval()
+    with torch.inference_mode():
+        for start in range(0, len(x_cpu), microbatch):
+            stop = start + microbatch
+            x = x_cpu[start:stop].to(device)
+            truth = {key: value[start:stop].to(device) for key, value in truth_cpu.items()}
+            outputs = model(x, compute_spectrum=False)
+            loss = task_loss(outputs, truth, dict(loss_config), teacher_weight=0.0)["task_total"]
+            if not torch.isfinite(loss):
+                raise FloatingPointError("nonfinite R6-C technical evaluation loss")
+            total += float(loss.item()) * (stop - start) / len(x_cpu)
+    return total
+
+
 def _eval_config(r6c: Mapping[str, Any], r6a: Mapping[str, Any]) -> dict[str, Any]:
     data = dict(r6c["data"])
     data["condition_count"] = len(r6a["radar"]["conditions"])
@@ -983,11 +1010,11 @@ def run_g1() -> dict[str, Any]:
     failed_microbatches: list[dict[str, Any]] = []
     for name in R6C_MODEL_SPECS:
         model = build_r6c_student(name, seed=int(r6c["models"]["training_seed"])).to(device)
-        optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
-        initial_outputs = model(x_cpu.to(device), compute_spectrum=False)
-        initial_terms = task_loss(initial_outputs, {key: value.to(device) for key, value in truth_cpu.items()}, loss_config, teacher_weight=0.0)
-        initial_loss = float(initial_terms["task_total"].item())
-        del initial_outputs, initial_terms, optimizer, model
+        initial_loss = _technical_batch_task_loss(
+            model, x_cpu, truth_cpu, device=device,
+            microbatch=formal_microbatch, loss_config=loss_config,
+        )
+        del model
         torch.cuda.empty_cache()
 
         result = None
@@ -1007,10 +1034,10 @@ def run_g1() -> dict[str, Any]:
                         model, optimizer, x_cpu, truth_cpu, device=device,
                         microbatch=candidate_microbatch, effective_batch=32, loss_config=loss_config,
                     )
-                with torch.inference_mode():
-                    outputs = model(x_cpu.to(device), compute_spectrum=False)
-                    terms = task_loss(outputs, {key: value.to(device) for key, value in truth_cpu.items()}, loss_config, teacher_weight=0.0)
-                    current_loss = float(terms["task_total"].item())
+                current_loss = _technical_batch_task_loss(
+                    model, x_cpu, truth_cpu, device=device,
+                    microbatch=candidate_microbatch, loss_config=loss_config,
+                )
                 torch.cuda.synchronize(0)
                 result = {
                     "status": "PASS" if math.isfinite(current_loss) and current_loss < initial_loss else "FAIL",
@@ -1025,7 +1052,7 @@ def run_g1() -> dict[str, Any]:
                     "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(0)),
                     "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(0)),
                 }
-                del optimizer, model, outputs, terms
+                del optimizer, model
                 torch.cuda.empty_cache()
                 break
             except torch.cuda.OutOfMemoryError as error:

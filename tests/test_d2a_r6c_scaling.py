@@ -157,6 +157,50 @@ def test_r6c_disk_usage_reads_free_and_total_fields(monkeypatch, tmp_path):
     assert runner._disk_usage_bytes(tmp_path) == (300, 1000)
 
 
+def test_r6c_technical_batch_loss_chunks_cuda_probe_without_changing_loss():
+    import torch
+
+    from scripts.run_d2a_r6c_scaling import _configs, _technical_batch_task_loss, _task_config
+    from radardistill.distillation.task_losses import task_loss
+
+    class BatchRecordingModel(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.scale = torch.nn.Parameter(torch.tensor(0.7))
+            self.max_batch = 0
+
+        def forward(self, x, compute_spectrum=False):
+            self.max_batch = max(self.max_batch, int(x.shape[0]))
+            signal = x.mean(dim=(1, 2, 3)) * self.scale
+            batch = len(signal)
+            return {
+                "presence_logit": signal,
+                "range_logits": signal[:, None].expand(batch, 32),
+                "range_offset": signal[:, None].expand(batch, 32),
+                "doppler_vector": torch.stack((signal + 1.0, signal + 0.5), dim=-1)[:, None, :].expand(batch, 32, 2),
+            }
+
+    _, _, _, e003 = _configs()
+    config = _task_config(e003)
+    x = torch.arange(32 * 6 * 2 * 2, dtype=torch.float32).reshape(32, 6, 2, 2) / 100.0
+    truth = {
+        "truth_presence": torch.tensor([0.0, 1.0] * 16),
+        "truth_range_cell": torch.tensor([0.0, 1.25] * 16),
+        "truth_doppler_hz": torch.tensor([0.0, 113.0] * 16),
+    }
+    full_model = BatchRecordingModel()
+    with torch.inference_mode():
+        expected = task_loss(full_model(x, compute_spectrum=False), truth, config, teacher_weight=0.0)["task_total"]
+
+    chunked_model = BatchRecordingModel()
+    actual = _technical_batch_task_loss(
+        chunked_model, x, truth, device=torch.device("cpu"), microbatch=16, loss_config=config
+    )
+
+    assert actual == pytest.approx(float(expected), rel=1e-6, abs=1e-7)
+    assert chunked_model.max_batch == 16
+
+
 def test_r6c_h1_exposure_plan_uses_all_scenes_each_epoch():
     from radardistill.training.d2a_r6c_scaling import build_r6c_h1_plan
 

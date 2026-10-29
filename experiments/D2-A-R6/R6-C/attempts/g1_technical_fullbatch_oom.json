@@ -1,0 +1,20 @@
+{
+  "attempt": "g1_technical_fullbatch_initial_forward",
+  "status": "FAILED_ENGINEERING_CHECK",
+  "git_sha": "ec0a697321f6074de8f408e91012d46746cb3867",
+  "protocol_version": 1.2,
+  "command": "conda run -n AISAR python scripts/run_d2a_r6c_scaling.py g1",
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "technical_seed": 2100000000,
+  "technical_paired_scenes": 16,
+  "technical_batch_cpi": 32,
+  "failure_location": "un-chunked initial forward pass before the width-specific 200-update overfit check",
+  "first_candidate": "Medium",
+  "exception": "torch.OutOfMemoryError",
+  "allocation_requested_bytes": 106954752,
+  "free_vram_at_failure_mib_approx": 62.94,
+  "formal_experiment_data_generated": false,
+  "formal_experiment_data_persisted": false,
+  "g1_record_written": false,
+  "disposition": "Fix the technical evaluation to use the already-probed common microbatch, then rerun G0 and G1 on the new pushed SHA."
+}
