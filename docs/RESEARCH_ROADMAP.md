@@ -26,7 +26,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - seed303 truth-only 与 hard-negative 两臂使用相同 Medium width96、82,887训练参数、初始化、H1计划、任务损失、FP32 CUDA、有效batch64和12,800 optimizer updates；只有训练H0采样不同。训练缓存按stage owner清理，场景ID和审计记录保留。
 - 两臂都在update12,000取得最低验证task loss（0.22854/0.23116）；update12,800分别为0.22989/0.23230。由此不能断言本轮预算已逼近极限，也没有显示最后800步仍有验证损失下降。R5-A的长预算证据支持后续继续检验训练充分性，但不是hard-negative收益证据。
 - 全局Pfa=0.05下HardNegative−TruthOnly joint差−0.00212（paired CI `[-0.00651,+0.00195]`），C3差−0.00260、困难格差−0.00391，未证明收益；C3/困难格虚警上界也未过0.10。当前分支不进入多seed、KD或blind。
-- 独立审查前不启动新训练。若后续另行冻结学习预算诊断，应让所有matched arm使用一致的较长update预算、有效batch（可预注册至128）、数据暴露、验证与模型选择规则，区分训练预算效应与负样本重采样效应。
+- R6-B自身不再追加训练；R6-C是路线中独立冻结的下一工作包，不以缺少R6-B ChatGPT审查为阻塞。R6-C对比应匹配更新预算、有效batch、数据暴露、验证与checkpoint规则，区分模型规模、训练预算与独立训练数据规模效应；batch对比作为单独的匹配因素。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
@@ -88,7 +88,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-对D2-A-R6-B提交独立ChatGPT阶段审查，审查完成后决定是否关闭hard-negative路线，以及是否值得另行注册训练预算诊断。当前单seed结果不足以证明hard-negative有效；也不支持把train-only负样本重采样与增加更新数、扩大batch混作一个处理。用户允许后续新协议在显存允许时适当延长训练并探索至两倍batch；匹配组须共享有效batch、优化更新预算、数据暴露和checkpoint规则。此前冻结的R6-B不追加训练，不生成final blind。
+推进D2-A-R6-C模型规模、训练预算和数据规模研究。R6-B当前hard-negative策略不做多seed晋级，但其独立ChatGPT审查不再作为R6后续阶段的阻塞条件；R6整项P0–P7路线完成后再提交一次综合审查。R6-C先按相同更新预算与有效batch比较候选，再依据预注册验证趋势从12,800逐级延长至25,600、最多51,200 updates；同时区分固定数据重复遍历和增加独立训练场景。不得把增加updates、增大batch和hard-negative采样效应混为一谈。每个matched对照保持相同有效batch、updates、数据暴露、优化计划和checkpoint规则；若研究batch效应，须将batch作为独立匹配因素。R6-B冻结设置、负结果和无final blind结论保持不变。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

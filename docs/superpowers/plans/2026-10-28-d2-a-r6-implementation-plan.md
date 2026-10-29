@@ -93,8 +93,8 @@
 
 - [ ] Build 0.3M and 1M CNNs from the same declared topology as the width-96 baseline; report inference and trainable parameter counts separately.
 - [ ] Add parameter-shape, forward/backward, CUDA memory, and 16-pair/200-update learning checks.
-- [ ] Screen at 12,800 updates on matched R6 training/validation scenes; record unique samples, exposure count, and all validation metrics.
-- [ ] Extend to 25,600 then at most 51,200 only if the predeclared validation trend remains improving without a widening overfit gap; defer 102,400 to a separate gate.
+- [ ] Screen at 12,800 updates on matched R6 training/validation scenes; record unique samples, exposure count, and all validation metrics. Log at a fixed interval, not on every update.
+- [ ] Extend all compared arms together to 25,600 then at most 51,200 only if the predeclared validation trend remains improving without a widening overfit gap; defer 102,400 to a separate gate. Keep effective batch, data exposure plan, optimizer/schedule, and checkpoint rule matched. Treat any batch-size study as a separate matched factor.
 - [ ] Compare 51,200 vs 102,400 unique training pairs under fixed updates, then add an exposure-matched comparison only if the first result motivates it.
 - [ ] Use one screening seed; take no more than two finalists to at least three independent seeds. Keep H0 verification independent from model selection.
 
@@ -139,12 +139,13 @@
 - [ ] Compare against matched truth-only and required truth-assisted controls; keep true labels, teacher hard outputs, soft responses, and reliability features separately logged.
 - [ ] Add reliability or teaching-time interventions only as a later one-factor protocol if the knowledge-content contrast first shows task gain.
 
-### Task 8: Formal confirmation and final stage review
+### Task 8: Formal confirmation and one consolidated R6 review
 
-**Files:** per-stage `metrics.json`, `analysis.md`, figures, `docs/stage_reviews/`, progress/decisions/assumptions and one consolidated ChatGPT review request after the authorized work package is complete.
+**Files:** per-stage `metrics.json`, `analysis.md`, figures, `docs/stage_reviews/`, progress/decisions/assumptions and one consolidated ChatGPT review request after all goals in the authorized R6 route are complete.
 
 - [ ] Select few candidates based on frozen development gates; generate independent formal multi-seed and final evaluation data only after model and analysis choices freeze.
 - [ ] Report Pfa sample size and exact bounds, Pd, conditional metrics, parameter/joint outcomes, architecture/training evidence, uncertainty and complete cost.
 - [ ] Preserve negative results and route changes; make no unsupported 1e-6 or deployment claim.
 - [ ] Update the research status and report one overall CONTINUE / REFINE / REDIRECT / STOP decision with one next priority.
-- [ ] Write and push the review request once, after the relevant study package is complete; do not block intermediate authorized stages on it.
+- [ ] Write and push one consolidated review request only after all authorized R6 goals in P0–P7 are complete; do not draft or submit it at intermediate phase boundaries.
+- [ ] Continue into authorized R6 phases when their frozen scientific/resource gates pass; absence of an intermediate ChatGPT review is not a blocker unless a frozen protocol or explicit user instruction makes that review a prerequisite.
