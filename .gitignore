@@ -4,6 +4,7 @@ __pycache__/
 
 # Generated experiment arrays stay local; configs, protocols, and seeds preserve reproducibility.
 experiments/**/*.npz
+experiments/D2-A-R6/R6-C/cache/
 experiments/P0-E006/attempts/attempt_1_invalid_evaluation/result.csv.gz
 experiments/D1-E001/data/cache/*.npy
 experiments/D1-E001/data/cache/*.npz
