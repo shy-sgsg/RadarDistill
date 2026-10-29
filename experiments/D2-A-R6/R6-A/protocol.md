@@ -42,7 +42,7 @@ R6-A只对已加载并冻结的checkpoint推理。若按训练记录导出推理
 | H0 verification | 12,000 | 每格1,000 | 独立Pfa与条件迁移评价 |
 | H1 development | 6,144 | 每格512 | Pd、ROC/AUC、参数及joint评价 |
 
-校准、验证和H1 development互不重叠。方法间共享split；方法分数/预测不跨方法混合阈值。按base_scene_id做配对bootstrap。所有数据是development，不是final blind。
+校准、验证和H1 development互不重叠。方法间共享split；方法分数/预测不跨方法混合阈值。按base_scene_id做配对bootstrap，重复抽样固定使用seed `2026102901`、2,000次。所有数据是development，不是final blind。
 
 新seed base分别为：H0 calibration `1,208,000,000`、H0 verification `1,228,000,000`、H1 development `1,248,000,000`。每条件seed block宽1,000,000；分块最大16场景、chunk stride 1009。执行前必须对已知记录与R5-C/R6-B保留block做seed和scene-ID冲突检查；不自动重新编号。
 

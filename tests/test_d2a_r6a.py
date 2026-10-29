@@ -204,7 +204,7 @@ def test_chunk_prediction_keeps_truth_outside_observed_methods(monkeypatch):
     from radardistill.evaluation import d2a_r6a
     iq = np.ones((2, 3, 130, 32), dtype=np.complex64)
     truth = {'range_cell': np.array([1.1, 2.2]), 'doppler_hz': np.array([5., 7.])}
-    def fake_observed(x, physics, r3, model, *, estimate_doppler):
+    def fake_observed(x, physics, r3, model, *, estimate_doppler, timings=None):
         assert x is iq and estimate_doppler
         return {'X': {'score': np.array([1., 2.]), 'range_cell': np.array([1., 2.]), 'range_bin': np.array([1, 2]), 'doppler_hz': np.array([5., 6.]), 'frequency_estimates': {'local_profile_ml': np.array([5., 6.])}}}
     def fake_oracle(x, ranges, physics):
@@ -217,3 +217,70 @@ def test_chunk_prediction_keeps_truth_outside_observed_methods(monkeypatch):
     assert len(rows) == 2 and rows[0]['scene_id'] == 'a'
     assert rows[0]['oracle_local_profile_ml'] == 5.1
     assert rows[0]['truth_range_cell'] == 1.1
+
+
+def test_scene_id_audit_checks_known_manifests(tmp_path):
+    import yaml
+    from radardistill.evaluation.d2a_r6a import audit_scene_ids
+    with open('experiments/D2-A-R6/R6-A/config.yaml', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    manifest = tmp_path / 'old.csv'
+    manifest.write_text('base_scene_id\nd2a-scene-1008000000-0\n', encoding='utf-8')
+    assert audit_scene_ids(config, [manifest])['overlap'] == 0
+    manifest.write_text('base_scene_id\nd2a-scene-1208000000-0\n', encoding='utf-8')
+    with pytest.raises(ValueError, match='scene ID'):
+        audit_scene_ids(config, [manifest])
+
+
+def test_csv_checkpoint_recovers_only_uncommitted_partial_chunk(tmp_path):
+    from radardistill.evaluation.d2a_r6a import ResumableCSV
+    path = tmp_path / 'scores.csv'
+    writer = ResumableCSV(path, ['scene_id', 'score'], 'abc', 'h0_calibration')
+    writer.append([{'scene_id': 'a', 'score': 1.}], 0)
+    with path.open('ab') as f:
+        f.write(b'partial-corrupt-row')
+    recovered = ResumableCSV(path, ['scene_id', 'score'], 'abc', 'h0_calibration')
+    assert recovered.chunks_done == 1
+    assert b'partial-corrupt-row' not in path.read_bytes()
+    recovered.append([{'scene_id': 'b', 'score': 2.}], 1)
+    assert path.read_text().splitlines() == ['scene_id,score', 'a,1.0', 'b,2.0']
+    with pytest.raises(ValueError, match='identity'):
+        ResumableCSV(path, ['scene_id', 'score'], 'wrong', 'h0_calibration')
+
+
+def test_parameter_estimator_reports_all_detection_and_candidate_conditioning():
+    from radardistill.evaluation.d2a_r6a import summarize_parameter_estimator
+    result = summarize_parameter_estimator(
+        predicted_range=np.array([2., 5.]), truth_range=np.array([2., 4.]),
+        predicted_doppler=np.array([649., -649.]), truth_doppler=np.array([-649., 649.]),
+        detection_mask=np.array([True, False]), prf_hz=1300.,
+    )
+    assert result['all_h1']['n'] == 2
+    assert result['all_h1']['range_rmse_cells'] == pytest.approx(np.sqrt(.5))
+    assert result['all_h1']['doppler_rmse_hz'] == pytest.approx(2.)
+    assert result['detection_hit']['n'] == 1
+    assert result['correct_candidate']['n'] == 2
+    assert result['detected_correct_candidate']['n'] == 1
+    assert result['joint_success'] == pytest.approx(.5)
+
+
+def test_detection_summary_uses_global_calibration_and_reports_condition_migration():
+    from radardistill.evaluation.d2a_r6a import summarize_detection_method
+    result = summarize_detection_method(
+        calibration_scores=np.array([0., 1., 2., 3., 4.]),
+        calibration_conditions=np.array([0, 0, 1, 1, 1]),
+        verification_scores=np.array([3., 4., 2., 1.]),
+        verification_conditions=np.array([0, 0, 1, 1]),
+        h1_scores=np.array([5., 2., 4., 0.]),
+        h1_conditions=np.array([0, 0, 1, 1]),
+        target_pfas=[.4], bootstrap_seed=7,
+    )
+    wp = result['workpoints']['0.4']
+    assert wp['calibration']['threshold'] == 3.
+    assert wp['verification']['pfa'] == .5
+    assert wp['verification']['pfa_gt'] == .25
+    assert wp['verification_by_condition']['0']['pfa'] == 1.
+    assert wp['verification_by_condition']['0']['pfa_gt'] == .5
+    assert wp['verification_by_condition']['1']['pfa'] == 0.
+    assert wp['h1']['pd'] == .5
+    assert result['roc_auc_global'] == pytest.approx(.5625)

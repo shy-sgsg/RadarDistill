@@ -93,6 +93,7 @@ evaluation:
   pfa_interval: one_sided_clopper_pearson_95
   bootstrap_unit: base_scene_id
   bootstrap_replicates: 2000
+  bootstrap_seed: 2026102901
   thresholds_from_verification: false
   development_data_is_final_blind: false
   range_gate_cells: 1.0

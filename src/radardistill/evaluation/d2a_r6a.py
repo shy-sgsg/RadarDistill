@@ -37,6 +37,155 @@ def wrapped_error(predicted: Any, truth: Any, prf_hz: float) -> Any:
     return (np.asarray(predicted) - np.asarray(truth) + prf_hz / 2) % prf_hz - prf_hz / 2
 
 
+def summarize_parameter_estimator(predicted_range: Any, truth_range: Any,
+                                  predicted_doppler: Any, truth_doppler: Any,
+                                  detection_mask: Any, *, prf_hz: float,
+                                  range_gate_cells: float = 1.0,
+                                  doppler_gate_hz: float = 20.0) -> dict[str, Any]:
+    """Report unconditional, detection-conditional, and correct-candidate errors."""
+    arrays = [np.asarray(value, dtype=np.float64) for value in
+              (predicted_range, truth_range, predicted_doppler, truth_doppler)]
+    hit = np.asarray(detection_mask, dtype=bool)
+    if any(value.ndim != 1 or value.shape != arrays[0].shape or not np.isfinite(value).all()
+           for value in arrays) or arrays[0].size == 0:
+        raise ValueError('parameter predictions and truth must be aligned finite vectors')
+    if hit.shape != arrays[0].shape:
+        raise ValueError('detection mask must align with parameter predictions')
+    if not np.isfinite(range_gate_cells) or range_gate_cells < 0 or not np.isfinite(doppler_gate_hz) or doppler_gate_hz < 0:
+        raise ValueError('parameter gates must be finite and nonnegative')
+    prange, trange, pdoppler, tdoppler = arrays
+    range_error = prange - trange
+    doppler_error = np.asarray(wrapped_error(pdoppler, tdoppler, prf_hz), dtype=np.float64)
+    candidate_correct = np.abs(range_error) <= range_gate_cells
+    detected_correct = hit & candidate_correct
+    joint = detected_correct & (np.abs(doppler_error) <= doppler_gate_hz)
+
+    def summarize(mask: np.ndarray) -> dict[str, Any]:
+        count = int(mask.sum())
+        if not count:
+            return {'n': 0, 'range_mae_cells': None, 'range_rmse_cells': None,
+                    'range_bias_cells': None, 'doppler_mae_hz': None,
+                    'doppler_rmse_hz': None, 'doppler_bias_hz': None}
+        rerr, derr = range_error[mask], doppler_error[mask]
+        return {'n': count,
+                'range_mae_cells': float(np.mean(np.abs(rerr))),
+                'range_rmse_cells': float(np.sqrt(np.mean(rerr ** 2))),
+                'range_bias_cells': float(np.mean(rerr)),
+                'doppler_mae_hz': float(np.mean(np.abs(derr))),
+                'doppler_rmse_hz': float(np.sqrt(np.mean(derr ** 2))),
+                'doppler_bias_hz': float(np.mean(derr))}
+
+    return {'all_h1': summarize(np.ones(len(hit), dtype=bool)),
+            'detection_hit': summarize(hit),
+            'correct_candidate': summarize(candidate_correct),
+            'detected_correct_candidate': summarize(detected_correct),
+            'joint_success': float(np.mean(joint)),
+            'joint_success_count': int(joint.sum()),
+            'range_gate_cells': float(range_gate_cells),
+            'doppler_gate_hz': float(doppler_gate_hz)}
+
+
+def _bootstrap_mean_interval(values: np.ndarray, replicates: int, seed: int,
+                             confidence: float = 0.95) -> list[float]:
+    samples = np.asarray(values, dtype=np.float64)
+    if samples.ndim != 1 or samples.size == 0 or not np.isfinite(samples).all():
+        raise ValueError('bootstrap values must be a finite nonempty vector')
+    if replicates <= 0 or not 0.0 < confidence < 1.0:
+        raise ValueError('invalid bootstrap configuration')
+    rng = np.random.default_rng(seed)
+    estimates = np.empty(replicates, dtype=np.float64)
+    for index in range(replicates):
+        estimates[index] = np.mean(samples[rng.integers(0, len(samples), size=len(samples))])
+    tail = (1.0 - confidence) / 2.0
+    return [float(value) for value in np.quantile(estimates, [tail, 1.0 - tail])]
+
+
+def summarize_detection_method(calibration_scores: Any, calibration_conditions: Any,
+                               verification_scores: Any, verification_conditions: Any,
+                               h1_scores: Any, h1_conditions: Any,
+                               target_pfas: list[float] | tuple[float, ...], *,
+                               bootstrap_replicates: int = 2000,
+                               bootstrap_seed: int = 0) -> dict[str, Any]:
+    """Summarize global calibration, independent condition transfer, and ROC AUC."""
+    from scipy.stats import beta
+    from radardistill.evaluation.d2a_e001 import empirical_auc
+
+    cal = np.asarray(calibration_scores, dtype=np.float64)
+    ver = np.asarray(verification_scores, dtype=np.float64)
+    h1 = np.asarray(h1_scores, dtype=np.float64)
+    cal_condition = np.asarray(calibration_conditions)
+    ver_condition = np.asarray(verification_conditions)
+    h1_condition = np.asarray(h1_conditions)
+    for scores, conditions in ((cal, cal_condition), (ver, ver_condition), (h1, h1_condition)):
+        if scores.ndim != 1 or scores.size == 0 or not np.isfinite(scores).all():
+            raise ValueError('detector scores must be finite nonempty vectors')
+        if conditions.shape != scores.shape:
+            raise ValueError('condition labels must align with scores')
+    condition_values = np.unique(np.concatenate((cal_condition, ver_condition, h1_condition)))
+    if not np.isin(ver_condition, cal_condition).all() or not np.isin(h1_condition, cal_condition).all():
+        raise ValueError('calibration, verification, and H1 condition sets must match')
+    result: dict[str, Any] = {
+        'roc_auc_global': float(empirical_auc(ver, h1)),
+        'roc_auc_by_condition': {},
+        'workpoints': {},
+    }
+    for condition in condition_values:
+        cver, ch1 = ver[ver_condition == condition], h1[h1_condition == condition]
+        result['roc_auc_by_condition'][str(int(condition))] = float(empirical_auc(cver, ch1))
+    for target in target_pfas:
+        calibration = calibrate_threshold(cal, float(target))
+        threshold = float(calibration['threshold'])
+        strict_false_alarms = ver > threshold
+        false_alarms = ver >= threshold
+        k, n = int(false_alarms.sum()), len(false_alarms)
+        pfa_upper = 1.0 if k == n else float(beta.ppf(.95, k + 1, n - k))
+        h1_detected = h1 >= threshold
+        calibration_by_condition = {}
+        per_condition = {}
+        h1_per_condition = {}
+        for condition in condition_values:
+            mask_cal = cal_condition == condition
+            mask0, mask1 = ver_condition == condition, h1_condition == condition
+            cal_count = int(mask_cal.sum())
+            cal_ge = int(np.count_nonzero(cal[mask_cal] >= threshold))
+            calibration_by_condition[str(int(condition))] = {
+                'n': cal_count,
+                'pfa_gt': float(np.count_nonzero(cal[mask_cal] > threshold) / cal_count),
+                'pfa_ge': float(cal_ge / cal_count),
+                'tie_count': int(np.count_nonzero(cal[mask_cal] == threshold)),
+            }
+            count0, alarms0 = int(mask0.sum()), int(np.count_nonzero(false_alarms[mask0]))
+            strict0 = int(np.count_nonzero(strict_false_alarms[mask0]))
+            upper0 = 1.0 if alarms0 == count0 else float(beta.ppf(.95, alarms0 + 1, count0 - alarms0))
+            per_condition[str(int(condition))] = {
+                'n': count0, 'false_alarms': alarms0, 'pfa': alarms0 / count0,
+                'pfa_gt': strict0 / count0,
+                'pfa_ci95_exact_upper': upper0,
+                'tie_count': int(np.count_nonzero(ver[mask0] == threshold)),
+            }
+            count1 = int(mask1.sum())
+            h1_per_condition[str(int(condition))] = {
+                'n': count1, 'pd': float(np.mean(h1_detected[mask1])),
+                'tie_count': int(np.count_nonzero(h1[mask1] == threshold)),
+            }
+        result['workpoints'][f'{float(target):g}'] = {
+            'calibration': calibration,
+            'calibration_by_condition': calibration_by_condition,
+            'verification': {'n': n, 'false_alarms': k, 'pfa': k / n,
+                             'pfa_gt': float(np.mean(strict_false_alarms)),
+                             'pfa_ci95_exact_upper': pfa_upper,
+                             'tie_count': int(np.count_nonzero(ver == threshold))},
+            'verification_by_condition': per_condition,
+            'h1': {'n': len(h1), 'pd': float(np.mean(h1_detected)),
+                   'pd_bootstrap_ci95': _bootstrap_mean_interval(
+                       h1_detected.astype(float), bootstrap_replicates,
+                       bootstrap_seed + int(round(float(target) * 10000))),
+                   'tie_count': int(np.count_nonzero(h1 == threshold)),
+                   'pd_by_condition': h1_per_condition},
+        }
+    return result
+
+
 def candidate_frequency_estimates(iq: np.ndarray, range_bins: np.ndarray, config: Mapping[str, Any]) -> dict[str, np.ndarray]:
     """Estimate Doppler in explicitly supplied candidate bins of the DPCA residual.
 
@@ -70,7 +219,7 @@ def candidate_frequency_estimates(iq: np.ndarray, range_bins: np.ndarray, config
     }
 
 
-def classical_detector_predictions(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any], *, use_cuda_r3: bool = False) -> dict[str, Any]:
+def classical_detector_predictions(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any], *, use_cuda_r3: bool = False, timings: dict[str, float] | None = None) -> dict[str, Any]:
     """Evaluate the frozen B0–B3 and R3 statistics on the same IQ batch."""
     from radardistill.d2a_baselines import run_b0, run_b1, run_b2, run_b3
     from radardistill.d2a_r3_baselines import run_t1_global_normalized, run_t2_local_cfar
@@ -88,10 +237,22 @@ def classical_detector_predictions(iq: np.ndarray, physics: Mapping[str, Any], r
             'R3_T1': lambda x: run_t1_global_normalized(x, prf, dict(physics), options['t1_global_robust_background']),
             'R3_T2': lambda x: run_t2_local_cfar(x, prf, dict(physics), options['t2_local_cfar_like']),
         })
-    results = matched_predictions(iq, methods)
+    if timings is None:
+        results = matched_predictions(iq, methods)
+    else:
+        import time
+        results = {}
+        for name, method in methods.items():
+            start = time.perf_counter()
+            results[name] = method(iq)
+            timings[name] = time.perf_counter() - start
     if use_cuda_r3:
+        import time
         from radardistill.evaluation.d2a_r6a_cuda import cuda_r3_predictions
+        start = time.perf_counter()
         results.update(cuda_r3_predictions(iq, physics, r3_config))
+        if timings is not None:
+            timings['B3_R3_shared_cuda'] = time.perf_counter() - start
     return results
 
 
@@ -173,11 +334,14 @@ def build_split_plan(config: Mapping[str, Any], split_name: str) -> list[dict[st
     return rows
 
 
-def iter_scene_chunks(config: Mapping[str, Any], physics: Mapping[str, Any], split_name: str):
+def iter_scene_chunks(config: Mapping[str, Any], physics: Mapping[str, Any], split_name: str, *, start_chunk: int = 0):
     """Generate registered scene chunks; truth stays separate from observable IQ."""
     from radardistill.simulation.d2a import generate_d2a_paired_batch
 
-    for spec in build_split_plan(config, split_name):
+    plan = build_split_plan(config, split_name)
+    if not 0 <= start_chunk <= len(plan):
+        raise ValueError('start_chunk outside split plan')
+    for spec in plan[start_chunk:]:
         condition = spec['condition']
         batch = generate_d2a_paired_batch(
             spec['count'], spec['seed'], condition['snr_db'], condition['cnr_db'],
@@ -231,20 +395,27 @@ def summarize_workpoint(cal_scores: np.ndarray, verification_scores: np.ndarray,
 
 
 def predict_observed(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any],
-                     model: Any, *, estimate_doppler: bool) -> dict[str, dict[str, Any]]:
+                     model: Any, *, estimate_doppler: bool, timings: dict[str, float] | None = None) -> dict[str, dict[str, Any]]:
     """Predict all detection methods from one IQ batch without truth labels."""
-    classical = classical_detector_predictions(iq, physics, r3_config, use_cuda_r3=True)
+    import time
+    classical = classical_detector_predictions(iq, physics, r3_config, use_cuda_r3=True, timings=timings)
     observed: dict[str, dict[str, Any]] = {}
     for name, output in classical.items():
         observed[name] = {'score': np.asarray(output.score), 'range_cell': np.asarray(output.range_cell),
                           'range_bin': np.asarray(output.range_cell, dtype=np.int64),
                           'doppler_hz': np.asarray(output.doppler_hz)}
+    start = time.perf_counter()
     student = predict_medium(model, iq)
+    if timings is not None:
+        timings['Medium'] = time.perf_counter() - start
     observed['Medium'] = {'score': student['score'], 'range_cell': student['predicted_range_cell'],
                           'range_bin': student['predicted_range_bin'], 'doppler_hz': student['predicted_doppler_hz']}
     if estimate_doppler:
-        for item in observed.values():
+        for name, item in observed.items():
+            start = time.perf_counter()
             item['frequency_estimates'] = candidate_frequency_estimates(iq, item['range_bin'], physics)
+            if timings is not None:
+                timings['candidate_estimators_' + name] = time.perf_counter() - start
     return observed
 
 
@@ -287,11 +458,15 @@ def audit_seed_isolation(config: Mapping[str, Any], r5c_manifest: str, r6b_confi
 FREQUENCY_NAMES = ('fft_peak', 'fft_interpolation', 'fft_zero_pad_4x', 'lag_one_phase_difference', 'local_profile_ml')
 
 
-def evaluate_chunk(chunk: Mapping[str, Any], physics: Mapping[str, Any], r3_config: Mapping[str, Any], model: Any) -> list[dict[str, Any]]:
+def evaluate_chunk(chunk: Mapping[str, Any], physics: Mapping[str, Any], r3_config: Mapping[str, Any], model: Any, *, timings: dict[str, float] | None = None) -> list[dict[str, Any]]:
     """Create compact matched rows; oracle calculations occur only after prediction."""
     iq, truth, spec = chunk['iq'], chunk['truth'], chunk['spec']
-    observed = predict_observed(iq, physics, r3_config, model, estimate_doppler=truth is not None)
+    import time
+    observed = predict_observed(iq, physics, r3_config, model, estimate_doppler=truth is not None, timings=timings)
+    start = time.perf_counter()
     oracle = oracle_frequency_estimates(iq, truth['range_cell'], physics) if truth is not None else {}
+    if timings is not None and truth is not None:
+        timings['oracle_estimators_offline'] = time.perf_counter() - start
     ids = np.asarray(chunk['scene_ids'])
     if ids.shape != (len(iq),) or len(np.unique(ids)) != len(ids):
         raise ValueError('invalid or repeated scene IDs')
@@ -310,3 +485,99 @@ def evaluate_chunk(chunk: Mapping[str, Any], physics: Mapping[str, Any], r3_conf
                 row['oracle_' + name] = None if name not in oracle else float(oracle[name][i])
             rows.append(row)
     return rows
+
+
+def audit_scene_ids(config: Mapping[str, Any], manifest_paths: list[Any]) -> dict[str, int]:
+    """Check every planned generated scene ID against known prior ID manifests."""
+    import csv
+    planned = {f"d2a-scene-{row['seed']}-{i}" for split in config['data']['splits']
+               for row in build_split_plan(config, split) for i in range(row['count'])}
+    expected = sum(int(item['scene_count']) for item in config['data']['splits'].values())
+    if len(planned) != expected:
+        raise ValueError('planned scene IDs are not unique')
+    prior: set[str] = set()
+    for path in manifest_paths:
+        with open(path, newline='', encoding='utf-8') as handle:
+            reader = csv.DictReader(handle)
+            columns = reader.fieldnames or []
+            key = next((k for k in ('base_scene_id', 'base_scene_ids', 'scene_id') if k in columns), None)
+            if key is None:
+                raise ValueError(f'known scene manifest lacks IDs: {path}')
+            prior.update(row[key] for row in reader)
+    overlap = planned & prior
+    if overlap:
+        raise ValueError(f'prior scene ID overlap: {sorted(overlap)[:3]}')
+    return {'planned_scene_ids': len(planned), 'known_scene_ids': len(prior), 'overlap': 0}
+
+
+class ResumableCSV:
+    """Append complete chunks, restoring the last committed byte offset after a crash."""
+
+    def __init__(self, path: Any, fieldnames: list[str], git_sha: str, split: str):
+        import csv
+        import io
+        import json
+        import os
+        from pathlib import Path
+        self.path = Path(path)
+        self.state_path = self.path.with_suffix(self.path.suffix + '.progress.json')
+        self.fieldnames, self.git_sha, self.split = list(fieldnames), git_sha, split
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        if self.path.exists() != self.state_path.exists():
+            raise ValueError('incomplete or unowned prediction output')
+        if not self.path.exists():
+            buffer = io.StringIO(newline='')
+            csv.DictWriter(buffer, fieldnames=self.fieldnames, lineterminator='\n').writeheader()
+            with self.path.open('xb') as handle:
+                handle.write(buffer.getvalue().encode('utf-8'))
+                handle.flush()
+                os.fsync(handle.fileno())
+            self.state = {'owner': 'D2-A-R6-A', 'git_sha': git_sha, 'split': split,
+                          'fieldnames': self.fieldnames, 'chunks_done': 0,
+                          'rows': 0, 'byte_offset': self.path.stat().st_size}
+            self._save_state()
+        else:
+            self.state = json.loads(self.state_path.read_text(encoding='utf-8'))
+            if (self.state.get('owner'), self.state.get('git_sha'), self.state.get('split'), self.state.get('fieldnames')) != ('D2-A-R6-A', git_sha, split, self.fieldnames):
+                raise ValueError('prediction output identity mismatch')
+            offset = int(self.state['byte_offset'])
+            if self.path.stat().st_size < offset:
+                raise ValueError('prediction output shorter than checkpoint')
+            with self.path.open('r+b') as handle:
+                handle.truncate(offset)
+
+    @property
+    def chunks_done(self) -> int:
+        return int(self.state['chunks_done'])
+
+    def _save_state(self) -> None:
+        import json
+        import os
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', dir=self.path.parent, prefix='.r6a-state-', delete=False) as handle:
+            json.dump(self.state, handle, sort_keys=True)
+            handle.flush()
+            os.fsync(handle.fileno())
+            temporary = handle.name
+        os.replace(temporary, self.state_path)
+
+    def append(self, rows: list[dict[str, Any]], chunk_index: int, *, timings: Mapping[str, float] | None = None, gpu_peak_bytes: int = 0) -> None:
+        import csv
+        import io
+        import os
+        if chunk_index != self.chunks_done or not rows:
+            raise ValueError('prediction chunks must be nonempty and sequential')
+        buffer = io.StringIO(newline='')
+        writer = csv.DictWriter(buffer, fieldnames=self.fieldnames, lineterminator='\n', extrasaction='raise')
+        writer.writerows(rows)
+        with self.path.open('ab') as handle:
+            handle.write(buffer.getvalue().encode('utf-8'))
+            handle.flush()
+            os.fsync(handle.fileno())
+            offset = handle.tell()
+        self.state.update(chunks_done=chunk_index + 1, rows=int(self.state['rows']) + len(rows), byte_offset=offset)
+        totals = self.state.setdefault('timings_seconds', {})
+        for key, value in (timings or {}).items():
+            totals[key] = float(totals.get(key, 0.0)) + float(value)
+        self.state['cuda_peak_allocated_bytes'] = max(int(self.state.get('cuda_peak_allocated_bytes', 0)), int(gpu_peak_bytes))
+        self._save_state()
