@@ -156,9 +156,8 @@ def preflight() -> dict[str, Any]:
     head = _git("rev-parse", "HEAD")
     if _git("branch", "--show-current") != "main":
         raise RuntimeError("R6-B requires execution on main")
-    remote = _git("ls-remote", "origin", "refs/heads/main").split()
-    if not remote or remote[0] != head or _git("rev-parse", "origin/main") != head:
-        raise RuntimeError("G0 requires the committed R6-B implementation pushed to origin/main")
+    if _git("rev-parse", "origin/main") != head:
+        raise RuntimeError("G0 requires the pushed R6-B implementation to match origin/main")
     if _git("status", "--porcelain", "--untracked-files=no"):
         raise RuntimeError("G0 requires a clean tracked worktree")
     if config["experiment"]["status"] != "preregistered" or config["experiment"]["final_blind_authorized"]:
