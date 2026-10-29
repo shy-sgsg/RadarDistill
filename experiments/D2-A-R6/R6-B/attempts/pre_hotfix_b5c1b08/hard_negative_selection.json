@@ -1,0 +1,27 @@
+{
+  "owner": "D2-A-R6-B-training-H0-hardness",
+  "git_sha": "b5c1b0889806289037f503524bcd93d0cdc61919",
+  "source_hardness_record": "experiments/D2-A-R6/R6-B/cache/training/train_h0_hardness.json",
+  "scene_order_manifest": "experiments/D2-A-R6/R6-B/scene_manifest_train.csv",
+  "teacher_checkpoint": "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt",
+  "teacher_checkpoint_sha256": "785ba966c52e629f0f73ff10f8347c27a216ab1faaf56783b7fbe3dcd01b89cd",
+  "training_record_source_git_sha": "1678a468d5c150ff734d80ad40cf75407a49651f",
+  "hardness_record_sha256": "aefc2a825d0d66c0afd66ad30ca61f4ffca4fd7baf43a5c0d9b55d029d1ace79",
+  "train_scene_count": 51200,
+  "top_score_fraction_within_condition": 0.25,
+  "hard_pool_count_by_condition": {
+    "0": 3200,
+    "1": 1600,
+    "2": 1600,
+    "3": 1067,
+    "4": 1067,
+    "5": 1067,
+    "6": 534,
+    "7": 534,
+    "8": 534,
+    "9": 534,
+    "10": 534,
+    "11": 534
+  },
+  "validation_calibration_verification_h1_development_used": false
+}

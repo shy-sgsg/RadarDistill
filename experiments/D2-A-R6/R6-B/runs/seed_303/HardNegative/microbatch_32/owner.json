@@ -1,0 +1,7 @@
+{
+  "owner": "D2-A-R6-B-training-attempt",
+  "arm": "HardNegative",
+  "microbatch": 32,
+  "updates": 12800,
+  "formal": true
+}

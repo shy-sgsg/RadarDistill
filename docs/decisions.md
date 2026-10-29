@@ -1,3 +1,10 @@
+## 2026-10-29：R6-B未证明hard-negative收益，先独立审查
+
+- **证据：** R6-B branch R在RTX 3050 Laptop CUDA上以seed303顺序训练truth-only与training-H0 hard-negative各12,800 updates、有效batch64。HardNegative−TruthOnly在全局Pfa 0.05下joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3和预选困难格joint差分别−0.00260和−0.00391，区间均跨零。全局0.05与0.01虚警上界未过门；0.001仅全局通过，C3/困难格未通过。更新12,000验证任务损失最低，12,800略回升。
+- **决定：** R6-B为 **REFINE**，不对当前hard-negative策略做多seed确认，不开展KD或final blind。保留所有单seed结果，不把区间跨零解释为等价。
+- **训练预算：** 本轮冻结的effective batch64与12,800 updates不改。用户允许后续全新实验公平增加更新数、并探索至多两倍batch。未来若认为训练预算是关键混淆因素，应另立匹配实验，让全部组共享有效batch、updates、数据暴露、优化计划和checkpoint规则；分离预算效应与hard-negative效应。R5-A的长程改善可支持研究该问题，但不能证明R6-B会因延长而获益。
+- **下一项唯一优先任务：** 提交R6-B独立ChatGPT阶段审查。审查前不追加训练或启动新路线；审查后再决定是否注册独立预算诊断。Charter v1.3与所有冻结协议保持不变。
+
 ## 2026-10-29：R6-A困难格选择R6-B hard-negative分支
 
 - **证据：** 在同一批新开发场景上，Medium全局0.05工作点joint success为0.8306、全局Pfa单侧exact95%上界0.04996；condition 10（C3 partial-overlap/SNR0/CNR20）AUC为0.5956、Pd为0.2207、joint为0.0391。仅用R6-A H0 calibration和H1 development计算的hard-cell AUC为0.60324（95% bootstrap CI `[0.57085,0.63295]`），上界低于R6-B冻结0.70门；没有读取H0 verification。

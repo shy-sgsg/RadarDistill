@@ -5,9 +5,9 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot与R6-A均已完成各自冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP，R5-B TFAS按G3停止。R5-C原教师软响应审计G4 PASS和K3相对K1定位提升保持原结论，但后续T0–T3 pilot未发现K3/K2-local在匹配truth-only之外改善最终joint任务，故停止当前教师内容分支。旧阶段门和负结果均保留。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot、R6-A与R6-B均已完成各自冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP，R5-B TFAS按G3停止。R5-C原教师软响应审计G4 PASS和K3相对K1定位提升保持原结论，但后续T0–T3 pilot未发现K3/K2-local在匹配truth-only之外改善最终joint任务，故停止当前教师内容分支。R6-B单seed hard-negative对照没有证明相对truth-only有增益，不启动该分支多seed或blind。旧阶段门和负结果均保留。
 
-R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故只运行R分支hard-negative训练对照。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
+R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
@@ -20,6 +20,13 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - Medium预测range gate上的传统FFT peak/interpolation/4x/profile-ML Doppler RMSE约143–150 Hz；Medium直接输出24.68 Hz。nearest-bin oracle离线profile-ML为68.27 Hz，仅用于诊断。R3 T1/T2总体优于B3，但在困难格仍弱。
 - R6-B选支脚本只读取R6-A H0 calibration与H1 development，未读H0 verification。C3 pooled AUC `0.93164 [0.92440,0.93871]`，hard-cell AUC `0.60324 [0.57085,0.63295]`，后者上界低于预注册0.70，选中R6-B hard-negative-resampling分支。归档于 `experiments/D2-A-R6/R6-B/branch_selection.json`。
 - 完整分析、逐场景预测、scene/seed manifests、环境记录和图保存在 `experiments/D2-A-R6/R6-A/`。结果仍为development证据，不说明学生已通过可靠检测器门。
+
+### D2-A-R6-B（训练期 H0 hard-negative matched pilot）
+
+- seed303 truth-only 与 hard-negative 两臂使用相同 Medium width96、82,887训练参数、初始化、H1计划、任务损失、FP32 CUDA、有效batch64和12,800 optimizer updates；只有训练H0采样不同。训练缓存按stage owner清理，场景ID和审计记录保留。
+- 两臂都在update12,000取得最低验证task loss（0.22854/0.23116）；update12,800分别为0.22989/0.23230。由此不能断言本轮预算已逼近极限，也没有显示最后800步仍有验证损失下降。R5-A的长预算证据支持后续继续检验训练充分性，但不是hard-negative收益证据。
+- 全局Pfa=0.05下HardNegative−TruthOnly joint差−0.00212（paired CI `[-0.00651,+0.00195]`），C3差−0.00260、困难格差−0.00391，未证明收益；C3/困难格虚警上界也未过0.10。当前分支不进入多seed、KD或blind。
+- 独立审查前不启动新训练。若后续另行冻结学习预算诊断，应让所有matched arm使用一致的较长update预算、有效batch（可预注册至128）、数据暴露、验证与模型选择规则，区分训练预算效应与负样本重采样效应。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
@@ -81,7 +88,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-执行R6-B已预注册R分支：使用新场景比较matched truth-only Medium与training-H0 hard-negative-resampled Medium。保持相同初始化、12,800 updates、有效batch64、训练样本计划和任务损失，hard-negative仅来自训练集；独立运行H0 calibration/verification与H1 development，报告冻结检测、Pd、参数与joint保护门。不可用verification选模型/阈值，不生成final blind。后续新训练协议可将更大batch作为匹配因素预注册，不改变当前R6-B公平对照。
+对D2-A-R6-B提交独立ChatGPT阶段审查，审查完成后决定是否关闭hard-negative路线，以及是否值得另行注册训练预算诊断。当前单seed结果不足以证明hard-negative有效；也不支持把train-only负样本重采样与增加更新数、扩大batch混作一个处理。用户允许后续新协议在显存允许时适当延长训练并探索至两倍batch；匹配组须共享有效batch、优化更新预算、数据暴露和checkpoint规则。此前冻结的R6-B不追加训练，不生成final blind。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

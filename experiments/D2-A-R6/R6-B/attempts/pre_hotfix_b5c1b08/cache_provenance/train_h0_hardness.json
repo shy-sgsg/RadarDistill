@@ -1,0 +1,16 @@
+{
+  "owner": "D2-A-R6-B-training-H0-hardness",
+  "git_sha": "b5c1b0889806289037f503524bcd93d0cdc61919",
+  "split": "train",
+  "presence": "H0",
+  "scene_count": 51200,
+  "batch_size": 32,
+  "method": "frozen_R5-A_Medium_presence_score",
+  "checkpoint": "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt",
+  "checkpoint_sha256": "785ba966c52e629f0f73ff10f8347c27a216ab1faaf56783b7fbe3dcd01b89cd",
+  "training_record_source_git_sha": "1678a468d5c150ff734d80ad40cf75407a49651f",
+  "elapsed_seconds": 67.78731551500096,
+  "cuda_peak_allocated_bytes": 259074048,
+  "cuda_peak_reserved_bytes": 287309824,
+  "validation_calibration_verification_h1_development_used": false
+}

@@ -2,10 +2,10 @@
 
 **更新日期：** 2026-10-29
 **工作分支：** `main`
-**最新完成工作：** D2-A-R6-A 同场景检测/参数估计基线已完成。预测运行 SHA `e3972ae94430abd3d79eae7e1ee9179f68062648`，分析与指标见 [`R6-A analysis`](../experiments/D2-A-R6/R6-A/analysis.md)、[`metrics`](../experiments/D2-A-R6/R6-A/metrics.json) 和 [R6-A阶段自审](stage_reviews/D2-A-R6A_review.md)。R6-B预注册选支结果已提交：困难 C3 partial-overlap / 0 dB 格 AUC 0.60324（95% CI `[0.57085,0.63295]`），选中训练 H0 hard-negative-resampling 分支。
-**阶段判断：** Medium 在全局0.05工作点的 development joint success 为0.8306、直接 Doppler RMSE为24.68 Hz，但困难格 joint success仅0.0391、AUC为0.5956；全局 Pfa 单侧上界0.04996不能替代条件保护。R6-A不是 final blind 或部署资格。R5-C教师内容分支 **STOP**、R5-B TFAS候选停止、历史结论及研究总纲v1.3均保持不变；动态路线进入已预注册的 R6-B R 分支。
+**最新完成工作：** D2-A-R6-B R分支已完成：同seed303、Medium width96的truth-only与training-H0 hard-negative匹配训练各12,800 updates，有效batch64；在RTX 3050 Laptop `cuda:0`、FP32完成。训练运行SHA `091e96b9d570bdaa16444c1e696a633145c6655d`，独立评价SHA `293f1733b417d7fdc65fd9e294c8511cef43613c`。结果见 [R6-B分析](../experiments/D2-A-R6/R6-B/analysis.md)、[指标](../experiments/D2-A-R6/R6-B/metrics.json) 和 [阶段审查](../experiments/D2-A-R6/R6-B/stage_review.md)。
+**阶段判断：** hard-negative组没有相对truth-only表现出可确认的检测或joint收益；0.05和0.01目标的全局精确上界未达标，0.001仅全局点通过而C3/困难格未通过。两组困难格表现仍差，单训练seed也不能估计seed方差。R6-B为 **REFINE**，不晋级此干预做多seed或final blind；R6-A和R6-B均是development证据。R5-C教师内容分支 **STOP**、R5-B TFAS候选停止、历史结果和研究总纲v1.3均保持不变。
 
-**当前工作：** 执行冻结 R6-B R 分支的 matched truth-only 与 training-H0 hard-negative-resampled Medium 对照。保持相同初始化、12,800 updates、有效 batch64、训练样本计划与任务损失；hard-negative只从训练集采样。运行独立 H0 calibration/verification 与 H1 development，按冻结检测、Pd、参数和 joint 保护门评价；不使用verification选择、不生成final blind。RTX 3050 Laptop CUDA当前可用约3.2 GiB显存、磁盘余量约29 GiB。预估的训练缓存约11.22 GB，阶段结束仅清理本阶段创建且可重建的缓存；保留其他未跟踪用户文件。
+**当前唯一优先任务：** 将R6-B阶段材料提交ChatGPT独立审查，再决定是否停止hard-negative分支及是否值得注册新的matched学习预算实验。用户已允许未来新实验在公平前提下增加训练更新数、并探索至多两倍batch；本轮冻结的12,800 updates/effective batch64不变。R5-A显示长程训练预算可带来改善，但R6-B两臂验证任务损失在12,000步最低、到12,800步略回升，因此不能声称本轮仍在持续收敛，也不能把延长预算直接当作hard-negative收益。任何后续预算实验须让比较臂使用相同updates、有效batch、数据暴露和checkpoint规则，并另行预注册；不启动当前R6-B追加训练。
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
 ## 当前结论
@@ -15,6 +15,14 @@ RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识�
 ### D2-A-R6-A 同场景基线
 
 全局0.05阈值下，Medium在development上的AUC/Pd/joint success/Doppler RMSE为0.9830/0.9334/0.8306/24.68 Hz；全局Pfa单侧exact95%上界0.04996，但C3条件Pfa为0.072–0.109。condition 10（C3 partial-overlap、SNR0、CNR20）Medium AUC=0.5956、Pd=0.2207、joint=0.0391。R6-B选支只读R6-A H0 calibration与H1 development，未读H0 verification；困难格AUC的bootstrap上界0.63295低于预注册0.70，故执行R分支hard-negative训练对照。R6-A共30,144个场景、211,008条方法记录，无训练或final blind。完整条件指标和离线oracle限制见 [R6-A分析](../experiments/D2-A-R6/R6-A/analysis.md)。
+
+### D2-A-R6-B hard-negative 匹配训练
+
+seed303两臂均训练12,800次，Medium训练参数82,887、FP32、有效batch64（microbatch32）、CUDA顺序执行。训练history按400步检查点记录，不逐更新写盘；每臂耗时3,176.7/3,278.4秒，峰值allocated约1.645 GB。两臂都选择update12,000验证checkpoint。Truth-only/HardNegative全局Pfa单侧exact95%上界为0.05123/0.05108，C3 pooled上界为0.10192/0.10180，困难格上界为0.10895/0.10722；0.05全局目标及C3保护均未通过。0.01目标全局也未通过；0.001只满足全局门，C3与困难格仍未满足。
+
+在全局0.05工作点，HardNegative−TruthOnly的全局Pd差为−0.00146（paired 95% CI `[-0.00358,+0.00065]`），joint差−0.00212（`[-0.00651,+0.00195]`）；C3 joint差−0.00260（`[-0.01107,+0.00553]`），困难格joint差−0.00391（`[-0.01563,+0.00586]`）。区间跨零表示收益未证实，也不等价于两法相同。HardNegative全H1 range/Doppler RMSE为2.678 cells/23.323 Hz，Truth-only为2.707 cells/23.448 Hz；差异很小，未改变联合检测评价。此单seed pilot不支持hard-negative分支多seed晋级。
+
+R6-B当前预算下的validation task loss在update12,000最低（0.22854/0.23116），12,800为0.22989/0.23230；不证明训练已收敛，但没有显示最后阶段仍持续下降。R5-A曾观察到1,600至12,800步的验证指标持续改善，提示训练预算是重要因素，但不能据此推断当前R6-B也必然从延长中获益。任何新的延长预算或batch128研究须在新协议中对全部matched组统一训练暴露、有效batch与checkpoint规则。本轮batch64、12,800步不追改。训练和评价缓存已清理；项目当前清理后大小约14.24 GiB，审计见 `cleanup.json`。无final blind。
 
 ### D2-A-R5-C 教师软知识质量审计
 
@@ -76,7 +84,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-按已批准的 R6-A protocol/config，在新的 scene/seed blocks 上对 B0–B3、R3 T1/T2、Medium学生与 FFT/插值/相位差/profile-ML 估计器开展同 IQ 对照。先完成 R6-A 实现和前置正确性检查，再运行独立 H0 calibration、verification 及 H1 development；不复用 R5-C 评价 IDs，不生成 final blind。R5-C教学分支停止；R6-B低Pfa诊断与R6-D模型继续按其各自阶段门执行，研究总纲v1.3不变。
+按治理协议将R6-B材料提交ChatGPT独立审查。审查应判断hard-negative是否停止，以及是否值得单独注册更充分训练预算的matched诊断。当前不追加R6-B训练、不做final blind。用户允许未来新研究在公平条件下增加updates并探索至多两倍batch；所有比较组需共享有效batch、更新数、数据暴露、优化计划和checkpoint选择规则。总纲v1.3及冻结R6-B协议保持不变。
 
 ## 关键材料
 
@@ -87,6 +95,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
 - D2-A-R4 [实验协议](../experiments/D2-A-R4/protocol.md)、[分析](../experiments/D2-A-R4/analysis.md)、[Codex 自审](stage_reviews/D2-A-R4_review.md)、[指标表](../experiments/D2-A-R4/result.csv)、[分层复核](../experiments/D2-A-R4/sampling_sensitivity.json)
+- D2-A-R6-B [冻结协议/配置](../experiments/D2-A-R6/R6-B/)、[分析和指标](../experiments/D2-A-R6/R6-B/analysis.md)、[阶段审查](../experiments/D2-A-R6/R6-B/stage_review.md)、[ChatGPT审查请求](../experiments/D2-A-R6/R6-B/review_request.md)；代码训练 SHA `091e96b…`，结果评价 SHA `293f173…`
 - D2-A-R5-A [容量对照分析](../experiments/D2-A-R5/R5-A/capacity/analysis.md)、[指标](../experiments/D2-A-R5/R5-A/capacity/metrics.json)、[阶段自审](stage_reviews/D2-A-R5A-capacity_review.md)、[容量研究汇总](research/D2-A_student_capacity_study.md)
 - D2-A-R5-A [ChatGPT容量阶段审查请求](../experiments/D2-A-R5/R5-A/capacity/review_request.md)，审查目标结果SHA `760cb30c7ce9dafdbcb5a328d9228b0f2eb9f585`
 - D2-A-R5-B [实验协议](../experiments/D2-A-R5/R5-B/protocol.md)、[配置](../experiments/D2-A-R5/R5-B/config.yaml)、[分析](../experiments/D2-A-R5/R5-B/analysis.md)、[阶段自审](stage_reviews/D2-A-R5B_review.md)与ChatGPT审查请求 `experiments/D2-A-R5/R5-B/review_request.md`

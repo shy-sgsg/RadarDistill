@@ -1,0 +1,21 @@
+{
+  "source_commit": "b5c1b0889806289037f503524bcd93d0cdc61919",
+  "technical_g0": "PASS",
+  "technical_g1": "PASS; both arms ran on CUDA and weights were discarded",
+  "formal_optimizer_updates": 0,
+  "formal_training": "not started; seed-303 initialization guard compared against an independently randomized model and stopped before training",
+  "fix_commit": "755accf2d1c392b883b56b85713b97e444cee1bc",
+  "disposition": "cache removed after exact owner/progress validation and will be deterministically regenerated under the fixed runner",
+  "removed_rebuildable_cache_bytes": 11233520150,
+  "preserved_records": [
+    "preflight.json",
+    "g1.json",
+    "hard_negative_selection.json",
+    "hard_negative_selection.npz",
+    "training_sampling_plan.npz",
+    "training_sampling_audit.json",
+    "scene_manifest_train.csv",
+    "scene_manifest_validation.csv",
+    "cache owner/progress records"
+  ]
+}

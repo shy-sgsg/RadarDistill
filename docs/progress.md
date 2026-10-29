@@ -1,5 +1,17 @@
 # 研究进度
 
+# 2026-10-29：D2-A-R6-B hard-negative matched pilot 完成
+
+- **研究主线：** 本阶段检验训练期 H0 hard-negative 重采样是否能帮助任务级 GMTI 学生改善困难格检测与最终联合任务；不是独立 CFAR 扩展，也没有加入教师或蒸馏。研究总纲 v1.3、冻结 R6-B protocol/config 和 R6-A/R5 历史结果均未改。
+- **运行版本：** R6-B branch R；训练执行代码 SHA `091e96b9d570bdaa16444c1e696a633145c6655d`，独立评价 SHA `293f1733b417d7fdc65fd9e294c8511cef43613c`。training/evaluation 修正和尝试记录保留于各自 commit/provenance 与 `experiments/D2-A-R6/R6-B/attempts/`；没有改实验预算或数据划分。
+- **训练：** seed303 truth-only 与 hard-negative Medium width96（82,887训练参数）各12,800 optimizer updates；FP32、RTX 3050 Laptop `cuda:0`、microbatch32、有效batch64，顺序训练、无CPU fallback与OOM。两臂均选择update12,000验证checkpoint。耗时3176.7/3278.4秒，峰值allocated1.6455/1.6461 GB，reserved1.7134 GB。历史按400步检查点写入，不逐更新落盘。
+- **验证趋势：** Truth-only/HardNegative validation task loss在update12,000为0.22854/0.23116，到12,800为0.22989/0.23230；因此不能说本pilot在预算终点仍持续改善，也不能由单seed与有限检查点确定训练上限。R5-A长预算结果说明训练预算值得继续单独研究。用户允许后续新实验公平延长更新并探索至多两倍batch；任何新比较须对所有匹配组统一有效batch、optimizer updates、数据暴露及checkpoint规则。本轮12,800/effective batch64保持冻结。
+- **数据与评价：** 独立 H0 calibration、verification各120,000，H1 development 6,144；训练/验证51,200/5,000对。评价流式执行、未落盘IQ。全局Pfa=0.05时TruthOnly/HardNegative Pfa为0.05018/0.05003，单侧exact95%上界0.05123/0.05108；C3上界0.10192/0.10180，困难格上界0.10895/0.10722。故0.05及0.01全局工作点未过资格；0.001仅全局门通过，C3及困难格未通过。
+- **任务结果：** H1全局Pd为0.93620/0.93473，joint为0.85042/0.84831。配对 HardNegative−TruthOnly global joint差−0.00212（95% CI `[-0.00651,+0.00195]`），C3差−0.00260（`[-0.01107,+0.00553]`），困难格差−0.00391（`[-0.01563,+0.00586]`）；区间跨0，不构成收益或等价证据。全H1 direct range/Doppler RMSE为2.707/23.448与2.678/23.323，变化很小。当前不将此分支升级为多seed、KD或blind。
+- **决定：** 阶段 **REFINE**。R6-A表明预选困难格本身区分能力低；R6-B training-H0重采样未证实能提高H1最终任务，也未解决低Pfa条件保护。hard-negative按本协议停止扩展；先请求ChatGPT独立审查，再决定是否存在独立的训练预算诊断价值。唯一下一项优先任务是该阶段审查。
+- **工程核验：** 最新应用相关完整测试记录为 `AISAR pytest -q` 467 passed（代码修正提交955cdf4）；`git diff --check` 在归档准备中执行。训练缓存清理仅涉及本阶段owner路径，共11,233,520,150 bytes；项目由26,524,167,231降至15,290,647,081 bytes（约14.24 GiB），低于20 GiB目标。保留检查点/history、metrics、预测、scene manifests、环境、审计与分析；未触碰未跟踪用户文件。未生成final blind。
+- **审查材料：** `experiments/D2-A-R6/R6-B/review_request.md`，含本阶段执行SHA、结果、研究主线影响、阶段审查与下一步问题。
+
 # 2026-10-29：R6-A 结果归档与 R6-B 分支选择完成
 
 - **研究主线：** 完成了总纲v1.3 Q1/Q3/Q6/Q8/Q10所需的同IQ检测与估计基线，分开评估固定阈值、条件可分性、实际候选参数误差和离线oracle。未修改研究总纲、R5历史结果或冻结实验设置。

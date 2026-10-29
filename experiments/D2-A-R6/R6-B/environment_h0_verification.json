@@ -1,0 +1,14 @@
+{
+  "git_sha": "293f1733b417d7fdc65fd9e294c8511cef43613c",
+  "split": "h0_verification",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "cuda_peak_allocated_bytes": 129681408,
+  "cuda_peak_reserved_bytes": 207618048,
+  "elapsed_seconds": 2289.271771583997,
+  "scenes": 120000,
+  "chunk_size": 16,
+  "evaluation_iq_persisted": false,
+  "teacher_maps_persisted": false,
+  "simultaneous_cuda_student_models": 1
+}

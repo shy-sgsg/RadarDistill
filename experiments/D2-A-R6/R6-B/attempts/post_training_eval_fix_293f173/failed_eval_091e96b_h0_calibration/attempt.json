@@ -1,0 +1,8 @@
+{
+  "result": "no_prediction_rows_generated",
+  "failure_stage": "evaluation state loader raised before first scene chunk",
+  "source_git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+  "chunks_done": 0,
+  "rows_done": 0,
+  "removed_zero_initialized_memmap_bytes": 63121664
+}

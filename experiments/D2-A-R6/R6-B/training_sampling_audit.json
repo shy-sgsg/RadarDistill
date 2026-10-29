@@ -1,0 +1,223 @@
+{
+  "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+  "h1_order_identical_across_arms": true,
+  "h1_scene_count_per_epoch": 51200,
+  "epochs": 8,
+  "truth_only_h0": {
+    "mode": "uniform",
+    "seed": 2026102913,
+    "hard_fraction_requested": 0.0,
+    "hard_fraction_by_condition": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 0.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0,
+      "10": 0.0,
+      "11": 0.0
+    },
+    "h0_slots_by_condition": {
+      "0": 102400,
+      "1": 51200,
+      "2": 51200,
+      "3": 34128,
+      "4": 34136,
+      "5": 34136,
+      "6": 17064,
+      "7": 17072,
+      "8": 17064,
+      "9": 17072,
+      "10": 17064,
+      "11": 17064
+    },
+    "sampling_counts_by_condition": {
+      "0": {
+        "slots": 102400,
+        "hard": 0,
+        "uniform": 102400,
+        "hard_fraction": 0.0
+      },
+      "1": {
+        "slots": 51200,
+        "hard": 0,
+        "uniform": 51200,
+        "hard_fraction": 0.0
+      },
+      "2": {
+        "slots": 51200,
+        "hard": 0,
+        "uniform": 51200,
+        "hard_fraction": 0.0
+      },
+      "3": {
+        "slots": 34128,
+        "hard": 0,
+        "uniform": 34128,
+        "hard_fraction": 0.0
+      },
+      "4": {
+        "slots": 34136,
+        "hard": 0,
+        "uniform": 34136,
+        "hard_fraction": 0.0
+      },
+      "5": {
+        "slots": 34136,
+        "hard": 0,
+        "uniform": 34136,
+        "hard_fraction": 0.0
+      },
+      "6": {
+        "slots": 17064,
+        "hard": 0,
+        "uniform": 17064,
+        "hard_fraction": 0.0
+      },
+      "7": {
+        "slots": 17072,
+        "hard": 0,
+        "uniform": 17072,
+        "hard_fraction": 0.0
+      },
+      "8": {
+        "slots": 17064,
+        "hard": 0,
+        "uniform": 17064,
+        "hard_fraction": 0.0
+      },
+      "9": {
+        "slots": 17072,
+        "hard": 0,
+        "uniform": 17072,
+        "hard_fraction": 0.0
+      },
+      "10": {
+        "slots": 17064,
+        "hard": 0,
+        "uniform": 17064,
+        "hard_fraction": 0.0
+      },
+      "11": {
+        "slots": 17064,
+        "hard": 0,
+        "uniform": 17064,
+        "hard_fraction": 0.0
+      }
+    }
+  },
+  "hard_negative_h0": {
+    "mode": "hard_negative",
+    "seed": 2026102913,
+    "hard_fraction_requested": 0.5,
+    "hard_fraction_by_condition": {
+      "0": 0.5,
+      "1": 0.5,
+      "2": 0.5,
+      "3": 0.5,
+      "4": 0.5,
+      "5": 0.5,
+      "6": 0.5,
+      "7": 0.5,
+      "8": 0.5,
+      "9": 0.5,
+      "10": 0.5,
+      "11": 0.5
+    },
+    "h0_slots_by_condition": {
+      "0": 102400,
+      "1": 51200,
+      "2": 51200,
+      "3": 34128,
+      "4": 34136,
+      "5": 34136,
+      "6": 17064,
+      "7": 17072,
+      "8": 17064,
+      "9": 17072,
+      "10": 17064,
+      "11": 17064
+    },
+    "sampling_counts_by_condition": {
+      "0": {
+        "slots": 102400,
+        "hard": 51200,
+        "uniform": 51200,
+        "hard_fraction": 0.5
+      },
+      "1": {
+        "slots": 51200,
+        "hard": 25600,
+        "uniform": 25600,
+        "hard_fraction": 0.5
+      },
+      "2": {
+        "slots": 51200,
+        "hard": 25600,
+        "uniform": 25600,
+        "hard_fraction": 0.5
+      },
+      "3": {
+        "slots": 34128,
+        "hard": 17064,
+        "uniform": 17064,
+        "hard_fraction": 0.5
+      },
+      "4": {
+        "slots": 34136,
+        "hard": 17068,
+        "uniform": 17068,
+        "hard_fraction": 0.5
+      },
+      "5": {
+        "slots": 34136,
+        "hard": 17068,
+        "uniform": 17068,
+        "hard_fraction": 0.5
+      },
+      "6": {
+        "slots": 17064,
+        "hard": 8532,
+        "uniform": 8532,
+        "hard_fraction": 0.5
+      },
+      "7": {
+        "slots": 17072,
+        "hard": 8536,
+        "uniform": 8536,
+        "hard_fraction": 0.5
+      },
+      "8": {
+        "slots": 17064,
+        "hard": 8532,
+        "uniform": 8532,
+        "hard_fraction": 0.5
+      },
+      "9": {
+        "slots": 17072,
+        "hard": 8536,
+        "uniform": 8536,
+        "hard_fraction": 0.5
+      },
+      "10": {
+        "slots": 17064,
+        "hard": 8532,
+        "uniform": 8532,
+        "hard_fraction": 0.5
+      },
+      "11": {
+        "slots": 17064,
+        "hard": 8532,
+        "uniform": 8532,
+        "hard_fraction": 0.5
+      }
+    }
+  },
+  "hard_pool_top_fraction": 0.25,
+  "hard_fraction": 0.5,
+  "H0_and_H1_share_base_scene_id_required": false
+}

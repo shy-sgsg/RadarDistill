@@ -1,0 +1,74 @@
+{
+  "result": "stage_owned_training_cache_removed_after_analysis",
+  "cleanup_code_sha": "955cdf4",
+  "evaluation_result_sha": "293f1733b417d7fdc65fd9e294c8511cef43613c",
+  "training_code_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+  "training_cache_owner_git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+  "removed_stage_owned_bytes": 11233520150,
+  "removed_paths": [
+    "experiments/D2-A-R6/R6-B/cache/training/train",
+    "experiments/D2-A-R6/R6-B/cache/training/validation",
+    "experiments/D2-A-R6/R6-B/cache/training/train_h0_hardness.json",
+    "experiments/D2-A-R6/R6-B/cache/training/train_h0_hardness.npy"
+  ],
+  "verified_cache_owners_and_progress": {
+    "train": {
+      "owner": {
+        "owner": "D2-A-R6-B-training-cache",
+        "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+        "split": "train",
+        "scene_count": 51200
+      },
+      "progress": {
+        "owner": {
+          "owner": "D2-A-R6-B-training-cache",
+          "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+          "split": "train",
+          "scene_count": 51200
+        },
+        "completed_chunks": 3205,
+        "rows_written": 51200,
+        "manifest_offset": 5438078
+      }
+    },
+    "validation": {
+      "owner": {
+        "owner": "D2-A-R6-B-training-cache",
+        "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+        "split": "validation",
+        "scene_count": 5000
+      },
+      "progress": {
+        "owner": {
+          "owner": "D2-A-R6-B-training-cache",
+          "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+          "split": "validation",
+          "scene_count": 5000
+        },
+        "completed_chunks": 319,
+        "rows_written": 5000,
+        "manifest_offset": 556183
+      }
+    }
+  },
+  "hardness_provenance_retained": {
+    "owner": "D2-A-R6-B-training-H0-hardness",
+    "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+    "split": "train",
+    "presence": "H0",
+    "scene_count": 51200,
+    "method": "frozen_R5-A_Medium_presence_score",
+    "checkpoint": "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt",
+    "checkpoint_sha256": "785ba966c52e629f0f73ff10f8347c27a216ab1faaf56783b7fbe3dcd01b89cd",
+    "training_record_source_git_sha": "1678a468d5c150ff734d80ad40cf75407a49651f",
+    "elapsed_seconds": 69.62919580300513,
+    "cuda_peak_allocated_bytes": 259074048,
+    "validation_calibration_verification_h1_development_used": false
+  },
+  "project_bytes_before": 26524167231,
+  "project_bytes_after": 15290647081,
+  "project_limit_bytes": 21474836480,
+  "project_below_20_gib": true,
+  "evaluation_iq_cache_retained": false,
+  "final_blind_generated": false
+}

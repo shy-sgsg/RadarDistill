@@ -1,0 +1,61 @@
+{
+  "status": "G0_PASS",
+  "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+  "selected_branch": "R",
+  "branch_selection_sha": "58ba8bdc7c069fcbb8276039a3de1cf80bf4b122",
+  "branch_selection_sha256": "4a64c90f533d2594a2a3953ab9310399efe4f294717cf3a2117ac5accbde0ff7",
+  "protocol_sha256": "277cde4b170e3c3226af4f4dd63ff4a4be32df15e8b368503678dbca8b9556f0",
+  "config_sha256": "9b2e7c183d110696140bc4d3907b94b598db9d2fbbcee37442378920ec80a53b",
+  "training_constants": {
+    "source": "R5-A capacity Medium two-segment schedule / E003 truth-task optimizer settings",
+    "optimizer": "AdamW",
+    "initial_updates": 6400,
+    "final_updates": 12800,
+    "learning_rate_initial": 0.001,
+    "learning_rate_at_update_6400": 0.0001,
+    "extension_learning_rate_final": 1e-05,
+    "schedule": "two_segment_cosine_6400_plus_6400",
+    "weight_decay": 0.0001,
+    "gradient_clip_norm": 1.0,
+    "validation_interval_updates": 400,
+    "microbatch_initial": 32,
+    "oom_microbatch_fallbacks": [
+      16,
+      8,
+      4
+    ],
+    "effective_batch_size_cpi": 64,
+    "optimizer_updates": 12800,
+    "h0_per_update": 32,
+    "h1_per_update": 32,
+    "pair_plan_seed": 2026102911,
+    "paired_bootstrap_seed": 2026102914
+  },
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cuda_device": "cuda:0",
+  "free_vram_bytes": 3118137344,
+  "total_vram_bytes": 3942383616,
+  "disk_free_bytes": 30026629120,
+  "training_cache_estimated_bytes": 11222016000,
+  "planned_scene_count": 302344,
+  "prior_scene_count": 171984,
+  "scene_id_overlap": 0,
+  "r6a_seed_audit": {
+    "r6a_chunk_seeds": 1896,
+    "r5c_known_seeds": 5080,
+    "r5c_seed_overlap": 0,
+    "r6b_reserved_overlap": 0
+  },
+  "split_scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144
+  },
+  "python": "3.13.7",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "final_blind_generated": false
+}

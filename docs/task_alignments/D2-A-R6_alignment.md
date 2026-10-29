@@ -67,3 +67,13 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 - **数据/审计：** 主预测共211,008行；oracle nearest-bin侧车只影响离线诊断。预更正指标与错误分条件图保留用于审计，不覆盖非oracle数据和历史结论。G0前两条注册场景只做形状/ID检查的次序偏差继续披露。
 - **资源与公平性：** R6-B有效batch64、12,800 updates和同初始化/数据计划均冻结；扩大batch会改变本对照的优化条件。未来新协议可在匹配比较臂中将更大batch作为预注册因素。R6-A `chunk_size=16` 是评估分块，不是训练batch。
 - **决定：** 总体 **REFINE**；执行R6-B R分支一次匹配训练，未满足任务/虚警保护时停止，不做额外分支搜索或final blind。研究总纲v1.3和R5历史结果保持不变。
+
+## 2026-10-29：R6-B hard-negative pilot 完成与预算解释
+
+- **总体目标映射：** R6-B服务总纲v1.3 Q1/Q4/Q6/Q9/Q10，通过提升训练期困难H0覆盖，检验任务级学生是否能在静止杂波困难格稳定检测并保护range/Doppler/joint任务；它不是独立CFAR项目，不涉及教师知识或蒸馏。
+- **假设与依据：** R6-A在condition 10（C3 partial-overlap/SNR0/CNR20）的AUC约0.60，因此固定阈值异常可能不止是分数尺度迁移，还包括条件内可分性不足。R分支已按冻结门选出，只允许一次matched training-H0 hard-negative重采样对照。
+- **训练与公平性：** seed303、Medium width96、82,887训练参数、FP32 RTX 3050 Laptop `cuda:0`、有效batch64、12,800 updates、相同初始化/H1计划/优化器/验证与选择规则；只改变训练H0 sampler。两臂均在update12,000选checkpoint；validation task loss在12,800稍高。训练history按400步验证点保存，不逐更新写盘。当前运行SHA `091e96b9d570bdaa16444c1e696a633145c6655d`，评价SHA `293f1733b417d7fdc65fd9e294c8511cef43613c`。
+- **证据：** HardNegative−TruthOnly global joint差为−0.00212（95% paired CI `[-0.00651,+0.00195]`），C3差−0.00260，hard-cell差−0.00391；均未证实收益，且不是等价证明。全局0.05/0.01虚警上界未通过，0.001只全局通过，C3和hard-cell保护未通过。单seed不能评估训练seed波动。详细指标和数据边界见`experiments/D2-A-R6/R6-B/analysis.md`、`metrics.json`、`stage_review.md`。
+- **解释范围：** 结果支持停止本协议的hard-negative采样策略，不证明所有负样本重加权失效，也没有隔离分数尺度因果作用。H-R6-DET-001的“尺度迁移且困难条件有充分可分性”合取表述在所测条件未获支持；尺度因素本身仍未评估。
+- **训练预算问题：** R5-A长训练中validation指标从1,600到12,800步改善；R6-B在12,000步取得最低validation task loss，12,800步略回升。因此训练充分性仍是可检验因素，但不能声称R6-B必然因延长训练获益。用户允许未来新实验在公平前提下增加更新数，并探索至多两倍batch；若开展，应另行预注册并对所有matched arm匹配effective batch、optimizer updates、数据暴露、优化计划和checkpoint规则，避免将预算效应与hard-negative效应混淆。本轮冻结batch64和12,800 updates不变。
+- **决定与下一步：** 阶段为REFINE；当前hard-negative不做多seed、KD或final blind。唯一优先任务是独立ChatGPT审查R6-B材料；审查前不启动新训练。`docs/RESEARCH_CHARTER.md` v1.3及历史冻结结果保持不变。

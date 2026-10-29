@@ -1,0 +1,275 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "b5c1b0889806289037f503524bcd93d0cdc61919",
+  "technical_only": true,
+  "weights_discarded": true,
+  "paired_scenes_per_update": 16,
+  "technical_batch_size_cpi": 32,
+  "updates_per_sampler_path": 200,
+  "formal_effective_batch_changed": false,
+  "formal_batch_cpi": 64,
+  "formal_batch_changed": false,
+  "technical_validation_source": "first_256_scenes_of_independent_R6-B_validation_split",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "free_vram_after_bytes": 3031957504,
+  "total_vram_bytes": 3942383616,
+  "arms": {
+    "TruthOnly": {
+      "arm": "G1_TruthOnly",
+      "microbatch_size": 32,
+      "effective_batch_size": 32,
+      "updates_completed": 200,
+      "selected_update": 200,
+      "selected_validation": {
+        "task_loss": 0.0798653494566679,
+        "auc": 1.0,
+        "doppler_rmse_hz": 28.016780847425768,
+        "range_rmse_cells": 0.07042344259640303
+      },
+      "training_seconds": 22.00751001900062,
+      "seconds_per_update": 0.1100375500950031,
+      "cuda_peak_allocated_bytes": 1645218304,
+      "cuda_peak_reserved_bytes": 1711276032,
+      "parameter_count": 82887,
+      "history_rows": 2,
+      "per_update_history_persisted": false,
+      "oom_attempts": [],
+      "sampler_audit": {
+        "mode": "uniform",
+        "seed": 2026102913,
+        "hard_fraction_requested": 0.0,
+        "hard_fraction_by_condition": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0
+        },
+        "h0_slots_by_condition": {
+          "0": 763,
+          "1": 404,
+          "2": 427,
+          "3": 268,
+          "4": 251,
+          "5": 299,
+          "6": 109,
+          "7": 140,
+          "8": 127,
+          "9": 140,
+          "10": 145,
+          "11": 127
+        },
+        "sampling_counts_by_condition": {
+          "0": {
+            "slots": 763,
+            "hard": 0,
+            "uniform": 763,
+            "hard_fraction": 0.0
+          },
+          "1": {
+            "slots": 404,
+            "hard": 0,
+            "uniform": 404,
+            "hard_fraction": 0.0
+          },
+          "2": {
+            "slots": 427,
+            "hard": 0,
+            "uniform": 427,
+            "hard_fraction": 0.0
+          },
+          "3": {
+            "slots": 268,
+            "hard": 0,
+            "uniform": 268,
+            "hard_fraction": 0.0
+          },
+          "4": {
+            "slots": 251,
+            "hard": 0,
+            "uniform": 251,
+            "hard_fraction": 0.0
+          },
+          "5": {
+            "slots": 299,
+            "hard": 0,
+            "uniform": 299,
+            "hard_fraction": 0.0
+          },
+          "6": {
+            "slots": 109,
+            "hard": 0,
+            "uniform": 109,
+            "hard_fraction": 0.0
+          },
+          "7": {
+            "slots": 140,
+            "hard": 0,
+            "uniform": 140,
+            "hard_fraction": 0.0
+          },
+          "8": {
+            "slots": 127,
+            "hard": 0,
+            "uniform": 127,
+            "hard_fraction": 0.0
+          },
+          "9": {
+            "slots": 140,
+            "hard": 0,
+            "uniform": 140,
+            "hard_fraction": 0.0
+          },
+          "10": {
+            "slots": 145,
+            "hard": 0,
+            "uniform": 145,
+            "hard_fraction": 0.0
+          },
+          "11": {
+            "slots": 127,
+            "hard": 0,
+            "uniform": 127,
+            "hard_fraction": 0.0
+          }
+        }
+      }
+    },
+    "HardNegative": {
+      "arm": "G1_HardNegative",
+      "microbatch_size": 32,
+      "effective_batch_size": 32,
+      "updates_completed": 200,
+      "selected_update": 200,
+      "selected_validation": {
+        "task_loss": 0.07049629651010036,
+        "auc": 1.0,
+        "doppler_rmse_hz": 15.69783241593744,
+        "range_rmse_cells": 0.06722219767120581
+      },
+      "training_seconds": 21.508130033005727,
+      "seconds_per_update": 0.10754065016502863,
+      "cuda_peak_allocated_bytes": 1645218304,
+      "cuda_peak_reserved_bytes": 1711276032,
+      "parameter_count": 82887,
+      "history_rows": 2,
+      "per_update_history_persisted": false,
+      "oom_attempts": [],
+      "sampler_audit": {
+        "mode": "hard_negative",
+        "seed": 2026102913,
+        "hard_fraction_requested": 0.5,
+        "hard_fraction_by_condition": {
+          "0": 0.5006553079947575,
+          "1": 0.5,
+          "2": 0.5011709601873536,
+          "3": 0.5,
+          "4": 0.50199203187251,
+          "5": 0.5016722408026756,
+          "6": 0.5045871559633027,
+          "7": 0.5,
+          "8": 0.5039370078740157,
+          "9": 0.5,
+          "10": 0.503448275862069,
+          "11": 0.5039370078740157
+        },
+        "h0_slots_by_condition": {
+          "0": 763,
+          "1": 404,
+          "2": 427,
+          "3": 268,
+          "4": 251,
+          "5": 299,
+          "6": 109,
+          "7": 140,
+          "8": 127,
+          "9": 140,
+          "10": 145,
+          "11": 127
+        },
+        "sampling_counts_by_condition": {
+          "0": {
+            "slots": 763,
+            "hard": 382,
+            "uniform": 381,
+            "hard_fraction": 0.5006553079947575
+          },
+          "1": {
+            "slots": 404,
+            "hard": 202,
+            "uniform": 202,
+            "hard_fraction": 0.5
+          },
+          "2": {
+            "slots": 427,
+            "hard": 214,
+            "uniform": 213,
+            "hard_fraction": 0.5011709601873536
+          },
+          "3": {
+            "slots": 268,
+            "hard": 134,
+            "uniform": 134,
+            "hard_fraction": 0.5
+          },
+          "4": {
+            "slots": 251,
+            "hard": 126,
+            "uniform": 125,
+            "hard_fraction": 0.50199203187251
+          },
+          "5": {
+            "slots": 299,
+            "hard": 150,
+            "uniform": 149,
+            "hard_fraction": 0.5016722408026756
+          },
+          "6": {
+            "slots": 109,
+            "hard": 55,
+            "uniform": 54,
+            "hard_fraction": 0.5045871559633027
+          },
+          "7": {
+            "slots": 140,
+            "hard": 70,
+            "uniform": 70,
+            "hard_fraction": 0.5
+          },
+          "8": {
+            "slots": 127,
+            "hard": 64,
+            "uniform": 63,
+            "hard_fraction": 0.5039370078740157
+          },
+          "9": {
+            "slots": 140,
+            "hard": 70,
+            "uniform": 70,
+            "hard_fraction": 0.5
+          },
+          "10": {
+            "slots": 145,
+            "hard": 73,
+            "uniform": 72,
+            "hard_fraction": 0.503448275862069
+          },
+          "11": {
+            "slots": 127,
+            "hard": 64,
+            "uniform": 63,
+            "hard_fraction": 0.5039370078740157
+          }
+        }
+      }
+    }
+  },
+  "final_blind_generated": false
+}

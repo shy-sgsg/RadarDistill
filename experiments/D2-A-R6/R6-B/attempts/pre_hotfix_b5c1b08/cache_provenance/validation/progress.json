@@ -1,0 +1,11 @@
+{
+  "owner": {
+    "owner": "D2-A-R6-B-training-cache",
+    "git_sha": "b5c1b0889806289037f503524bcd93d0cdc61919",
+    "split": "validation",
+    "scene_count": 5000
+  },
+  "completed_chunks": 319,
+  "rows_written": 5000,
+  "manifest_offset": 556183
+}

@@ -1,0 +1,21 @@
+{
+  "owner": {
+    "owner": "D2-A-R6-B-predictions",
+    "git_sha": "091e96b9d570bdaa16444c1e696a633145c6655d",
+    "split": "h0_calibration",
+    "scene_count": 120000,
+    "methods": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "R3_T1",
+      "R3_T2",
+      "Medium_Frozen",
+      "Medium_TruthOnly",
+      "Medium_HardNegative"
+    ]
+  },
+  "chunks_done": 0,
+  "rows_done": 0
+}
