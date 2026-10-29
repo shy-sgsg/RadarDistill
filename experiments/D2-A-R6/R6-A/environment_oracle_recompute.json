@@ -1,0 +1,15 @@
+{
+  "analysis_git_sha": "f91da92c455af072accb38cac529e48bce684b3b",
+  "prediction_run_git_sha": "e3972ae94430abd3d79eae7e1ee9179f68062648",
+  "split": "h1_development",
+  "scene_count": 6144,
+  "mapping": "nearest_available_range_center_half_up",
+  "gpu_available": true,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "gpu_used": false,
+  "cpu_frequency_estimators": true,
+  "timings_seconds": {
+    "scene_generation": 130.5358968580258,
+    "oracle_estimators": 5.381836215936346
+  }
+}

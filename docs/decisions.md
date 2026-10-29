@@ -1,3 +1,11 @@
+## 2026-10-29：R6-A困难格选择R6-B hard-negative分支
+
+- **证据：** 在同一批新开发场景上，Medium全局0.05工作点joint success为0.8306、全局Pfa单侧exact95%上界0.04996；condition 10（C3 partial-overlap/SNR0/CNR20）AUC为0.5956、Pd为0.2207、joint为0.0391。仅用R6-A H0 calibration和H1 development计算的hard-cell AUC为0.60324（95% bootstrap CI `[0.57085,0.63295]`），上界低于R6-B冻结0.70门；没有读取H0 verification。
+- **决定：** 按冻结选支规则只执行R6-B R分支：新训练数据上 matched truth-only Medium 对照 training-H0 hard-negative-resampled Medium。相同初始化、样本计划、12,800 updates、有效batch64和损失设置保持一致；hard mining只用train split。branch selection已由`58ba8bd`的脚本复现，并以`b3ad8a5`提交结果。
+- **影响：** H-R6-DET-001按“困难格有充分条件可分性，主要问题是分数尺度/固定阈值迁移”的合取表述不获支持；分数尺度是否也有贡献仍未测。有限训练集hard-negative干预可检验学生是否能减少困难H0误报，不足以据此宣称已解决conditional Pfa。
+- **批量与停止：** 当前R6-B有效batch64是冻结公平比较条件，不因空闲显存增大。未来独立训练实验可预注册至多2×batch的matched对照。若hard-negative只降低Pfa但损害Pd、参数估计或joint保护，则停止该分支，不做多seed或final blind。
+- **边界：** R6-A是development，不是blind；Medium单checkpoint不估计seed方差。R5-C教师分支STOP及总纲v1.3保持不变。
+
 ## 2026-10-28：停止R5-C当前教师内容分支，优先推进R6-A
 
 - **证据：** seed303的T1/T2相对T0，C2+C3 joint差分别为`−0.0104`和`−0.0138`，两者均未达到预注册`+0.02`门；T1/T2均未通过全部任务/C3虚警保护。T3 truth-assisted控制差`+0.0156`为描述性结果，不能计为教师收益。四臂C3 H0 Pfa为`0.182–0.203`，均高于0.10晋级门。

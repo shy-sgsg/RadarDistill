@@ -1,6 +1,16 @@
 # 研究进度
 
-# 2026-10-29：R6-A 评价实现进行中
+# 2026-10-29：R6-A 结果归档与 R6-B 分支选择完成
+
+- **研究主线：** 完成了总纲v1.3 Q1/Q3/Q6/Q8/Q10所需的同IQ检测与估计基线，分开评估固定阈值、条件可分性、实际候选参数误差和离线oracle。未修改研究总纲、R5历史结果或冻结实验设置。
+- **R6-A数据与执行：** 预测运行SHA `e3972ae94430abd3d79eae7e1ee9179f68062648`；12,000 H0 calibration、12,000 H0 verification、6,144 H1 development，共30,144场景和211,008方法行。AISAR/PyTorch 2.8.0+cu128、CUDA 12.8、RTX3050 Laptop `cuda:0`；冻结Medium仅推理、无训练，峰值allocated129,681,408 bytes。G0为`PASS_WITH_RECORDED_PROTOCOL_ORDER_DEVIATION`；详细偏差见任务对齐和R6-A分析。
+- **主要结果：** 全局Pfa=0.05时Medium AUC/Pd/joint/Doppler RMSE为0.9830/0.9334/0.8306/24.68 Hz；但C3 partial-overlap/SNR0/CNR20的AUC/Pd/joint为0.5956/0.2207/0.0391，条件Pfa=0.097。全局Pfa单侧exact95%上界0.04996不能代表困难条件可靠性。R3 T1/T2 joint优于B3但总体仍低于Medium。
+- **R6-B选支：** 仅读取R6-A H0 calibration与H1 development，未读取H0 verification。C3 pooled AUC=`0.93164`（95%CI `[0.92440,0.93871]`）；困难格AUC=`0.60324`（`[0.57085,0.63295]`），95%上界低于预注册0.70门；C3 calibration cell-Pfa range=`0.033`，低于S分支所需0.05。已冻结选中R分支：matched truth-only vs training-H0 hard-negative-resampled Medium。分支 JSON提交`b3ad8a5`。
+- **审计修正：** 修复oracle距离门floor→nearest-bin映射；仅同场景重建offline oracle sidecar，非oracle指标不变。另修正分条件joint图读取错误，数值表无误。预更正指标/图仍保留于审计目录，未覆盖。整仓测试456项通过，选支CLI在AISAR成功运行，代码提交`58ba8bd`。
+- **资源及公平性：** 项目当前约15GiB，分区可用磁盘约29GiB；R6-B预估11.22GB训练缓存可在本阶段临时使用，收尾后按本阶段生成清单清理。冻结R6-B有效batch64、12,800 updates、同初始化和训练样本计划保持不变；扩大batch会改变已注册对照。新实验可将更大batch作为 matched factor。
+- **决定与下一步：** R6-A为开发基线，不是blind或部署资格；总体路线 **REFINE**。唯一优先任务是执行已预注册R6-B R分支，保持冻结batch64与其他训练条件，运行独立校准/验证/开发并应用任务保护门。不开展final blind或额外分支搜索。
+
+# 2026-10-29：R6-A 运行过程与更正审计（历史记录）
 
 - 已实现同 IQ 的 B0–B3、R3 T1/T2 与冻结 Medium 输出，实际候选和离线 oracle 距离门分开，加入频率估计、独立阈值统计、分层汇总、分块断点恢复和资源记录。AISAR定向测试19项通过；完整测试套件452项通过，runner `--help` 与Python编译通过。当前尚未生成R6-A汇总指标，不能报告科学结论。
 - RTX 3050 上 B3/T1/T2 complex128 CUDA 实现与现有 CPU 参考在16个独立工程随机 CPI 上最大相对分数差小于 `1.8e-15`，候选一致；单次运行 CUDA/CPU 分别约 `0.031/0.138 s`，CUDA 峰值分配约126 MB，仅用于工程资源诊断。包含学生、所有检测器与候选估计的16场景工程批次生成/预测分别约 `0.242/1.109 s`，不构成系统时延结论。

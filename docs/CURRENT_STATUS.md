@@ -1,16 +1,20 @@
 # 当前研究状态
 
-**更新日期：** 2026-10-28
+**更新日期：** 2026-10-29
 **工作分支：** `main`
-**最新完成工作：** D2-A-R5-C 教师知识质量审计及其后经独立审查放行的 T0–T3 教学内容 pilot 均已完成。Pilot 代码/训练/评价绑定提交 `a97ad36877d04dff8d2c8499e4bf783e0435714c`；四臂各12,800 updates，使用 RTX 3050 Laptop `cuda:0`。新数据、逐场景预测、指标、训练记录和阶段审查见 [`R5-C teaching analysis`](../experiments/D2-A-R5/R5-C-teaching/analysis.md)、[`metrics`](../experiments/D2-A-R5/R5-C-teaching/metrics.json) 和 [阶段审查](stage_reviews/D2-A-R5C-teaching_pilot_review.md)。
-**阶段判断：** T1−T0 与 T2−T0 的 C2+C3 joint 差分别为−0.0104、−0.0138，均未达到预注册 +0.02 增益门；T1/T2 也未通过所有保护门。四臂 C3 H0 Pfa 为0.182–0.203，均高于绝对0.10门。故当前教师内容分支 **STOP**，H-TEACH-002 在该 pilot 范围内为 NOT_SUPPORTED。R5-C 原 G4 PASS 与教师质量结论保持不变；它不构成学生教学增益或固定阈值检测器资格。项目总体路线 **REFINE**，R5-B TFAS 的 STOP 和研究总纲 v1.3 保持不变。
+**最新完成工作：** D2-A-R6-A 同场景检测/参数估计基线已完成。预测运行 SHA `e3972ae94430abd3d79eae7e1ee9179f68062648`，分析与指标见 [`R6-A analysis`](../experiments/D2-A-R6/R6-A/analysis.md)、[`metrics`](../experiments/D2-A-R6/R6-A/metrics.json) 和 [R6-A阶段自审](stage_reviews/D2-A-R6A_review.md)。R6-B预注册选支结果已提交：困难 C3 partial-overlap / 0 dB 格 AUC 0.60324（95% CI `[0.57085,0.63295]`），选中训练 H0 hard-negative-resampling 分支。
+**阶段判断：** Medium 在全局0.05工作点的 development joint success 为0.8306、直接 Doppler RMSE为24.68 Hz，但困难格 joint success仅0.0391、AUC为0.5956；全局 Pfa 单侧上界0.04996不能替代条件保护。R6-A不是 final blind 或部署资格。R5-C教师内容分支 **STOP**、R5-B TFAS候选停止、历史结论及研究总纲v1.3均保持不变；动态路线进入已预注册的 R6-B R 分支。
 
-**当前工作：** R5-C pilot 已完成 G0/G1、四臂训练、独立校准/验证/development评价、配对分析和阶段审查；没有生成 final blind。仅按清理manifest删除了四个 stage-owned IQ memmap，项目占用为15,160,472,696 bytes（约14.12 GiB），低于20 GiB；其他未跟踪用户数据未删除。当前不启动教师多seed、时机/可靠性权重搜索或完整R5-D机制实验。下一项唯一优先任务为已批准的R6-A同场景检测/参数估计基线。
+**当前工作：** 执行冻结 R6-B R 分支的 matched truth-only 与 training-H0 hard-negative-resampled Medium 对照。保持相同初始化、12,800 updates、有效 batch64、训练样本计划与任务损失；hard-negative只从训练集采样。运行独立 H0 calibration/verification 与 H1 development，按冻结检测、Pd、参数和 joint 保护门评价；不使用verification选择、不生成final blind。RTX 3050 Laptop CUDA当前可用约3.2 GiB显存、磁盘余量约29 GiB。预估的训练缓存约11.22 GB，阶段结束仅清理本阶段创建且可重建的缓存；保留其他未跟踪用户文件。
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
 ## 当前结论
 
 RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
+
+### D2-A-R6-A 同场景基线
+
+全局0.05阈值下，Medium在development上的AUC/Pd/joint success/Doppler RMSE为0.9830/0.9334/0.8306/24.68 Hz；全局Pfa单侧exact95%上界0.04996，但C3条件Pfa为0.072–0.109。condition 10（C3 partial-overlap、SNR0、CNR20）Medium AUC=0.5956、Pd=0.2207、joint=0.0391。R6-B选支只读R6-A H0 calibration与H1 development，未读H0 verification；困难格AUC的bootstrap上界0.63295低于预注册0.70，故执行R分支hard-negative训练对照。R6-A共30,144个场景、211,008条方法记录，无训练或final blind。完整条件指标和离线oracle限制见 [R6-A分析](../experiments/D2-A-R6/R6-A/analysis.md)。
 
 ### D2-A-R5-C 教师软知识质量审计
 

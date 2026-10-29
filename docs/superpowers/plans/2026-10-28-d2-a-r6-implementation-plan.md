@@ -56,15 +56,15 @@
 - Create: `experiments/D2-A-R6/R6-A/{protocol.md,config.yaml}`
 - Test: `tests/test_d2a_r6a.py`
 
-- [x] Freeze the independent R6-A protocol/config, fresh seed blocks, 12 condition cells, and exact frozen Medium checkpoint path after R5-C completion. Implementation and G0 tests remain pending.
+- [x] Freeze the independent R6-A protocol/config, fresh seed blocks, 12 condition cells, and exact frozen Medium checkpoint path after R5-C completion. Implementation, G0/G1, data generation and evaluation are complete; protocol-order deviation is recorded.
 
 **Interfaces:** `evaluate_r6a_scene(iq, detector, estimator, config) -> dict[str, float]`; stream generator yields `base_scene_id`, condition metadata, IQ and physical truth. Detector output is one CPI-level score plus candidate location. Estimator output includes actual-candidate and separately labeled oracle-candidate estimates.
 
-- [ ] Add tests for same-IQ method fan-out, threshold isolation, Doppler wrap, H0/H1 outputs, and oracle/actual separation.
-- [ ] Implement B0–B3, R3 T1/T2 (as non-qualified development candidates), frozen Medium, FFT/zero-pad/interpolation/phase-difference/profile-ML baselines using existing validated functions where possible.
-- [ ] Generate new R6-A H0 calibration (12,000), H0 verification (12,000), H1 development (6,144) scenes on fresh seed blocks; compare all methods on identical split IDs.
-- [ ] Report workpoints 0.05 and 0.01, ROC/AUC, global and condition Pfa, Pd, all-H1 and hit/correct-candidate RMSE, joint success and diagnostic costs.
-- [ ] Do not call R6-A development data final blind; commit and push the baseline package.
+- [x] Add tests for same-IQ method fan-out, threshold isolation, Doppler wrap, H0/H1 outputs, and oracle/actual separation.
+- [x] Implement B0–B3, R3 T1/T2 (as non-qualified development candidates), frozen Medium, FFT/zero-pad/interpolation/phase-difference/profile-ML baselines using existing validated functions where possible.
+- [x] Generate new R6-A H0 calibration (12,000), H0 verification (12,000), H1 development (6,144) scenes on fresh seed blocks; compare all methods on identical split IDs.
+- [x] Report workpoints 0.05 and 0.01, ROC/AUC, global and condition Pfa, Pd, all-H1 and hit/correct-candidate RMSE, joint success and diagnostic costs.
+- [x] Keep R6-A development data labeled as development; archive and push the baseline package.
 
 ### Task 2: R6-B low-false-alarm diagnosis
 
@@ -74,12 +74,12 @@
 - Create: `experiments/D2-A-R6/R6-B/{protocol.md,config.yaml}`
 - Test: `tests/test_d2a_r6b_low_pfa.py`
 
-- [x] Freeze the R6-B low-Pfa protocol/config, sample-size limits, branch-selection firewall, and conditional resource budget. Execution remains gated on R6-A and its resource check.
+- [x] Freeze the R6-B low-Pfa protocol/config, sample-size limits, branch-selection firewall, and conditional resource budget. R6-A and the preregistered resource gate are complete; hard-negative branch R is selected.
 
 - [ ] Test exact Clopper–Pearson intervals and required zero-event sample counts for 0.05/0.01/0.001/0.0001/1e-6.
 - [ ] On R6-B-only scenes, run H0 calibration and independent verification of 120,000 CPI each (10,000 per registered condition), plus matched H1 development; no R5-C/R6-A IDs are reused.
 - [ ] At each method's fixed global threshold, compare pooled and six-cell C3 Pfa with family-aware intervals, condition ROC, H0 score scale, and Pd/joint protection.
-- [ ] Use the result to select exactly one next diagnostic: observable background normalization/score calibration if conditional ROC is good but global transfer fails; H0 coverage/representation if conditional ROC is poor.
+- [x] Use the result to select exactly one next diagnostic: observable background normalization/score calibration if conditional ROC is good but global transfer fails; H0 coverage/representation if conditional ROC is poor. R6-A hard-cell AUC selected the preregistered hard-negative-resampling R branch.
 - [ ] Evaluate the selected intervention against matched Medium baseline on fresh train/validation IDs, using hard-H0 mining only from training data and no oracle nuisance inputs.
 - [ ] Stop an intervention that lowers Pfa while violating the frozen Pd/parameter/joint protection; record untested 1e-4/1e-6 work honestly.
 

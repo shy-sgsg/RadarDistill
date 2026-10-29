@@ -59,3 +59,11 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 - **修正与审计：** 实现最近可用整数距离中心映射（半格向上、越界裁到有效轴），增加确定性H1重建的独立 sidecar 和严格scene ID/truth核对；原预更正 `metrics.json`、`analysis.md` 与四张图保存在 `experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/`，旧CSV oracle列继续作为审计值，不再作为规范指标输入。使用同一组6,144个注册H1 IDs，不生成新划分、不称blind。
 - **验证/下一步：** 新增nearest-bin与边界规则回归测试（先因floor映射失败，修复后通过）；完整验证、sidecar重算、指标/图更新和阶段审查仍待完成。
 - **图表核验：** 重新查看曲线时发现 joint-success 图误取全局汇总值，导致每个条件重复同一数值；原始 `parameter_metrics_by_condition` 表无此错误。绘图现读取分条件 joint 指标，横轴增加条件序号与SNR；为两种场景新增测试并确认图像已反映各条件差异。历史重复值图留在 pre-correction 审计目录。
+
+## 2026-10-29：R6-A完成与R6-B分支判定
+
+- **研究结果：** R6-A在30,144个注册场景上完成同IQ基线。Medium在全局0.05工作点AUC/Pd/joint success/Doppler RMSE为0.9830/0.9334/0.8306/24.68 Hz；condition 10（C3 partial-overlap、SNR0、CNR20）AUC=0.5956、Pd=0.2207、joint=0.0391。学生在混合开发集表现强，但困难格可分性和联合任务仍明显不足。
+- **R6-B选支：** 选支器只读取R6-A H0 calibration与H1 development，不读取H0 verification；C3 pooled AUC=0.93164（95% CI `[0.92440,0.93871]`），hard-cell AUC=0.60324（`[0.57085,0.63295]`）。困难格上界低于冻结0.70门，因此选中R分支（training-only H0 hard-negative resampling），没有因总体AUC高而选择尺度归一化。
+- **数据/审计：** 主预测共211,008行；oracle nearest-bin侧车只影响离线诊断。预更正指标与错误分条件图保留用于审计，不覆盖非oracle数据和历史结论。G0前两条注册场景只做形状/ID检查的次序偏差继续披露。
+- **资源与公平性：** R6-B有效batch64、12,800 updates和同初始化/数据计划均冻结；扩大batch会改变本对照的优化条件。未来新协议可在匹配比较臂中将更大batch作为预注册因素。R6-A `chunk_size=16` 是评估分块，不是训练batch。
+- **决定：** 总体 **REFINE**；执行R6-B R分支一次匹配训练，未满足任务/虚警保护时停止，不做额外分支搜索或final blind。研究总纲v1.3和R5历史结果保持不变。
