@@ -51,3 +51,10 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 - **资源检查：** 当前CUDA设备为RTX 3050 Laptop GPU；检查时约3.0 GiB显存空闲。桌面与一个独立GMTI应用仍占少量显存，实际每split空闲显存及R6-A峰值将在环境记录中留档；实验不并行训练模型。
 - **启动回归：** 首次runner调用在构造场景迭代器前因未导入已实现的 `iter_scene_chunks` 而报 `NameError`。CSV仅有表头，checkpoint记录0 chunks/0 rows，未进入数据生成、预测或统计；原G0与空输出保存在 `experiments/D2-A-R6/R6-A/attempts/pre_data_launch_3f7826f/`。新增导入回归测试（先失败后通过），修复后重新运行G0并通过。
 - **汇总回归：** 三组预测均完整写出后，汇总路径因漏导入 `_bootstrap_mean_interval` 停止，未生成metrics/figures或检查科学指标。已增加导入和分析SHA分离测试，修复后目标测试19项、完整套件452项通过。此次修正只改变汇总入口，不改预测代码、阈值、方法、样本或结果门；指标将同时记录原预测运行SHA和汇总代码SHA，场景不重生成。
+
+## 2026-10-29：oracle 距离门映射更正
+
+- **触发证据：** 初次汇总与指标初步查看后，抽查一条 H1 记录发现连续真值距离 `10.8787` 被 `floor` 分配到门10，而 B3 检测候选门为11；仿真器明确使用 `np.sinc(range_cell - range_axis)`，响应中心对应最近离散门。故预更正 oracle 估计存在系统性门错配风险。
+- **影响范围：** 仅原始预测CSV的 `oracle_*` 列及其派生 oracle-only Doppler 指标/图可能错误。所有真实方法的预测、候选距离、检测分数、阈值、命中和联合任务输出均未更改。未依据预更正 oracle 指标选择模型/方法或更改方案。
+- **修正与审计：** 实现最近可用整数距离中心映射（半格向上、越界裁到有效轴），增加确定性H1重建的独立 sidecar 和严格scene ID/truth核对；原预更正 `metrics.json`、`analysis.md` 与四张图保存在 `experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/`，旧CSV oracle列继续作为审计值，不再作为规范指标输入。使用同一组6,144个注册H1 IDs，不生成新划分、不称blind。
+- **验证/下一步：** 新增nearest-bin与边界规则回归测试（先因floor映射失败，修复后通过）；完整验证、sidecar重算、指标/图更新和阶段审查仍待完成。

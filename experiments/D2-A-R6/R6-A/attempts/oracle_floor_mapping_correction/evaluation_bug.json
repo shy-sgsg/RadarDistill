@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-29",
+  "prediction_run_git_sha": "e3972ae94430abd3d79eae7e1ee9179f68062648",
+  "pre_correction_summary_git_sha": "c82f18178541c3167e3d9841f304d75a3f08e3f4",
+  "finding": {
+    "old_mapping": "floor(truth_range_cell)",
+    "correct_mapping": "nearest available integer range-bin center; exact half-bin ties round upward; out-of-axis values clip to the nearest edge bin",
+    "evidence": "The simulator uses sinc(truth_range_cell - range_axis), centered at the continuous target range.",
+    "example": {
+      "truth_range_cell": 10.8787,
+      "old_bin": 10,
+      "nearest_bin": 11
+    }
+  },
+  "affected": [
+    "oracle_* fields in the original H1 prediction CSV",
+    "offline oracle frequency-estimator metrics derived from those fields",
+    "the actual-versus-oracle Doppler RMSE figure"
+  ],
+  "unaffected": [
+    "all detector outputs and scores",
+    "actual candidate range gates and frequency estimates",
+    "calibration thresholds and H0/H1 scene splits",
+    "detection, Pd, Pfa, ROC/AUC, and native joint-success metrics"
+  ],
+  "selection_use": "No model or method selection, threshold adjustment, or protocol change was based on pre-correction oracle metrics.",
+  "preserved_pre_correction_artifacts": "experiments/D2-A-R6/R6-A/attempts/oracle_floor_mapping_correction/pre_correction/",
+  "corrected_sidecar": "experiments/D2-A-R6/R6-A/predictions/h1_oracle_nearest_bin.csv",
+  "corrected_recompute_status": "pending"
+}

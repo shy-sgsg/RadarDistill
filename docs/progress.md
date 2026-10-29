@@ -9,6 +9,7 @@
 - 首次正式runner调用在生成器调用前因遗漏 `iter_scene_chunks` 导入而停止；核验检查点为0 chunks、0 rows，CSV只有表头，未生成或查看注册场景。故障与原preflight及空输出已归档至 `experiments/D2-A-R6/R6-A/attempts/pre_data_launch_3f7826f/`；修复增加runner导入回归测试，随后G0通过并开始实验。
 - 按G0冻结的执行SHA `e3972ae94430abd3d79eae7e1ee9179f68062648` 已生成全部30,144个注册场景预测：H0 calibration 12,000、H0 verification 12,000、H1 development 6,144；共211,008方法行，未保存IQ，final blind未生成。三split CUDA峰值分配均为129,681,408 bytes。H0两split的完整处理时间约350.44/353.37秒；H1含候选/离线估计约216.71秒。所有分块状态完整。
 - 首次汇总在全部预测写完后因runner遗漏 `_bootstrap_mean_interval` 导入而停止；尚未完成指标计算、查看或筛选科研结果。回归测试先失败后通过。当前为已冻结预测文件补齐汇总入口，指标将记录预测运行SHA `e3972ae…` 与独立的汇总代码SHA，并按原数据复算，不重新生成场景。
+- **后续复核更正（2026-10-29）：** 汇总代码修复后生成并初步查看了预更正统计，发现离线 oracle 将连续距离 `floor` 到整数门；这与仿真器 `sinc(truth_range_cell - range_axis)` 的距离响应不符。预更正指标和图仅供审计，尚未据此选择方法；保留后先按最近可用距离中心规则重算 oracle-only 频率列及其汇总。实际 detector 输出、阈值、H1场景、实际候选估计不受影响。细节及数据边界见 R6-A protocol 第7节与下方任务记录。
 
 # 2026-10-28：R5-C T0–T3教学内容pilot完成并停止当前教师内容分支
 

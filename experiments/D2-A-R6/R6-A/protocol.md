@@ -72,3 +72,9 @@ R6-A只对已加载并冻结的checkpoint推理。若按训练记录导出推理
 ## 6. 交付
 
 运行代码、config、`preflight.json`、scene/seed manifests、每场景紧凑预测、`metrics.json`、`analysis.md`、图和资源记录。不得缓存全量IQ；保存scene IDs足以复现。R6-A完成后单独提交SHA及阶段结论，且不改R5-C结果。
+
+## 7. 运行后离线 oracle 映射更正（2026-10-29）
+
+在汇总指标复核时发现，原 oracle helper 将连续真值距离用 `floor` 映射为距离门。仿真器的距离响应为 `sinc(truth_range_cell - range_axis)`，所以离散 oracle 门应选择有限距离轴上最近的整数中心。更正规则为四舍五入、半格恰好时向较大索引取整，并将超出采样轴的值裁到最近边界门。
+
+原 H1 预测 CSV 中的 `oracle_*` 列以及首次预更正 `metrics.json.gz`、`analysis.md.gz`（均为无损压缩）和图表均保存在 `attempts/oracle_floor_mapping_correction/pre_correction/`，仅作审计记录。使用相同的6,144个注册 H1 development scene IDs确定性重建 IQ，并将最近门结果写入独立 `predictions/h1_oracle_nearest_bin.csv` sidecar；规范 `metrics.json` 的 oracle-only 频率诊断从此 sidecar 读取。该更正只影响 oracle 候选频率估计及其离线汇总/图，不改变实际检测器、实际候选、阈值、H1标签、样本划分或阶段门。未依据预更正 oracle 数值选择方法或修改方案。该数据仍是 development，不是 blind。

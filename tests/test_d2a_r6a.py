@@ -160,6 +160,38 @@ def test_matched_detector_predictions_and_separate_oracle_frequency():
     assert oracle['local_profile_ml'].shape == (1,)
 
 
+def test_oracle_range_gate_uses_nearest_available_range_center(monkeypatch):
+    import radardistill.evaluation.d2a_r6a as r6a
+    captured = {}
+
+    def fake_candidate_estimates(iq, bins, physics):
+        captured['bins'] = np.asarray(bins).copy()
+        names = ('fft_peak', 'fft_interpolation', 'fft_zero_pad_4x',
+                 'lag_one_phase_difference', 'local_profile_ml')
+        return {name: np.zeros(len(iq)) for name in names}
+
+    monkeypatch.setattr(r6a, 'candidate_frequency_estimates', fake_candidate_estimates)
+    iq = np.zeros((3, 3, 130, 32), dtype=np.complex128)
+    truth_range = np.array([10.8787, 10.3, 31.8])
+
+    result = r6a.oracle_frequency_estimates(iq, truth_range, {})
+
+    np.testing.assert_array_equal(captured['bins'], [11, 10, 31])
+    assert result['local_profile_ml'].shape == (3,)
+
+
+def test_truth_range_to_bin_rounds_half_up_and_clips_to_axis():
+    from radardistill.evaluation.d2a_r6a import truth_range_to_bin
+    np.testing.assert_array_equal(
+        truth_range_to_bin(np.array([.5, 1.5, -2., 31.8]), 32),
+        [1, 2, 0, 31],
+    )
+    with pytest.raises(ValueError):
+        truth_range_to_bin(np.array([np.nan]), 32)
+    with pytest.raises(ValueError):
+        truth_range_to_bin(np.array([1.]), 0)
+
+
 def test_seed_audit_rejects_previous_or_reserved_seed_blocks():
     import yaml
     from radardistill.evaluation.d2a_r6a import audit_seed_isolation

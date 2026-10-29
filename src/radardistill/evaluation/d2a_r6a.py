@@ -419,12 +419,31 @@ def predict_observed(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapp
     return observed
 
 
-def oracle_frequency_estimates(iq: np.ndarray, truth_range: np.ndarray, physics: Mapping[str, Any]) -> dict[str, np.ndarray]:
-    """Offline-only oracle gate; must never be used to select a runtime candidate."""
+def truth_range_to_bin(truth_range: np.ndarray, range_bin_count: int) -> np.ndarray:
+    """Map continuous truth to the nearest available integer range-bin center.
+
+    Exact half-bin ties go to the higher-index bin. Values beyond the sampled
+    range axis map to its nearest edge bin.
+    """
     truth = np.asarray(truth_range, dtype=np.float64)
     if truth.ndim != 1 or not np.isfinite(truth).all():
         raise ValueError('oracle truth ranges must be finite vector')
-    return candidate_frequency_estimates(iq, np.floor(truth).astype(np.int64), physics)
+    if not isinstance(range_bin_count, (int, np.integer)) or range_bin_count <= 0:
+        raise ValueError('range_bin_count must be a positive integer')
+    nearest = np.floor(truth + 0.5).astype(np.int64)
+    return np.clip(nearest, 0, int(range_bin_count) - 1)
+
+
+def oracle_frequency_estimates(iq: np.ndarray, truth_range: np.ndarray, physics: Mapping[str, Any]) -> dict[str, np.ndarray]:
+    """Offline-only nearest-range-bin oracle; never select a runtime candidate."""
+    values = np.asarray(iq)
+    if values.ndim != 4:
+        raise ValueError('IQ must be a batch [B,C,N,R] for oracle estimates')
+    truth = np.asarray(truth_range, dtype=np.float64)
+    if truth.ndim != 1 or not np.isfinite(truth).all() or truth.shape != (len(values),):
+        raise ValueError('oracle truth ranges must be a finite vector matching IQ batch')
+    bins = truth_range_to_bin(truth, values.shape[-1])
+    return candidate_frequency_estimates(values, bins, physics)
 
 
 def audit_seed_isolation(config: Mapping[str, Any], r5c_manifest: str, r6b_config: Mapping[str, Any]) -> dict[str, int]:

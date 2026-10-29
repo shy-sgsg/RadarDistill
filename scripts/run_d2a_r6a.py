@@ -27,6 +27,8 @@ FREQUENCY_NAMES = ('fft_peak', 'fft_interpolation', 'fft_zero_pad_4x',
                    'lag_one_phase_difference', 'local_profile_ml')
 PREDICTION_FIELDS = list(BASE_FIELDS) + [field for name in FREQUENCY_NAMES
                                          for field in (name, 'oracle_' + name)]
+ORACLE_FIELDS = ['scene_id', 'split', 'seed', 'condition_index', 'truth_range_cell',
+                 'oracle_range_bin', 'truth_doppler_hz', *FREQUENCY_NAMES]
 
 from radardistill.evaluation.d2a_r6a import (
     ResumableCSV,
@@ -34,11 +36,13 @@ from radardistill.evaluation.d2a_r6a import (
     audit_scene_ids,
     audit_seed_isolation,
     build_split_plan,
+    candidate_frequency_estimates,
     evaluate_chunk,
     iter_scene_chunks,
     load_frozen_medium,
     summarize_detection_method,
     summarize_parameter_estimator,
+    truth_range_to_bin,
     wrapped_error,
 )
 
@@ -218,6 +222,92 @@ def run_split(split: str) -> dict:
             'cuda_peak_allocated_bytes': writer.state.get('cuda_peak_allocated_bytes', 0)}
 
 
+def recompute_oracle() -> dict:
+    """Recompute only offline oracle estimators on the registered H1 scenes."""
+    preflight_result, head = _frozen_preflight(allow_analysis_code_update=True)
+    config = read_yaml('experiments/D2-A-R6/R6-A/config.yaml')
+    physics = read_yaml(config['radar']['source_config'])
+    reference_path = STAGE / 'predictions/h1_development.csv'
+    reference_progress = reference_path.with_suffix(reference_path.suffix + '.progress.json')
+    reference_spec = config['data']['splits']['h1_development']
+    plan = build_split_plan(config, 'h1_development')
+    if not reference_path.exists() or not reference_progress.exists():
+        raise RuntimeError('complete H1 development predictions are required')
+    expected_rows = int(reference_spec['scene_count']) * len(METHODS)
+    reference_state = json.loads(reference_progress.read_text(encoding='utf-8'))
+    if (reference_state.get('git_sha') != preflight_result['git_sha']
+            or reference_state.get('owner') != 'D2-A-R6-A'
+            or reference_state.get('split') != 'h1_development'
+            or reference_state.get('fieldnames') != PREDICTION_FIELDS
+            or int(reference_state.get('chunks_done', -1)) != len(plan)
+            or int(reference_state.get('rows', -1)) != expected_rows
+            or int(reference_state.get('byte_offset', -1)) != reference_path.stat().st_size):
+        raise ValueError('H1 prediction checkpoint is incomplete or belongs to another run')
+    reference = _load_split(reference_path, 'h1_development', int(reference_spec['scene_count']))['B0']
+    output = STAGE / 'predictions/h1_oracle_nearest_bin.csv'
+    writer = ResumableCSV(output, ORACLE_FIELDS, head, 'h1_oracle_nearest_bin')
+    if writer.chunks_done > len(plan):
+        raise ValueError('oracle checkpoint exceeds registered H1 chunk plan')
+    chunks = iter_scene_chunks(config, physics, 'h1_development', start_chunk=writer.chunks_done)
+    scene_offset = sum(row['count'] for row in plan[:writer.chunks_done])
+    for chunk_index in range(writer.chunks_done, len(plan)):
+        started = time.perf_counter()
+        chunk = next(chunks)
+        generated_seconds = time.perf_counter() - started
+        count = len(chunk['scene_ids'])
+        end = scene_offset + count
+        expected_ids = reference['scene_id'][scene_offset:end]
+        if not np.array_equal(np.asarray(chunk['scene_ids'], dtype=str), expected_ids):
+            raise ValueError(f'regenerated H1 scene IDs differ at chunk {chunk_index}')
+        for field, generated in (
+                ('seed', np.full(count, int(chunk['spec']['seed']), dtype=np.int64)),
+                ('condition_index', np.full(count, int(chunk['spec']['condition_index']), dtype=np.int64)),
+                ('truth_range_cell', np.asarray(chunk['truth']['range_cell'], dtype=np.float64)),
+                ('truth_doppler_hz', np.asarray(chunk['truth']['doppler_hz'], dtype=np.float64))):
+            if not np.array_equal(generated, reference[field][scene_offset:end]):
+                raise ValueError(f'regenerated H1 {field} differs at chunk {chunk_index}')
+        bins = truth_range_to_bin(chunk['truth']['range_cell'], chunk['iq'].shape[-1])
+        started = time.perf_counter()
+        estimates = candidate_frequency_estimates(chunk['iq'], bins, physics)
+        estimator_seconds = time.perf_counter() - started
+        rows = []
+        for index, scene_id in enumerate(chunk['scene_ids']):
+            row = {'scene_id': str(scene_id), 'split': 'h1_development',
+                   'seed': int(chunk['spec']['seed']),
+                   'condition_index': int(chunk['spec']['condition_index']),
+                   'truth_range_cell': float(chunk['truth']['range_cell'][index]),
+                   'oracle_range_bin': int(bins[index]),
+                   'truth_doppler_hz': float(chunk['truth']['doppler_hz'][index])}
+            row.update({name: float(estimates[name][index]) for name in FREQUENCY_NAMES})
+            rows.append(row)
+        writer.append(rows, chunk_index,
+                      timings={'scene_generation': generated_seconds,
+                               'oracle_estimators': estimator_seconds})
+        scene_offset = end
+        if (chunk_index + 1) % 100 == 0 or chunk_index + 1 == len(plan):
+            print(json.dumps({'split': 'h1_oracle_nearest_bin',
+                              'chunks_done': chunk_index + 1, 'chunks_total': len(plan),
+                              'scenes_done': writer.state['rows']}, ensure_ascii=False), flush=True)
+    expected_scenes = int(reference_spec['scene_count'])
+    if writer.chunks_done != len(plan) or int(writer.state['rows']) != expected_scenes:
+        raise RuntimeError('completed oracle output does not match registered H1 scene plan')
+    device = torch.cuda.get_device_name(0)
+    record = {'analysis_git_sha': head, 'prediction_run_git_sha': reference_state['git_sha'],
+              'split': 'h1_development', 'scene_count': expected_scenes,
+              'mapping': 'nearest_available_range_center_half_up', 'gpu_available': True,
+              'gpu': device, 'gpu_used': False, 'cpu_frequency_estimators': True,
+              'timings_seconds': writer.state.get('timings_seconds', {})}
+    record_path = STAGE / 'environment_oracle_recompute.json'
+    payload = json.dumps(record, indent=2, ensure_ascii=False) + '\n'
+    if record_path.exists() and record_path.read_text(encoding='utf-8') != payload:
+        raise FileExistsError(f'refusing to overwrite oracle recompute record: {record_path}')
+    if not record_path.exists():
+        record_path.write_text(payload, encoding='utf-8')
+    return {'scene_count': expected_scenes, 'chunks': len(plan),
+            'csv': str(output.relative_to(ROOT)), 'analysis_git_sha': head,
+            'timings_seconds': writer.state.get('timings_seconds', {})}
+
+
 def _load_split(path: Path, split: str, expected_count: int) -> dict[str, dict[str, np.ndarray]]:
     int_fields = ('seed', 'condition_index', 'range_bin')
     float_fields = ('score', 'range_cell', 'doppler_hz', 'truth_range_cell', 'truth_doppler_hz') + tuple(
@@ -271,6 +361,59 @@ def _scalar_doppler_summary(predicted: np.ndarray, truth: np.ndarray,
     return result
 
 
+def _load_oracle_sidecar(reference: dict[str, np.ndarray]) -> tuple[dict[str, np.ndarray], dict]:
+    path = STAGE / 'predictions/h1_oracle_nearest_bin.csv'
+    progress_path = path.with_suffix(path.suffix + '.progress.json')
+    if not path.exists() or not progress_path.exists():
+        raise RuntimeError('nearest-bin H1 oracle sidecar is required before summarization')
+    progress = json.loads(progress_path.read_text(encoding='utf-8'))
+    if (progress.get('owner') != 'D2-A-R6-A'
+            or not progress.get('git_sha')
+            or progress.get('split') != 'h1_oracle_nearest_bin'
+            or progress.get('fieldnames') != ORACLE_FIELDS
+            or int(progress.get('chunks_done', -1)) != len(build_split_plan(
+                read_yaml('experiments/D2-A-R6/R6-A/config.yaml'), 'h1_development'))
+            or int(progress.get('rows', -1)) != len(reference['scene_id'])
+            or int(progress.get('byte_offset', -1)) != path.stat().st_size):
+        raise ValueError('nearest-bin oracle sidecar checkpoint is incomplete or invalid')
+    rows = []
+    seen = set()
+    with path.open(newline='', encoding='utf-8') as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames != ORACLE_FIELDS:
+            raise ValueError('nearest-bin oracle sidecar columns do not match')
+        for row in reader:
+            if row['scene_id'] in seen:
+                raise ValueError(f'duplicate oracle scene ID: {row["scene_id"]}')
+            seen.add(row['scene_id'])
+            if row['split'] != 'h1_development':
+                raise ValueError('oracle sidecar contains an unexpected split')
+            rows.append(row)
+    if len(rows) != len(reference['scene_id']):
+        raise ValueError('oracle sidecar scene count does not match H1 reference')
+    ids = np.asarray([row['scene_id'] for row in rows], dtype=str)
+    seeds = np.asarray([int(row['seed']) for row in rows], dtype=np.int64)
+    conditions = np.asarray([int(row['condition_index']) for row in rows], dtype=np.int64)
+    truth_range = np.asarray([float(row['truth_range_cell']) for row in rows], dtype=np.float64)
+    truth_doppler = np.asarray([float(row['truth_doppler_hz']) for row in rows], dtype=np.float64)
+    bins = np.asarray([int(row['oracle_range_bin']) for row in rows], dtype=np.int64)
+    if (not np.array_equal(ids, reference['scene_id'])
+            or not np.array_equal(seeds, reference['seed'])
+            or not np.array_equal(conditions, reference['condition_index'])
+            or not np.array_equal(truth_range, reference['truth_range_cell'])
+            or not np.array_equal(truth_doppler, reference['truth_doppler_hz'])):
+        raise ValueError('oracle sidecar does not align exactly with registered H1 scenes and truth')
+    config = read_yaml('experiments/D2-A-R6/R6-A/config.yaml')
+    expected_bins = truth_range_to_bin(truth_range, int(config['radar']['range_bin_count']))
+    if not np.array_equal(bins, expected_bins):
+        raise ValueError('oracle sidecar range bins do not follow the registered nearest-center mapping')
+    estimates = {name: np.asarray([float(row[name]) for row in rows], dtype=np.float64)
+                 for name in FREQUENCY_NAMES}
+    if any(not np.isfinite(values).all() for values in estimates.values()):
+        raise ValueError('oracle sidecar contains non-finite frequency estimates')
+    return estimates, progress
+
+
 def summarize() -> dict:
     preflight_result, head = _frozen_preflight(allow_analysis_code_update=True)
     config = read_yaml('experiments/D2-A-R6/R6-A/config.yaml')
@@ -310,6 +453,13 @@ def summarize() -> dict:
     calibration = split_data['h0_calibration']
     verification = split_data['h0_verification']
     h1 = split_data['h1_development']
+    oracle_estimates, oracle_progress = _load_oracle_sidecar(h1[METHODS[0]])
+    oracle_record = json.loads((STAGE / 'environment_oracle_recompute.json').read_text(encoding='utf-8'))
+    if (oracle_record.get('analysis_git_sha') != oracle_progress['git_sha']
+            or oracle_record.get('prediction_run_git_sha') != preflight_result['git_sha']
+            or oracle_record.get('scene_count') != counts['h1_development']
+            or oracle_record.get('mapping') != 'nearest_available_range_center_half_up'):
+        raise ValueError('oracle recompute environment record does not match sidecar provenance')
     targets = [float(value) for value in config['methods']['detector_thresholds']['target_pfa_cpi']]
     evaluation = config['evaluation']
     replicates = int(evaluation['bootstrap_replicates'])
@@ -321,6 +471,12 @@ def summarize() -> dict:
         'experiment': 'D2-A-R6-A', 'protocol_version': config['experiment']['protocol_version'],
         'git_sha': head, 'analysis_git_sha': head,
         'prediction_run_git_sha': preflight_result['git_sha'],
+        'oracle_recompute_git_sha': oracle_progress['git_sha'],
+        'oracle_gate_mapping': {
+            'source': 'nearest_available_integer_range_center',
+            'rounding': 'half_up', 'out_of_axis': 'clip_to_nearest_edge_bin',
+            'legacy_prediction_csv_oracle_columns': 'floor_based_pre_correction_audit_only',
+        },
         'g0_status': preflight_result['status'],
         'protocol_order_deviation': preflight_result['protocol_deviation'],
         'checkpoint_source': config['methods']['checkpoint_source'],
@@ -370,7 +526,7 @@ def summarize() -> dict:
                     range_gate_cells=range_gate, doppler_gate_hz=doppler_gate)
             oracle_metrics = {}
             for name in FREQUENCY_NAMES:
-                prediction = test['oracle_' + name]
+                prediction = oracle_estimates[name]
                 if not np.isfinite(prediction).all():
                     raise ValueError(f'{method} has missing oracle-candidate estimates for {name}')
                 oracle_metrics[name] = _scalar_doppler_summary(
@@ -565,6 +721,7 @@ def _write_analysis(metrics: dict, figures: list[str]) -> Path:
         '# D2-A-R6-A same-scene detector and estimator baseline', '',
         f"**Git SHA:** `{metrics['git_sha']}`  ",
         f"**Prediction run SHA:** `{metrics['prediction_run_git_sha']}`  ",
+        f"**Nearest-bin oracle recompute SHA:** `{metrics['oracle_recompute_git_sha']}`  ",
         f"**G0:** {metrics['g0_status']}  ",
         f"**Final blind:** {metrics['development_data_is_final_blind']}  ",
         f"**Protocol-order deviation:** {metrics['protocol_order_deviation']}", '',
@@ -585,6 +742,7 @@ def _write_analysis(metrics: dict, figures: list[str]) -> Path:
               '- R6-A uses development scenes and does not establish final blind performance.',
               '- R3 T1/T2 remain development candidates without fixed-threshold qualification.',
               '- Oracle-candidate estimates are offline diagnostics and cannot be used as deployable performance.',
+              '- Oracle distance uses the nearest available integer range-bin center; old floor-based `oracle_*` columns in the original prediction CSV are retained for audit only, while canonical metrics use the recomputed sidecar.',
               '- Detector and frequency-estimator errors are reported separately; joint success includes detection, range, and Doppler gates.',
               '- Timing records describe this offline evaluation boundary, not full system latency.']
     path = STAGE / 'analysis.md'
@@ -621,7 +779,7 @@ def run() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=('preflight', 'run', 'summarize'))
+    parser.add_argument('action', choices=('preflight', 'run', 'recompute_oracle', 'summarize'))
     parser.add_argument('--split', choices=('h0_calibration', 'h0_verification', 'h1_development'))
     args = parser.parse_args()
     os.chdir(ROOT)
@@ -632,6 +790,8 @@ def main() -> None:
             print(json.dumps(run_split(args.split), indent=2, ensure_ascii=False))
         else:
             run()
+    elif args.action == 'recompute_oracle':
+        print(json.dumps(recompute_oracle(), indent=2, ensure_ascii=False))
     else:
         metrics = summarize()
         figures = _write_figures(metrics)
