@@ -1020,10 +1020,8 @@ def run_formal_training() -> dict[str, Any]:
         raise RuntimeError("refusing to overwrite a different R6-B sampling audit")
     if not audit_path.exists():
         _write_json(audit_path, audit_record)
-    from radardistill.students.task_student import TaskStudent
-
     initial_state = _initial_medium_state(303)
-    model = TaskStudent(width=96, include_spectrum_head=True)
+    model = _task_model(initial_state, device=torch.device("cpu"))
     if sum(p.numel() for p in model.parameters()) != 82887:
         raise RuntimeError("R6-B Medium training architecture parameter count changed")
     if not all(torch.equal(initial_state[key], value.cpu()) for key, value in model.state_dict().items()):

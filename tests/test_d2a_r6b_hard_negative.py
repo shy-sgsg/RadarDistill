@@ -69,6 +69,18 @@ def test_r6b_optimizer_schedule_inherits_frozen_two_segment_r5_schedule():
     assert _r6b_learning_rate(12800) == pytest.approx(0.00001)
 
 
+def test_seed303_medium_state_loads_identically_into_both_matched_arms():
+    import torch
+    from scripts.run_d2a_r6b_low_pfa import _initial_medium_state, _task_model
+
+    state = _initial_medium_state(303)
+    first = _task_model(state, device=torch.device("cpu"))
+    second = _task_model(state, device=torch.device("cpu"))
+    assert sum(parameter.numel() for parameter in first.parameters()) == 82887
+    assert all(torch.equal(state[key], value) for key, value in first.state_dict().items())
+    assert all(torch.equal(first.state_dict()[key], value) for key, value in second.state_dict().items())
+
+
 def test_hard_pools_are_top_quartile_with_deterministic_tie_breaking():
     scores = np.asarray([1, 9, 9, 2, 3, 3, 0, 0], dtype=float)
     conditions = np.asarray([0, 0, 0, 0, 1, 1, 1, 1])
