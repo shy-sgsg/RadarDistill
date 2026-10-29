@@ -1,0 +1,138 @@
+import numpy as np
+import pytest
+
+from radardistill.evaluation.d2a_r6a import calibrate_threshold, matched_predictions, wrapped_error
+
+
+def test_methods_receive_same_iq_without_truth():
+    iq = np.ones((3, 130, 32), dtype=np.complex64)
+    seen = []
+    def method(x):
+        seen.append(x)
+        return {"score": float(np.abs(x).max())}
+    out = matched_predictions(iq, {"a": method, "b": method})
+    assert seen[0] is iq and seen[1] is iq
+    assert out == {"a": {"score": 1.0}, "b": {"score": 1.0}}
+
+
+def test_calibration_higher_quantile_and_ties():
+    result = calibrate_threshold(np.arange(100.0), 0.05)
+    assert result["threshold"] == 95.0
+    assert result["pfa_gt"] == 0.04
+    assert result["pfa_ge"] == 0.05
+    assert result["tie_count"] == 1
+
+
+def test_wrap_at_nyquist_and_reject_invalid_iq():
+    assert wrapped_error(-649.0, 649.0, 1300.0) == pytest.approx(2.0)
+    with pytest.raises(ValueError):
+        matched_predictions(np.zeros((3, 130, 32)), {"a": lambda x: x})
+
+
+def test_candidate_frequency_uses_selected_range_gate_and_wraps():
+    from radardistill.evaluation.d2a_r6a import candidate_frequency_estimates
+    import yaml
+    with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    n = np.arange(130)
+    iq = np.zeros((2, 3, 130, 32), dtype=np.complex128)
+    iq[0, 0, :, 7] = np.exp(2j * np.pi * 123.4 * n / 1300)
+    iq[1, 0, :, 9] = np.exp(2j * np.pi * -648.0 * n / 1300)
+    estimates = candidate_frequency_estimates(iq, np.array([7, 9]), config)
+    assert set(estimates) == {'fft_peak', 'fft_interpolation', 'fft_zero_pad_4x', 'lag_one_phase_difference', 'local_profile_ml'}
+    assert np.max(np.abs(wrapped_error(estimates['local_profile_ml'], [123.4, -648.0], 1300))) < 0.01
+    assert np.max(np.abs(wrapped_error(estimates['lag_one_phase_difference'], [123.4, -648.0], 1300))) < 0.01
+    with pytest.raises(ValueError):
+        candidate_frequency_estimates(iq, np.array([7, 32]), config)
+
+
+def test_classical_detectors_match_existing_baselines():
+    import yaml
+    from radardistill.d2a_baselines import run_b3
+    from radardistill.evaluation.d2a_r6a import classical_detector_predictions
+    with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
+        physics = yaml.safe_load(f)
+    with open('experiments/D2-A-R3/config.yaml', encoding='utf-8') as f:
+        r3 = yaml.safe_load(f)
+    rng = np.random.default_rng(82)
+    iq = (rng.standard_normal((1, 3, 130, 32)) + 1j * rng.standard_normal((1, 3, 130, 32)))
+    out = classical_detector_predictions(iq, physics, r3)
+    assert set(out) == {'B0', 'B1', 'B2', 'B3', 'R3_T1', 'R3_T2'}
+    original = run_b3(iq, 1300., physics)
+    np.testing.assert_allclose(out['B3'].score, original.score)
+    np.testing.assert_allclose(out['B3'].range_cell, original.range_cell)
+    assert all(np.isfinite(np.asarray(value.score)).all() for value in out.values())
+
+
+def test_frozen_medium_checkpoint_cuda_export_preserves_task_outputs():
+    torch = pytest.importorskip('torch')
+    if not torch.cuda.is_available():
+        pytest.skip('CUDA device unavailable')
+    from radardistill.evaluation.d2a_r6a import load_frozen_medium, predict_medium
+    model = load_frozen_medium('experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt', 'experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/training_record.json')
+    assert sum(p.numel() for p in model.parameters()) == 70277
+    rng = np.random.default_rng(123)
+    iq = (rng.normal(size=(2, 3, 130, 32)) + 1j*rng.normal(size=(2, 3, 130, 32))).astype(np.complex64)
+    prediction = predict_medium(model, iq)
+    assert set(prediction) == {'score', 'predicted_range_cell', 'predicted_range_bin', 'predicted_doppler_hz'}
+    assert all(np.asarray(value).shape == (2,) and np.isfinite(value).all() for value in prediction.values())
+    assert next(model.parameters()).is_cuda
+    from radardistill.students.task_student import TaskStudent
+    original = TaskStudent(width=96, include_spectrum_head=True).cuda().eval()
+    payload = torch.load('experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt', map_location='cpu', weights_only=False)
+    original.load_state_dict(payload['model_state_dict'], strict=True)
+    tensor = torch.from_numpy(np.concatenate((iq.real, iq.imag), axis=1)).cuda()
+    with torch.inference_mode():
+        reference = original(tensor, compute_spectrum=False)
+        exported = model(tensor, compute_spectrum=False)
+    for key in reference:
+        torch.testing.assert_close(reference[key], exported[key], rtol=0, atol=0)
+
+
+def test_registered_split_plan_counts_and_disjoint_seed_blocks():
+    import yaml
+    from radardistill.evaluation.d2a_r6a import build_split_plan
+    with open('experiments/D2-A-R6/R6-A/config.yaml', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    plans = {name: build_split_plan(config, name) for name in config['data']['splits']}
+    assert {k: sum(row['count'] for row in v) for k, v in plans.items()} == {'h0_calibration': 12000, 'h0_verification': 12000, 'h1_development': 6144}
+    all_seeds = [row['seed'] for plan in plans.values() for row in plan]
+    assert len(all_seeds) == len(set(all_seeds))
+    assert all(row['count'] <= 16 for plan in plans.values() for row in plan)
+    bad = yaml.safe_load(yaml.safe_dump(config))
+    bad['data']['splits']['h0_verification']['seed_base'] = bad['data']['splits']['h0_calibration']['seed_base']
+    with pytest.raises(ValueError):
+        build_split_plan(bad, 'h0_verification')
+
+
+def test_streamed_chunk_preserves_scene_ids_and_presence():
+    import yaml
+    from radardistill.evaluation.d2a_r6a import iter_scene_chunks
+    with open('experiments/D2-A-R6/R6-A/config.yaml', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
+        physics = yaml.safe_load(f)
+    for split in config['data']['splits'].values():
+        split['count_per_condition'] = 1
+        split['scene_count'] = 12
+    h0 = next(iter_scene_chunks(config, physics, 'h0_calibration'))
+    h1 = next(iter_scene_chunks(config, physics, 'h1_development'))
+    assert h0['iq'].shape == h1['iq'].shape == (1, 3, 130, 32)
+    assert h0['truth'] is None
+    assert h1['truth']['range_cell'].shape == (1,)
+    assert set(h0['scene_ids']).isdisjoint(h1['scene_ids'])
+
+
+def test_fixed_threshold_summary_excludes_verification_from_calibration():
+    from radardistill.evaluation.d2a_r6a import summarize_workpoint
+    cal = np.arange(100., dtype=float)
+    verification = np.array([96., 95., 0., -1.])
+    scores = np.array([99., 90., 99.])
+    result = summarize_workpoint(cal, verification, scores, np.array([3., 3., 6.]), np.array([649., 0., 10.]), np.array([3., 3., 3.]), np.array([-649., 0., 10.]), 0.05, 1300.)
+    assert result['calibration']['threshold'] == 95.
+    assert result['verification']['pfa'] == .5
+    assert result['h1']['pd'] == pytest.approx(2/3)
+    assert result['h1']['joint_success'] == pytest.approx(1/3)
+    assert result['h1']['doppler_rmse_hz'] == pytest.approx(np.sqrt(4/3))
+    changed = summarize_workpoint(cal, verification + 1000, scores, np.array([3., 3., 6.]), np.array([649., 0., 10.]), np.array([3., 3., 3.]), np.array([-649., 0., 10.]), 0.05, 1300.)
+    assert changed['calibration']['threshold'] == 95.
