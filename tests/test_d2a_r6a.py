@@ -112,9 +112,10 @@ def test_streamed_chunk_preserves_scene_ids_and_presence():
         config = yaml.safe_load(f)
     with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
         physics = yaml.safe_load(f)
-    for split in config['data']['splits'].values():
+    for index, split in enumerate(config['data']['splits'].values()):
         split['count_per_condition'] = 1
         split['scene_count'] = 12
+        split['seed_base'] = 2000000000 + index * 20000000
     h0 = next(iter_scene_chunks(config, physics, 'h0_calibration'))
     h1 = next(iter_scene_chunks(config, physics, 'h1_development'))
     assert h0['iq'].shape == h1['iq'].shape == (1, 3, 130, 32)
@@ -136,3 +137,83 @@ def test_fixed_threshold_summary_excludes_verification_from_calibration():
     assert result['h1']['doppler_rmse_hz'] == pytest.approx(np.sqrt(4/3))
     changed = summarize_workpoint(cal, verification + 1000, scores, np.array([3., 3., 6.]), np.array([649., 0., 10.]), np.array([3., 3., 3.]), np.array([-649., 0., 10.]), 0.05, 1300.)
     assert changed['calibration']['threshold'] == 95.
+
+
+def test_matched_detector_predictions_and_separate_oracle_frequency():
+    import yaml
+    torch = pytest.importorskip('torch')
+    if not torch.cuda.is_available():
+        pytest.skip('CUDA device unavailable')
+    from radardistill.evaluation.d2a_r6a import load_frozen_medium, predict_observed, oracle_frequency_estimates
+    with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
+        physics = yaml.safe_load(f)
+    with open('experiments/D2-A-R3/config.yaml', encoding='utf-8') as f:
+        r3 = yaml.safe_load(f)
+    model = load_frozen_medium('experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt', 'experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/training_record.json')
+    rng = np.random.default_rng(987)
+    iq = (rng.normal(size=(1, 3, 130, 32)) + 1j*rng.normal(size=(1, 3, 130, 32))).astype(np.complex64)
+    results = predict_observed(iq, physics, r3, model, estimate_doppler=True)
+    assert set(results) == {'B0', 'B1', 'B2', 'B3', 'R3_T1', 'R3_T2', 'Medium'}
+    assert all(item['score'].shape == (1,) and item['range_cell'].shape == (1,) for item in results.values())
+    assert all(item['frequency_estimates']['local_profile_ml'].shape == (1,) for item in results.values())
+    oracle = oracle_frequency_estimates(iq, np.array([7.8]), physics)
+    assert oracle['local_profile_ml'].shape == (1,)
+
+
+def test_seed_audit_rejects_previous_or_reserved_seed_blocks():
+    import yaml
+    from radardistill.evaluation.d2a_r6a import audit_seed_isolation
+    with open('experiments/D2-A-R6/R6-A/config.yaml', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    with open('experiments/D2-A-R6/R6-B/config.yaml', encoding='utf-8') as f:
+        r6b = yaml.safe_load(f)
+    result = audit_seed_isolation(config, 'experiments/D2-A-R5/R5-C-teaching/seed_manifest.csv', r6b)
+    assert result['r5c_seed_overlap'] == 0 and result['r6b_reserved_overlap'] == 0
+    bad = yaml.safe_load(yaml.safe_dump(config))
+    bad['data']['splits']['h0_calibration']['seed_base'] = 1008000000
+    with pytest.raises(ValueError, match='R5-C'):
+        audit_seed_isolation(bad, 'experiments/D2-A-R5/R5-C-teaching/seed_manifest.csv', r6b)
+    bad = yaml.safe_load(yaml.safe_dump(config))
+    bad['data']['splits']['h0_calibration']['seed_base'] = 1508000000
+    with pytest.raises(ValueError, match='R6-B'):
+        audit_seed_isolation(bad, 'experiments/D2-A-R5/R5-C-teaching/seed_manifest.csv', r6b)
+
+
+def test_cuda_r3_statistics_match_frozen_cpu_implementations():
+    import yaml
+    torch = pytest.importorskip('torch')
+    if not torch.cuda.is_available():
+        pytest.skip('CUDA device unavailable')
+    from radardistill.evaluation.d2a_r6a_cuda import cuda_r3_predictions
+    with open('experiments/D2-A-E001/config.yaml', encoding='utf-8') as f:
+        physics = yaml.safe_load(f)
+    with open('experiments/D2-A-R3/config.yaml', encoding='utf-8') as f:
+        r3 = yaml.safe_load(f)
+    from radardistill.evaluation.d2a_r6a import classical_detector_predictions
+    rng = np.random.default_rng(981)
+    iq = rng.normal(size=(2, 3, 130, 32)) + 1j*rng.normal(size=(2, 3, 130, 32))
+    reference = classical_detector_predictions(iq, physics, r3)
+    result = cuda_r3_predictions(iq, physics, r3)
+    for name in ('B3', 'R3_T1', 'R3_T2'):
+        np.testing.assert_allclose(result[name].score, reference[name].score, rtol=1e-10, atol=1e-10)
+        np.testing.assert_array_equal(result[name].range_cell, reference[name].range_cell)
+        np.testing.assert_array_equal(result[name].doppler_hz, reference[name].doppler_hz)
+
+
+def test_chunk_prediction_keeps_truth_outside_observed_methods(monkeypatch):
+    from radardistill.evaluation import d2a_r6a
+    iq = np.ones((2, 3, 130, 32), dtype=np.complex64)
+    truth = {'range_cell': np.array([1.1, 2.2]), 'doppler_hz': np.array([5., 7.])}
+    def fake_observed(x, physics, r3, model, *, estimate_doppler):
+        assert x is iq and estimate_doppler
+        return {'X': {'score': np.array([1., 2.]), 'range_cell': np.array([1., 2.]), 'range_bin': np.array([1, 2]), 'doppler_hz': np.array([5., 6.]), 'frequency_estimates': {'local_profile_ml': np.array([5., 6.])}}}
+    def fake_oracle(x, ranges, physics):
+        np.testing.assert_array_equal(ranges, truth['range_cell'])
+        return {'local_profile_ml': np.array([5.1, 7.1])}
+    monkeypatch.setattr(d2a_r6a, 'predict_observed', fake_observed)
+    monkeypatch.setattr(d2a_r6a, 'oracle_frequency_estimates', fake_oracle)
+    chunk = {'spec': {'split': 'h1_development', 'condition_index': 3, 'seed': 11}, 'iq': iq, 'scene_ids': np.array(['a', 'b']), 'truth': truth}
+    rows = d2a_r6a.evaluate_chunk(chunk, {}, {}, None)
+    assert len(rows) == 2 and rows[0]['scene_id'] == 'a'
+    assert rows[0]['oracle_local_profile_ml'] == 5.1
+    assert rows[0]['truth_range_cell'] == 1.1

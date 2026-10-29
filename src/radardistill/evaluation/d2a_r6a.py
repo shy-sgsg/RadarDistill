@@ -70,21 +70,29 @@ def candidate_frequency_estimates(iq: np.ndarray, range_bins: np.ndarray, config
     }
 
 
-def classical_detector_predictions(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any]) -> dict[str, Any]:
+def classical_detector_predictions(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any], *, use_cuda_r3: bool = False) -> dict[str, Any]:
     """Evaluate the frozen B0–B3 and R3 statistics on the same IQ batch."""
     from radardistill.d2a_baselines import run_b0, run_b1, run_b2, run_b3
     from radardistill.d2a_r3_baselines import run_t1_global_normalized, run_t2_local_cfar
 
     prf = float(physics['radar']['prf_hz'])
     options = r3_config['detection']
-    return matched_predictions(iq, {
+    methods = {
         'B0': lambda x: run_b0(x, prf),
         'B1': lambda x: run_b1(x, prf),
         'B2': lambda x: run_b2(x, prf, dict(physics)),
-        'B3': lambda x: run_b3(x, prf, dict(physics)),
-        'R3_T1': lambda x: run_t1_global_normalized(x, prf, dict(physics), options['t1_global_robust_background']),
-        'R3_T2': lambda x: run_t2_local_cfar(x, prf, dict(physics), options['t2_local_cfar_like']),
-    })
+    }
+    if not use_cuda_r3:
+        methods.update({
+            'B3': lambda x: run_b3(x, prf, dict(physics)),
+            'R3_T1': lambda x: run_t1_global_normalized(x, prf, dict(physics), options['t1_global_robust_background']),
+            'R3_T2': lambda x: run_t2_local_cfar(x, prf, dict(physics), options['t2_local_cfar_like']),
+        })
+    results = matched_predictions(iq, methods)
+    if use_cuda_r3:
+        from radardistill.evaluation.d2a_r6a_cuda import cuda_r3_predictions
+        results.update(cuda_r3_predictions(iq, physics, r3_config))
+    return results
 
 
 def load_frozen_medium(checkpoint_path: str, record_path: str):
@@ -101,6 +109,8 @@ def load_frozen_medium(checkpoint_path: str, record_path: str):
     expected = {'experiment': 'D2-A-R5', 'subphase': 'R5-A', 'arm': 'S0', 'width': 96, 'global_update': 12800}
     if any(payload.get(key) != value for key, value in expected.items()):
         raise ValueError('registered Medium checkpoint identity does not match')
+    if payload.get('r5_config', {}).get('training', {}).get('seed') != 101:
+        raise ValueError('registered Medium checkpoint training seed does not match')
     if (record.get('source_git_sha') != payload.get('source_git_sha') or record.get('width') != 96
             or record.get('selected_update') != 12800 or record.get('parameter_count') != 82887):
         raise ValueError('Medium checkpoint training record does not match')
@@ -218,3 +228,85 @@ def summarize_workpoint(cal_scores: np.ndarray, verification_scores: np.ndarray,
                    'doppler_rmse_hz': float(np.sqrt(np.mean(doppler_error ** 2))),
                    'all_h1': errors(np.ones(len(score), dtype=bool)),
                    'detection_hit': errors(hit), 'correct_candidate': errors(hit & correct)}}
+
+
+def predict_observed(iq: np.ndarray, physics: Mapping[str, Any], r3_config: Mapping[str, Any],
+                     model: Any, *, estimate_doppler: bool) -> dict[str, dict[str, Any]]:
+    """Predict all detection methods from one IQ batch without truth labels."""
+    classical = classical_detector_predictions(iq, physics, r3_config, use_cuda_r3=True)
+    observed: dict[str, dict[str, Any]] = {}
+    for name, output in classical.items():
+        observed[name] = {'score': np.asarray(output.score), 'range_cell': np.asarray(output.range_cell),
+                          'range_bin': np.asarray(output.range_cell, dtype=np.int64),
+                          'doppler_hz': np.asarray(output.doppler_hz)}
+    student = predict_medium(model, iq)
+    observed['Medium'] = {'score': student['score'], 'range_cell': student['predicted_range_cell'],
+                          'range_bin': student['predicted_range_bin'], 'doppler_hz': student['predicted_doppler_hz']}
+    if estimate_doppler:
+        for item in observed.values():
+            item['frequency_estimates'] = candidate_frequency_estimates(iq, item['range_bin'], physics)
+    return observed
+
+
+def oracle_frequency_estimates(iq: np.ndarray, truth_range: np.ndarray, physics: Mapping[str, Any]) -> dict[str, np.ndarray]:
+    """Offline-only oracle gate; must never be used to select a runtime candidate."""
+    truth = np.asarray(truth_range, dtype=np.float64)
+    if truth.ndim != 1 or not np.isfinite(truth).all():
+        raise ValueError('oracle truth ranges must be finite vector')
+    return candidate_frequency_estimates(iq, np.floor(truth).astype(np.int64), physics)
+
+
+def audit_seed_isolation(config: Mapping[str, Any], r5c_manifest: str, r6b_config: Mapping[str, Any]) -> dict[str, int]:
+    """Reject registered seeds used by R5-C or reserved for R6-B."""
+    import csv
+    plans = [row for name in config['data']['splits'] for row in build_split_plan(config, name)]
+    seeds = {row['seed'] for row in plans}
+    if len(seeds) != len(plans):
+        raise ValueError('R6-A chunk seeds overlap')
+    with open(r5c_manifest, newline='', encoding='utf-8') as handle:
+        prior = {int(row['seed']) for row in csv.DictReader(handle)}
+    overlap = seeds & prior
+    if overlap:
+        raise ValueError('R5-C seed overlap')
+    r6b_data = r6b_config['data']
+    stride = int(r6b_data['condition_seed_stride'])
+    count = int(r6b_data['condition_count'])
+    reserved = []
+    for split in r6b_data['splits'].values():
+        if 'seed_base' in split:
+            base = int(split['seed_base'])
+            reserved.append((base, base + count * stride))
+        for base in split.get('seed_bases_by_course', []):
+            reserved.append((int(base), int(base) + 5 * stride))
+    if any(lo <= seed < hi for seed in seeds for lo, hi in reserved):
+        raise ValueError('R6-B reserved seed overlap')
+    return {'r6a_chunk_seeds': len(seeds), 'r5c_known_seeds': len(prior),
+            'r5c_seed_overlap': 0, 'r6b_reserved_overlap': 0}
+
+
+FREQUENCY_NAMES = ('fft_peak', 'fft_interpolation', 'fft_zero_pad_4x', 'lag_one_phase_difference', 'local_profile_ml')
+
+
+def evaluate_chunk(chunk: Mapping[str, Any], physics: Mapping[str, Any], r3_config: Mapping[str, Any], model: Any) -> list[dict[str, Any]]:
+    """Create compact matched rows; oracle calculations occur only after prediction."""
+    iq, truth, spec = chunk['iq'], chunk['truth'], chunk['spec']
+    observed = predict_observed(iq, physics, r3_config, model, estimate_doppler=truth is not None)
+    oracle = oracle_frequency_estimates(iq, truth['range_cell'], physics) if truth is not None else {}
+    ids = np.asarray(chunk['scene_ids'])
+    if ids.shape != (len(iq),) or len(np.unique(ids)) != len(ids):
+        raise ValueError('invalid or repeated scene IDs')
+    rows = []
+    for method, prediction in observed.items():
+        for i, scene_id in enumerate(ids):
+            row = {'scene_id': str(scene_id), 'split': spec['split'], 'seed': spec['seed'],
+                   'condition_index': spec['condition_index'], 'method': method,
+                   'score': float(prediction['score'][i]), 'range_cell': float(prediction['range_cell'][i]),
+                   'range_bin': int(prediction['range_bin'][i]), 'doppler_hz': float(prediction['doppler_hz'][i]),
+                   'truth_range_cell': None if truth is None else float(truth['range_cell'][i]),
+                   'truth_doppler_hz': None if truth is None else float(truth['doppler_hz'][i])}
+            for name in FREQUENCY_NAMES:
+                actual = prediction.get('frequency_estimates', {}).get(name)
+                row[name] = None if actual is None else float(actual[i])
+                row['oracle_' + name] = None if name not in oracle else float(oracle[name][i])
+            rows.append(row)
+    return rows
