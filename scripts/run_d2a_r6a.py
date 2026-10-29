@@ -30,6 +30,7 @@ PREDICTION_FIELDS = list(BASE_FIELDS) + [field for name in FREQUENCY_NAMES
 
 from radardistill.evaluation.d2a_r6a import (
     ResumableCSV,
+    _bootstrap_mean_interval,
     audit_scene_ids,
     audit_seed_isolation,
     build_split_plan,
@@ -116,16 +117,26 @@ def preflight() -> dict:
     return result
 
 
-def _frozen_preflight() -> tuple[dict, str]:
+def _validate_preflight_head(execution_sha: str, head: str,
+                            *, allow_analysis_code_update: bool = False) -> dict[str, str]:
+    if execution_sha != head and not allow_analysis_code_update:
+        raise RuntimeError('HEAD differs from G0; rerun a new committed preflight')
+    return {'prediction_run_git_sha': execution_sha, 'analysis_git_sha': head}
+
+
+def _frozen_preflight(*, allow_analysis_code_update: bool = False) -> tuple[dict, str]:
     path = STAGE / 'preflight.json'
     if not path.exists():
         raise RuntimeError('run the registered G0 preflight before generating scenes')
     preflight_result = json.loads(path.read_text(encoding='utf-8'))
     head = _git('rev-parse', 'HEAD')
-    if head != preflight_result.get('git_sha'):
-        raise RuntimeError('HEAD differs from G0; rerun a new committed preflight')
+    _validate_preflight_head(preflight_result.get('git_sha', ''), head,
+                             allow_analysis_code_update=allow_analysis_code_update)
     if _git('branch', '--show-current') != 'main' or _git('status', '--porcelain', '--untracked-files=no'):
         raise RuntimeError('R6-A execution requires the clean, preflighted main commit')
+    remote_lines = _git('ls-remote', 'origin', 'refs/heads/main').split()
+    if not remote_lines or remote_lines[0] != head:
+        raise RuntimeError('R6-A requires the current main commit to be pushed')
     if not torch.cuda.is_available() or '3050' not in torch.cuda.get_device_name(0):
         raise RuntimeError('R6-A requires RTX 3050 cuda:0; CPU fallback is forbidden')
     return preflight_result, head
@@ -261,7 +272,7 @@ def _scalar_doppler_summary(predicted: np.ndarray, truth: np.ndarray,
 
 
 def summarize() -> dict:
-    preflight_result, head = _frozen_preflight()
+    preflight_result, head = _frozen_preflight(allow_analysis_code_update=True)
     config = read_yaml('experiments/D2-A-R6/R6-A/config.yaml')
     split_data = {}
     all_ids = set()
@@ -275,7 +286,8 @@ def summarize() -> dict:
         progress = json.loads(progress_path.read_text(encoding='utf-8'))
         expected_rows = int(split_spec['scene_count']) * len(METHODS)
         expected_chunks = len(build_split_plan(config, split))
-        if (progress.get('owner') != 'D2-A-R6-A' or progress.get('git_sha') != head
+        if (progress.get('owner') != 'D2-A-R6-A'
+                or progress.get('git_sha') != preflight_result['git_sha']
                 or progress.get('split') != split or progress.get('fieldnames') != PREDICTION_FIELDS
                 or int(progress.get('chunks_done', -1)) != expected_chunks
                 or int(progress.get('rows', -1)) != expected_rows
@@ -307,7 +319,9 @@ def summarize() -> dict:
     doppler_gate = float(evaluation['doppler_gate_hz'])
     metrics = {
         'experiment': 'D2-A-R6-A', 'protocol_version': config['experiment']['protocol_version'],
-        'git_sha': head, 'g0_status': preflight_result['status'],
+        'git_sha': head, 'analysis_git_sha': head,
+        'prediction_run_git_sha': preflight_result['git_sha'],
+        'g0_status': preflight_result['status'],
         'protocol_order_deviation': preflight_result['protocol_deviation'],
         'checkpoint_source': config['methods']['checkpoint_source'],
         'student_training_parameters': int(config['methods']['checkpoint_training_parameter_count']),
@@ -550,6 +564,7 @@ def _write_analysis(metrics: dict, figures: list[str]) -> Path:
     lines = [
         '# D2-A-R6-A same-scene detector and estimator baseline', '',
         f"**Git SHA:** `{metrics['git_sha']}`  ",
+        f"**Prediction run SHA:** `{metrics['prediction_run_git_sha']}`  ",
         f"**G0:** {metrics['g0_status']}  ",
         f"**Final blind:** {metrics['development_data_is_final_blind']}  ",
         f"**Protocol-order deviation:** {metrics['protocol_order_deviation']}", '',

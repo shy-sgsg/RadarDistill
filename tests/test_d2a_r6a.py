@@ -293,3 +293,17 @@ def test_runner_imports_the_registered_streamed_scene_iterator():
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
     assert callable(runner.iter_scene_chunks)
+    assert callable(runner._bootstrap_mean_interval)
+
+
+def test_postrun_summary_accepts_separate_analysis_sha_but_run_does_not():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location('r6a_runner_sha_test', Path('scripts/run_d2a_r6a.py'))
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    with pytest.raises(RuntimeError, match='differs'):
+        runner._validate_preflight_head('prediction-sha', 'analysis-sha')
+    assert runner._validate_preflight_head(
+        'prediction-sha', 'analysis-sha', allow_analysis_code_update=True
+    ) == {'prediction_run_git_sha': 'prediction-sha', 'analysis_git_sha': 'analysis-sha'}
