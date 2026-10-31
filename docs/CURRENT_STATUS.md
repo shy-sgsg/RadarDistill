@@ -1,16 +1,19 @@
 # 当前研究状态
 
-**更新日期：** 2026-10-31
+**更新日期：** 2026-11-01
 **工作分支：** `main`
-**最新完成工作：** D2-A-R6-C protocol/config v1.2 已完成 seed404 单seed容量、训练延长门和数据规模 pilot；在 RTX 3050 Laptop `cuda:0`、FP32 顺序训练，并完成独立 H0 calibration/verification 与 H1 development。分析、指标和内部阶段审查见 [`R6-C 分析`](../experiments/D2-A-R6/R6-C/analysis.md)、[`metrics.json`](../experiments/D2-A-R6/R6-C/metrics.json) 和 [`R6-C 阶段审查`](stage_reviews/D2-A-R6C_review.md)。
-**阶段判断：** Large/XLarge 相对 Medium 的 C2+C3 joint 分别提高 +0.0464/+0.0540，配对区间下界均高于0，但 C3 pooled Pfa 的单侧95%上界为0.1021/0.1027，六格 familywise 门均失败，故不晋级多seed或final blind。Medium 与 XLarge 未共同通过冻结续训门；没有证据说明12,800更新已达到学习极限。数据规模对照未达到主要joint增益门。R6-C为 **REFINE**，R6-A/B/C均为development证据；历史负结果和研究总纲v1.3不变。
+**最新完成工作：** D2-A-R6-D protocol/config v1.2 的 seed505 四臂 matched pilot、RTX 3050 Laptop `cuda:0` FP32 顺序训练、独立 H0 calibration/verification 与 H1 development 已完成。结果和内部审查见 [`R6-D 分析`](../experiments/D2-A-R6/R6-D/analysis.md)、[`metrics.json`](../experiments/D2-A-R6/R6-D/metrics.json) 和 [`R6-D 阶段审查`](stage_reviews/D2-A-R6D_review.md)。
+**阶段判断：** J2-J 相对 J1-J 的 C2+C3 joint-success 提高 +0.0447（95% paired CI `[+0.0360,+0.0536]`），range RMSE ratio=0.8966，均通过筛选/保护；Doppler RMSE ratio=1.3066（95% CI `[1.2015,1.4148]`）与 C3 六格 familywise Pfa 保护均失败。R6-D 为 **REFINE**，不晋级 formal seeds 或 final blind。J1-D/J2-J 验证 loss 在 12,800 步后继续下降，J1-P/J1-J 则较早达到验证最佳；12,800 不是通用上限，也不能把加长训练的收益外推到所有臂。研究总纲 v1.3 和历史冻结结果不变。
 
-**当前唯一优先任务：** 进入已授权的 D2-A-R6-D：完成 J1 D/P/J 与 J2 软候选双向交互的实现、CUDA/资源门和正确性测试，再冻结独立 development pilot。根据 R6-C 未触发延长门的证据，R6-D 新 protocol 将预注册更充分的共同训练预算；D/P/J 对照须匹配 updates、有效 batch、数据暴露、优化计划和验证/checkpoint 规则，训练记录保持固定间隔，不逐 update 写盘。模型规模/batch 仅在不混淆主要对比时另立匹配因素。R6-B/C 冻结设置、结果与无 final blind 结论保持不变。ChatGPT 综合审查请求仍在 R6 P0–P7 全部目标结束后提交；中间审查缺席不阻塞已授权并通过前置门的路线。
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
 ## 当前结论
 
 RadarDistill 的长期目标仍是通过物理仿真真值和传统算法知识蒸馏，训练直接完成 GMTI 动目标检测与参数估计的学生，并在后期评估精度和完整处理效率。当前优先问题仍是学生能否从复数多通道观测学习可辨识物理量。
+
+### D2-A-R6-D 联合检测与参数估计 pilot
+
+seed505 四臂均使用 25,600 updates、有效 batch64、FP32 `cuda:0` 和相同训练/验证场景；H0 calibration/verification 各120,000，H1 development6,144。J2-J−J1-J C2+C3 joint-success差为`+0.04470`（95% CI `[+0.03602,+0.05360]`），Pd与range保护通过，但 Doppler RMSE ratio为`1.3066`（`[1.2015,1.4148]`）；J2的 C3 pooled Pfa上界0.09778，但六格familywise门失败。J2因此保留为range/joint收益与Doppler退化并存的开发候选，不晋级正式多seed/blind。J1-J作为下一轮联合baseline。训练曲线表明J1-D/J2-J在12,800后还改善，J1-P/J1-J在14,400步达到最佳；未来预算须按模型相关趋势预注册并对照匹配。无KD、无物理相位干预、无final blind。
 
 ### D2-A-R6-A 同场景基线
 
@@ -84,7 +87,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-R6-C协议/配置v1.2已在数据生成前冻结，现进入结构实现、G0/G1测试和匹配模型规模/训练充分性筛选。R6-B的hard-negative分支不做多seed晋级；此前R6-B训练、评估、阶段报告及冻结协议保持不变。
+按R6 P4路线冻结 D2-A-R6-E 的有界架构比较 protocol；以 J1-J 作为当前联合 baseline，候选限于少量有物理依据的复数/序列结构。将 Doppler、C3 familywise Pfa 与配对 joint 作为保护，并在新协议中预注册匹配训练预算；依据 R6-D 曲线可考虑超过25,600 updates，但不能单臂追加 R6-D 训练。R6 P0–P7 全部完成前不生成综合 ChatGPT 审查请求；研究总纲 v1.3 与所有历史冻结结果保持不变。
 
 ## 关键材料
 

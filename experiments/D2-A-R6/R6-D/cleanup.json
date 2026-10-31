@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "owner": "D2-A-R6-D-paired-cache",
+  "git_sha": "9a631f4fae445d9fd3793faeba94cdcbc09cc062",
+  "cache_generator_git_shas": {
+    "train": "76815bb2c2068b3c43643340e640fc008dfebff4",
+    "validation": "76815bb2c2068b3c43643340e640fc008dfebff4"
+  },
+  "removed": [
+    {
+      "split": "train",
+      "path": "experiments/D2-A-R6/R6-D/cache/training/train",
+      "bytes": 10233909000
+    },
+    {
+      "split": "validation",
+      "path": "experiments/D2-A-R6/R6-D/cache/training/validation",
+      "bytes": 999406805
+    }
+  ],
+  "removed_bytes": 11233315805,
+  "workspace_used_bytes_after_cleanup": 468160528384,
+  "workspace_limit_bytes": 21474836480,
+  "project_tree_used_bytes_after_cleanup": 1264234496,
+  "project_tree_limit_bytes": 21474836480,
+  "project_tree_measurement": "du -x -sB1 . (allocated bytes, includes .git and local user files under the project root)"
+}

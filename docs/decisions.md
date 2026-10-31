@@ -38,6 +38,14 @@
 
 # 技术决策记录
 
+## 2026-11-01：R6-D联合检测/参数pilot为REFINE，进入R6-E有界架构比较
+
+- **实验范围：** R6-D protocol/config v1.2；seed505、RTX 3050 Laptop `cuda:0`、FP32、有效batch64；J1-D/J1-P/J1-J/J2-J四臂各25,600 updates。训练/验证为51,200/5,000对，独立H0 calibration/verification各120,000、H1 development6,144。没有KD、final blind或多seed。
+- **任务结果：** J2-J−J1-J C2+C3 joint差`+0.04470`（paired 95% CI `[+0.03602,+0.05360]`），overall Pd差`+0.00130`并通过非劣保护，range RMSE ratio=`0.8966`并通过保护；Doppler RMSE ratio=`1.3066`（95% CI `[1.2015,1.4148]`），明显失败。J2的joint/range收益与频率估计退化并存，不做单指标晋级。
+- **虚警保护：** J2-J verification总体Pfa=`0.04892`（单侧exact95%上界`0.04995`），C3 pooled Pfa=`0.09578`（上界`0.09778`）；但C3六格Bonferroni familywise门失败。整体或pooled Pfa不可替代条件保护。
+- **训练预算解释：** J1-D/J2-J validation目标仍从12,800步后改善，最佳点分别20,400/22,800；J1-P/J1-J最佳点14,400步，之后验证损失回升。由此支持不同架构的训练充分性不同，但不表示所有模型可由追加更新获益或已收敛。用户允许未来新实验公平增加updates；R6-D冻结预算保持不变。R6-E可在protocol中注册更长的共同预算，并匹配updates、有效batch、scene exposure、优化计划、验证/checkpoint规则；训练history仍按固定间隔记录。
+- **决定与范围：** R6-D **REFINE**。J2-J不进入formal seeds/blind，J1-J保留为联合baseline。按R6 P4进入R6-E有界架构比较，复数/序列候选限少数有理论依据的结构，保留Doppler/C3 familywise保护。R6-D不评价教师/KD、FFT/传统方法公平对比、相位不变性或频移等变性；旧阶段结论和研究总纲v1.3均不变。
+
 ## 2026-10-31：R6-C按冻结续训门停止，R6-D预注册更充分训练预算
 
 - **依据：** R6-C v1.2 seed404、RTX 3050 Laptop CUDA、有效batch64、12,800-update matched screening完成。Medium在11,200–12,800 updates内validation task loss仅下降0.047%，XLarge反而上升约1.17%，且gap增加0.01442；Medium与validation筛选的XLarge未共同满足续训门。故未运行25,600/51,200更新，也不能声称12,800已接近极限。

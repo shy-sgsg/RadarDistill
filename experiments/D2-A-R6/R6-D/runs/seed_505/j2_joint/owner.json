@@ -1,0 +1,17 @@
+{
+  "owner": "D2-A-R6-D-training-run",
+  "git_sha": "9a631f4fae445d9fd3793faeba94cdcbc09cc062",
+  "protocol_sha256": "c5b30ff2f395617558484ad48821b9239da09278922331c326745f84dc8dddb5",
+  "config_sha256": "e01cb65244338fc3957b39b0db233c022a9befa467f130bda37ecc667abe3ee9",
+  "arm": "j2_joint",
+  "training_seed": 505,
+  "effective_batch_size": 64,
+  "updates": 25600,
+  "microbatch": 16,
+  "parameters": {
+    "parameters": 143294,
+    "trainable_parameters": 143294
+  },
+  "precision": "FP32",
+  "data": "train_51200_paired_scenes"
+}

@@ -1,0 +1,129 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "9a631f4fae445d9fd3793faeba94cdcbc09cc062",
+  "protocol_sha256": "c5b30ff2f395617558484ad48821b9239da09278922331c326745f84dc8dddb5",
+  "config_sha256": "e01cb65244338fc3957b39b0db233c022a9befa467f130bda37ecc667abe3ee9",
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "fp32": true,
+  "effective_batch_size": 64,
+  "formal_microbatch": 16,
+  "resource_probe": {
+    "j1_detection": {
+      "parameters": {
+        "parameters": 70277,
+        "trainable_parameters": 70277
+      },
+      "peak_allocated_bytes": 820022272,
+      "peak_reserved_bytes": 895483904
+    },
+    "j1_parameter": {
+      "parameters": {
+        "parameters": 70277,
+        "trainable_parameters": 70277
+      },
+      "peak_allocated_bytes": 820020736,
+      "peak_reserved_bytes": 895483904
+    },
+    "j1_joint": {
+      "parameters": {
+        "parameters": 70277,
+        "trainable_parameters": 70277
+      },
+      "peak_allocated_bytes": 819823104,
+      "peak_reserved_bytes": 895483904
+    },
+    "j2_joint": {
+      "parameters": {
+        "parameters": 143294,
+        "trainable_parameters": 143294
+      },
+      "peak_allocated_bytes": 1333014016,
+      "peak_reserved_bytes": 1524629504
+    }
+  },
+  "physical_test_seed": 2200000000,
+  "physical_test_scene_ids": [
+    "d2a-scene-2200000000-0",
+    "d2a-scene-2200000000-1",
+    "d2a-scene-2200000000-2",
+    "d2a-scene-2200000000-3",
+    "d2a-scene-2200000000-4",
+    "d2a-scene-2200000000-5",
+    "d2a-scene-2200000000-6",
+    "d2a-scene-2200000000-7",
+    "d2a-scene-2200000000-8",
+    "d2a-scene-2200000000-9",
+    "d2a-scene-2200000000-10",
+    "d2a-scene-2200000000-11",
+    "d2a-scene-2200000000-12",
+    "d2a-scene-2200000000-13",
+    "d2a-scene-2200000000-14",
+    "d2a-scene-2200000000-15"
+  ],
+  "condition": {
+    "course": "C2",
+    "scenario_id": "partial_overlap",
+    "snr_db": 10.0,
+    "cnr_db": 10.0
+  },
+  "arms": {
+    "j1_detection": {
+      "initial_loss": 0.6983340978622437,
+      "last20_mean_loss": 0.32370716482400896,
+      "relative_loss_reduction": 0.5364580280198994,
+      "minimum_required_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 16,
+      "passed": true,
+      "peak_allocated_bytes": 837923328,
+      "peak_reserved_bytes": 924844032,
+      "seconds": 51.73976086100083
+    },
+    "j1_parameter": {
+      "initial_loss": 4.049028396606445,
+      "last20_mean_loss": 0.006479303631931543,
+      "relative_loss_reduction": 0.9983997880485693,
+      "minimum_required_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 16,
+      "passed": true,
+      "peak_allocated_bytes": 837926400,
+      "peak_reserved_bytes": 924844032,
+      "seconds": 53.3928613240023
+    },
+    "j1_joint": {
+      "initial_loss": 4.747363090515137,
+      "last20_mean_loss": 0.010823552240617573,
+      "relative_loss_reduction": 0.9977200917574132,
+      "minimum_required_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 16,
+      "passed": true,
+      "peak_allocated_bytes": 837730816,
+      "peak_reserved_bytes": 924844032,
+      "seconds": 53.78512816199873
+    },
+    "j2_joint": {
+      "initial_loss": 22.973342895507812,
+      "last20_mean_loss": 0.01374825295060873,
+      "relative_loss_reduction": 0.9994015562727139,
+      "minimum_required_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 16,
+      "passed": true,
+      "peak_allocated_bytes": 1335240704,
+      "peak_reserved_bytes": 1480589312,
+      "seconds": 84.41500276000079
+    }
+  },
+  "formal_train_validation_data_present": true
+}

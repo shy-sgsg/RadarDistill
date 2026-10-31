@@ -1,11 +1,11 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-10-31
+**更新时间：** 2026-11-01
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot、R6-A/B/C均已完成各自冻结试验。** R6-C在同数据、有效batch64和12,800 updates下发现更宽学生的C2+C3 joint提高，但绝对C3 Pfa保护失败；数据规模对照未达到主要joint增益门，冻结续训条件也未通过。R6-A/B/C均为development证据，不启动当前候选多seed或blind。R6-D仅完成J1/J2架构与正确性设计，尚未实现或训练。所有历史阶段门、负结果和研究总纲v1.3均保留。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot、R6-A/B/C/D均已完成各自冻结试验。** R6-C容量单seed pilot显示 C2+C3 joint 收益但 C3 绝对 Pfa 保护失败；R6-D在新场景、matched 25,600 updates 下发现 J2-J 的 C2+C3 joint 和 range 收益，同时 Doppler 与 C3 六格 familywise Pfa 保护失败。所有 R6 H1 仍是 development 证据，不启动 formal seeds 或 final blind。研究总纲v1.3及历史负结果保持不变。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
@@ -36,11 +36,12 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - Medium与validation筛选出的XLarge均未过冻结的12,800→25,600验证延长门；本轮没有训练到更长预算，不能据此称12,800已达学习极限。用户允许后续新实验预注册更充分的共同预算，须保持比较臂更新数、有效batch、数据暴露、优化计划和checkpoint公平匹配；history仍仅在固定间隔记录。
 - 结果/缓存清理记录见 `experiments/D2-A-R6/R6-C/`；只清理owner记录的21,467,222,779 bytes可重建缓存，清理后项目约1.21 GB。阶段内部报告见 `docs/stage_reviews/D2-A-R6C_review.md`。没有final blind。
 
-### D2-A-R6-D（联合检测与参数估计；设计已完成，实施待开始）
+### D2-A-R6-D（联合检测与参数估计；protocol v1.2 pilot 已完成）
 
-- J1/J2设计见 `experiments/D2-A-R6/R6-D/joint_architecture_design.md`。下一步完成模型/损失实现、概率与H0行为、PRF周期边界、双向梯度、显存和16-pair/200-update G1门；门通过后再冻结新development pilot。
-- R6-C显示增加容量可提高可辨识C2+C3 joint，但未通过C3绝对Pfa保护。R6-D须报告并保护各臂C3 H0表现。
-- 新protocol应根据用户授权预注册更充分的共同训练预算；D-only/P-only/J1/J2对照匹配updates、有效batch、训练样本暴露、优化计划和验证/checkpoint选择。不可把预算差异当作联合建模收益；不逐update追加训练日志。
+- seed505 的 J1-D/J1-P/J1-J/J2-J 四臂均在 RTX 3050 Laptop `cuda:0`、FP32、effective batch64、25,600 updates 下顺序训练；训练/验证为51,200/5,000配对场景，H0 calibration/verification各120,000，H1 development6,144。全部使用新scene ID，无 final blind。
+- J2-J−J1-J 的 C2+C3 joint-success差`+0.04470`（95% paired CI `[+0.03602,+0.05360]`）；overall Pd和range RMSE配对保护通过，但 Doppler RMSE ratio=`1.3066`（95% CI `[1.2015,1.4148]`）失败。J2-J C3 pooled Pfa上界为0.09778，但六格 familywise门仍失败。
+- J2-J 在本协议下不晋级 formal seeds/blind；J1-J保留为下一轮联合 baseline。R6-D完整分层证据、训练曲线、限制和阶段判断见 `experiments/D2-A-R6/R6-D/analysis.md` 与 `docs/stage_reviews/D2-A-R6D_review.md`。
+- 验证曲线显示 J1-D/J2-J 在12,800步后仍有改善，J1-P/J1-J则在14,400步取得验证最佳。新实验可预注册更长共同预算，但必须匹配所有 arm 的 updates、有效batch、scene exposure、schedule、验证和checkpoint规则；不追溯延长R6-D或对单臂追加训练。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
@@ -102,7 +103,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-推进D2-A-R6-D实施与正确性门；R6-A/B/C已冻结的protocol、结果、负结果均不改，R6-C不追加训练或晋级多seed。R6-D新protocol可以在公平条件下采用更充分训练：所有D/P/J臂共享预注册updates上限、有效batch、训练数据/样本暴露、优化与checkpoint规则；若有充分理由改变batch，则作为匹配因素明示，不混淆训练预算效应。训练history继续按固定验证间隔记录，不逐update写日志。ChatGPT综合审查只在R6 P0–P7全部授权目标完成后提交；中间审查不作为已授权阶段的默认阻塞。
+按R6 P4路线冻结 D2-A-R6-E 有界架构比较协议：以 J1-J 为联合 baseline，仅保留少量有物理依据的复数/序列候选，并保护 Doppler、C3 familywise Pfa 与配对 joint。根据 R6-D 验证曲线可考虑高于25,600 updates 的共同训练预算，但新 protocol 必须让比较臂匹配更新数、有效batch、训练数据暴露、优化计划、验证/checkpoint规则；训练日志继续固定间隔记录，不逐update写盘。R6 P0–P7 全部目标完成后再提交一次综合 ChatGPT 审查；R6-D 的任何冻结协议或结果不追溯修改。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

@@ -1,5 +1,14 @@
 # 研究进度
 
+## 2026-11-01：D2-A-R6-D 四臂联合学习 pilot 完成
+
+- **研究主线：** 按总纲 v1.3 与冻结 R6-D v1.2，比较任务级检测、参数估计和共享联合学习，服务于真值监督学生的能力与结构问题（Q1/Q3/Q4/Q6/Q10）。只使用物理真值监督，没有教师或蒸馏；没有修改总纲及 R6-A/B/C 历史结果。
+- **训练与公平性：** seed505 的 J1-D/J1-P/J1-J/J2-J 四臂均在 RTX 3050 Laptop `cuda:0`、FP32 顺序训练25,600 updates，有效batch64、microbatch16，共用51,200训练对、5,000验证对和相同数据曝光、优化计划及checkpoint规则。每类H0/H1场景重复访问约16次；history每400 updates记录，不逐更新写日志。H0 calibration/verification各120,000，H1 development6,144；未生成final blind。
+- **关键结果：** J2-J−J1-J可辨识C2+C3 joint-success差`+0.04470`（95% paired CI `[+0.03602,+0.05360]`），range RMSE ratio`0.8966`；两项筛选/保护通过。Doppler RMSE ratio`1.3066`（`[1.2015,1.4148]`）失败。J2的C3 pooled Pfa上界0.09778，但六格familywise门失败。阶段结论REFINE：J1-J保留为下一轮联合baseline，J2-J不晋级正式多seed或blind。
+- **训练预算结论：** J1-D/J2-J验证目标在12,800后继续改善，最佳checkpoint分别位于20,400/22,800；J1-P/J1-J在14,400达最佳并随后回升。因此25,600是本阶段冻结对比预算，不是通用学习上限。未来新比较可预注册更长共同预算；必须对所有匹配臂保持updates、effective batch、场景曝光、优化计划和checkpoint规则一致，不追溯追加本轮单臂训练。
+- **数据与交付：** 删除owner manifest指定的Train/Validation可重建缓存`11,233,315,805` bytes；保留协议、配置、scene manifests、检查点/history、训练记录、预测、metrics、图和分析。清理后项目树分配空间约`1.26 GB`（包含`.git`和目录内本地文件），低于20 GiB。清理审计见`experiments/D2-A-R6/R6-D/cleanup.json`；内部阶段报告见`docs/stage_reviews/D2-A-R6D_review.md`。
+- **验证与下一步：** 定向回归`tests/test_d2a_r6_joint.py`为19 passed（1.52 s）；阶段执行中72项项目测试通过。按已授权路线进入R6-E有界架构比较，R6-D结果属于单seed development；R6 P0–P7全部完成后再提交唯一综合ChatGPT审查请求。
+
 # 2026-10-31：D2-A-R6-C 完成，进入 R6-D 实现
 
 - **执行：** 按冻结R6-C v1.2，在RTX 3050 Laptop `cuda:0`、FP32、seed404下顺序训练Medium/Large/XLarge各12,800 updates；有效batch64，history每400 updates记录，不逐update写盘。另完成Medium 51,200 vs102,400唯一训练对的固定12,800-update对照。每模型评价使用H0 calibration/verification各120,000及H1 development6,144场景，未生成final blind。

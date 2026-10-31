@@ -1,0 +1,150 @@
+{
+  "status": "complete",
+  "arm": "j1_parameter",
+  "owner": {
+    "owner": "D2-A-R6-D-training-run",
+    "git_sha": "9a631f4fae445d9fd3793faeba94cdcbc09cc062",
+    "protocol_sha256": "c5b30ff2f395617558484ad48821b9239da09278922331c326745f84dc8dddb5",
+    "config_sha256": "e01cb65244338fc3957b39b0db233c022a9befa467f130bda37ecc667abe3ee9",
+    "arm": "j1_parameter",
+    "training_seed": 505,
+    "effective_batch_size": 64,
+    "updates": 25600,
+    "microbatch": 16,
+    "parameters": {
+      "parameters": 70277,
+      "trainable_parameters": 70277
+    },
+    "precision": "FP32",
+    "data": "train_51200_paired_scenes"
+  },
+  "updates": 25600,
+  "best_update": 14400,
+  "best_validation_objective": 0.17620156875574028,
+  "training_seconds": 6389.668734004001,
+  "effective_batch_size": 64,
+  "microbatch": 16,
+  "unique_train_paired_scenes": 51200,
+  "train_cache_generator_git_sha": "76815bb2c2068b3c43643340e640fc008dfebff4",
+  "validation_cache_generator_git_sha": "76815bb2c2068b3c43643340e640fc008dfebff4",
+  "scene_visits_per_presence": 16.0,
+  "total_cpi_exposures_per_presence": 819200,
+  "model_parameter_counts": {
+    "parameters": 70277,
+    "trainable_parameters": 70277
+  },
+  "cuda_peak_allocated_bytes": 820880384,
+  "cuda_peak_reserved_bytes": 897581056,
+  "sampler_audit": {
+    "mode": "uniform",
+    "seed": 506,
+    "hard_fraction_requested": 0.0,
+    "hard_fraction_by_condition": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 0.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0,
+      "10": 0.0,
+      "11": 0.0
+    },
+    "h0_slots_by_condition": {
+      "0": 204800,
+      "1": 102400,
+      "2": 102400,
+      "3": 68352,
+      "4": 68352,
+      "5": 68096,
+      "6": 34304,
+      "7": 34048,
+      "8": 34048,
+      "9": 34304,
+      "10": 34048,
+      "11": 34048
+    },
+    "sampling_counts_by_condition": {
+      "0": {
+        "slots": 204800,
+        "hard": 0,
+        "uniform": 204800,
+        "hard_fraction": 0.0
+      },
+      "1": {
+        "slots": 102400,
+        "hard": 0,
+        "uniform": 102400,
+        "hard_fraction": 0.0
+      },
+      "2": {
+        "slots": 102400,
+        "hard": 0,
+        "uniform": 102400,
+        "hard_fraction": 0.0
+      },
+      "3": {
+        "slots": 68352,
+        "hard": 0,
+        "uniform": 68352,
+        "hard_fraction": 0.0
+      },
+      "4": {
+        "slots": 68352,
+        "hard": 0,
+        "uniform": 68352,
+        "hard_fraction": 0.0
+      },
+      "5": {
+        "slots": 68096,
+        "hard": 0,
+        "uniform": 68096,
+        "hard_fraction": 0.0
+      },
+      "6": {
+        "slots": 34304,
+        "hard": 0,
+        "uniform": 34304,
+        "hard_fraction": 0.0
+      },
+      "7": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "8": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "9": {
+        "slots": 34304,
+        "hard": 0,
+        "uniform": 34304,
+        "hard_fraction": 0.0
+      },
+      "10": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "11": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      }
+    },
+    "h0_plan_sha256": "43d638bc86224aeae54f8b5b73d3be7f3eed44b790d78016edc071fad184504a",
+    "h1_plan_sha256": "09a8c57d638be5e0f017488aacb1e4f1eb4353739e953540ac5518975e82757d"
+  },
+  "history": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_parameter/training_history.csv",
+  "best_checkpoint": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_parameter/best_checkpoint.pt",
+  "last_checkpoint": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_parameter/last_checkpoint.pt"
+}

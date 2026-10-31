@@ -38,7 +38,7 @@
 - Modify: `experiments/D2-A-R6/R6-D/joint_architecture_design.md`
 - Test: `tests/test_d2a_r6_joint.py`
 
-- [ ] Record the R6-C evidence boundary and the R6-D fixed 25,600-update/effective-batch64 matched budget.
+- [x] Record the R6-C evidence boundary and the R6-D fixed 25,600-update/effective-batch64 matched budget.
 - [x] Record the R6-C evidence boundary and the R6-D fixed 25,600-update/effective-batch64 matched budget; clarify that the budget is not a convergence claim.
 - [x] Record the one-round candidate implementation, output/loss contract, H0/null behavior, and why the feedback output layer uses small nonzero initialization (strict zero initialization blocks first-step cross-branch gradients).
 - [x] Write tests first for J1/J2 output shapes, finite values, null-plus-candidate probability normalization, PRF wrap, H0 loss masking, batch permutation, and no truth/teacher inputs in `forward`.
@@ -64,10 +64,10 @@
 - Modify: `tests/test_d2a_r6_joint.py`
 - Create/update: `experiments/D2-A-R6/R6-D/g1.json`
 
-- [ ] Measure actual parameters and CUDA forward/backward peak memory per arm on the registered GPU; keep one model resident.
-- [ ] Run J1/J2 loss gradient and 16-pair/200-update micro-overfit checks on CUDA; require the preregistered task-loss reduction and finite gradients.
-- [ ] Verify effective batch64 under available microbatch/accumulation and record throughput; no training fallback to CPU.
-- [ ] If a candidate fails, fix only a diagnosed implementation error or stop that candidate; do not weaken the scientific question.
+- [x] Measure actual parameters and CUDA forward/backward peak memory per arm on the registered GPU; keep one model resident.
+- [x] Run J1/J2 loss gradient and 16-pair/200-update micro-overfit checks on CUDA; require the preregistered task-loss reduction and finite gradients.
+- [x] Verify effective batch64 under available microbatch/accumulation and record throughput; no training fallback to CPU.
+- [x] All candidates passed the preregistered G1 checks; conditional failure handling was not triggered.
 
 ### Task 4: Freeze the R6-D experiment protocol before data generation
 
@@ -97,15 +97,15 @@
 
 ### Task 6: Run the matched single-seed development pilot
 
-- [ ] Pass G0/G1 and confirm at least4 GiB disk headroom beyond any stage-owned data cache before generation.
-- [ ] Generate new R6-D train/validation/calibration/verification/development manifests and pass independence audits.
-- [ ] Train D-only, P-only, J1-joint and J2-joint sequentially on CUDA for exactly25,600 updates each; keep effective batch64 and prescribed checkpoint/log intervals.
-- [ ] Evaluate only after all training arms and checkpoint choices are frozen; keep H0 verification independent and all H1 outputs labeled development.
+- [x] Pass G0/G1 and confirm at least4 GiB disk headroom beyond any stage-owned data cache before generation.
+- [x] Generate new R6-D train/validation/calibration/verification/development manifests and pass independence audits.
+- [x] Train D-only, P-only, J1-joint and J2-joint sequentially on CUDA for exactly25,600 updates each; keep effective batch64 and prescribed checkpoint/log intervals.
+- [x] Evaluate only after all training arms and checkpoint choices are frozen; keep H0 verification independent and all H1 outputs labeled development.
 
 ### Task 7: Analyze, report, clean and push
 
-- [ ] Produce `metrics.json`, `analysis.md`, training/metric curves, and `docs/stage_reviews/D2-A-R6D_review.md`.
-- [ ] Report paired task gains, conditional Pfa/Pd, range/Doppler, C3, uncertainty, budget/exposure, parameter count, VRAM and wall time; preserve negative results.
-- [ ] Update status, roadmap, assumptions, decisions, progress and the R6 implementation-plan checkboxes; do not edit the charter.
-- [ ] Remove only R6-D manifest-owned reconstructible caches after all reports exist; verify project size remains <20 GiB and user-untracked files remain untouched.
-- [ ] Review exact staged paths, run the relevant test suite, commit and push the completed package to `main`.
+- [x] Produce `metrics.json`, `analysis.md`, training/metric curves, and `docs/stage_reviews/D2-A-R6D_review.md`.
+- [x] Report paired task gains, conditional Pfa/Pd, range/Doppler, C3, uncertainty, budget/exposure, parameter count, VRAM and wall time; preserve negative results.
+- [x] Update status, roadmap, assumptions, decisions, progress and the R6 implementation-plan checkboxes; do not edit the charter.
+- [x] Remove only R6-D manifest-owned reconstructible caches after all reports exist; verify project size remains <20 GiB and user-untracked files remain untouched.
+- [x] Review exact staged paths, run the relevant test suite, commit and push the completed package to `main`.
