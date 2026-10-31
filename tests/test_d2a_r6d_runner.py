@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 import torch
 
+from scripts import run_d2a_r6d_joint as r6d_runner
 from scripts.run_d2a_r6d_joint import (
     _exact_two_sided,
     _h1_metrics,
@@ -107,3 +109,42 @@ def test_loss_measurement_helper_does_not_retain_autograd_graphs() -> None:
     )
 
     assert all(not value.requires_grad for value in terms.values())
+
+
+def test_owner_marker_alone_is_not_a_training_payload(tmp_path) -> None:
+    (tmp_path / "owner.json").write_text('{"owner":"this-run"}', encoding="utf-8")
+
+    assert r6d_runner._has_training_payload(tmp_path) is False
+
+    (tmp_path / "partial_history.csv").write_text("update\n", encoding="utf-8")
+    assert r6d_runner._has_training_payload(tmp_path) is True
+
+
+def test_cache_owner_can_be_reused_after_code_only_commit() -> None:
+    expected = {
+        "owner": "D2-A-R6-D-paired-cache",
+        "git_sha": "b" * 40,
+        "protocol_sha256": "protocol",
+        "config_sha256": "config",
+        "split": "train",
+        "scene_count": 16,
+        "plan_sha256": "same-plan",
+    }
+    actual = {**expected, "git_sha": "a" * 40}
+
+    assert r6d_runner._cache_owner_matches(expected, actual) is True
+    actual["plan_sha256"] = "different-plan"
+    assert r6d_runner._cache_owner_matches(expected, actual) is False
+
+
+def test_empty_stale_training_owner_can_be_rebound_but_partial_run_cannot(tmp_path) -> None:
+    current_owner = {"git_sha": "b" * 40, "arm": "j1_joint"}
+    (tmp_path / "owner.json").write_text('{"git_sha":"' + "a" * 40 + '","arm":"j1_joint"}', encoding="utf-8")
+
+    r6d_runner._ensure_training_owner(tmp_path, current_owner)
+
+    assert (tmp_path / "owner.json").read_text(encoding="utf-8").find("b" * 40) >= 0
+    (tmp_path / "training_history.csv").write_text("update\n", encoding="utf-8")
+    (tmp_path / "owner.json").write_text('{"git_sha":"' + "a" * 40 + '","arm":"j1_joint"}', encoding="utf-8")
+    with pytest.raises(RuntimeError, match="nonempty unowned"):
+        r6d_runner._ensure_training_owner(tmp_path, current_owner)

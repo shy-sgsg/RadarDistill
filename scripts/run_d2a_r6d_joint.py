@@ -161,10 +161,32 @@ def preflight() -> dict[str, Any]:
     expected["g1_test"] = 16
     prior = _prior_scene_ids()
     audit = audit_r6d_scene_plans(plans, expected_counts=expected, prior_scene_ids=prior)
+    cache_state: dict[str, Any] = {}
     if CACHE.exists():
-        raise RuntimeError("R6-D cache exists before G0; inspect it manually, do not overwrite it")
+        if not CACHE.is_dir():
+            raise RuntimeError("R6-D cache path exists but is not a directory")
+        unexpected_cache_dirs = {item.name for item in CACHE.iterdir()} - {"train", "validation"}
+        if unexpected_cache_dirs:
+            raise RuntimeError(f"R6-D cache has unexpected entries: {sorted(unexpected_cache_dirs)}")
+        for split in ("train", "validation"):
+            directory = CACHE / split
+            if not directory.exists():
+                cache_state[split] = {"status": "absent"}
+                continue
+            arrays = _load_pair_cache(split)
+            owner = json.loads((directory / "owner.json").read_text(encoding="utf-8"))
+            cache_state[split] = {
+                "status": "complete",
+                "rows": len(arrays["scene_id"]),
+                "generator_git_sha": owner["git_sha"],
+            }
+            del arrays
     free, disk_total = shutil.disk_usage(STAGE).free, shutil.disk_usage(STAGE).total
-    required = int(config["data"]["minimum_free_disk_bytes_before_generation"])
+    reserve = 4 * 1024 ** 3
+    remaining_cache_bytes = _remaining_owned_cache_bytes(config, r6a, head)
+    required = remaining_cache_bytes + reserve
+    if not cache_state:
+        required = max(required, int(config["data"]["minimum_free_disk_bytes_before_generation"]))
     if free < required:
         raise RuntimeError(f"R6-D needs {required} free bytes before cache generation; found {free}")
     if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
@@ -199,17 +221,21 @@ def preflight() -> dict[str, Any]:
         "disk_free_before_generation_bytes": int(free),
         "disk_total_bytes": int(disk_total),
         "minimum_free_bytes": required,
+        "remaining_cache_bytes": remaining_cache_bytes,
         "estimated_train_validation_cache_bytes": int(config["data"]["estimated_train_validation_cache_bytes"]),
         "gpu": gpu,
         "device": "cuda:0",
         "free_vram_before_g1_bytes": int(free_vram),
         "total_vram_bytes": int(total_vram),
         "model_parameter_counts": counts,
+        "preexisting_train_validation_cache": cache_state,
         "python": platform.python_version(),
         "numpy": np.__version__,
         "torch": torch.__version__,
         "torch_cuda": torch.version.cuda,
-        "formal_data_generated": False,
+        "formal_train_validation_data_generated": any(
+            item.get("status") == "complete" for item in cache_state.values()
+        ),
         "final_blind_generated": False,
     }
     _write_json(STAGE / "preflight.json", result)
@@ -446,7 +472,9 @@ def run_g1() -> dict[str, Any]:
         "physical_test_scene_ids": [str(value) for value in generated.base_scene_id],
         "condition": dict(g1_condition),
         "arms": reports,
-        "formal_data_generated": False,
+        "formal_train_validation_data_present": all(
+            (CACHE / split / "progress.json").is_file() for split in ("train", "validation")
+        ),
     }
     _write_json(STAGE / "g1.json", record)
     return record
@@ -475,6 +503,20 @@ def _cache_owner(split: str, head: str, plan: Sequence[Mapping[str, Any]]) -> di
     }
 
 
+def _cache_owner_matches(expected: Mapping[str, Any], actual: Mapping[str, Any]) -> bool:
+    """Match immutable data identity while retaining the generator commit as provenance."""
+    if not isinstance(expected, Mapping) or not isinstance(actual, Mapping):
+        return False
+    generator_sha = actual.get("git_sha")
+    if not isinstance(generator_sha, str) or len(generator_sha) != 40 or any(
+        char not in "0123456789abcdef" for char in generator_sha
+    ):
+        return False
+    expected_identity = {key: value for key, value in expected.items() if key != "git_sha"}
+    actual_identity = {key: value for key, value in actual.items() if key != "git_sha"}
+    return expected_identity == actual_identity
+
+
 def _remaining_owned_cache_bytes(config: Mapping[str, Any], r6a: Mapping[str, Any], head: str) -> int:
     plans = _all_split_plans(config, r6a)
     bytes_per_row = 2 * 3 * 130 * 32 * np.dtype(np.complex64).itemsize + 2 * np.dtype(np.float32).itemsize + np.dtype(np.uint8).itemsize + 48 * np.dtype("<U1").itemsize
@@ -485,9 +527,12 @@ def _remaining_owned_cache_bytes(config: Mapping[str, Any], r6a: Mapping[str, An
         written = 0
         directory = CACHE / split
         if directory.exists():
-            owner = _cache_owner(split, head, plan)
+            expected_owner = _cache_owner(split, head, plan)
             owner_path, progress_path = directory / "owner.json", directory / "progress.json"
-            if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != owner:
+            if not owner_path.is_file():
+                raise RuntimeError(f"refusing to estimate free space for an unowned cache: {directory}")
+            owner = json.loads(owner_path.read_text(encoding="utf-8"))
+            if not _cache_owner_matches(expected_owner, owner):
                 raise RuntimeError(f"refusing to estimate free space for an unowned cache: {directory}")
             if progress_path.is_file():
                 progress = json.loads(progress_path.read_text(encoding="utf-8"))
@@ -518,13 +563,17 @@ def generate_paired_cache(split: str) -> dict[str, Any]:
     plan = _all_split_plans(config, r6a)[split]
     count = sum(int(row["count"]) for row in plan)
     directory = CACHE / split
-    owner = _cache_owner(split, head, plan)
+    expected_owner = _cache_owner(split, head, plan)
     existed = directory.exists()
     if existed:
         owner_path = directory / "owner.json"
-        if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != owner:
+        if not owner_path.is_file():
+            raise RuntimeError(f"refusing to reuse unowned or differently-owned R6-D cache: {directory}")
+        owner = json.loads(owner_path.read_text(encoding="utf-8"))
+        if not _cache_owner_matches(expected_owner, owner):
             raise RuntimeError(f"refusing to reuse unowned or differently-owned R6-D cache: {directory}")
     else:
+        owner = expected_owner
         directory.mkdir(parents=True)
         _write_json(directory / "owner.json", owner)
     paths = _paired_cache_paths(split)
@@ -630,6 +679,7 @@ def generate_paired_cache(split: str) -> dict[str, Any]:
         "cache_bytes": sum(path.stat().st_size for path in paths.values()),
         "manifest": str(manifest_path.relative_to(ROOT)),
         "preflight_sha": preflight_record["git_sha"],
+        "cache_generator_git_sha": owner["git_sha"],
     }
 
 
@@ -640,10 +690,13 @@ def _load_pair_cache(split: str) -> dict[str, np.ndarray]:
     config, r6a, _, _ = _configs()
     plan = _all_split_plans(config, r6a)[split]
     expected_count = sum(int(row["count"]) for row in plan)
-    owner = _cache_owner(split, head, plan)
+    expected_owner = _cache_owner(split, head, plan)
     directory = CACHE / split
     owner_path, progress_path = directory / "owner.json", directory / "progress.json"
-    if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != owner:
+    if not owner_path.is_file():
+        raise RuntimeError(f"R6-D {split} cache owner mismatch")
+    owner = json.loads(owner_path.read_text(encoding="utf-8"))
+    if not _cache_owner_matches(expected_owner, owner):
         raise RuntimeError(f"R6-D {split} cache owner mismatch")
     if not progress_path.is_file():
         raise RuntimeError(f"R6-D {split} cache has no progress record")
@@ -895,6 +948,27 @@ def _training_plan(train: Mapping[str, np.ndarray], config: Mapping[str, Any]) -
     return h0_plan, h1_plan, {**audit, **hashes}
 
 
+def _has_training_payload(directory: Path) -> bool:
+    """Ignore the ownership marker when checking for an interrupted training run."""
+    return any(path.name != "owner.json" for path in directory.iterdir())
+
+
+def _ensure_training_owner(directory: Path, owner: Mapping[str, Any]) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    owner_path = directory / "owner.json"
+    if owner_path.is_file():
+        existing_owner = json.loads(owner_path.read_text(encoding="utf-8"))
+        if existing_owner == owner:
+            return
+        if _has_training_payload(directory):
+            raise RuntimeError(f"refusing to rebind a nonempty unowned run directory: {directory}")
+        _write_json(owner_path, dict(owner))
+        return
+    if _has_training_payload(directory):
+        raise RuntimeError(f"refusing to reuse a nonempty unowned run directory: {directory}")
+    _write_json(owner_path, dict(owner))
+
+
 def train_arm(arm: str) -> dict[str, Any]:
     if arm not in R6D_ARMS:
         raise ValueError(f"unknown arm {arm}")
@@ -909,17 +983,14 @@ def train_arm(arm: str) -> dict[str, Any]:
         raise RuntimeError("R6-D batch/microbatch differs from frozen protocol")
     train = _load_pair_cache("train")
     validation = _load_pair_cache("validation")
+    train_cache_generator_sha = json.loads((CACHE / "train" / "owner.json").read_text(encoding="utf-8"))["git_sha"]
+    validation_cache_generator_sha = json.loads(
+        (CACHE / "validation" / "owner.json").read_text(encoding="utf-8")
+    )["git_sha"]
     h0_plan, h1_plan, sampler_audit = _training_plan(train, config)
     owner = _training_owner(arm, config, head)
     out = RUNS / arm
-    out.mkdir(parents=True, exist_ok=True)
-    owner_path = out / "owner.json"
-    if owner_path.exists() and json.loads(owner_path.read_text(encoding="utf-8")) != owner:
-        raise RuntimeError(f"refusing to reuse a differently-owned training run: {out}")
-    if not owner_path.exists():
-        if any(out.iterdir()):
-            raise RuntimeError(f"refusing to reuse a nonempty unowned run directory: {out}")
-        _write_json(owner_path, owner)
+    _ensure_training_owner(out, owner)
 
     device = torch.device("cuda:0")
     torch.cuda.set_device(device)
@@ -966,7 +1037,7 @@ def train_arm(arm: str) -> dict[str, Any]:
                 best_objective = float(best_state["validation_objective"])
                 best_update = int(best_state["update"])
         _write_history(history_path, history)
-    elif any(out.iterdir()):
+    elif _has_training_payload(out):
         raise RuntimeError("R6-D training directory has artifacts but no owner-bound resume checkpoint")
 
     validation_interval = int(config["training"]["validation_interval_updates"])
@@ -1060,6 +1131,8 @@ def train_arm(arm: str) -> dict[str, Any]:
         "effective_batch_size": effective_batch,
         "microbatch": microbatch,
         "unique_train_paired_scenes": len(train["scene_id"]),
+        "train_cache_generator_git_sha": train_cache_generator_sha,
+        "validation_cache_generator_git_sha": validation_cache_generator_sha,
         "scene_visits_per_presence": target_updates * (effective_batch // 2) / len(train["scene_id"]),
         "total_cpi_exposures_per_presence": target_updates * (effective_batch // 2),
         "model_parameter_counts": counts,
@@ -1585,6 +1658,7 @@ def _cache_cleanup() -> dict[str, Any]:
     if missing:
         raise RuntimeError(f"refusing R6-D cleanup before reports exist: {missing}")
     removed = []
+    cache_generator_shas: dict[str, str] = {}
     for split in ("train", "validation"):
         plan = _all_split_plans(config, r6a)[split]
         expected_owner = _cache_owner(split, head, plan)
@@ -1592,13 +1666,17 @@ def _cache_cleanup() -> dict[str, Any]:
         if not directory.exists():
             continue
         owner_path = directory / "owner.json"
-        if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != expected_owner:
+        if not owner_path.is_file():
+            raise RuntimeError(f"refusing to remove unowned R6-D cache: {directory}")
+        owner = json.loads(owner_path.read_text(encoding="utf-8"))
+        if not _cache_owner_matches(expected_owner, owner):
             raise RuntimeError(f"refusing to remove unowned R6-D cache: {directory}")
         progress = json.loads((directory / "progress.json").read_text(encoding="utf-8"))
-        if progress.get("owner") != expected_owner or int(progress.get("rows_written", -1)) != sum(
+        if progress.get("owner") != owner or int(progress.get("rows_written", -1)) != sum(
             int(row["count"]) for row in plan
         ):
             raise RuntimeError(f"refusing to remove incomplete R6-D cache: {directory}")
+        cache_generator_shas[split] = str(owner["git_sha"])
         byte_count = sum(path.stat().st_size for path in directory.rglob("*") if path.is_file())
         shutil.rmtree(directory)
         removed.append({"split": split, "path": str(directory.relative_to(ROOT)), "bytes": int(byte_count)})
@@ -1607,6 +1685,7 @@ def _cache_cleanup() -> dict[str, Any]:
         "status": "complete",
         "owner": "D2-A-R6-D-paired-cache",
         "git_sha": head,
+        "cache_generator_git_shas": cache_generator_shas,
         "removed": removed,
         "removed_bytes": int(sum(item["bytes"] for item in removed)),
         "workspace_used_bytes_after_cleanup": int(usage.total - usage.free),
