@@ -43,6 +43,15 @@ R6设计可以与R5-C CPU数据生成及分析并行；R6 CUDA推理/训练等�
 
 本对齐仅解释动态阶段路线，不修改 `docs/RESEARCH_CHARTER.md`，不改写R5历史协议或冻结结果。
 
+## 2026-10-31：R6-D联合架构pilot预注册
+
+- **总纲映射：** 本阶段对应Q3/Q4/Q6/Q10，继续服务于物理真值监督下直接完成GMTI检测和连续参数估计的学生目标；不引入教师或蒸馏，也不把软候选网格当作独立科研终点。
+- **触发证据：** R6-C证明扩大模型在单seed development上改善joint success，但其Medium/XLarge成对训练延长门未通过。该结果没有测试25,600步训练，也不支持“12,800步已达学习上限”。用户明确允许后续新实验在比较公平时增加更新。
+- **冻结对照：** R6-D注册J1 detection-only、parameter-only、joint和J2 soft-candidate joint四臂；新seed505、相同初始化兼容主干、相同新Train/Validation scene IDs与顺序、effective batch64、25,600 optimizer updates、相同AdamW/cosine计划和checkpoint间隔。该预算相对R6-C初筛加倍，但只是本阶段固定预算，不是收敛判断；末端仍下降将如实报告，不能只为单臂追加训练。
+- **batch控制：** 本次不把batch扩大到128，因为本阶段首要问题是区分训练目标和检测/参数交互，batch64保持与R6-C的有效批量匹配。未来若要研究batch效应，应新建所有臂matched的独立因素，不追溯修改冻结实验。
+- **结果边界：** 四臂均为单训练seed的development pilot；D-only不声称参数质量，P-only不声称检测/Pfa。主对比J2-J与J1-J按新H1 C2+C3 paired joint success评价，同时设置整体Pd、参数RMSE和C3六格familywise H0 Pfa保护门。数据、协议与模型选择使用过的development不得称为blind。
+- **下一步与停止：** 先冻结protocol/config、跑G0/G1及CUDA双向梯度和小样本学习门，再生成正式R6-D数据。任一前置门失败只修复有证据的实现错误或停止该候选；G2完成后依据任务收益和C3保护决定是否继续R6后续路线，不进行无界架构搜索。研究总纲v1.3不变。
+
 ## 2026-10-29：R6-A执行准备与batch约束
 
 - **当前状态：** R6-A实现与19项定向测试完成，G0于预测运行SHA `e3972ae94430abd3d79eae7e1ee9179f68062648` 通过（保留已披露的协议顺序偏差）。三组注册场景和预测均完整；首次汇总因汇总helper漏导入而停止，尚无指标输出或科研结果查看。
