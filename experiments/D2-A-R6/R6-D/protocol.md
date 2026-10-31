@@ -1,9 +1,11 @@
 # D2-A-R6-D：联合检测与连续参数估计学生 pilot
 
-**协议版本：** 1.0  
-**状态：** 预注册；场景生成和科学训练尚未开始。  
-**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3。  
+**协议版本：** 1.2
+**状态：** 预注册；场景生成和科学训练尚未开始。
+**研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3。
 **最终盲测：** 未授权生成。
+
+**版本记录：** v1.0于2026-10-31冻结四臂、场景划分、25,600-update matched预算及评价门。v1.1在任何G1或科学场景生成前，将16-pair/200-update工程过拟合门数值化为各臂主loss最后20步均值相对初始loss至少下降10%。v1.2在任何数据生成前，将既有overall Pd与参数RMSE保护要求操作化为配对scene bootstrap区间规则；不改变科学数据、模型比较或任务门数值。
 
 本阶段检验共享多任务学习和一次软候选双向交互能否改善物理真值监督学生的最终检测与参数估计。R6-C在12,800步的延长门未通过；那只表示没有达到该阶段的成对延长资格，既不表示网络已收敛，也不提供更长预算的收益估计。R6-D采用固定25,600步，让所有臂在完全匹配的训练预算下筛选。25,600步是本阶段比较预算，不是能力上限。
 
@@ -63,7 +65,7 @@ history每400步记录一次；恢复checkpoint每800步；不逐update写日志
 
 1. H0 verification总体Pfa及one-sided exact95% upper；每条件和C3 pooled Pfa；C3六个condition cell用Bonferroni familywise exact upper，要求各≤0.10才可称通过C3虚警保护。
 2. H1整体、C2+C3、C3及六格Pd；AUC；距离/Doppler RMSE、bias、门错率；检测命中、正确候选和joint success。
-3. J2相对J1-J总体Pd退化不得超过0.02；range和Doppler RMSE比率的95% CI upper不得超过1.05，作为候选保护门。
+3. 报告每臂H1 overall与分条件Pd的two-sided exact95% Clopper-Pearson区间。J2−J1-J的overall Pd采用按base_scene_id重采样的配对bootstrap，95% CI下界须≥−0.02；all-H1 range和PRF-wrapped Doppler RMSE ratio（J2/J1-J）分别用同一配对bootstrap定义，95% CI上界须≤1.05，作为候选保护门。每臂C2+C3/C3 joint success报告exact95%区间；主contrast仍是C2+C3 paired joint-success差。
 4. D-only和P-only的专门指标如上表；不为其未训练任务填充“成功”指标。
 5. 报告四臂逐scene预测、差值bootstrap、训练seed、独立scene数、训练暴露、updates、模型参数、GPU显存峰值、墙钟时间和验证曲线。
 
@@ -72,7 +74,7 @@ threshold、model selection、candidate、C3 analysis均不得用verification/de
 ## 6. 阶段门、停止与结论边界
 
 - **G0：** main/远端提交、protocol/config哈希、seed与ID disjointness、磁盘空间、RTX 3050 `cuda:0`及FP32可用性均通过；正式场景生成前记录preflight。
-- **G1：** CPU contract tests、CUDA输出/梯度/显存检查、每种架构的16-pair/200-update微过拟合检查通过；有效batch保持64。失败时只修复已诊断实现问题，或停止对应结构。
+- **G1：** CPU contract tests、CUDA输出/梯度/显存检查、每个训练臂在同一16-pair物理样本上过拟合200步通过；各臂注册主损失的最后20步均值须比第1步至少降低10%，梯度有限且存在非零梯度。该小样本是工程学习门，不作为模型能力结果。有效batch保持64。失败时只修复已诊断实现问题，或停止对应结构。
 - **G2：** 四臂完成匹配单seed开发pilot；按前述定义完成checkpoint冻结后再运行独立calibration、verification和H1 development。
 - **停止：** 任一模型出现NaN/梯度断路/无学习、OOM在microbatch4仍无法保留有效batch、协议/ID错配、H0/H1监督泄漏则暂停该臂并调查；不通过G1不进入完整训练。训练末端未平台不允许单臂追加updates。
 

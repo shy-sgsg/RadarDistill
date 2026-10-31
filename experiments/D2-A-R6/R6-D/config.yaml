@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-R6
   subphase: R6-D
-  protocol_version: 1.0
+  protocol_version: 1.2
   status: preregistered
   charter_version: 1.3
   execution_authorized: true
@@ -95,6 +95,9 @@ training:
   history_written_every_update: false
   microbatch_initial: 16
   microbatch_candidates_after_oom: [8, 4]
+  g1_micro_overfit_pairs: 16
+  g1_micro_overfit_updates: 200
+  g1_min_relative_loss_reduction: 0.10
   oom_preserve_effective_batch: true
   precision: FP32
   amp: false
@@ -125,8 +128,11 @@ evaluation:
   paired_bootstrap_replicates: 2000
   paired_bootstrap_seed: 2026103104
   ci_level: 0.95
-  max_overall_pd_degradation: 0.02
-  max_range_or_doppler_rmse_ratio_upper: 1.05
+  h1_pd_interval: two_sided_clopper_pearson_95
+  individual_joint_interval: two_sided_clopper_pearson_95
+  paired_overall_pd_difference_ci_lower_minimum: -0.02
+  paired_all_h1_range_rmse_ratio_ci_upper_maximum: 1.05
+  paired_all_h1_doppler_rmse_ratio_ci_upper_maximum: 1.05
   c3_conditions: 6
   c3_familywise_alpha: 0.05
   c3_cell_interval_method: bonferroni_exact

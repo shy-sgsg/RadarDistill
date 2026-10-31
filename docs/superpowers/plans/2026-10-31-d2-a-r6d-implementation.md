@@ -76,12 +76,12 @@
 - Create: `experiments/D2-A-R6/R6-D/config.yaml`
 - Update: `docs/task_alignments/D2-A-R6_alignment.md`
 
-- [ ] Register four arms: J1 D-only, J1 P-only, J1 joint, and J2 joint; state which metrics are undefined for specialized D/P arms.
-- [ ] Register fresh non-overlapping scene blocks, 51,200 paired training scenes, 5,000 validation pairs, H0 calibration/verification120,000 each and H1 development6,144; use identical scenes for all arms.
-- [ ] Register training seed505, E1 physical truth supervision, FP32 CUDA, effective batch64, 25,600 fixed updates, identical AdamW/learning-rate plan, H0/H1-balanced batches, validation every400 and resume checkpoints every800.
-- [ ] Register per-arm checkpoint selection based only on the corresponding validation objective; H0 verification and H1 development are evaluation-only.
-- [ ] Register primary endpoint/protections, C3 Pfa handling, paired scene bootstrap, stopping rules, resource/disk budget, cleanup manifest and no-final-blind boundary.
-- [ ] Hash/freeze protocol and config before generating any R6-D scenes.
+- [x] Register four arms: J1 D-only, J1 P-only, J1 joint, and J2 joint; state which metrics are undefined for specialized D/P arms.
+- [x] Register fresh non-overlapping scene blocks, 51,200 paired training scenes, 5,000 validation pairs, H0 calibration/verification120,000 each and H1 development6,144; use identical scenes for all arms.
+- [x] Register training seed505, E1 physical truth supervision, FP32 CUDA, effective batch64, 25,600 fixed updates, identical AdamW/learning-rate plan, H0/H1-balanced batches, validation every400 and resume checkpoints every800.
+- [x] Register per-arm checkpoint selection based only on the corresponding validation objective; H0 verification and H1 development are evaluation-only.
+- [x] Register primary endpoint/protections, C3 Pfa handling, paired scene bootstrap, stopping rules, resource/disk budget, cleanup manifest and no-final-blind boundary.
+- [x] Freeze protocol and config at version1.2 before generating any R6-D scenes; G0 will bind their committed hashes before generation.
 
 ### Task 5: Implement and audit the R6-D runner
 
@@ -90,10 +90,10 @@
 - Modify: `src/radardistill/training/d2a_r6d_joint.py`
 - Modify: `tests/test_d2a_r6_joint.py`
 
-- [ ] Implement G0, deterministic split manifests, owner-scoped streaming/cache, matched sampler, checkpoint/resume and 400-update history.
-- [ ] Implement per-arm validation checkpoint selection and H0 calibration-only threshold selection.
-- [ ] Implement independent H0 verification, H1 development, scene-paired comparisons and compact per-scene prediction archives.
-- [ ] Test seed/split disjointness, common arm IDs/order, no verification/development leakage, exact `>=` threshold behavior, null outputs and checkpoint identity.
+- [x] Implement G0, deterministic split manifests, owner-scoped streaming/cache, matched sampler, checkpoint/resume and 400-update history.
+- [x] Implement per-arm validation checkpoint selection and H0 calibration-only threshold selection.
+- [x] Implement independent H0 verification, H1 development, scene-paired comparisons and compact per-scene prediction archives.
+- [x] Test seed/split disjointness, common arm IDs/order, no verification/development leakage, exact `>=` threshold behavior, null outputs and checkpoint identity.
 
 ### Task 6: Run the matched single-seed development pilot
 
