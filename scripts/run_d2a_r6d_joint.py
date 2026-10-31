@@ -258,6 +258,7 @@ def _paired_iq_and_truth(generated: Any) -> tuple[np.ndarray, dict[str, np.ndarr
     }
 
 
+@torch.no_grad()
 def _loss_on_device(
     model: torch.nn.Module,
     iq: torch.Tensor,

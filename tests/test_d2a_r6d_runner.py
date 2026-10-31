@@ -1,8 +1,15 @@
 from __future__ import annotations
 
 import numpy as np
+import torch
 
-from scripts.run_d2a_r6d_joint import _exact_two_sided, _h1_metrics, _paired_quality_bootstrap
+from scripts.run_d2a_r6d_joint import (
+    _exact_two_sided,
+    _h1_metrics,
+    _loss_on_device,
+    _paired_quality_bootstrap,
+)
+from radardistill.students.r6_joint import R6J1Student
 
 
 def _conditions() -> list[dict[str, str]]:
@@ -79,3 +86,24 @@ def test_paired_quality_bootstrap_reports_registered_guards() -> None:
     assert result["all_h1_range_rmse_ratio_j2_over_j1"]["protection_pass"] is True
     assert result["all_h1_doppler_rmse_ratio_j2_over_j1"]["ratio"] < 1.0
     assert result["all_h1_doppler_rmse_ratio_j2_over_j1"]["protection_pass"] is True
+
+
+def test_loss_measurement_helper_does_not_retain_autograd_graphs() -> None:
+    model = R6J1Student(width=8, temporal_dilations=(1,))
+    iq = torch.randn(4, 6, 130, 32)
+    truth = {
+        "truth_presence": torch.tensor([0.0, 1.0, 0.0, 1.0]),
+        "truth_range_cell": torch.tensor([0.0, 12.25, 0.0, 14.5]),
+        "truth_doppler_hz": torch.tensor([0.0, 130.0, 0.0, -240.0]),
+    }
+    terms = _loss_on_device(
+        model,
+        iq,
+        truth,
+        arm="j1_joint",
+        microbatch=2,
+        prf_hz=1300.0,
+        device=torch.device("cpu"),
+    )
+
+    assert all(not value.requires_grad for value in terms.values())
