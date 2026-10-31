@@ -91,12 +91,12 @@
 - Create: `experiments/D2-A-R6/R6-C/{protocol.md,config.yaml}`
 - Test: `tests/test_d2a_r6c_scaling.py`
 
-- [ ] Build 0.3M and 1M CNNs from the same declared topology as the width-96 baseline; report inference and trainable parameter counts separately.
-- [ ] Add parameter-shape, forward/backward, CUDA memory, and 16-pair/200-update learning checks.
-- [ ] Screen at 12,800 updates on matched R6 training/validation scenes; record unique samples, exposure count, and all validation metrics. Log at a fixed interval, not on every update.
-- [ ] Extend all compared arms together to 25,600 then at most 51,200 only if the predeclared validation trend remains improving without a widening overfit gap; defer 102,400 to a separate gate. Keep effective batch, data exposure plan, optimizer/schedule, and checkpoint rule matched. Treat any batch-size study as a separate matched factor.
-- [ ] Compare 51,200 vs 102,400 unique training pairs under fixed updates, then add an exposure-matched comparison only if the first result motivates it.
-- [ ] Use one screening seed; take no more than two finalists to at least three independent seeds. Keep H0 verification independent from model selection.
+- [x] Build 0.3M and 1M CNNs from the same declared topology as the width-96 baseline; report inference and trainable parameter counts separately.
+- [x] Add parameter-shape, forward/backward, CUDA memory, and 16-pair/200-update learning checks.
+- [x] Screen at 12,800 updates on matched R6 training/validation scenes; record unique samples, exposure count, and all validation metrics. Log at a fixed interval, not on every update.
+- [x] Evaluate the frozen continuation gate; Medium and XLarge did not jointly pass, so neither was extended to 25,600. The 51,200 endpoint remains untested; no claim of convergence or a learning limit is made.
+- [x] Compare 51,200 vs 102,400 unique training pairs under fixed updates; the primary gain gate failed, so no exposure-matched comparison was launched.
+- [x] Use one screening seed and keep H0 verification independent from model selection. The C3 absolute-protection gate failed, so no candidate advanced to three-seed confirmation.
 
 ### Task 4: R6-D joint D/P/J models and correctness
 

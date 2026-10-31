@@ -1,0 +1,82 @@
+{
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "selection_basis": "minimum common validation truth task loss only",
+  "selected_large_candidate": "XLarge",
+  "extension_pair": [
+    "Medium",
+    "XLarge"
+  ],
+  "decisions": [
+    {
+      "from_update": 12800,
+      "extension_pair": [
+        "Medium",
+        "XLarge"
+      ],
+      "gates": {
+        "Medium": {
+          "eligible": false,
+          "checks": {
+            "task_loss_drop": false,
+            "nonworsening_intervals": false,
+            "validation_presence_loss": true,
+            "validation_range_cell_loss": true,
+            "validation_range_offset_loss": true,
+            "validation_doppler_loss": true,
+            "validation_range_rmse_cells": true,
+            "validation_doppler_rmse_hz": false,
+            "validation_auc": true,
+            "validation_range_cell_mismatch_rate": true,
+            "overfit_gap": true
+          },
+          "relative_task_loss_drop": 0.0004690067647360463,
+          "nonworsening_intervals": 2,
+          "overfit_gap_start": 0.014710910027200957,
+          "overfit_gap_end": 0.021385129191339503,
+          "overfit_gap_increase": 0.006674219164138545,
+          "required_updates": [
+            11200,
+            11600,
+            12000,
+            12400,
+            12800
+          ]
+        },
+        "XLarge": {
+          "eligible": false,
+          "checks": {
+            "task_loss_drop": false,
+            "nonworsening_intervals": false,
+            "validation_presence_loss": true,
+            "validation_range_cell_loss": true,
+            "validation_range_offset_loss": true,
+            "validation_doppler_loss": true,
+            "validation_range_rmse_cells": true,
+            "validation_doppler_rmse_hz": true,
+            "validation_auc": true,
+            "validation_range_cell_mismatch_rate": true,
+            "overfit_gap": false
+          },
+          "relative_task_loss_drop": -0.01169972120869911,
+          "nonworsening_intervals": 2,
+          "overfit_gap_start": 0.025858935686236484,
+          "overfit_gap_end": 0.040281601912523585,
+          "overfit_gap_increase": 0.0144226662262871,
+          "required_updates": [
+            11200,
+            11600,
+            12000,
+            12400,
+            12800
+          ]
+        }
+      },
+      "continue_both": false,
+      "medium_eligible": false,
+      "large_eligible": false
+    }
+  ],
+  "h0_calibration_read": false,
+  "h0_verification_read": false,
+  "h1_development_read": false
+}

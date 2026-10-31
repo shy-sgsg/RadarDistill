@@ -1514,6 +1514,10 @@ def _bootstrap_interval(
     }
 
 
+def _paired_boolean_difference(candidate: np.ndarray, reference: np.ndarray) -> np.ndarray:
+    return np.asarray(candidate, dtype=np.float64) - np.asarray(reference, dtype=np.float64)
+
+
 def _summarize_prediction_tag(tag: str, target_pfas: Sequence[float] = (0.05, 0.01)) -> dict[str, Any]:
     r6c, r6a, _, _ = _configs()
     conditions = r6a["radar"]["conditions"]
@@ -1683,13 +1687,13 @@ def run_evaluations() -> dict[str, Any]:
             mask = identifiable
             summaries[f"{target:g}"] = {
                 "identifiable_c2_c3_joint_success": _bootstrap_interval(
-                    (cand_joint[mask] - ref_joint[mask]).astype(np.float64),
+                    _paired_boolean_difference(cand_joint[mask], ref_joint[mask]),
                     replicates=replicates,
                     seed=bootstrap_seed + seed_offset + target_index,
                     confidence=confidence,
                 ),
                 "global_pd": _bootstrap_interval(
-                    (cand_detected - ref_detected).astype(np.float64),
+                    _paired_boolean_difference(cand_detected, ref_detected),
                     replicates=replicates,
                     seed=bootstrap_seed + 100 + seed_offset + target_index,
                     confidence=0.95,

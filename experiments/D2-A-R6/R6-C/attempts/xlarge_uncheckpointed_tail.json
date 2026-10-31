@@ -1,0 +1,33 @@
+{
+  "archive_type": "history_rows_after_last_resumable_checkpoint",
+  "model": "XLarge",
+  "training_seed": 404,
+  "checkpoint_update": 10400,
+  "checkpoint_mtime_local": "2026-10-30T15:14:53.009748+08:00",
+  "archived_history_rows": [
+    {
+      "update": "10800",
+      "learning_rate": "3.000508026812849e-05",
+      "interval_train_task_loss": "0.17537116408265319",
+      "interval_presence_loss": "0.05543065591616141",
+      "interval_range_cell_loss": "0.10709217665066129",
+      "interval_range_offset_loss": "0.01149960969828271",
+      "interval_doppler_loss": "0.0013487214874476194",
+      "validation_task_loss": "0.19901155363176945",
+      "validation_presence_loss": "0.05739680858626962",
+      "validation_range_cell_loss": "0.1266697156749314",
+      "validation_range_offset_loss": "0.013513616809155792",
+      "validation_doppler_loss": "0.0014314123034477233",
+      "validation_auc": "0.99589656",
+      "validation_range_rmse_cells": "1.7302118815948475",
+      "validation_doppler_rmse_hz": "14.01571357546008",
+      "validation_range_cell_mismatch_rate": "0.0386",
+      "seconds_since_last_checkpoint": "557.0821506890024",
+      "cuda_peak_allocated_bytes": "1627687424",
+      "cuda_peak_reserved_bytes": "2642411520"
+    }
+  ],
+  "reason": "Preserve the completed validation row beyond the last optimizer/model checkpoint before deterministic resume rewrites training_history.csv.",
+  "training_process_termination_cause": "unknown",
+  "final_model_state_uses_this_tail": false
+}

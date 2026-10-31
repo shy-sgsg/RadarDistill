@@ -1,0 +1,54 @@
+{
+  "status": "G0_PASS",
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "protocol_version": 1.2,
+  "protocol_sha256": "3687cc6cd7344d6e70beccdff3813659a124774e6260d593144237136c785526",
+  "config_sha256": "64840c0013a616bd38492599ebefc4e5436869bdf51a3e1a8d6d830ef42efa22",
+  "split_scene_counts": {
+    "train_extended": 102400,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144
+  },
+  "planned_seed_counts": {
+    "train_core": 3200,
+    "train_extended": 6400,
+    "validation": 319,
+    "h0_calibration": 7500,
+    "h0_verification": 7500,
+    "h1_development": 384
+  },
+  "train_core_is_exact_subset_of_train_extended": true,
+  "prior_scene_id_count": 474328,
+  "prior_scene_id_overlap": 0,
+  "g1_test_seed": 2100000000,
+  "g1_test_scene_ids_reserved": 16,
+  "disk_free_before_generation_bytes": 42175336448,
+  "disk_total_bytes": 497777065984,
+  "minimum_required_free_bytes": 25740599296,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "free_vram_before_g1_bytes": 3183738880,
+  "total_vram_bytes": 3942383616,
+  "model_parameter_counts": {
+    "Medium": {
+      "trainable_parameters": 70277,
+      "inference_parameters": 70277
+    },
+    "Large": {
+      "trainable_parameters": 292005,
+      "inference_parameters": 292005
+    },
+    "XLarge": {
+      "trainable_parameters": 1012197,
+      "inference_parameters": 1012197
+    }
+  },
+  "python": "3.13.7",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "formal_data_generated": false,
+  "final_blind_generated": false
+}

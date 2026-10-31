@@ -1,0 +1,16 @@
+{
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "tag": "scale_Large",
+  "data_arm": "train_core",
+  "model": "Large",
+  "split": "h1_development",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "cuda_peak_allocated_bytes": 269025792,
+  "cuda_peak_reserved_bytes": 297795584,
+  "elapsed_seconds": 68.6368127780006,
+  "scenes": 6144,
+  "evaluation_iq_persisted": false,
+  "final_blind": false,
+  "preflight_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df"
+}

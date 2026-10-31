@@ -1,11 +1,11 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-10-29
+**更新时间：** 2026-10-31
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot、R6-A与R6-B均已完成各自冻结试验。** R3/E002/R4与R5-A/B总体为 REFINE；T001教师候选STOP，R5-B TFAS按G3停止。R5-C原教师软响应审计G4 PASS和K3相对K1定位提升保持原结论，但后续T0–T3 pilot未发现K3/K2-local在匹配truth-only之外改善最终joint任务，故停止当前教师内容分支。R6-B单seed hard-negative对照没有证明相对truth-only有增益，不启动该分支多seed或blind。旧阶段门和负结果均保留。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C teaching pilot、R6-A/B/C均已完成各自冻结试验。** R6-C在同数据、有效batch64和12,800 updates下发现更宽学生的C2+C3 joint提高，但绝对C3 Pfa保护失败；数据规模对照未达到主要joint增益门，冻结续训条件也未通过。R6-A/B/C均为development证据，不启动当前候选多seed或blind。R6-D仅完成J1/J2架构与正确性设计，尚未实现或训练。所有历史阶段门、负结果和研究总纲v1.3均保留。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
@@ -28,12 +28,19 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - 全局Pfa=0.05下HardNegative−TruthOnly joint差−0.00212（paired CI `[-0.00651,+0.00195]`），C3差−0.00260、困难格差−0.00391，未证明收益；C3/困难格虚警上界也未过0.10。当前分支不进入多seed、KD或blind。
 - R6-B自身不再追加训练；R6-C是路线中独立冻结的下一工作包，不以缺少R6-B ChatGPT审查为阻塞。R6-C对比应匹配更新预算、有效batch、数据暴露、验证与checkpoint规则，区分模型规模、训练预算与独立训练数据规模效应；batch对比作为单独的匹配因素。
 
-### D2-A-R6-C（模型规模、训练预算与数据规模；协议v1.2已冻结）
+### D2-A-R6-C（模型规模、训练预算与数据规模；协议v1.2已完成）
 
-- 研究总纲映射：Q3/Q4/Q6/Q10；单一原始复IQ TaskStudent拓扑宽度96/200/376，对应活动参数70,277/292,005/1,012,197。使用E1物理真值，不含物理前端、教师或蒸馏损失。
-- 三个模型同训练seed404、Train core 51,200对、Validation5,000对、effective batch64、12,800初始updates、FP32和共同truth-task优化/选择规则。12,800筛选后只按validation task loss选择一个较大模型与Medium组成matched extension pair；两臂共同通过验证趋势和训练-验证gap门才一起延至25,600，再最多51,200。每400步保存指标，每800步保存resume状态，不逐update落盘。三模型顺序训练。
-- 另有Medium同seed、同effective batch、固定12,800 updates的嵌套数据量对照：51,200 vs102,400唯一训练场景对；两臂总训练样本暴露匹配，分别反映重复遍历和场景多样性。v1.2在生成前修正课程/条件分块seed布局以保证嵌套场景逐块一致且seed区间不重叠。训练/验证缓存预计21,445,632,000 bytes，执行前要求至少预留4GiB额外磁盘空间；阶段后仅按owner manifest清除缓存，项目最终保持<20GiB。
-- H0 calibration/verification各120,000、H1 development6,144；verification不参与模型/阈值选择。主任务指标为global Pfa 0.05下C2+C3 joint，绝对C3 Pfa仍是后续正式晋级保护。协议/配置见 `experiments/D2-A-R6/R6-C/`；实现与运行尚未开始。
+- 同一原始复IQ TaskStudent width96/200/376、seed404、E1 truth-only、FP32、有效batch64与12,800 updates。RTX 3050 Laptop `cuda:0` 顺序训练；训练/验证/H0 calibration/H0 verification/H1 development互斥，评价分别每模型120,000/120,000/6,144场景。
+- 在global Pfa 0.05下C2+C3 joint success：Medium/Large/XLarge=`0.8164/0.8628/0.8704`。Large−Medium=`+0.04644`（97.5% paired CI `[+0.03646,+0.05643]`），XLarge−Medium=`+0.05404`（`[+0.04449,+0.06402]`）；任务/RMSE相对保护通过，但C3 pooled Pfa单侧95%上界为`0.10162/0.10207/0.10266`，且六个C3格familywise门均失败，故两候选均不晋级正式seed或blind。
+- Medium训练数据对照固定12,800 updates、有效batch64和总样本暴露：51,200对vs102,400唯一场景对。C2+C3 joint差`+0.00673`（95% CI `[-0.00066,+0.01455]`），未达到`+0.02`主门；Doppler RMSE比`0.953`（`[0.917,0.993]`）属次级信号，C3 pooled Pfa上界`0.10412`，保护失败。
+- Medium与validation筛选出的XLarge均未过冻结的12,800→25,600验证延长门；本轮没有训练到更长预算，不能据此称12,800已达学习极限。用户允许后续新实验预注册更充分的共同预算，须保持比较臂更新数、有效batch、数据暴露、优化计划和checkpoint公平匹配；history仍仅在固定间隔记录。
+- 结果/缓存清理记录见 `experiments/D2-A-R6/R6-C/`；只清理owner记录的21,467,222,779 bytes可重建缓存，清理后项目约1.21 GB。阶段内部报告见 `docs/stage_reviews/D2-A-R6C_review.md`。没有final blind。
+
+### D2-A-R6-D（联合检测与参数估计；设计已完成，实施待开始）
+
+- J1/J2设计见 `experiments/D2-A-R6/R6-D/joint_architecture_design.md`。下一步完成模型/损失实现、概率与H0行为、PRF周期边界、双向梯度、显存和16-pair/200-update G1门；门通过后再冻结新development pilot。
+- R6-C显示增加容量可提高可辨识C2+C3 joint，但未通过C3绝对Pfa保护。R6-D须报告并保护各臂C3 H0表现。
+- 新protocol应根据用户授权预注册更充分的共同训练预算；D-only/P-only/J1/J2对照匹配updates、有效batch、训练样本暴露、优化计划和验证/checkpoint选择。不可把预算差异当作联合建模收益；不逐update追加训练日志。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
@@ -95,7 +102,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-推进D2-A-R6-C模型规模、训练预算和数据规模研究。R6-B当前hard-negative策略不做多seed晋级，但其独立ChatGPT审查不再作为R6后续阶段的阻塞条件；R6整项P0–P7路线完成后再提交一次综合审查。R6-C先按相同更新预算与有效batch比较候选，再依据预注册验证趋势从12,800逐级延长至25,600、最多51,200 updates；同时区分固定数据重复遍历和增加独立训练场景。不得把增加updates、增大batch和hard-negative采样效应混为一谈。每个matched对照保持相同有效batch、updates、数据暴露、优化计划和checkpoint规则；若研究batch效应，须将batch作为独立匹配因素。R6-B冻结设置、负结果和无final blind结论保持不变。
+推进D2-A-R6-D实施与正确性门；R6-A/B/C已冻结的protocol、结果、负结果均不改，R6-C不追加训练或晋级多seed。R6-D新protocol可以在公平条件下采用更充分训练：所有D/P/J臂共享预注册updates上限、有效batch、训练数据/样本暴露、优化与checkpoint规则；若有充分理由改变batch，则作为匹配因素明示，不混淆训练预算效应。训练history继续按固定验证间隔记录，不逐update写日志。ChatGPT综合审查只在R6 P0–P7全部授权目标完成后提交；中间审查不作为已授权阶段的默认阻塞。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

@@ -1,0 +1,16 @@
+{
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "tag": "scale_XLarge",
+  "data_arm": "train_core",
+  "model": "XLarge",
+  "split": "h0_calibration",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "cuda_peak_allocated_bytes": 508978176,
+  "cuda_peak_reserved_bytes": 530579456,
+  "elapsed_seconds": 1662.6342204770008,
+  "scenes": 120000,
+  "evaluation_iq_persisted": false,
+  "final_blind": false,
+  "preflight_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df"
+}

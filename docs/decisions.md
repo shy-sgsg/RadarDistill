@@ -38,6 +38,14 @@
 
 # 技术决策记录
 
+## 2026-10-31：R6-C按冻结续训门停止，R6-D预注册更充分训练预算
+
+- **依据：** R6-C v1.2 seed404、RTX 3050 Laptop CUDA、有效batch64、12,800-update matched screening完成。Medium在11,200–12,800 updates内validation task loss仅下降0.047%，XLarge反而上升约1.17%，且gap增加0.01442；Medium与validation筛选的XLarge未共同满足续训门。故未运行25,600/51,200更新，也不能声称12,800已接近极限。
+- **容量证据：** Large/XLarge的C2+C3 joint相对Medium提高`+0.04644/+0.05404`，区间下界均大于0，其他相对任务/RMSE保护通过；但C3 pooled Pfa单侧95%上界为`0.10207/0.10266`，六格familywise门失败，不进入formal seed或final blind。
+- **数据规模证据：** 51,200/102,400训练对在12,800 updates、有效batch64、总样本暴露相同下，joint差`+0.00673`（95% CI `[-0.00066,+0.01455]`），主增益门失败；Doppler RMSE次级指标有所改善，但C3 Pfa上界更高，不作主要泛化收益解释。
+- **训练预算决定：** 用户明确允许后续新实验在不影响公平性的条件下适当增加updates。R6-C冻结protocol不追溯改变；R6-D作为独立新实验应预注册更充分的共同budget，且D-only/P-only/J1/J2各臂在更新数、有效batch、训练scene曝光、优化计划、验证与checkpoint规则上匹配。更长预算不是默认无限续训；需记录学习曲线和过拟合边界。除有明确诊断需要外不逐optimizer update写训练日志。
+- **路线：** 按R6已授权P0–P7继续R6-D实现与G1正确性门；不因R6-C capacity相对增益绕过C3保护或启动blind。综合ChatGPT审查仍待整条R6完成；研究总纲v1.3保持不变。
+
 ## 2026-10-28：依据R5-C独立审查冻结一次T0–T3 teaching pilot
 
 - **依据：** 独立审查针对结果提交 `7563c822e70afe761897ddd5e91bb64207720f89`、研究总纲 `docs/RESEARCH_CHARTER.md` v1.3，结论为 **REFINE**。审查同意开展一次受保护的T0–T3教学内容pilot，并指出R5-C G4通过不代表困难子组教师可靠；C3 partial-overlap / SNR 0 dB / CNR 20 dB的K3/K2-local正确定位率约4.1%。

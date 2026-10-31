@@ -1,0 +1,9 @@
+{
+  "status": "CLEANUP_PASS",
+  "removed_owned_cache_bytes": 21467222779,
+  "project_bytes_after_cleanup": 1205698287,
+  "project_limit_bytes": 21474836480,
+  "only_owner_manifest_authorized_cache_removed": true,
+  "user_untracked_files_deleted": false,
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df"
+}

@@ -1,0 +1,28 @@
+{
+  "stage": "D2-A-R6-C",
+  "protocol_version": 1.2,
+  "prediction_generation_git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "first_aggregation_failure": {
+    "type": "TypeError",
+    "cause": "NumPy boolean arrays were subtracted before conversion to a numeric dtype",
+    "affected_metrics": [
+      "paired C2+C3 joint-success difference",
+      "paired global Pd difference"
+    ],
+    "prediction_generation_complete": true
+  },
+  "correction": "Convert candidate and reference boolean vectors to float64 before subtraction.",
+  "regression_test": {
+    "name": "test_r6c_paired_boolean_difference_preserves_signed_outcomes",
+    "red": "failed before implementation because the paired difference function was absent",
+    "green": "passed after implementation"
+  },
+  "aggregation": {
+    "prediction_archives_reused": 12,
+    "prediction_archives_expected": 12,
+    "inference_repeated": false,
+    "metrics": "experiments/D2-A-R6/R6-C/metrics.json"
+  },
+  "analysis_plot_backend": "Agg",
+  "no_final_blind": true
+}

@@ -146,6 +146,18 @@ def test_r6c_evaluation_plan_omits_extension_arms_when_gate_stops(tmp_path, monk
     assert set(arms) == {"scale_Medium", "scale_Large", "scale_XLarge", "data_extended_Medium"}
 
 
+def test_r6c_paired_boolean_difference_preserves_signed_outcomes():
+    from scripts.run_d2a_r6c_scaling import _paired_boolean_difference
+
+    candidate = np.array([True, False, True, False])
+    reference = np.array([False, False, True, True])
+
+    np.testing.assert_array_equal(
+        _paired_boolean_difference(candidate, reference),
+        np.array([1.0, 0.0, 0.0, -1.0]),
+    )
+
+
 def test_r6c_disk_usage_reads_free_and_total_fields(monkeypatch, tmp_path):
     from scripts import run_d2a_r6c_scaling as runner
 

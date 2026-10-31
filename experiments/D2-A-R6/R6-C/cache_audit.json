@@ -1,0 +1,12 @@
+{
+  "status": "CACHE_PASS",
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "train_extended_pairs": 102400,
+  "train_core_pairs": 51200,
+  "validation_pairs": 5000,
+  "core_is_exact_scene_id_subset": true,
+  "train_validation_disjoint": true,
+  "scene_ids_unique": true,
+  "training_cache_bytes": 20467815168,
+  "validation_cache_bytes": 999405768
+}

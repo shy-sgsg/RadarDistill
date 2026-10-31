@@ -1,0 +1,9 @@
+{
+  "status": "ANALYSIS_WRITTEN",
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "analysis": "experiments/D2-A-R6/R6-C/analysis.md",
+  "figures": [
+    "experiments/D2-A-R6/R6-C/figures/r6c_training_joint_doppler.png"
+  ],
+  "protocol_version": 1.2
+}

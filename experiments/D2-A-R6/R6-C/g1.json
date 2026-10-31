@@ -1,0 +1,86 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "a34feea10822ac4ef4dfbe9b64771826aa1e80df",
+  "technical_only": true,
+  "weights_discarded": true,
+  "test_seed": 2100000000,
+  "technical_pairs": 16,
+  "technical_batch_cpi": 32,
+  "updates_per_model": 200,
+  "models_sequential": true,
+  "formal_effective_batch_cpi": 64,
+  "formal_microbatch": 8,
+  "formal_microbatch_probe": [
+    {
+      "microbatch": 16,
+      "status": "OOM",
+      "error": "CUDA out of memory. Tried to allocate 96.00 MiB. GPU 0 has a total capacity of 3.67 GiB of which 120.12 MiB is free. Process 71087 has 31.22 MiB memory in use. Process 71665 has 54.72 MiB memory in use. Including non-PyTorch memory, this process has 2.92 GiB memory in use. Of the allocated memory 2.82 GiB is allocated by PyTorch, and 20.60 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda"
+    },
+    {
+      "microbatch": 8,
+      "status": "PASS",
+      "probe_loss": 15.788251161575317,
+      "peak_allocated_bytes": 1619579392,
+      "peak_reserved_bytes": 3066036224
+    }
+  ],
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "free_vram_after_bytes": 3136815104,
+  "total_vram_bytes": 3942383616,
+  "arms": {
+    "Medium": {
+      "status": "PASS",
+      "initial_task_loss": 5.398109078407288,
+      "final_task_loss": 0.02297539124265313,
+      "task_loss_ratio": 0.004256192475723744,
+      "updates": 200,
+      "technical_batch_cpi": 32,
+      "microbatch": 8,
+      "training_seconds": 27.454566475993488,
+      "parameter_counts": {
+        "trainable_parameters": 70277,
+        "inference_parameters": 70277
+      },
+      "cuda_peak_allocated_bytes": 410928640,
+      "cuda_peak_reserved_bytes": 473956352,
+      "oom_attempts": []
+    },
+    "Large": {
+      "status": "PASS",
+      "initial_task_loss": 2.9896827340126038,
+      "final_task_loss": 0.4654868468642235,
+      "task_loss_ratio": 0.15569774062262123,
+      "updates": 200,
+      "technical_batch_cpi": 32,
+      "microbatch": 8,
+      "training_seconds": 57.01465030800318,
+      "parameter_counts": {
+        "trainable_parameters": 292005,
+        "inference_parameters": 292005
+      },
+      "cuda_peak_allocated_bytes": 877968384,
+      "cuda_peak_reserved_bytes": 880803840,
+      "oom_attempts": []
+    },
+    "XLarge": {
+      "status": "PASS",
+      "initial_task_loss": 15.788251161575317,
+      "final_task_loss": 0.4377247057855129,
+      "task_loss_ratio": 0.027724711325268638,
+      "updates": 200,
+      "technical_batch_cpi": 32,
+      "microbatch": 8,
+      "training_seconds": 105.35197636199882,
+      "parameter_counts": {
+        "trainable_parameters": 1012197,
+        "inference_parameters": 1012197
+      },
+      "cuda_peak_allocated_bytes": 1627687424,
+      "cuda_peak_reserved_bytes": 1637875712,
+      "oom_attempts": []
+    }
+  },
+  "formal_data_generated": false,
+  "final_blind_generated": false
+}

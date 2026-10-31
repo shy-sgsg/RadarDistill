@@ -1,11 +1,11 @@
 # 当前研究状态
 
-**更新日期：** 2026-10-29
+**更新日期：** 2026-10-31
 **工作分支：** `main`
-**最新完成工作：** D2-A-R6-B R分支已完成：同seed303、Medium width96的truth-only与training-H0 hard-negative匹配训练各12,800 updates，有效batch64；在RTX 3050 Laptop `cuda:0`、FP32完成。训练运行SHA `091e96b9d570bdaa16444c1e696a633145c6655d`，独立评价SHA `293f1733b417d7fdc65fd9e294c8511cef43613c`。结果见 [R6-B分析](../experiments/D2-A-R6/R6-B/analysis.md)、[指标](../experiments/D2-A-R6/R6-B/metrics.json) 和 [阶段审查](../experiments/D2-A-R6/R6-B/stage_review.md)。
-**阶段判断：** hard-negative组没有相对truth-only表现出可确认的检测或joint收益；0.05和0.01目标的全局精确上界未达标，0.001仅全局点通过而C3/困难格未通过。两组困难格表现仍差，单训练seed也不能估计seed方差。R6-B为 **REFINE**，不晋级此干预做多seed或final blind；R6-A和R6-B均是development证据。R5-C教师内容分支 **STOP**、R5-B TFAS候选停止、历史结果和研究总纲v1.3均保持不变。
+**最新完成工作：** D2-A-R6-C protocol/config v1.2 已完成 seed404 单seed容量、训练延长门和数据规模 pilot；在 RTX 3050 Laptop `cuda:0`、FP32 顺序训练，并完成独立 H0 calibration/verification 与 H1 development。分析、指标和内部阶段审查见 [`R6-C 分析`](../experiments/D2-A-R6/R6-C/analysis.md)、[`metrics.json`](../experiments/D2-A-R6/R6-C/metrics.json) 和 [`R6-C 阶段审查`](stage_reviews/D2-A-R6C_review.md)。
+**阶段判断：** Large/XLarge 相对 Medium 的 C2+C3 joint 分别提高 +0.0464/+0.0540，配对区间下界均高于0，但 C3 pooled Pfa 的单侧95%上界为0.1021/0.1027，六格 familywise 门均失败，故不晋级多seed或final blind。Medium 与 XLarge 未共同通过冻结续训门；没有证据说明12,800更新已达到学习极限。数据规模对照未达到主要joint增益门。R6-C为 **REFINE**，R6-A/B/C均为development证据；历史负结果和研究总纲v1.3不变。
 
-**当前唯一优先任务：** D2-A-R6-C protocol/config v1.2已在未生成数据前修订并冻结；当前推进结构实现、G0/G1前置检查和匹配单seed筛选。候选为约0.07M/0.29M/1.01M活动参数的同拓扑TaskStudent，先在相同新训练/验证集、effective batch64和12,800 updates下比较；若Medium与验证集筛选出的大模型共同通过趋势门，两臂再一起逐级延至25,600、最多51,200 updates。嵌套训练场景按相同条件块种子生成，块级scene IDs应完全一致。另冻结Medium在51,200与102,400唯一训练场景对下的12,800-update数据规模对照。训练记录每400步验证一次，不逐update写日志，恢复checkpoint每800步保存。R6-B冻结结果不改。ChatGPT综合审查请求在R6 P0–P7全部目标完成后提交；缺少中间审查不阻塞通过前置门的已批准阶段。
+**当前唯一优先任务：** 进入已授权的 D2-A-R6-D：完成 J1 D/P/J 与 J2 软候选双向交互的实现、CUDA/资源门和正确性测试，再冻结独立 development pilot。根据 R6-C 未触发延长门的证据，R6-D 新 protocol 将预注册更充分的共同训练预算；D/P/J 对照须匹配 updates、有效 batch、数据暴露、优化计划和验证/checkpoint 规则，训练记录保持固定间隔，不逐 update 写盘。模型规模/batch 仅在不混淆主要对比时另立匹配因素。R6-B/C 冻结设置、结果与无 final blind 结论保持不变。ChatGPT 综合审查请求仍在 R6 P0–P7 全部目标结束后提交；中间审查缺席不阻塞已授权并通过前置门的路线。
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
 ## 当前结论

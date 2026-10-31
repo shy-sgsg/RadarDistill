@@ -1,5 +1,14 @@
 # 研究进度
 
+# 2026-10-31：D2-A-R6-C 完成，进入 R6-D 实现
+
+- **执行：** 按冻结R6-C v1.2，在RTX 3050 Laptop `cuda:0`、FP32、seed404下顺序训练Medium/Large/XLarge各12,800 updates；有效batch64，history每400 updates记录，不逐update写盘。另完成Medium 51,200 vs102,400唯一训练对的固定12,800-update对照。每模型评价使用H0 calibration/verification各120,000及H1 development6,144场景，未生成final blind。
+- **容量结果：** global Pfa 0.05时C2+C3 joint为0.8164/0.8628/0.8704。Large−Medium=`+0.04644`（97.5% CI `[+0.03646,+0.05643]`），XLarge−Medium=`+0.05404`（`[+0.04449,+0.06402]`）；相对任务保护通过，但C3 pooled Pfa单侧95%上界0.10162/0.10207/0.10266、六格familywise门失败，未晋级formal seeds。
+- **训练与数据规模：** Medium与validation选出的XLarge未共同通过预注册续训趋势/过拟合门，未延至25,600/51,200；不据此断言12,800为学习极限。数据扩展组相对core的joint差`+0.00673`（95% CI `[-0.00066,+0.01455]`），未通过主增益门；Doppler RMSE有小幅次级改善，C3上界为0.10412。
+- **工程/审计：** 首次预测汇总因布尔数组直接相减失败；在两组布尔向量转换为float64后修复，复用12/12已有预测归档，无重复推理；定向回归用例通过，R6-C测试文件12项通过。按owner记录移除21,467,222,779 bytes重建缓存；清理后项目占用1,205,698,287 bytes。审计见`experiments/D2-A-R6/R6-C/attempts/evaluation_aggregation_fix.json`与`cache_cleanup.json`。
+- **判断与路线：** R6-C为REFINE，limited support宽度扩展的相对joint收益，但绝对C3虚警保护失败；数据规模主假设未获支持；更长更新的效果仍未检验。用户允许未来新实验注册更充分更新，须匹配D/P/J各组updates、effective batch、样本暴露、schedule和checkpoint规则，且仍按检查点记录、不逐update日志。当前唯一优先工作转为R6-D J1/J2实现与CUDA正确性门；综合ChatGPT审查待R6 P0–P7全部完成。
+- **证据：** `experiments/D2-A-R6/R6-C/{protocol.md,config.yaml,metrics.json,analysis.md,analysis_record.json,cache_cleanup.json}`；内部报告`docs/stage_reviews/D2-A-R6C_review.md`。运行/预测生成SHA=`a34feea10822ac4ef4dfbe9b64771826aa1e80df`。
+
 # 2026-10-29：按用户要求将综合ChatGPT审查放在R6路线收尾，冻结R6-C协议
 
 - **审查时机：** 用户要求完成整项R6研究目标后再形成一份ChatGPT审查请求；R6内部每个阶段仍保留协议、结果与阶段报告，但不分别提前提交审查提示词。未收到中间审查不阻塞已经授权且通过冻结前置门的阶段。
