@@ -106,22 +106,23 @@
 - Create: `experiments/D2-A-R6/R6-D/joint_architecture_design.md`
 - Test: `tests/test_d2a_r6_joint.py`
 
-- [x] Write the J1/J2 architecture and correctness-gate design; implementation and CUDA tests remain pending.
+- [x] Write and implement the J1/J2 architecture with matched J1 task losses; complete output/gradient/periodic-boundary tests, parameter and CUDA resource measurement, and G1.
 
-- [ ] Implement J1 shared-backbone multi-head baseline with D-only, P-only and J losses under matched trunk/optimizer controls.
-- [ ] Implement one J2 soft-candidate bidirectional interaction model with explicit null class and continuous range/Doppler refinement.
-- [ ] Test output probability normalization, no-target/H0 behavior, PRF-periodic boundaries, and finite bidirectional gradient flow; test detached-branch controls.
-- [ ] Measure parameter count, forward/backward and RTX3050 peak VRAM before any scientific training.
-- [ ] Run small-tensor CPU/CUDA correctness and 16-pair/200-update G1; only then propose a matched development pilot after R6-A/R6-B.
+- [x] Implement J1 shared-backbone multi-head baseline with D-only, P-only and J losses under matched trunk/optimizer controls.
+- [x] Implement one J2 soft-candidate bidirectional interaction model with explicit null class and continuous range/Doppler refinement.
+- [x] Test output probability normalization, no-target/H0 behavior, PRF-periodic boundaries, and finite bidirectional gradient flow; test detached-branch controls.
+- [x] Measure parameter count, forward/backward and RTX3050 peak VRAM before scientific training.
+- [x] Run CUDA correctness and 16-pair/200-update G1, then complete the matched R6-D development pilot. See `experiments/D2-A-R6/R6-D/` and `docs/stage_reviews/D2-A-R6D_review.md`.
 
 ### Task 5: R6-E representative architecture screening
 
-**Files:** R6-E protocol/config, compact candidate models, candidate-specific tests and a single ordered screen runner.
+**Files:** R6-E protocol/config, compact candidate models, candidate-specific tests, ordered screen runner and stage report.
 
-- [ ] Compare only mechanism-motivated candidates: multiscale/TCN or time-range-separable CNN; axis-factorized periodic Transformer; parameter-matched complex CNN; bidirectional slow-time/range SSM; one CNN+sequence hybrid.
-- [ ] Audit the existing TFAS input/position/attention/pooling path and document structural differences in the new Transformer.
-- [ ] Screen parameter count, memory, finite forward/backward, overfit behavior and short-budget diagnostics before long training.
-- [ ] Do not reject a model family on one short run; send at most the strongest representative candidates to a fresh matched budget/seed protocol.
+- [x] Freeze a bounded comparison: J1-J, complex common-phase-equivariant CE-TCN, and full-grid axial RAX-Transformer; defer SSM and hybrids without treating them as rejected.
+- [x] Audit the existing TFAS input/position/attention/pooling path and document the distinct full-grid relative-bias RAX structure.
+- [ ] Implement candidate-specific physical/contract tests; screen parameter count, CUDA memory, finite gradients and the frozen 16-pair/200-update G1 before formal data generation.
+- [ ] Train the three arms in order on fresh matched data under the common 51,200-update CUDA FP32 budget; report independent H0 calibration/verification and H1 development.
+- [ ] Preserve negative results, analyze task/physical consistency and training curves, clean only R6-E owned cache, and push the result package without an intermediate ChatGPT review request.
 
 ### Task 6: R6-F hybrid systems
 

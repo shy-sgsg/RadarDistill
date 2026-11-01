@@ -103,7 +103,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-按R6 P4路线冻结 D2-A-R6-E 有界架构比较协议：以 J1-J 为联合 baseline，仅保留少量有物理依据的复数/序列候选，并保护 Doppler、C3 familywise Pfa 与配对 joint。根据 R6-D 验证曲线可考虑高于25,600 updates 的共同训练预算，但新 protocol 必须让比较臂匹配更新数、有效batch、训练数据暴露、优化计划、验证/checkpoint规则；训练日志继续固定间隔记录，不逐update写盘。R6 P0–P7 全部目标完成后再提交一次综合 ChatGPT 审查；R6-D 的任何冻结协议或结果不追溯修改。
+按R6 P4路线执行 D2-A-R6-E 有界架构筛选：J1-J作联合baseline，对照复数公共相位等变CE-TCN与保留完整慢时间—距离网格的轻量RAX-Transformer。protocol/config已冻结，新独立scene blocks在全仓历史清单预演中无重叠，正式G0还要复核。三臂固定51,200共同updates、有效batch64、数据顺序和exposure、优化计划、validation/checkpoint规则；该预算为常见12,800的4倍，不是收敛声明。用户允许后续实验公平增加更新数；若需要延长，作为新的匹配实验预注册。训练日志固定间隔记录，不逐update写盘。训练、H0校准/独立验证和H1 development尚未开始；不生成blind。R6 P0–P7全部目标完成后再提交一次综合ChatGPT审查；R6-D的任何冻结协议或结果不追溯修改。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

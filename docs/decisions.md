@@ -38,6 +38,15 @@
 
 # 技术决策记录
 
+## 2026-11-01：R6-E冻结代表性架构筛选及共同训练预算
+
+- **触发证据：** R6-D在25,600 updates下表现出臂间验证最佳点不同；J1-J较早达到validation best，J1-D/J2-J在12,800之后仍改善。用户明确允许未来实验公平增加训练更新，并要求不因一般日志需要而逐optimizer update落盘。
+- **设计选择：** 按R6 P4预注册J1-J、CE-TCN和RAX-Transformer。CE-TCN使用无复偏置复卷积、径向操作和模长读出，结构上保证公共相位等变/任务不变；RAX保留完整时间—距离网格做两轴attention，但不保证相位或频移等变。固定物理频谱层、教师知识、SSM和混合模型不进入本轮。
+- **公平性：** 三臂新seed606、同scene IDs与配对采样序列、E1 truth-only、有效batch64、FP32、AdamW/cosine schedule、验证/checkpoint规则及51,200 optimizer updates；51,200是统一筛选预算，不是收敛结论，也不对R6-D追溯追加。若之后需要更长训练，按全比较组匹配的独立协议注册；log每400步、checkpoint每800步。
+- **统计与保护：** 两个候选分别对J1-J比较C2+C3 paired joint；因两项候选对比，使用Bonferroni控制的双侧97.5% bootstrap区间。Pd、range/Doppler RMSE保护同样匹配区间；C3六格familywise Pfa绝对门独立判读。single-seed收益只用于候选筛选，不自动晋级blind。
+- **场景边界：** AISAR预演审计22个现有manifest/selected清单、884,072历史ID；候选302,360个ID与历史及split间重叠均为0。G0正式运行前复核scene ID、CUDA设备、协议SHA与磁盘；G1未通过不生成正式Train/Validation。
+- **依据材料：** `docs/superpowers/specs/2026-11-01-d2-a-r6e-architecture-screen-design.md`、`docs/superpowers/plans/2026-11-01-d2-a-r6e-architecture-screen-implementation.md`、`experiments/D2-A-R6/R6-E/protocol.md`、`config.yaml`。当前只完成设计与预注册；未开始训练，暂无科学结果。
+
 ## 2026-11-01：R6-D联合检测/参数pilot为REFINE，进入R6-E有界架构比较
 
 - **实验范围：** R6-D protocol/config v1.2；seed505、RTX 3050 Laptop `cuda:0`、FP32、有效batch64；J1-D/J1-P/J1-J/J2-J四臂各25,600 updates。训练/验证为51,200/5,000对，独立H0 calibration/verification各120,000、H1 development6,144。没有KD、final blind或多seed。
