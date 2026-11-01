@@ -71,7 +71,7 @@ def _write_json(path: Path, value: Any) -> None:
     temporary.replace(path)
 
 
-def _atomic_torch_save(path: Path, value: Any) -> None:
+def _atomic_torch_save(value: Any, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     torch.save(value, temporary)
@@ -151,6 +151,7 @@ def _source_sha256() -> dict[str, str]:
 
 def _cache_owner(split: str, plan: Sequence[Mapping[str, Any]], git_sha: str) -> dict[str, Any]:
     config, _, _ = _configs()
+    sources = _source_sha256()
     plan_hash = hashlib.sha256(
         json.dumps(list(plan), sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     ).hexdigest()
@@ -159,7 +160,7 @@ def _cache_owner(split: str, plan: Sequence[Mapping[str, Any]], git_sha: str) ->
         "git_sha": git_sha,
         "protocol_sha256": _sha256(STAGE / "protocol.md"),
         "config_sha256": _sha256(STAGE / "config.yaml"),
-        "source_sha256": _source_sha256(),
+        "source_sha256": {key: sources[key] for key in ("simulator", "paired_plan")},
         "split": split,
         "scene_count": sum(int(row["count"]) for row in plan),
         "plan_sha256": plan_hash,
@@ -170,9 +171,18 @@ def _cache_owner(split: str, plan: Sequence[Mapping[str, Any]], git_sha: str) ->
 def _owner_matches(expected: Mapping[str, Any], actual: Mapping[str, Any]) -> bool:
     if not isinstance(expected, Mapping) or not isinstance(actual, Mapping):
         return False
-    expected_identity = {key: value for key, value in expected.items() if key != "git_sha"}
-    actual_identity = {key: value for key, value in actual.items() if key != "git_sha"}
-    return expected_identity == actual_identity
+    if set(expected) != set(actual):
+        return False
+    for key, expected_value in expected.items():
+        if key == "git_sha":
+            continue
+        actual_value = actual.get(key)
+        if key == "source_sha256" and isinstance(expected_value, Mapping) and isinstance(actual_value, Mapping):
+            if any(actual_value.get(name) != value for name, value in expected_value.items()):
+                return False
+        elif actual_value != expected_value:
+            return False
+    return True
 
 
 def _cache_paths(split: str) -> dict[str, Path]:

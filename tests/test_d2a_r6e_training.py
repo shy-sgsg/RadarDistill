@@ -64,3 +64,32 @@ def test_cache_manifest_must_match_frozen_plan_ids(tmp_path, monkeypatch) -> Non
     assert not d2a_r6e._cache_manifest_matches(
         "train", plan, {"scene_id": np.asarray(["unexpected-0", "unexpected-1"])}
     )
+
+
+def test_atomic_checkpoint_writer_accepts_payload_then_path(tmp_path) -> None:
+    path = tmp_path / "checkpoint.pt"
+    d2a_r6e._atomic_torch_save({"update": 0}, path)
+
+    import torch
+
+    assert torch.load(path, map_location="cpu", weights_only=False) == {"update": 0}
+
+
+def test_cache_owner_allows_training_only_source_changes_but_checks_data_sources() -> None:
+    expected = {
+        "owner": "D2-A-R6-E-paired-cache",
+        "git_sha": "new-training-code",
+        "source_sha256": {"simulator": "sim-v1", "paired_plan": "plan-v1"},
+    }
+    prior_cache_owner = {
+        "owner": "D2-A-R6-E-paired-cache",
+        "git_sha": "old-training-code",
+        "source_sha256": {
+            "trainer": "old-trainer-v1",
+            "simulator": "sim-v1",
+            "paired_plan": "plan-v1",
+        },
+    }
+    assert d2a_r6e._owner_matches(expected, prior_cache_owner)
+    prior_cache_owner["source_sha256"]["simulator"] = "sim-v2"
+    assert not d2a_r6e._owner_matches(expected, prior_cache_owner)
