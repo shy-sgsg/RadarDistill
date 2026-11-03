@@ -1,10 +1,14 @@
 # D2-A-R6-F：完整检测与参数估计处理链比较
 
-**协议版本：** 1.0
+**协议版本：** 1.0.2
 
 **状态：** 运行前冻结；开发实验，`final_blind_authorized: false`
 
 **对应总纲：** `docs/RESEARCH_CHARTER.md` v1.3
+
+**执行前修订 1.0.1：** 将 G1 合成链路检查专用 seed 固定为 `2,298,000,000`，条件索引固定为 10，样本数为 16 CPI。该 seed 仅用于正确性检查，不进入校准、验证或 development 指标；修订发生在 G0/G1 和正式场景生成之前。
+
+**执行前修订 1.0.2：** 系统 D 固定为 B3 提供检测分数、CE-TCN 输出其原生距离/Doppler 估计，不再把 B3 FFT 峰值门用作 CE 的 offset 基准。CE range head 的训练 offset 相对于 `floor(truth_range)` 监督门定义，而 B3 选择离散功率峰；二者门索引语义不能预先视作相同。D 将同时记录 B3 检测候选与 CE 参数候选的一致率。此项在 G0/G1 和正式数据生成前完成，不改变六链数量、数据划分、阈值、指标或统计门。
 **依据：** R6 总体设计第 9 节、R6-A 公共场景定义、R6-E 架构筛选与阶段报告。
 
 ## 1. 研究问题与范围
@@ -24,13 +28,13 @@
 | A | B3 DPCA 最大响应 | B3 距离门上的 4× 零填充 FFT 峰 | 传统检测 + 传统精估主基线 |
 | B | CE-TCN `presence_probability` | CE-TCN 原生 range/Doppler 联合输出 | CE-TCN 原生联合学生链 |
 | C | CE-TCN `presence_probability` | CE-TCN 距离候选门上的局部 profile-ML Doppler；range 用 CE-TCN 连续输出 | 神经检测 + 传统精估 |
-| D | B3 DPCA 最大响应 | B3 候选距离门上读取 CE-TCN offset 和 Doppler 向量；range 为候选门加该 offset | 传统检测 + 神经精估 |
+| D | B3 DPCA 最大响应 | CE-TCN 原生 range/Doppler 输出；B3 只决定是否输出，CE 参数候选不受 B3 峰值门强制覆盖 | 传统检测 + 神经精估 |
 | E | J1-J `presence_probability` | J1-J 原生 range/Doppler 联合输出 | 与 CE-TCN 配对的共享主干联合 NN 参考 |
 | F | `CE_probability × fit_fraction` | CE-TCN 距离候选门上的 profile-ML Doppler；range 用 CE-TCN 连续输出 | CE 检测 + profile-ML + 统计拟合验证 |
 
 `fit_fraction` 是在 CE 候选距离门的 DPCA 慢时间残差上，4× FFT 最大复正弦投影功率除以 `N × 总能量`；理论范围 `[0,1]`。它是可观测的归一化拟合统计量，不宣称是经解析校准的 p 值。F 的唯一最终阈值仍由 F 整链的 H0 calibration 决定；不另外搜索验证阈值、权重或组合式。数值越界仅允许由浮点舍入导致，计算后截在 `[0,1]`。
 
-系统 A 采用 R6-A 已注册的 4× FFT 传统 Doppler 精估，避免用局部搜索给传统主基线不必要地增添算法自由度；局部 profile-ML 仅用于 C/F 与 R6-A 注册的估计诊断。所有 DPCA 候选来自 B3 真实最大响应；神经候选来自模型输出。D 在 B3 选中的整数距离门上读取 CE-TCN 的逐距离参数头，不访问真值。
+系统 A 采用 R6-A 已注册的 4× FFT 传统 Doppler 精估，避免用局部搜索给传统主基线不必要地增添算法自由度；局部 profile-ML 仅用于 C/F 与 R6-A 注册的估计诊断。所有 DPCA 候选来自 B3 真实最大响应；神经参数候选来自模型输出。D 的检测候选由 B3 产生，参数候选由 CE-TCN 原生 range logits 产生；两者不一致时仍按冻结的 B3 检测阈值输出 CE 参数，并将候选一致性单独报告。该链不访问真值。
 
 ### oracle 估计诊断
 
@@ -65,7 +69,7 @@ H1 报告每条件、C0–C3、C2+C3 及总体 Pd/AUC、检测候选正确率、
 ## 5. 阶段门与停止条件
 
 - **G0（实现与隔离）：** protocol/config/source/checkpoint SHA 记录一致；RTX 3050 可见；seed/scene ID 无冲突；六链分数、候选、null 语义及同场景配对检查通过。
-- **G1（小样本链路验证）：** 每条链在合成可控 IQ 上输出有限分数/参数；DPCA 与神经候选正确传播；H0 不生成真值参数；H1 与 oracle 明确分开；batch=1 和 16 一致到预设数值容差；CUDA 路径无 CPU 回退。
+- **G1（小样本链路验证）：** 使用 config 中独立保留的 seed、C3 partial-overlap 条件及 16 对合成 IQ；每条链输出有限分数/参数；DPCA 与神经候选按该链定义正确传播，D 分别保留检测候选和参数候选；H0 不生成真值参数；H1 与 oracle 明确分开；batch=1 和 16 一致到预设数值容差；CUDA 路径无 CPU 回退。
 - **G2（H0）：** 各链按自身 H0 calibration 独立定阈值，并只用 verification 判定上述全局/C3 门。任何一链失败时不得转借其他链阈值或以开发 H1 调整分数。
 - **G3（H1/完整链）：** 所有系统在相同 H1 scene IDs 上评价；候选级误差和 end-to-end joint 分开；阈值、模型、估计器、统计组合均不得依据 verification/H1 反复调节。
 - **G4（阶段判断）：** 只将通过绝对 H0 与任务保护的链称为候选合格系统。若没有链通过，保留相对性能证据但结论不得升级为系统优势；依据 CE/传统检测/参数子项归因，决定 R6-G 的教师内容是否仍有可检验价值，不能靠教师训练掩盖所有完整系统均未过门。

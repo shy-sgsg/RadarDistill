@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-R6
   subphase: R6-F
-  protocol_version: "1.0"
+  protocol_version: "1.0.2"
   charter_version: "1.3"
   status: preregistered
   execution_authorized: true
@@ -38,8 +38,9 @@ systems:
   D:
     detector: B3_DPCA_max
     detector_score: B3_peak_power
-    range_estimator: B3_candidate_plus_CE_offset_at_candidate_gate
-    doppler_estimator: CE_circular_head_at_B3_candidate_gate
+    range_estimator: CE_native_range_head_argmax_plus_offset
+    doppler_estimator: CE_native_circular_head
+    report_b3_ce_candidate_agreement: true
   E:
     detector: J1_J_joint_presence_probability
     detector_score: J1_J_presence_probability
@@ -86,6 +87,9 @@ data:
   condition_seed_stride: 1000000
   chunk_size: 16
   chunk_seed_stride: 1009
+  g1_test_seed: 2298000000
+  g1_condition_index: 10
+  g1_test_count: 16
   splits:
     h0_calibration:
       presence: H0
