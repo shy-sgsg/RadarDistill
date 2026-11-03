@@ -1,0 +1,161 @@
+experiment:
+  id: D2-A-R6
+  subphase: R6-F
+  protocol_version: "1.0"
+  charter_version: "1.3"
+  status: preregistered
+  execution_authorized: true
+  execution_gate: implement_G0_G1_then_evaluate
+  final_blind_authorized: false
+  review_request_timing: after_all_authorized_R6_P0_P7_goals
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  physics_source: experiments/D2-A-E001/config.yaml
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+  condition_count: 12
+
+systems:
+  A:
+    detector: B3_DPCA_max
+    detector_score: B3_peak_power
+    range_estimator: B3_integer_candidate
+    doppler_estimator: candidate_4x_zero_padded_FFT
+  B:
+    detector: CE_TCN_presence_probability
+    detector_score: CE_presence_probability
+    range_estimator: CE_native_range_head_argmax_plus_offset
+    doppler_estimator: CE_native_circular_head_at_predicted_range
+  C:
+    detector: CE_TCN_presence_probability
+    detector_score: CE_presence_probability
+    range_estimator: CE_native_range_head_argmax_plus_offset
+    doppler_estimator: local_profile_ML_at_CE_candidate_range
+  D:
+    detector: B3_DPCA_max
+    detector_score: B3_peak_power
+    range_estimator: B3_candidate_plus_CE_offset_at_candidate_gate
+    doppler_estimator: CE_circular_head_at_B3_candidate_gate
+  E:
+    detector: J1_J_joint_presence_probability
+    detector_score: J1_J_presence_probability
+    range_estimator: J1_J_native_range_head_argmax_plus_offset
+    doppler_estimator: J1_J_native_circular_head
+  F:
+    detector: CE_presence_probability_times_normalized_profile_fit_fraction
+    detector_score: product_CE_probability_and_fit_fraction
+    range_estimator: CE_native_range_head_argmax_plus_offset
+    doppler_estimator: local_profile_ML_at_CE_candidate_range
+    fit_fraction: max_4x_DFT_projection_power_over_pulse_count_times_total_DPCA_energy
+    fit_fraction_is_calibrated_p_value: false
+    additional_tuned_gate_or_weight: false
+  all_systems:
+    threshold_scope: independently_calibrated_per_complete_chain
+    target_pfa_cpi: 0.05
+    quantile_method: higher
+    comparator: ">="
+    output_when_not_detected: null
+    truth_available_to_pipeline: false
+    final_blind: false
+
+models:
+  ce_tcn:
+    arm: ce_tcn
+    checkpoint: experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/best_checkpoint.pt
+    training_record: experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/training_record.json
+    training_seed: 606
+    expected_parameter_count: 63429
+  j1_joint:
+    arm: j1_joint
+    checkpoint: experiments/D2-A-R6/R6-E/runs/seed_606/j1_joint/best_checkpoint.pt
+    training_record: experiments/D2-A-R6/R6-E/runs/seed_606/j1_joint/training_record.json
+    training_seed: 606
+    expected_parameter_count: 70277
+  retraining: false
+  checkpoint_selection: frozen_R6_E_validation_selected_best
+  inference_device: cuda:0
+  required_gpu: NVIDIA GeForce RTX 3050 Laptop GPU
+  cpu_fallback: forbidden
+
+data:
+  conditions_from_r6a: true
+  condition_seed_stride: 1000000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  splits:
+    h0_calibration:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2308000000
+    h0_verification:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2328000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 2348000000
+  require_new_scene_ids: true
+  all_systems_same_scene_per_split: true
+  splits_disjoint: true
+  compare_against_all_prior_scene_manifests: true
+  persist_iq: false
+  persist_per_scene_predictions: true
+  estimated_prediction_budget_mib: 100
+
+evaluation:
+  primary_metric: identifiable_C2_C3_joint_success
+  joint_range_tolerance_cells: 1.0
+  joint_doppler_tolerance_hz: 20.0
+  doppler_error: PRF_wrapped
+  primary_baseline: A
+  primary_candidates: [B, C, D, E, F]
+  minimum_meaningful_joint_gain: 0.02
+  primary_candidate_ci_level: 0.99
+  primary_candidate_ci_family: five_candidate_contrasts
+  pd_difference_lower_minimum: -0.02
+  range_rmse_ratio_upper_maximum: 1.05
+  doppler_rmse_ratio_upper_maximum: 1.05
+  protection_ci_level: 0.975
+  paired_bootstrap_unit: base_scene_id_stratified_by_condition
+  paired_bootstrap_replicates: 5000
+  paired_bootstrap_seed: 2026110301
+  pfa_interval: one_sided_clopper_pearson
+  pfa_confidence: 0.95
+  global_verification_pfa_upper_maximum: 0.055
+  c3_condition_count: 6
+  c3_familywise_alpha: 0.05
+  c3_cell_method: bonferroni_exact
+  c3_cell_pfa_upper_maximum: 0.10
+  h0_threshold_source: own_chain_calibration_only
+  h0_verification_for_threshold_or_score_selection: false
+  h1_for_threshold_or_score_selection: false
+  oracle_candidate_results: offline_diagnostic_only
+  report_all_conditions: true
+  report_candidate_correctness: true
+  report_null_abstentions: true
+  report_full_chain_cost: true
+  cost_subset_count: 384
+  cost_subset_scene_selection: first_32_scene_ids_per_condition
+  cost_batch_size: 16
+  cost_warmup_batches: 2
+  cost_repeats: 3
+  real_time_claim: false
+
+resources:
+  training: none
+  neural_device: cuda:0
+  models_simultaneously_resident: 1
+  inference_microbatch: 16
+  peak_cuda_memory_recording: true
+  scene_iq_cache: none
+  cleanup: owner_manifest_only
+  preserve_untracked_user_data: true
+  final_project_limit_gib: 20
