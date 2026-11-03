@@ -90,6 +90,49 @@ def test_composite_scores_keep_each_complete_chain_score_explicit():
     np.testing.assert_allclose(scores["F"], [0.2, 0.2], atol=1e-7)
 
 
+def test_calibration_target_is_read_from_the_registered_system_section():
+    config, _, _ = d2a_r6f._configs()
+
+    assert d2a_r6f.calibration_target_pfa(config) == 0.05
+
+
+def test_cached_prediction_loader_reuses_only_complete_disjoint_splits(tmp_path, monkeypatch):
+    monkeypatch.setattr(d2a_r6f, "PREDICTIONS", tmp_path)
+    conditions = [{"course": "C0"}]
+    plans = {
+        split: [{"condition_index": 0, "count": 2}]
+        for split in ("h0_calibration", "h0_verification", "h1_development")
+    }
+    for split, prefix in (("h0_calibration", "cal"), ("h0_verification", "ver"), ("h1_development", "dev")):
+        arrays = {
+            "scene_id": np.array([f"{prefix}-0", f"{prefix}-1"]),
+            "condition_index": np.zeros(2, dtype=np.uint8),
+            **{f"{name}__score": np.array([0.1, 0.2]) for name in d2a_r6f.SYSTEM_NAMES},
+        }
+        if split == "h1_development":
+            arrays.update({
+                "truth_range_cell": np.array([2.25, 3.25]),
+                "truth_doppler_hz": np.array([100.0, 200.0]),
+                "oracle_fft4_doppler_hz": np.array([100.0, 200.0]),
+                "oracle_profile_ml_doppler_hz": np.array([100.0, 200.0]),
+                "oracle_ce_range_cell": np.array([2.25, 3.25]),
+                "oracle_ce_doppler_hz": np.array([100.0, 200.0]),
+                "oracle_j1_range_cell": np.array([2.25, 3.25]),
+                "oracle_j1_doppler_hz": np.array([100.0, 200.0]),
+            })
+            for name in d2a_r6f.SYSTEM_NAMES:
+                arrays[f"{name}__candidate_range_bin"] = np.array([2, 3])
+                arrays[f"{name}__predicted_range_cell"] = np.array([2.25, 3.25])
+                arrays[f"{name}__predicted_doppler_hz"] = np.array([100.0, 200.0])
+            arrays["D__detection_candidate_range_bin"] = np.array([2, 3])
+        d2a_r6f._write_npz(tmp_path / f"{split}.npz", arrays)
+
+    loaded, counts = d2a_r6f._load_finalized_prediction_cache(plans, conditions)
+
+    assert counts == {"h0_calibration": 2, "h0_verification": 2, "h1_development": 2}
+    assert loaded["h1_development"]["scene_id"].tolist() == ["dev-0", "dev-1"]
+
+
 def test_detection_decision_abstains_on_below_threshold_cpis():
     decision = decision_outputs(
         np.array([0.49, 0.50, 0.90]),

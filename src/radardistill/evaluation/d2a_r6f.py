@@ -104,6 +104,11 @@ def _configs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     return config, condition_source, physics
 
 
+def calibration_target_pfa(config: Mapping[str, Any]) -> float:
+    """Read the registered per-chain calibration target from the system section."""
+    return float(config["systems"]["all_systems"]["target_pfa_cpi"])
+
+
 def build_r6f_split_plans(
     config: Mapping[str, Any], conditions: Sequence[Mapping[str, Any]]
 ) -> dict[str, list[dict[str, Any]]]:
@@ -875,7 +880,9 @@ def _require_g1(preflight: Mapping[str, Any]) -> dict[str, Any]:
     return record
 
 
-def _ensure_prediction_owner(preflight: Mapping[str, Any]) -> dict[str, Any]:
+def _ensure_prediction_owner(
+    preflight: Mapping[str, Any], *, reuse_prior_commit: bool = False
+) -> dict[str, Any]:
     path = STAGE / "output_owner.json"
     owner = {
         "experiment": "D2-A-R6-F",
@@ -887,8 +894,33 @@ def _ensure_prediction_owner(preflight: Mapping[str, Any]) -> dict[str, Any]:
     }
     if path.is_file():
         existing = json.loads(path.read_text(encoding="utf-8"))
-        if existing != owner:
+        if existing == owner:
+            return existing
+        shared_keys = (
+            "experiment",
+            "protocol_sha256",
+            "config_sha256",
+            "prediction_directory",
+            "raw_iq_persisted",
+        )
+        prior_sha = str(existing.get("git_sha", ""))
+        valid_prior_sha = len(prior_sha) == 40 and all(char in "0123456789abcdef" for char in prior_sha)
+        ancestor = False
+        if reuse_prior_commit and valid_prior_sha:
+            check = subprocess.run(
+                ["git", "merge-base", "--is-ancestor", prior_sha, str(preflight["git_sha"])],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+            )
+            ancestor = check.returncode == 0
+        if (
+            not reuse_prior_commit
+            or not ancestor
+            or any(existing.get(key) != owner[key] for key in shared_keys)
+        ):
             raise RuntimeError("R6-F prediction directory belongs to a different run")
+        return existing
     elif PREDICTIONS.exists() and any(PREDICTIONS.iterdir()):
         raise RuntimeError("R6-F prediction path contains files without a matching owner record")
     else:
@@ -896,41 +928,102 @@ def _ensure_prediction_owner(preflight: Mapping[str, Any]) -> dict[str, Any]:
     return owner
 
 
-def r6f_evaluate() -> dict[str, Any]:
+def _load_finalized_prediction_cache(
+    plans: Mapping[str, Sequence[Mapping[str, Any]]],
+    conditions: Sequence[Mapping[str, Any]],
+) -> tuple[dict[str, dict[str, np.ndarray]], dict[str, int]]:
+    """Load complete deterministic prediction caches and verify split identity/counts."""
+    arrays_by_split: dict[str, dict[str, np.ndarray]] = {}
+    counts: dict[str, int] = {}
+    seen_ids: set[str] = set()
+    for split in ("h0_calibration", "h0_verification", "h1_development"):
+        path = PREDICTIONS / f"{split}.npz"
+        if not path.is_file():
+            raise RuntimeError(f"R6-F finalized prediction cache is missing: {path.name}")
+        arrays = _load_npz(path)
+        if "scene_id" not in arrays or "condition_index" not in arrays:
+            raise RuntimeError(f"R6-F cached {split} is missing scene identity fields")
+        scene_ids = np.asarray(arrays["scene_id"]).astype(str)
+        condition_index = np.asarray(arrays["condition_index"], dtype=np.int64)
+        if scene_ids.ndim != 1 or condition_index.shape != scene_ids.shape or not len(scene_ids):
+            raise RuntimeError(f"R6-F cached {split} has invalid scene identity shapes")
+        expected_by_condition = np.zeros(len(conditions), dtype=np.int64)
+        for spec in plans[split]:
+            expected_by_condition[int(spec["condition_index"])] += int(spec["count"])
+        if len(scene_ids) != int(expected_by_condition.sum()):
+            raise RuntimeError(f"R6-F cached {split} scene count differs from the frozen plan")
+        if np.any(condition_index < 0) or np.any(condition_index >= len(conditions)):
+            raise RuntimeError(f"R6-F cached {split} contains an unknown condition index")
+        if not np.array_equal(np.bincount(condition_index, minlength=len(conditions)), expected_by_condition):
+            raise RuntimeError(f"R6-F cached {split} condition counts differ from the frozen plan")
+        id_set = set(scene_ids.tolist())
+        if len(id_set) != len(scene_ids) or seen_ids.intersection(id_set):
+            raise RuntimeError(f"R6-F cached {split} scene IDs are duplicated across splits")
+        seen_ids.update(id_set)
+        required = {"scene_id", "condition_index", *(f"{name}__score" for name in SYSTEM_NAMES)}
+        if split == "h1_development":
+            required.update({"truth_range_cell", "truth_doppler_hz"})
+            for name in SYSTEM_NAMES:
+                required.update({
+                    f"{name}__candidate_range_bin",
+                    f"{name}__predicted_range_cell",
+                    f"{name}__predicted_doppler_hz",
+                })
+            required.add("D__detection_candidate_range_bin")
+            required.update({
+                "oracle_fft4_doppler_hz",
+                "oracle_profile_ml_doppler_hz",
+                "oracle_ce_range_cell",
+                "oracle_ce_doppler_hz",
+                "oracle_j1_range_cell",
+                "oracle_j1_doppler_hz",
+            })
+        missing = required.difference(arrays)
+        if missing:
+            raise RuntimeError(f"R6-F cached {split} is missing fields: {sorted(missing)}")
+        arrays_by_split[split] = arrays
+        counts[split] = len(scene_ids)
+    return arrays_by_split, counts
+
+
+def r6f_evaluate(*, reuse_predictions: bool = False) -> dict[str, Any]:
     """Run frozen full-chain prediction, independent calibration and development evaluation."""
     preflight = _require_preflight()
     g1 = _require_g1(preflight)
-    _ensure_prediction_owner(preflight)
+    prediction_owner = _ensure_prediction_owner(preflight, reuse_prior_commit=reuse_predictions)
     config, condition_config, physics = _configs()
     conditions = condition_config["radar"]["conditions"]
     plans = build_r6f_split_plans(config, conditions)
     device = torch.device("cuda:0")
     started = time.perf_counter()
+    if reuse_predictions:
+        arrays_by_split, counts = _load_finalized_prediction_cache(plans, conditions)
+        ce_peak_bytes = None
+        j1_peak_bytes = None
+    else:
+        ce_model = _load_r6e_model("ce_tcn", config, device)
+        torch.cuda.reset_peak_memory_stats(device)
+        ce_counts = _run_ce_pass(ce_model, config, conditions, physics, plans, device)
+        torch.cuda.synchronize(device)
+        ce_peak_bytes = int(torch.cuda.max_memory_allocated(device))
+        del ce_model
+        torch.cuda.empty_cache()
 
-    ce_model = _load_r6e_model("ce_tcn", config, device)
-    torch.cuda.reset_peak_memory_stats(device)
-    ce_peak_bytes = 0
-    ce_counts = _run_ce_pass(ce_model, config, conditions, physics, plans, device)
-    torch.cuda.synchronize(device)
-    ce_peak_bytes = int(torch.cuda.max_memory_allocated(device))
-    del ce_model
-    torch.cuda.empty_cache()
+        j1_model = _load_r6e_model("j1_joint", config, device)
+        torch.cuda.reset_peak_memory_stats(device)
+        j1_counts = _run_j1_pass(j1_model, config, physics, plans, device)
+        torch.cuda.synchronize(device)
+        j1_peak_bytes = int(torch.cuda.max_memory_allocated(device))
+        del j1_model
+        torch.cuda.empty_cache()
 
-    j1_model = _load_r6e_model("j1_joint", config, device)
-    torch.cuda.reset_peak_memory_stats(device)
-    j1_counts = _run_j1_pass(j1_model, config, physics, plans, device)
-    torch.cuda.synchronize(device)
-    j1_peak_bytes = int(torch.cuda.max_memory_allocated(device))
-    del j1_model
-    torch.cuda.empty_cache()
-
-    counts = _finalize_predictions()
-    if counts != ce_counts or counts != j1_counts:
-        raise RuntimeError("R6-F prediction pass scene counts do not match")
-    arrays_by_split = {
-        split: _load_npz(PREDICTIONS / f"{split}.npz")
-        for split in ("h0_calibration", "h0_verification", "h1_development")
-    }
+        counts = _finalize_predictions()
+        if counts != ce_counts or counts != j1_counts:
+            raise RuntimeError("R6-F prediction pass scene counts do not match")
+        arrays_by_split = {
+            split: _load_npz(PREDICTIONS / f"{split}.npz")
+            for split in ("h0_calibration", "h0_verification", "h1_development")
+        }
     h0_cal = arrays_by_split["h0_calibration"]
     h0_ver = arrays_by_split["h0_verification"]
     h1 = arrays_by_split["h1_development"]
@@ -942,7 +1035,7 @@ def r6f_evaluate() -> dict[str, Any]:
         cal_view = _system_view(h0_cal, system)
         ver_view = _system_view(h0_ver, system)
         threshold_info = calibrate_threshold(
-            cal_view["score"], float(config["evaluation"]["all_systems"]["target_pfa_cpi"])
+            cal_view["score"], calibration_target_pfa(config)
         )
         threshold = float(threshold_info["threshold"])
         thresholds[system] = threshold
@@ -1070,6 +1163,8 @@ def r6f_evaluate() -> dict[str, Any]:
         "protocol_sha256": preflight["protocol_sha256"],
         "config_sha256": preflight["config_sha256"],
         "source_and_checkpoint_sha256": preflight["source_and_checkpoint_sha256"],
+        "prediction_generation_git_sha": prediction_owner["git_sha"],
+        "prediction_cache_reused": bool(reuse_predictions),
         "g0_status": preflight["status"],
         "g1_status": g1["status"],
         "scene_counts": counts,

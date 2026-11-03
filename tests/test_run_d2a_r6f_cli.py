@@ -16,5 +16,5 @@ def test_r6f_runner_help_lists_only_frozen_stage_commands():
     )
 
     assert completed.returncode == 0
-    for command in ("preflight", "g1", "evaluate", "all"):
+    for command in ("preflight", "g1", "evaluate", "summarize", "all"):
         assert command in completed.stdout

@@ -16,7 +16,7 @@ from radardistill.evaluation.d2a_r6f import r6f_evaluate, r6f_g1, r6f_preflight
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("preflight", "g1", "evaluate", "all"))
+    parser.add_argument("command", choices=("preflight", "g1", "evaluate", "summarize", "all"))
     args = parser.parse_args()
     if args.command == "preflight":
         result = r6f_preflight()
@@ -24,6 +24,8 @@ def main() -> None:
         result = r6f_g1()
     elif args.command == "evaluate":
         result = r6f_evaluate()
+    elif args.command == "summarize":
+        result = r6f_evaluate(reuse_predictions=True)
     else:
         preflight = r6f_preflight()
         g1 = r6f_g1()
