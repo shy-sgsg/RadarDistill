@@ -906,9 +906,9 @@ def r6f_evaluate() -> dict[str, Any]:
     plans = build_r6f_split_plans(config, conditions)
     device = torch.device("cuda:0")
     started = time.perf_counter()
-    torch.cuda.reset_peak_memory_stats(device)
 
     ce_model = _load_r6e_model("ce_tcn", config, device)
+    torch.cuda.reset_peak_memory_stats(device)
     ce_peak_bytes = 0
     ce_counts = _run_ce_pass(ce_model, config, conditions, physics, plans, device)
     torch.cuda.synchronize(device)
@@ -916,8 +916,8 @@ def r6f_evaluate() -> dict[str, Any]:
     del ce_model
     torch.cuda.empty_cache()
 
-    torch.cuda.reset_peak_memory_stats(device)
     j1_model = _load_r6e_model("j1_joint", config, device)
+    torch.cuda.reset_peak_memory_stats(device)
     j1_counts = _run_j1_pass(j1_model, config, physics, plans, device)
     torch.cuda.synchronize(device)
     j1_peak_bytes = int(torch.cuda.max_memory_allocated(device))
