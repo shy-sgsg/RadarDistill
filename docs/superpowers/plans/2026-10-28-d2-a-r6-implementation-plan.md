@@ -120,9 +120,9 @@
 
 - [x] Freeze a bounded comparison: J1-J, complex common-phase-equivariant CE-TCN, and full-grid axial RAX-Transformer; defer SSM and hybrids without treating them as rejected.
 - [x] Audit the existing TFAS input/position/attention/pooling path and document the distinct full-grid relative-bias RAX structure.
-- [ ] Implement candidate-specific physical/contract tests; screen parameter count, CUDA memory, finite gradients and the frozen 16-pair/200-update G1 before formal data generation.
-- [ ] Train the three arms in order on fresh matched data under the common 51,200-update CUDA FP32 budget; report independent H0 calibration/verification and H1 development.
-- [ ] Preserve negative results, analyze task/physical consistency and training curves, clean only R6-E owned cache, and push the result package without an intermediate ChatGPT review request.
+- [x] Implement candidate-specific physical/contract tests; screen parameter count, CUDA memory, finite gradients and the frozen 16-pair/200-update G1 before formal data generation.
+- [x] Train the three arms in order on fresh matched data under the common 51,200-update CUDA FP32 budget; report independent H0 calibration/verification and H1 development.
+- [x] Preserve negative results, analyze task/physical consistency and training curves, clean only R6-E owned cache, and push the result package without an intermediate ChatGPT review request.
 
 ### Task 6: R6-F hybrid systems
 

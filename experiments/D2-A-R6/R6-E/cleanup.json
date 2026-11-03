@@ -1,0 +1,24 @@
+{
+  "stage": "D2-A-R6-E",
+  "status": "cleaned",
+  "preflight_git_sha": "2eaf7838c07f0b2b9292343fa9ef56f19260db01",
+  "cache_owner": "R6-E train and validation owner manifests verified",
+  "removed": [
+    {
+      "split": "train",
+      "bytes": 10233910428
+    },
+    {
+      "split": "validation",
+      "bytes": 999408233
+    }
+  ],
+  "total_cache_bytes_removed": 11233318661,
+  "scene_manifests_preserved": true,
+  "checkpoints_histories_predictions_metrics_preserved": true,
+  "user_untracked_files_touched": false,
+  "project_bytes_after_cleanup": 1294176256,
+  "project_gib_after_cleanup": 1.2052955627441406,
+  "project_limit_gib": 20,
+  "measurement": "du -s -B1 ."
+}

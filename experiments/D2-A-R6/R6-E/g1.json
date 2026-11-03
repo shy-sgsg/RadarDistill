@@ -1,0 +1,142 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "2eaf7838c07f0b2b9292343fa9ef56f19260db01",
+  "protocol_sha256": "f2d4c508e8e51ee15f3a1b68ada3eed9f2e51635df55158e602c58ca3f392851",
+  "config_sha256": "1bf1d04e8208a8bfcffd09c1beaa985a5cd707f39899168debd7c212665a909b",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "precision": "FP32",
+  "effective_batch_size": 64,
+  "formal_microbatch": 4,
+  "resource_probe": {
+    "16": {
+      "j1_joint": {
+        "status": "pass",
+        "peak_allocated_bytes": 819818496,
+        "peak_reserved_bytes": 895483904
+      },
+      "ce_tcn": {
+        "status": "oom"
+      },
+      "rax_transformer": {
+        "status": "pass",
+        "peak_allocated_bytes": 1054421504,
+        "peak_reserved_bytes": 1130364928
+      }
+    },
+    "8": {
+      "j1_joint": {
+        "status": "pass",
+        "peak_allocated_bytes": 427594752,
+        "peak_reserved_bytes": 501219328
+      },
+      "ce_tcn": {
+        "status": "pass",
+        "peak_allocated_bytes": 2489629696,
+        "peak_reserved_bytes": 2906652672
+      },
+      "rax_transformer": {
+        "status": "pass",
+        "peak_allocated_bytes": 537063936,
+        "peak_reserved_bytes": 660602880
+      }
+    }
+  },
+  "physical_test_seed": 2300000000,
+  "physical_test_scene_ids": [
+    "d2a-scene-2300000000-0",
+    "d2a-scene-2300000000-1",
+    "d2a-scene-2300000000-2",
+    "d2a-scene-2300000000-3",
+    "d2a-scene-2300000000-4",
+    "d2a-scene-2300000000-5",
+    "d2a-scene-2300000000-6",
+    "d2a-scene-2300000000-7",
+    "d2a-scene-2300000000-8",
+    "d2a-scene-2300000000-9",
+    "d2a-scene-2300000000-10",
+    "d2a-scene-2300000000-11",
+    "d2a-scene-2300000000-12",
+    "d2a-scene-2300000000-13",
+    "d2a-scene-2300000000-14",
+    "d2a-scene-2300000000-15"
+  ],
+  "condition": {
+    "course": "C0",
+    "scenario_id": "separated",
+    "snr_db": 20.0,
+    "cnr_db": -5.0
+  },
+  "arms": {
+    "j1_joint": {
+      "initial_loss": 11.987025260925293,
+      "last20_mean_loss": 0.017853609472513198,
+      "relative_loss_reduction": 0.9985105888171678,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 8,
+      "passed": true,
+      "peak_allocated_bytes": 427962880,
+      "peak_reserved_bytes": 494927872,
+      "seconds": 58.117008357992745
+    },
+    "ce_tcn": {
+      "initial_loss": 5.020621299743652,
+      "last20_mean_loss": 0.016723595070652665,
+      "relative_loss_reduction": 0.9966690188181477,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 8,
+      "passed": true,
+      "peak_allocated_bytes": 2490430464,
+      "peak_reserved_bytes": 2904555520,
+      "seconds": 485.41524264600594
+    },
+    "rax_transformer": {
+      "initial_loss": 5.404036998748779,
+      "last20_mean_loss": 0.0010706153698265553,
+      "relative_loss_reduction": 0.9998018860029874,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 8,
+      "passed": true,
+      "peak_allocated_bytes": 537729536,
+      "peak_reserved_bytes": 660602880,
+      "seconds": 157.91388762899442
+    }
+  },
+  "formal_train_validation_data_generated": true,
+  "formal_microbatch_before_oom": 8,
+  "runtime_microbatch_adjustment": {
+    "event": "cuda_oom_microbatch_fallback",
+    "timestamp_local": "2026-11-01T23:11:07+08:00",
+    "arm": "ce_tcn",
+    "resume_checkpoint_update": 16800,
+    "microbatch_before": 8,
+    "microbatch_after": 4,
+    "effective_batch_size_cpi": 64,
+    "fixed_update_budget": 51200,
+    "optimizer_and_sampler_state": "preserved from update-16800 checkpoint",
+    "protocol_basis": "R6-E protocol permits reducing microbatch to 4 while preserving effective batch on OOM",
+    "oom_evidence": {
+      "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "attempted_allocation_mib": 18.0,
+      "free_memory_mib": 12.75,
+      "pytorch_allocated_mib": 2263.04,
+      "pytorch_reserved_unallocated_mib": 378.95
+    },
+    "backups": [
+      "experiments/D2-A-R6/R6-E/g1.before_microbatch4.json",
+      "experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/owner.before_microbatch4.json",
+      "experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/last_checkpoint.before_microbatch4.pt",
+      "experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/best_checkpoint.before_microbatch4.pt"
+    ],
+    "status": "fallback configured; first resumed update will verify resource fit"
+  }
+}

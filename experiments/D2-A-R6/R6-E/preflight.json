@@ -1,0 +1,62 @@
+{
+  "status": "G0_PASS",
+  "git_sha": "2eaf7838c07f0b2b9292343fa9ef56f19260db01",
+  "protocol_sha256": "f2d4c508e8e51ee15f3a1b68ada3eed9f2e51635df55158e602c58ca3f392851",
+  "config_sha256": "1bf1d04e8208a8bfcffd09c1beaa985a5cd707f39899168debd7c212665a909b",
+  "source_sha256": {
+    "trainer": "a8b9be9694f10810b5a8d079bb6323bcd985006ff1958c108c8a39dff46178ee",
+    "architectures": "1eab85466a6f59b71efb5e75ad1ddeeb006dfd81d13d234dc1e591b2d5755449",
+    "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+    "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+    "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+    "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+    "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+    "entrypoint": "eb92c7b0f2f78d4205999b9d3d5a4f869adf0f7913b2cea484850d46f8ba9697"
+  },
+  "protocol_version": 1.0,
+  "split_scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144,
+    "g1_test": 16
+  },
+  "historical_scene_id_count": 884072,
+  "historical_scene_id_overlap": 0,
+  "cross_split_scene_id_overlap": 0,
+  "parameter_count_bounds": [
+    56222,
+    84332
+  ],
+  "model_parameter_counts": {
+    "j1_joint": {
+      "parameters": 70277,
+      "trainable_parameters": 70277
+    },
+    "ce_tcn": {
+      "parameters": 63429,
+      "trainable_parameters": 63429
+    },
+    "rax_transformer": {
+      "parameters": 60085,
+      "trainable_parameters": 60085
+    }
+  },
+  "estimated_train_validation_cache_bytes": 11233312200,
+  "remaining_owned_cache_bytes": 2097152,
+  "disk_free_before_generation_bytes": 18350661632,
+  "disk_total_bytes": 497777065984,
+  "minimum_free_bytes": 15516983296,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "driver_version": "580.178.04",
+  "free_vram_before_g1_bytes": 3364683776,
+  "total_vram_bytes": 3942383616,
+  "python": "3.13.7",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "formal_data_generated": false,
+  "final_blind_generated": false
+}

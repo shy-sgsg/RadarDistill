@@ -24,7 +24,7 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 的 R0 T1–T12 全通过；后续 R3 固定阈值迁移决定为 **REFINE**，T1 未获固定阈值教师资格。
 
-**当前状态：** R5-A/B/C及T0–T3 teaching pilot、R6-A/B/C/D均已完成并保留各自阶段边界。R5-C教师内容pilot没有证明软教师收益；R6-D J2-J虽提高C2+C3 joint/range，但Doppler与C3六格familywise虚警保护失败，因此当前不进入正式seed或blind。R6 P4的R6-E协议已冻结：在新独立数据上比较J1-J、复数公共相位等变CE-TCN和完整轴向RAX-Transformer，统一有效batch64和51,200 CUDA updates，训练/验证日志按间隔记录。全仓预演scene ID审计无重叠；正式G0/G1和训练尚未运行。R6-E的设计、实施计划和协议见[设计](docs/superpowers/specs/2026-11-01-d2-a-r6e-architecture-screen-design.md)、[计划](docs/superpowers/plans/2026-11-01-d2-a-r6e-architecture-screen-implementation.md)、[protocol/config](experiments/D2-A-R6/R6-E/)。R6 P0–P7完成后再提交一次综合审查请求；研究总纲v1.3与历史负结果不变。
+**当前状态：** R5-A/B/C及T0–T3 teaching pilot、R6-A/B/C/D/E均已完成并保留阶段边界。R5-C教师内容pilot尚未证明软教师收益；R6-D J2-J的Doppler及C3六格虚警保护失败。R6-E在新独立数据、seed606、有效batch64、FP32 CUDA和统一51,200 updates下比较J1-J、复数公共相位等变CE-TCN和全网格轴向RAX-Transformer。CE-TCN的C2+C3 joint相对增益为`+0.02713`（97.5% CI `[+0.01736,+0.03668]`），相对任务保护通过，公共相位一致性符合结构；RAX当前候选明显落后。三个模型均未过C3六格familywise Pfa绝对门，CE-TCN不称为合格低虚警检测器。单seed development结果不代表跨seed，且未开展KD、传统方法对照或final blind。结果见[R6-E分析](experiments/D2-A-R6/R6-E/analysis.md)、[指标](experiments/D2-A-R6/R6-E/metrics.json)和[阶段审查](docs/stage_reviews/D2-A-R6E_review.md)。当前进入R6-F完整混合链比较；之后依据R5-C/R6-E/F证据进行有界R6-G教师协作。R6 P0–P7全部完成后再提交一份综合审查请求；研究总纲v1.3及历史负结果不变。
 
 **近期历史：** D2-A-E002 v2.1 的 A/B/C 单 seed pilot 曾显示 G3 分层虚警和 G6 公共相位/频移一致性门失败，课程与 K2 未达到预注册增益；其 **REFINE** 结论保留，不由 E003 覆盖。
 

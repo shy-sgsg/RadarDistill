@@ -38,6 +38,14 @@
 
 # 技术决策记录
 
+## 2026-11-03：R6-E筛选CE-TCN进入R6-F，停止当前RAX候选
+
+- **依据：** D2-A-R6-E冻结单seed606架构比较完成。CE-TCN相对J1-J的可辨识C2+C3 joint差`+0.02713`（97.5% paired CI `[+0.01736,+0.03668]`），Pd、range和Doppler相对保护通过；公共相位旋转诊断与结构相符。RAX joint差`−0.39280`且Doppler RMSE比`2.8927`。三者均未通过C3六格familywise Pfa绝对门。
+- **决定：** R6-F优先使用CE-TCN作为NN端到端候选，J1-J作为匹配学生参考并保留冻结传统处理链。CE-TCN尚不是合格低虚警检测器，不据单seed开发结果宣称正式胜出。当前RAX候选停止扩展，负结果不外推至整个Transformer家族。
+- **物理/蒸馏边界：** CE-TCN公共相位任务输出稳定不等于频移等变；±130 Hz频移残差p95仍约378–503 Hz。R6-E没有教师或蒸馏，不能回答教师教学增益。R6-G须在R6-F结果后，最多挑一种知识形式，与truth-only及必要truth-assisted控制匹配比较。
+- **后续：** 当前优先阶段是R6-F完整混合链对比。每条全链独立校准H0、匹配场景并核算端到端链路；最终多seed/blind须在P7按冻结条件处理。综合ChatGPT审查请求只在P0–P7已授权目标完成后提交。
+- **材料：** `experiments/D2-A-R6/R6-E/{protocol.md,config.yaml,metrics.json,analysis.md,figures/}`、`docs/stage_reviews/D2-A-R6E_review.md`。
+
 ## 2026-11-01：R6-E冻结代表性架构筛选及共同训练预算
 
 - **触发证据：** R6-D在25,600 updates下表现出臂间验证最佳点不同；J1-J较早达到validation best，J1-D/J2-J在12,800之后仍改善。用户明确允许未来实验公平增加训练更新，并要求不因一般日志需要而逐optimizer update落盘。

@@ -1,5 +1,14 @@
 # 研究进度
 
+## 2026-11-03：D2-A-R6-E架构筛选完成
+
+- **对齐与协议：** R6-E服务总纲Q3/Q4/Q6/Q10；没有修改总纲、R5-C或R6-A至R6-D冻结结果。G0/G1通过，场景ID与历史/其他split互斥。按冻结protocol v1.0，J1-J、CE-TCN和RAX-Transformer在RTX 3050 Laptop `cuda:0`、FP32、seed606、有效batch64下各训练51,200 updates。每臂51,200唯一配对场景重复访问32次；training history每400步记录，不逐步写日志。
+- **执行偏差：** CE-TCN正式训练在microbatch8、update16,800发生OOM，按协议恢复优化器和采样器状态并降至microbatch4；有效batch、更新预算、scene顺序和曝光保持匹配。无CPU回退。
+- **主要结果：** CE-TCN−J1-J C2+C3 joint差`+0.02713`（97.5% paired CI `[+0.01736,+0.03668]`），Pd差`+0.01025`、range RMSE ratio`0.9201`、Doppler RMSE ratio`0.8408`且冻结保护通过。RAX−J1-J joint差`−0.39280`，Doppler RMSE ratio`2.8927`，保护失败并停止当前候选。三臂C3六格familywise Pfa门均失败；CE-TCN相位不变性与结构相符，但频移诊断不支持±130 Hz频移等变。
+- **预算与证据边界：** 最佳validation更新分别为14,400/27,600/38,400；各臂末步validation loss均高于最佳值，J1-J后段训练/验证差距明显扩大。51,200只是筛选预算，不是任何模型学习上限。R6-E只有一个训练seed、development数据；没有teacher/KD、传统检测器对照、跨seed确认或final blind。
+- **判断与下一步：** 阶段结论REFINE。CE-TCN是R6-F优先NN候选，J1-J保留作匹配参考；所有链须重新独立校准最终H0。R6-F完成后依据R5-C和R6-F/E证据，冻结至多一种教师知识形式开展R6-G matched教学实验。R6 P0–P7全路线结束后提交唯一综合审查请求。
+- **材料与资源：** [R6-E分析](../experiments/D2-A-R6/R6-E/analysis.md)、[metrics](../experiments/D2-A-R6/R6-E/metrics.json)、[训练曲线](../experiments/D2-A-R6/R6-E/figures/training_curves.png)、[条件虚警图](../experiments/D2-A-R6/R6-E/figures/h0_pfa_by_condition.png)、[H1条件图](../experiments/D2-A-R6/R6-E/figures/h1_metrics_by_condition.png)、[物理诊断图](../experiments/D2-A-R6/R6-E/figures/physical_consistency_diagnostics.png)、[cleanup audit](../experiments/D2-A-R6/R6-E/cleanup.json)、[阶段审查](stage_reviews/D2-A-R6E_review.md)。按owner清单删除训练/验证IQ缓存共11,233,318,661 bytes；保留checkpoint、history、predictions、metrics和scene manifest，未触碰用户未跟踪文件。清理后项目占用1,294,176,256 bytes（1.2053 GiB），低于20 GiB上限。
+
 ## 2026-11-01：D2-A-R6-E架构筛选预注册
 
 - **目标与路线：** R6-E作为R6 P4，比较任务级J1-J、复数公共相位等变CE-TCN和保留完整130×32慢时间—距离网格的轻量RAX-Transformer，服务总纲Q3/Q4/Q6/Q10。没有修改总纲、R5-C或R6-A至R6-D冻结协议和结果。

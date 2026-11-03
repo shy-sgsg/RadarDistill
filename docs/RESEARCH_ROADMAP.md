@@ -103,7 +103,9 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 
 ## 当前唯一优先任务
 
-按R6 P4路线执行 D2-A-R6-E 有界架构筛选：J1-J作联合baseline，对照复数公共相位等变CE-TCN与保留完整慢时间—距离网格的轻量RAX-Transformer。protocol/config已冻结，新独立scene blocks在全仓历史清单预演中无重叠，正式G0还要复核。三臂固定51,200共同updates、有效batch64、数据顺序和exposure、优化计划、validation/checkpoint规则；该预算为常见12,800的4倍，不是收敛声明。用户允许后续实验公平增加更新数；若需要延长，作为新的匹配实验预注册。训练日志固定间隔记录，不逐update写盘。训练、H0校准/独立验证和H1 development尚未开始；不生成blind。R6 P0–P7全部目标完成后再提交一次综合ChatGPT审查；R6-D的任何冻结协议或结果不追溯修改。
+R6 P4 的 D2-A-R6-E 已完成：J1-J、复数公共相位等变CE-TCN和全网格轴向RAX-Transformer均使用新独立scene IDs、seed606、E1真值监督、有效batch64、FP32及51,200 matched updates，按序在RTX 3050 Laptop `cuda:0`训练。CE-TCN对J1-J的可辨识C2+C3 joint增益`+0.02713`（97.5%配对CI `[+0.01736,+0.03668]`），Pd、距离和Doppler相对保护通过；其相位不变性与结构相符。当前RAX候选joint差`−0.39280`且Doppler保护明显失败，停止扩展。三个模型均未通过C3六格familywise Pfa上界≤0.10；CE-TCN不具备低虚警检测资格。频移干预没有显示稳定频移等变；单seed development不构成跨seed确认。没有蒸馏、传统基线比较或final blind。owner缓存删除11,233,318,661 bytes，清理后项目占用1,294,176,256 bytes（1.2053 GiB），未触碰用户未跟踪文件；详见R6-E `analysis.md`、`metrics.json`、`figures/`、`cleanup.json`和`docs/stage_reviews/D2-A-R6E_review.md`。
+
+**当前优先阶段：R6 P5 / D2-A-R6-F。** 先冻结传统/学生混合pipeline的端到端比较，优先将CE-TCN作为NN候选、J1-J作为匹配参考，并纳入冻结传统基线；每条最终链都用独立H0校准，不能从子模块沿用阈值。R6-F完成后，结合R5-C教学pilot、R6-E学生筛选及R6-F完整链结果，选择至多一种教师知识形式开展R6-G matched truth-only/teacher/truth-assisted对照。R6 P0–P7全部授权目标完成后再形成一份综合ChatGPT审查；R6-E单seed结果不单独触发formal seeds或blind。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

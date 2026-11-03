@@ -87,7 +87,11 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-R6 P4 当前任务为 D2-A-R6-E：协议已预注册，比较 J1-J、复数公共相位等变CE-TCN和全网格轴向RAX-Transformer。三臂共用独立场景、有效batch64、FP32 CUDA及51,200 updates（常见12,800预算的4倍），这是筛选预算而非收敛声明；训练历史按400 updates记录，不逐update写盘。全仓scene ID预演检查22个清单、884,072个历史ID，计划302,360个新ID与历史及split间均无重叠；正式G0还须重跑审计。尚未生成R6-E正式数据或开始训练。R6 P0–P7全部完成前不生成综合ChatGPT审查请求；研究总纲v1.3与所有历史冻结结果保持不变。
+R6 P4 的 D2-A-R6-E 已按冻结协议完成。三臂在新独立数据上各训练51,200 updates：CE-TCN相对J1-J的C2+C3 joint差`+0.02713`（97.5% CI `[+0.01736,+0.03668]`），相对Pd、距离和Doppler保护通过；RAX-Transformer joint差`−0.39280`，当前候选停止。三臂都未通过C3六格familywise Pfa绝对门；因此CE-TCN是值得继续检验的候选，尚非合格低虚警检测器。CE-TCN公共相位输出一致，但三臂频移诊断均未证明频移等变。单seed开发结果不证明跨seed泛化；没有教师、蒸馏、传统检测器对照或final blind。实验分析、训练曲线、条件图和阶段审查见[`R6-E analysis`](../experiments/D2-A-R6/R6-E/analysis.md)、[`R6-E metrics`](../experiments/D2-A-R6/R6-E/metrics.json)和[`R6-E stage review`](stage_reviews/D2-A-R6E_review.md)。
+
+R6-E的owner缓存清理见[`cleanup.json`](../experiments/D2-A-R6/R6-E/cleanup.json)：删除训练/验证IQ缓存11,233,318,661 bytes，清理后项目占用1,294,176,256 bytes（约1.2053 GiB），低于20 GiB限制；用户未跟踪文件未动。
+
+当前进入R6 P5：先冻结并验证R6-F端到端混合链比较；以CE-TCN作为优先NN候选，J1-J保留为匹配学生参考，每条完整处理链独立校准和报告虚警。之后依据R6-F、R5-C与R6-E证据，开展范围有限的R6-G教师知识教学对照。R6 P0–P7全部获批目标完成前不提交综合ChatGPT审查请求；研究总纲v1.3和历史冻结结果保持不变。
 
 ## 关键材料
 
