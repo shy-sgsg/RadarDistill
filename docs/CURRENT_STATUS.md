@@ -1,10 +1,10 @@
 # 当前研究状态
 
-**更新日期：** 2026-11-04
+**更新日期：** 2026-11-05
 **工作分支：** `main`
-**最新完成工作：** D2-A-R6-F v1.0.2 六条完整处理链开发评价已完成；G0/G1通过，使用RTX 3050 Laptop `cuda:0`运行神经链。协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
+**最新完成工作：** R6-H SSM/混合架构筛选器的执行器、测试与恢复/缓存清理保护已提交至 `main`（`85d4387`，全套测试611项通过）。R6-H仍是draft，尚无G0/G1、正式数据或训练结果；R6-G是当前进行中的科研阶段。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
 **阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
-**当前执行：** R6-G v1.0.1的T0/T1/T3匹配教学pilot正在RTX 3050 Laptop `cuda:0`上顺序训练；每臂51,200 updates、有效batch64、FP32、microbatch4。最近一次进度观察为T0 update 800，训练进程随后仍在运行；精确状态以本阶段`training_history.csv`/checkpoint为准。训练完成前不运行H1 development评价。项目约15 GiB，当前GPU训练进程占用约1.96 GiB显存（桌面图形程序另占用）；owner-scoped缓存会在阶段完成后清理。
+**当前执行：** R6-G v1.0.1的T0/T1/T3匹配教学pilot按冻结协议顺序训练。最近一次里程碑核对观察到 `train-all` 仍在运行，T0 `training_history.csv` 最新记录为16,000 updates；T1/T3尚未开始。训练完成前不运行H1 development评价。保持有效batch64、FP32及既定microbatch/OOM回退规则不变；阶段完成后仅清理本阶段owner-scoped缓存。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
