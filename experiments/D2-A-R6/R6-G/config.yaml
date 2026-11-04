@@ -1,0 +1,172 @@
+experiment:
+  id: D2-A-R6
+  subphase: R6-G
+  protocol_version: "1.0.0"
+  charter_version: "1.3"
+  status: preregistered
+  execution_authorized: true
+  execution_gate: implement_G0_G1_then_train
+  final_blind_authorized: false
+  review_request_timing: after_all_authorized_R6_P0_P7_goals
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  physics_source: experiments/D2-A-E001/config.yaml
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+  condition_count: 12
+
+arms:
+  - T0
+  - T1
+  - T3
+student:
+  architecture: complex_equivariant_residual_tcn
+  source_architecture: R6ECEStudent
+  width: 64
+  inference_parameters_expected: 63429
+  training_only_response_head:
+    enabled: true
+    response_shape: [520, 32]
+    omitted_during_inference: true
+  initialization:
+    seed: 707
+    mode: from_scratch
+    clone_bit_identical_state_across_arms: true
+    warm_start_checkpoint: null
+
+teacher:
+  arm: T1_only
+  method: K3_B3_DPCA_complex128_cuda_4x
+  device: cuda:0
+  teacher_inputs: [observable_H1_IQ, frozen_physics_config]
+  response_shape: [520, 32]
+  response_normalization: sum_to_one_over_range_and_doppler
+  storage_dtype: float16
+  compute_only_for: H1
+  hard_peak_used_for_training: false
+  truth_or_snr_cnr_input: false
+  reliability_gating: false
+
+truth_assisted_control:
+  arm: T3_only
+  response: finite_CPI_Dirichlet_power_on_520_doppler_bins_at_truth_range
+  generated_from_truth: true
+  teacher_maps_used: false
+  loss_weight: 0.05
+
+data:
+  source_conditions: experiments/D2-A-R6/R6-A/config.yaml
+  condition_seed_stride: 1000000
+  condition_offset_stride: 850000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  g1_test_seed: 2598000000
+  splits:
+    train:
+      paired_scenes: 51200
+      seed_bases_by_course: [2408000000, 2413000000, 2418000000, 2423000000]
+      assignment_seed: 2026110401
+    validation:
+      paired_scenes: 5000
+      seed_bases_by_course: [2428000000, 2433000000, 2438000000, 2443000000]
+      assignment_seed: 2026110402
+    h0_calibration:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2508000000
+    h0_verification:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2528000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 2548000000
+  training_seed: 707
+  sampler_seed: 708
+  reuse_any_existing_scene_ids: false
+  same_scene_order_across_arms: true
+  persist_train_validation_iq_temporarily: true
+  persist_evaluation_iq: false
+  estimated_train_validation_cache_bytes: 11222016000
+  estimated_auxiliary_target_bytes: 3407872000
+  minimum_free_disk_bytes_before_generation: 18924856576
+  final_project_limit_gib: 20
+
+training:
+  supervision: truth_with_optional_auxiliary_response
+  task_loss_function: r6d_loss_j1_joint
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.00001
+  learning_rate_schedule: single_cosine_over_all_updates
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  effective_batch_size_cpi: 64
+  per_update_examples: {H0: 32, H1: 32}
+  fixed_updates_per_arm: 51200
+  exposure_per_presence_cpi: 1638400
+  expected_scene_visits_per_presence: 32
+  updates_are_screen_budget_not_convergence_claim: true
+  validation_interval_updates: 400
+  resume_checkpoint_interval_updates: 800
+  history_interval_updates: 400
+  history_written_every_update: false
+  checkpoint_selection: minimum_common_validation_truth_task_loss
+  microbatch_initial: 4
+  microbatch_oom_fallbacks: [2, 1]
+  preserve_effective_batch_on_oom: true
+  precision: FP32
+  amp: false
+  arm_order: [T0, T1, T3]
+  auxiliary_response_shape: [520, 32]
+  auxiliary_response_support: normalized_joint_range_doppler_map
+  auxiliary_response_rows: H1_only
+  teacher_loss_weight: 0.05
+  teacher_loss_weight_schedule: constant
+  teacher_loss_rows: H1_only
+  t0_teacher_map_computed: false
+  t3_teacher_map_computed: false
+  t3_truth_response_used: true
+
+evaluation:
+  target_pfa_cpi: 0.05
+  score_type: presence_logit
+  auc_method: independent_h0_condition_stratified_h1_count_weighted
+  range_gate_cells: 1.0
+  doppler_gate_hz: 20.0
+  calibration_quantile: 0.95
+  calibration_quantile_method: higher
+  decision_comparator: ">="
+  exact_pfa_interval: one_sided_clopper_pearson_95
+  c3_familywise_alpha: 0.05
+  c3_per_cell_upper_maximum: 0.10
+  bootstrap_unit: paired_base_scene_id
+  bootstrap_replicates: 5000
+  bootstrap_seed: 2026110401
+  primary_arm_contrast: T1_minus_T0
+  primary_scope: identifiable_C2_C3_joint_success
+  minimum_primary_gain: 0.02
+  primary_ci: two_sided_95_percent
+  primary_bootstrap_lower_quantile: 0.025
+  pd_difference_ci_lower_minimum: -0.02
+  parameter_rmse_ratio_ci_upper_maximum: 1.05
+  auxiliary_control_contrasts: [T1_minus_T3, T3_minus_T0]
+  validation_curve_updates: [0, 12800, 25600, 51200]
+  final_blind_authorized: false
+
+resources:
+  required_gpu_name: NVIDIA GeForce RTX 3050 Laptop GPU
+  required_device: cuda:0
+  vram_bytes: 4294967296
+  simultaneous_models_resident: 1
+  data_loading: CPU_cache_to_CUDA_per_microbatch
+  teacher_targets_computed_on_cuda: true
+  cleanup_owner_scoped_only: true
