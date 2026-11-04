@@ -1,0 +1,34 @@
+{
+  "stage": "D2-A-R6-G",
+  "status": "pre_update_resource_revision",
+  "superseded_protocol": "1.0.0",
+  "active_protocol": "1.0.1",
+  "superseded_run": "experiments/D2-A-R6/R6-G/runs/seed_707/T0",
+  "superseded_run_checkpoint_update": 0,
+  "superseded_run_history_updates": [0],
+  "completed_optimizer_updates": 0,
+  "observed_issue": "The initial 5,000-pair validation used 4-CPI forward slices and consumed several minutes before the first optimizer update.",
+  "resource_observation": {
+    "elapsed_at_gpu_check": "00:06:45",
+    "gpu_utilization_percent": 96,
+    "gpu_memory_used_mib": 2178,
+    "gpu_memory_free_mib": 1582
+  },
+  "revision": {
+    "change": "Use a fixed 128-CPI no-gradient validation forward batch for every arm.",
+    "training_microbatch_unchanged": 4,
+    "effective_batch_unchanged": 64,
+    "optimizer_updates_unchanged": 51200,
+    "checkpoint_selection_unchanged": "minimum common validation truth-task loss",
+    "protocol_v1_0_0_preserved_at": "experiments/D2-A-R6/R6-G/protocol_v1.0.0.md"
+  },
+  "validation_batch_probe": {
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "batch_cpi": 128,
+    "forward_seconds": 1.3605663039998035,
+    "peak_allocated_bytes": 1934371328,
+    "finite_outputs": true
+  },
+  "optimizer_step_one_checkpoint_created": false
+}

@@ -1,7 +1,7 @@
 experiment:
   id: D2-A-R6
   subphase: R6-G
-  protocol_version: "1.0.0"
+  protocol_version: "1.0.1"
   charter_version: "1.3"
   status: preregistered
   execution_authorized: true
@@ -137,6 +137,7 @@ training:
   t3_truth_response_used: true
 
 evaluation:
+  validation_cpi_forward_batch_size: 128
   target_pfa_cpi: 0.05
   score_type: presence_logit
   auc_method: independent_h0_condition_stratified_h1_count_weighted

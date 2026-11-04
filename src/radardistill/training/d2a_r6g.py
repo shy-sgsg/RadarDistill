@@ -40,7 +40,7 @@ from radardistill.students.r6g_student import export_r6g_inference_model
 ROOT = Path(__file__).resolve().parents[3]
 STAGE = ROOT / "experiments/D2-A-R6/R6-G"
 CACHE = STAGE / "cache/training"
-RUNS = STAGE / "runs/seed_707"
+RUNS = STAGE / "runs/seed_707_v1.0.1"
 DEVICE_NAME = "NVIDIA GeForce RTX 3050 Laptop GPU"
 
 
@@ -62,7 +62,7 @@ def validate_r6g_config(config: Mapping[str, Any]) -> None:
     for key, expected in {
         "id": "D2-A-R6",
         "subphase": "R6-G",
-        "protocol_version": "1.0.0",
+        "protocol_version": "1.0.1",
         "execution_authorized": True,
         "execution_gate": "implement_G0_G1_then_train",
         "final_blind_authorized": False,
@@ -176,6 +176,7 @@ def validate_r6g_config(config: Mapping[str, Any]) -> None:
 
     evaluation = config["evaluation"]
     for key, expected in {
+        "validation_cpi_forward_batch_size": 128,
         "target_pfa_cpi": 0.05,
         "range_gate_cells": 1.0,
         "doppler_gate_hz": 20.0,
@@ -632,6 +633,27 @@ def r6g_run_g1() -> dict[str, Any]:
     if parameter_count != expected_parameters:
         raise RuntimeError(f"R6-G inference parameter count {parameter_count} != {expected_parameters}")
 
+    validation_batch = int(config["evaluation"]["validation_cpi_forward_batch_size"])
+    validation_start = time.perf_counter()
+    validation_model = R6GCEStudent(width=int(config["student"]["width"])).to(device).eval()
+    validation_model.load_state_dict(initial_state, strict=True)
+    validation_input = torch.randn(validation_batch, 6, 130, 32, device=device)
+    torch.cuda.reset_peak_memory_stats(device)
+    with torch.inference_mode():
+        validation_output = validation_model(validation_input, compute_spectrum=False)
+    torch.cuda.synchronize(device)
+    validation_probe = {
+        "batch_cpi": validation_batch,
+        "finite_task_outputs": all(bool(torch.isfinite(value).all()) for value in validation_output.values()),
+        "peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+        "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+        "seconds": time.perf_counter() - validation_start,
+    }
+    if not validation_probe["finite_task_outputs"]:
+        raise FloatingPointError("R6-G validation forward probe produced nonfinite outputs")
+    del validation_model, validation_input, validation_output
+    torch.cuda.empty_cache()
+
     reports: dict[str, Any] = {}
     formal_microbatch = None
     for candidate in [int(config["training"]["microbatch_initial"]), *map(int, config["training"]["microbatch_oom_fallbacks"])]:
@@ -676,6 +698,8 @@ def r6g_run_g1() -> dict[str, Any]:
         "t3_map_normalized": True,
         "inference_parameters": parameter_count,
         "formal_microbatch": formal_microbatch,
+        "validation_cpi_forward_batch_size": validation_batch,
+        "validation_forward_probe": validation_probe,
         "arm_probes": reports,
         "paired_scene_order_shared": True,
         "teacher_k3_truth_inputs": False,
@@ -919,8 +943,13 @@ def _cache_owner(split: str, plan: list[Mapping[str, Any]], git_sha: str) -> dic
 def _assert_cache_owner(expected: Mapping[str, Any], actual: Mapping[str, Any], label: str) -> None:
     expected_identity = dict(expected)
     actual_identity = dict(actual)
+    # Scene/target cache data identity is protected by the explicit plan, target
+    # contract, frozen source checks, and strict config validator. This permits
+    # an evaluation-only forward-batch revision without regenerating IQ/maps.
     expected_identity.pop("git_sha", None)
     actual_identity.pop("git_sha", None)
+    expected_identity.pop("config_sha256", None)
+    actual_identity.pop("config_sha256", None)
     if not isinstance(actual.get("git_sha"), str) or actual_identity != expected_identity:
         raise RuntimeError(f"{label} cache owner differs from the registered plan")
 
@@ -1363,36 +1392,35 @@ def _r6g_validation_summary(
     model: R6GCEStudent,
     validation: Mapping[str, np.ndarray],
     *,
-    microbatch: int,
     device: torch.device,
     config: Mapping[str, Any],
 ) -> dict[str, float]:
     count = len(validation["scene_id"])
+    forward_batch = int(config["evaluation"]["validation_cpi_forward_batch_size"])
+    if forward_batch <= 0 or forward_batch % 2:
+        raise ValueError("R6-G validation forward batch must be a positive even CPI count")
+    paired_scenes_per_batch = forward_batch // 2
     keys = ("total", "presence", "range_cell", "range_offset", "doppler", "candidate")
     totals = {key: 0.0 for key in keys}
     model.eval()
     with torch.inference_mode():
-        for base_start in range(0, count, 32):
-            base_indices = np.arange(base_start, min(base_start + 32, count), dtype=np.int64)
+        for base_start in range(0, count, paired_scenes_per_batch):
+            base_indices = np.arange(
+                base_start, min(base_start + paired_scenes_per_batch, count), dtype=np.int64
+            )
             batch = _r6g_training_batch(validation, base_indices, base_indices)
-            if len(batch["iq_ri"]) % microbatch:
-                raise ValueError("R6-G validation cohort does not divide by the selected microbatch")
             inputs = torch.from_numpy(batch["iq_ri"])
-            labels = {
-                key: torch.from_numpy(np.asarray(batch[key], dtype=np.float32))
+            truth = {
+                key: torch.from_numpy(np.asarray(batch[key], dtype=np.float32)).to(device)
                 for key in ("truth_presence", "truth_range_cell", "truth_doppler_hz")
             }
-            for start in range(0, len(inputs), microbatch):
-                stop = start + microbatch
-                x = inputs[start:stop].to(device)
-                truth = {key: value[start:stop].to(device) for key, value in labels.items()}
-                outputs = model(x, compute_spectrum=False)
-                terms = r6d_loss(
-                    outputs, truth, arm="j1_joint", prf_hz=float(config["radar"]["prf_hz"])
-                )
-                weight = len(inputs[start:stop]) / (2 * count)
-                for key in keys:
-                    totals[key] += float(terms[key].item()) * weight
+            outputs = model(inputs.to(device), compute_spectrum=False)
+            terms = r6d_loss(
+                outputs, truth, arm="j1_joint", prf_hz=float(config["radar"]["prf_hz"])
+            )
+            weight = len(inputs) / (2 * count)
+            for key in keys:
+                totals[key] += float(terms[key].item()) * weight
     if not all(np.isfinite(value) for value in totals.values()):
         raise FloatingPointError("R6-G validation truth-task loss is nonfinite")
     return totals
@@ -1556,7 +1584,7 @@ def r6g_train_arm(
         raise RuntimeError(f"R6-G {arm} artifacts exist without a resumable checkpoint")
     else:
         initial_validation = _r6g_validation_summary(
-            model, validation, microbatch=microbatch, device=device, config=config
+            model, validation, device=device, config=config
         )
         history.append({"update": 0, "learning_rate": float(config["training"]["learning_rate_initial"]),
                         "validation_truth_total": initial_validation["total"],
@@ -1613,7 +1641,7 @@ def r6g_train_arm(
 
             if update % validation_interval == 0:
                 validation_metrics = _r6g_validation_summary(
-                    model, validation, microbatch=microbatch, device=device, config=config
+                    model, validation, device=device, config=config
                 )
                 objective = float(validation_metrics["total"])
                 if objective < best_objective:

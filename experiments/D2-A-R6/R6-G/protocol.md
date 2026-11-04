@@ -1,7 +1,7 @@
 # D2-A-R6-G：CE-TCN上的K3教师教学内容 pilot
 
-**协议版本：** 1.0.0
-**状态：** 执行前冻结；单训练seed开发 pilot；`final_blind_authorized: false`
+**协议版本：** 1.0.1
+**状态：** 正式优化器更新前冻结；单训练seed开发 pilot；`final_blind_authorized: false`
 **总纲：** `docs/RESEARCH_CHARTER.md` v1.3
 **对应路线：** R6 P6；本协议不修改 R5-C、R6-E/F 冻结协议或结果。
 
@@ -54,6 +54,7 @@ R5-C的T0–T3显示，K3完整RD教师图在R5-C Medium学生上没有改善joi
 - microbatch固定4、梯度累积16；如果运行前显存门不通过，或训练OOM，按4→2→1降低microbatch但有效batch仍为64、updates和样本曝光不变。若microbatch1仍无法完成有效batch则停止。
 - 三臂顺序驻留RTX 3050 Laptop `cuda:0`训练；CUDA不可见或任何静默CPU回退立即停止。
 - Validation每400步；resume checkpoint每800步；history每400步；禁止逐optimizer update写日志。checkpoint只按共同validation truth-task loss选取。
+- 验证推理固定使用128 CPI的无梯度前向批次（64个配对场景）；最后一个批次可更小。该批次仅改变相同验证样本的计算切片，三臂使用同一批量与同一真值任务损失，不改变训练effective batch64。
 - 所有臂使用同一训练scene plan和样本次序；teacher/T3 target仅以预先固定的数据索引取用。保存模型、优化器、scheduler、随机数状态、sampler位置和owner信息，以便断点精确恢复。
 
 ## 5. 指标、统计和解释
@@ -71,6 +72,10 @@ H1报告总体、C0–C3、C2+C3及12条件的Pd/AUC、range RMSE、周期Dopple
 记录训练时间、validation用时、K3 CUDA目标生成时间、每臂峰值显存和完整评价成本；不作实时性声明。报告训练样本暴露、updates、访问次数、参数量和训练/验证曲线。
 
 ## 6. 阶段门、停止和交付
+
+### 6.1 版本1.0.1运行资源修订
+
+版本1.0.0的第0步验证在RTX 3050上使用4 CPI前向切片，实际运行约6分钟后进入第1步，尚未完成任何optimizer update。为避免重复小前向造成不必要的验证开销，保留`protocol_v1.0.0.md`和对应G0/G1/data-generation记录，将验证前向切片改为128 CPI。训练微批4、有效batch64、样本、更新数、优化器、损失、检查点选择与评价门均不变。版本1.0.1从step0重新开始正式训练。
 
 - **G0：** protocol/config/source冻结；新scene ID与历史及split无碰撞；三臂初始化、batch plan、总updates和目标数据owner一致；磁盘估算和CUDA设备门通过。
 - **G1：** T0/T1/T3输出接口一致；response头输出`[B,520,32]`、全有限；K3 map非负且归一化；T1 response head梯度有限非零；T3梯度有限非零；T0不读取辅助target；H0不生成response map；CUDA教师和学生路径通过；seed/data order配对检查通过。

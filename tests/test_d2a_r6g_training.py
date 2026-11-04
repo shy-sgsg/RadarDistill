@@ -58,3 +58,25 @@ def test_training_update_keeps_h0_out_of_auxiliary_targets(arm: str) -> None:
     assert all(np.isfinite(value) for value in terms.values())
     assert terms["auxiliary"] == 0.0 if arm == "T0" else terms["auxiliary"] > 0.0
     assert terms["total"] == pytest.approx(terms["truth"] + 0.05 * terms["auxiliary"], rel=1e-5)
+
+
+def test_validation_uses_batched_no_grad_truth_loss() -> None:
+    from radardistill.students.r6g_student import R6GCEStudent
+
+    torch.set_num_threads(1)
+    rng = np.random.default_rng(11)
+    validation = {
+        "iq_h0": (rng.normal(size=(4, 3, 130, 32)) + 1j * rng.normal(size=(4, 3, 130, 32))).astype(np.complex64),
+        "iq_h1": (rng.normal(size=(4, 3, 130, 32)) + 1j * rng.normal(size=(4, 3, 130, 32))).astype(np.complex64),
+        "truth_range_cell": np.asarray([2.0, 7.25, 18.5, 30.75], dtype=np.float32),
+        "truth_doppler_hz": np.asarray([-650.0, -200.0, 75.0, 649.0], dtype=np.float32),
+        "scene_id": np.asarray([f"validation-{index}" for index in range(4)]),
+    }
+    model = R6GCEStudent(width=64)
+    summary = d2a_r6g._r6g_validation_summary(
+        model, validation, device=torch.device("cpu"),
+        config={"radar": {"prf_hz": 1300.0}, "evaluation": {"validation_cpi_forward_batch_size": 8}},
+    )
+    assert set(summary) == {"total", "presence", "range_cell", "range_offset", "doppler", "candidate"}
+    assert all(np.isfinite(value) for value in summary.values())
+    assert all(parameter.grad is None for parameter in model.parameters())

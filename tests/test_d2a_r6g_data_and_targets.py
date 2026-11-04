@@ -91,10 +91,10 @@ def test_cache_resume_rejects_a_different_owner() -> None:
         )
 
 
-def test_cache_resume_keeps_valid_across_result_only_commits() -> None:
+def test_cache_resume_keeps_data_across_a_validation_batch_revision() -> None:
     d2a_r6g._assert_cache_owner(
-        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "preflight", "plan_sha256": "same"},
-        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "later-commit", "plan_sha256": "same"},
+        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "preflight", "config_sha256": "old", "plan_sha256": "same"},
+        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "later-commit", "config_sha256": "new", "plan_sha256": "same"},
         "R6-G train",
     )
 

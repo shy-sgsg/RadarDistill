@@ -27,6 +27,7 @@ def test_accepts_frozen_r6g_protocol_config() -> None:
         ("training", "checkpoint_selection", "minimum_arm_total_loss"),
         ("training", "effective_batch_size_cpi", 128),
         ("teacher", "device", "cpu"),
+        ("evaluation", "validation_cpi_forward_batch_size", 64),
         ("experiment", "final_blind_authorized", True),
     ],
 )
