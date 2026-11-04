@@ -73,6 +73,11 @@ data:
   minimum_free_disk_bytes_before_generation: 15516983296
   final_project_limit_gib: 20
 
+prerequisites:
+  r6g_training_complete: false
+  r6g_gpu_released: false
+  r6g_completion_sha: ""
+
 training:
   supervision: physical_truth_only_E1
   loss_function: r6d_loss_j1_joint
@@ -85,6 +90,8 @@ training:
   effective_batch_size_cpi: 64
   per_update_examples: {H0: 32, H1: 32}
   fixed_updates_per_model: 25600
+  g1_micro_overfit_updates: 200
+  g1_min_relative_loss_reduction: 0.10
   validation_interval_updates: 400
   resume_checkpoint_interval_updates: 800
   history_interval_updates: 400

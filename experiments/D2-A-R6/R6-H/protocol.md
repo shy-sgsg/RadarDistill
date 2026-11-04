@@ -72,4 +72,4 @@ R6-G 完成前不运行上述 CUDA preflight、G1 或正式数据生成，以免
 
 ## 7. 当前执行状态
 
-本文件是可审阅草案，不是已冻结 protocol；配置状态为 draft。已完成模型骨架、三臂工厂、split-plan静态检查和 CPU 单元测试；新模型与 R6-E 架构测试及协议测试合计21项通过。暂定 R6-H scene IDs 与 R6-E/R6-G 配置中登记的 seed plans 无重叠；全仓历史 manifests 的正式审计仍待 G0。尚无 R6-H 数据、CUDA preflight、G1、训练、指标或阶段结论。下一步在 R6-G 安全结束后执行 scene ID/资源审计，再将协议、配置与 runner 一并冻结和推送，然后按 G0→G1→数据生成→顺序训练→独立评价执行。
+本文件是可审阅草案，不是已冻结 protocol；配置状态为 draft，且 R6-G 前置状态仍为 false。已实现模型骨架、三臂工厂、owner-scoped 配对缓存、G0/G1、顺序 CUDA 训练、独立评价与缓存清理入口；R6-H 相关 23 项测试和全仓 609 项测试通过。当前静态 split 检查显示暂定 scene IDs 与 R6-E/R6-G 配置登记的 seed plans 无重叠；全仓历史 manifests 的正式审计仍待 G0。尚无 R6-H 数据、CUDA preflight、G1、训练、指标或阶段结论。R6-G 安全结束、确认 GPU 已释放并完成全仓 scene ID 审计后，才能冻结和推送协议、配置与 runner，再按 G0→G1→数据生成→顺序训练→独立评价执行。
