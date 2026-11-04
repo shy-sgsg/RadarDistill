@@ -10,6 +10,7 @@ from radardistill.students.r6_ssm import (
     R6ComplexDiagonalSSMBlock,
     R6ComplexSSMStudent,
     _complex_linear_conv_fft,
+    build_r6h_student,
     count_r6h_parameters,
 )
 
@@ -142,3 +143,11 @@ def test_default_candidate_parameter_counts_match_ce_tcn_range() -> None:
     assert reference["parameters"] == 63_429
     for result in candidates:
         assert 0.8 * reference["parameters"] <= result["parameters"] <= 1.2 * reference["parameters"]
+
+
+def test_r6h_factory_builds_only_the_preregistered_candidate_names() -> None:
+    assert isinstance(build_r6h_student("ce_tcn"), torch.nn.Module)
+    assert isinstance(build_r6h_student("complex_ssm"), R6ComplexSSMStudent)
+    assert isinstance(build_r6h_student("cnn_ssm"), R6ComplexCNNSSMStudent)
+    with pytest.raises(ValueError, match="unknown R6-H arm"):
+        build_r6h_student("mamba")

@@ -82,6 +82,7 @@ Expected: FAIL because the SSM helper has not yet been implemented.
 - [x] **Step 2: Run the tests and confirm the expected missing-module/API failure.**
 - [x] **Step 3: Implement both candidates** by composing the existing CE-TCN complex stem/readout with the tested blocks; do not modify R6-E/R6-G implementations.
 - [x] **Step 4: Run targeted model tests and confirm PASS.**
+- [x] Add a fixed three-arm factory (`ce_tcn`, `complex_ssm`, `cnn_ssm`) with seed-scoped initialization; reject unregistered names.
 
 ### Task 4: Add architecture-screen training/evaluation integration after R6-G
 

@@ -13,6 +13,7 @@ import torch
 from torch import nn
 
 from .r6_architectures import (
+    R6ECEStudent,
     _ComplexConv2d,
     _ComplexGroupRMSNorm,
     _ComplexTemporalResidualBlock,
@@ -24,6 +25,7 @@ from .r6_architectures import (
 R6H_WIDTH = 56
 R6H_MODES = 8
 R6H_BLOCKS = 3
+R6H_ARMS = ("ce_tcn", "complex_ssm", "cnn_ssm")
 
 
 def _complex_linear_conv_fft(
@@ -231,6 +233,24 @@ class R6ComplexCNNSSMStudent(_R6ComplexSSMBase):
         blocks: int = R6H_BLOCKS,
     ) -> None:
         super().__init__(width=width, modes=modes, blocks=blocks, local_temporal_block=True)
+
+
+def build_r6h_student(arm: str, *, seed: int | None = None) -> nn.Module:
+    if arm not in R6H_ARMS:
+        raise ValueError(f"unknown R6-H arm {arm!r}")
+
+    def create() -> nn.Module:
+        if arm == "ce_tcn":
+            return R6ECEStudent()
+        if arm == "complex_ssm":
+            return R6ComplexSSMStudent()
+        return R6ComplexCNNSSMStudent()
+
+    if seed is None:
+        return create()
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(int(seed))
+        return create()
 
 
 def count_r6h_parameters(model: nn.Module) -> dict[str, int]:
