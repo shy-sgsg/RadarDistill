@@ -779,7 +779,14 @@ def r6g_preflight() -> dict[str, Any]:
         plans, expected_counts=expected, prior_scene_ids=historical
     )
     disk = shutil.disk_usage(STAGE)
-    minimum_free = int(config["data"]["minimum_free_disk_bytes_before_generation"])
+    remaining_cache = _remaining_owned_cache_bytes(config, r6a, head)
+    cache_exists = any((CACHE / name).exists() for name in ("train", "validation", "targets"))
+    minimum_free = remaining_cache + 4 * 1024**3
+    if not cache_exists:
+        minimum_free = max(
+            minimum_free,
+            int(config["data"]["minimum_free_disk_bytes_before_generation"]),
+        )
     if disk.free < minimum_free:
         raise RuntimeError(
             f"R6-G needs {minimum_free} free disk bytes before generation; found {disk.free}"
