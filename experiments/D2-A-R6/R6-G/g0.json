@@ -1,10 +1,10 @@
 {
   "status": "G0_PASS",
-  "git_sha": "bbe57f6e56693b4f2eb74178a47609855c6a2cb0",
-  "protocol_sha256": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
-  "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+  "git_sha": "3a986699f52836293f159ec850033de7c5424f69",
+  "protocol_sha256": "faf7b2983d85b0f13c4b5947394f7deed48b0ec185322e49ee8a2c5a04b9c02a",
+  "config_sha256": "a9b7ef38d26d1baa6220acb9fb24512add450b2fd6fa09d4c959e50e22aa43ce",
   "source_sha256": {
-    "trainer": "6f9cf1ed7221648d6b3d34c6302c1a5f2c8a2f6ad3a1df3f39c04643054af9ca",
+    "trainer": "20da99f9d9893381dffb26f56f8067d1dcb84a8f6384ea3470d551186919d99c",
     "runner": "3a0dea3b497d89397b063b494902fd95d314d8dc50a6cd94a5756bed4efb9654",
     "student": "baccf44202a6f52834170cc09039fae31c09e022362f206aedc0fefe39773265",
     "simulation": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
@@ -15,8 +15,8 @@
     "response_loss": "2e20e372c8f3f4750c891bcb15f00329133048533afc4c99d780b4694e3549bf",
     "condition_config": "99fd0bbfd3e1a4801105e81a59dff395c503ccdece3ddb96eb686de3fe21f598",
     "physics_config": "b97f2b1125ed15ff8ee782d8fa1ee4228529411ed300beabadffff9fcb3aa9ce",
-    "protocol": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
-    "config": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754"
+    "protocol": "faf7b2983d85b0f13c4b5947394f7deed48b0ec185322e49ee8a2c5a04b9c02a",
+    "config": "a9b7ef38d26d1baa6220acb9fb24512add450b2fd6fa09d4c959e50e22aa43ce"
   },
   "split_scene_counts": {
     "train": 51200,
@@ -29,12 +29,12 @@
   "historical_scene_id_count": 940272,
   "historical_scene_id_overlap": 0,
   "cross_split_scene_id_overlap": 0,
-  "disk_free_before_generation_bytes": 18190368768,
+  "disk_free_before_generation_bytes": 18174656512,
   "disk_total_bytes": 497777065984,
   "minimum_free_bytes": 4297064448,
   "device": "cuda:0",
   "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
-  "free_vram_before_g1_bytes": 3201695744,
+  "free_vram_before_g1_bytes": 3199795200,
   "total_vram_bytes": 3942383616,
   "python": "3.13.7",
   "torch": "2.8.0+cu128",
