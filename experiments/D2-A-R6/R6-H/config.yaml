@@ -1,0 +1,130 @@
+experiment:
+  id: D2-A-R6-H
+  protocol_version: "0.1-draft"
+  status: draft
+  charter_version: "1.3"
+  execution_authorized: false
+  final_blind_authorized: false
+  review_request_timing: after_all_authorized_R6_P0_P7_goals
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+  physics_source: experiments/D2-A-E001/config.yaml
+  condition_count: 12
+
+models:
+  arms: [ce_tcn, complex_ssm, cnn_ssm]
+  baseline: ce_tcn
+  parameter_match_relative_tolerance: 0.20
+  expected_parameters:
+    ce_tcn: 63429
+    complex_ssm: 65077
+    cnn_ssm: 71909
+  ssm_width: 56
+  ssm_modes: 8
+  ssm_blocks: 3
+  physical_spectral_frontend: none
+  ssm_transition: fixed_learnable_complex_diagonal
+  selective_mamba: false
+  teacher_inputs: false
+  task_output_contract: [presence_logit, range_logits, range_offset, doppler_vector]
+
+data:
+  condition_count: 12
+  condition_seed_stride: 1000000
+  condition_offset_stride: 850000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  g1_test_seed: 2798000000
+  splits:
+    train:
+      paired_scenes: 51200
+      seed_bases_by_course: [2608000000, 2613000000, 2618000000, 2623000000]
+      assignment_seed: 2026111201
+    validation:
+      paired_scenes: 5000
+      seed_bases_by_course: [2628000000, 2633000000, 2638000000, 2643000000]
+      assignment_seed: 2026111202
+    h0_calibration:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2708000000
+    h0_verification:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 2728000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 2748000000
+  training_seed: 808
+  sampler_seed: 809
+  reuse_existing_scene_ids: false
+  persist_train_validation_iq_temporarily: true
+  persist_evaluation_iq: false
+  estimated_train_validation_cache_bytes: 11222016000
+  minimum_free_disk_bytes_before_generation: 15516983296
+  final_project_limit_gib: 20
+
+training:
+  supervision: physical_truth_only_E1
+  loss_function: r6d_loss_j1_joint
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.00001
+  learning_rate_schedule: cosine_over_25600_updates
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  effective_batch_size_cpi: 64
+  per_update_examples: {H0: 32, H1: 32}
+  fixed_updates_per_model: 25600
+  validation_interval_updates: 400
+  resume_checkpoint_interval_updates: 800
+  history_interval_updates: 400
+  history_written_every_update: false
+  checkpoint_selection: minimum_validation_truth_task_loss
+  microbatch_initial: 4
+  microbatch_oom_fallbacks: [2, 1]
+  preserve_effective_batch_on_oom: true
+  precision: FP32
+  amp: false
+  device: cuda:0
+  required_gpu: NVIDIA GeForce RTX 3050 Laptop GPU
+  cpu_fallback: forbidden
+  train_models_sequentially: [ce_tcn, complex_ssm, cnn_ssm]
+
+evaluation:
+  target_pfa_cpi: 0.05
+  calibration_quantile: 0.95
+  calibration_quantile_method: higher
+  decision_comparator: ">="
+  primary_metric: identifiable_C2_C3_joint_success
+  primary_contrasts: [complex_ssm_minus_ce_tcn, cnn_ssm_minus_ce_tcn]
+  primary_meaningful_gain: 0.02
+  candidate_contrast_ci_level: 0.975
+  paired_bootstrap_unit: base_scene_id
+  paired_bootstrap_replicates: 5000
+  paired_bootstrap_seed: 2026111203
+  pd_noninferiority_difference_lower_minimum: -0.02
+  parameter_rmse_ratio_upper_maximum: 1.05
+  c3_conditions: 6
+  c3_familywise_alpha: 0.05
+  c3_cell_pfa_upper_maximum: 0.10
+  common_phase_rotation_count: 16
+  frequency_shift_intervention_hz: [-130.0, 130.0]
+  final_blind_authorized: false
+
+resources:
+  required_gpu_name: NVIDIA GeForce RTX 3050 Laptop GPU
+  required_device: cuda:0
+  simultaneous_models_resident: 1
+  data_loading: CPU_cache_to_CUDA_per_microbatch
+  cleanup_owner_scoped_only: true
+  preserve_untracked_user_data: true
