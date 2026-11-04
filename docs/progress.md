@@ -1,5 +1,12 @@
 # 研究进度
 
+## 2026-11-04：D2-A-R6-G教学pilot执行中
+
+- **主线与状态：** R6-G是整体R6路线P6，检验K3完整RD软响应能否在CE-TCN物理真值监督之外提供任务收益，并用T3真值辅助监督隔离一般辅助监督效应。总纲v1.3已覆盖本阶段目标；未修改总纲、R5-C或R6-A至R6-F冻结结果。
+- **冻结设置：** T0 truth-only、T1 truth+K3、T3 truth-assisted，seed707，RTX 3050 Laptop `cuda:0`、FP32、有效batch64、每臂51,200 updates，按顺序训练。G0/G1与独立评价实现已通过；不进行教师权重、温度、可靠性或教学时机搜索。
+- **执行边界：** 最近一次里程碑观察为T0 update800；训练完成前不运行H1 development评价。后续仅按冻结检查点和臂完成事件更新状态，不逐update轮询或写日志。训练结束后执行注册的独立H0/H1评价、曲线与教师错误分层，再按owner清单清理可重建缓存。
+- **阶段关系：** R5-C K3/K2-local教学分支负结果继续保留；R6-G是CE-TCN上的一次有界新pilot，不预先宣称蒸馏成功。结果完成后再冻结P7候选和资源门；final blind未获授权。
+
 ## 2026-11-04：D2-A-R6-F完整链比较完成
 
 - **对齐与协议：** R6-F服务于总纲Q1/Q3/Q6/Q7/Q8/Q9/Q10，按protocol v1.0.2比较六条传统、神经及混合链；未改总纲、R5-C或历史冻结结果。G0/G1通过，RTX 3050 Laptop `cuda:0`神经链顺序执行。场景为独立H0 calibration/verification各120,000与H1 development 6,144，未生成final blind。

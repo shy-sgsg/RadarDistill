@@ -76,12 +76,12 @@
 
 - [x] Freeze the R6-B low-Pfa protocol/config, sample-size limits, branch-selection firewall, and conditional resource budget. R6-A and the preregistered resource gate are complete; hard-negative branch R is selected.
 
-- [ ] Test exact Clopper–Pearson intervals and required zero-event sample counts for 0.05/0.01/0.001/0.0001/1e-6.
-- [ ] On R6-B-only scenes, run H0 calibration and independent verification of 120,000 CPI each (10,000 per registered condition), plus matched H1 development; no R5-C/R6-A IDs are reused.
-- [ ] At each method's fixed global threshold, compare pooled and six-cell C3 Pfa with family-aware intervals, condition ROC, H0 score scale, and Pd/joint protection.
+- [x] Test exact Clopper–Pearson intervals and required zero-event sample counts for 0.05/0.01/0.001/0.0001/1e-6.
+- [x] On R6-B-only scenes, run H0 calibration and independent verification of 120,000 CPI each (10,000 per registered condition), plus matched H1 development; no R5-C/R6-A IDs are reused.
+- [x] At each method's fixed global threshold, compare pooled and six-cell C3 Pfa with family-aware intervals, condition ROC, H0 score scale, and Pd/joint protection.
 - [x] Use the result to select exactly one next diagnostic: observable background normalization/score calibration if conditional ROC is good but global transfer fails; H0 coverage/representation if conditional ROC is poor. R6-A hard-cell AUC selected the preregistered hard-negative-resampling R branch.
-- [ ] Evaluate the selected intervention against matched Medium baseline on fresh train/validation IDs, using hard-H0 mining only from training data and no oracle nuisance inputs.
-- [ ] Stop an intervention that lowers Pfa while violating the frozen Pd/parameter/joint protection; record untested 1e-4/1e-6 work honestly.
+- [x] Evaluate the selected intervention against matched Medium baseline on fresh train/validation IDs, using hard-H0 mining only from training data and no oracle nuisance inputs.
+- [x] Stop the selected intervention under its frozen task protections; record that 1e-4 was not run and 1e-6 was outside this stage's sample budget.
 
 ### Task 3: R6-C model scale, training budget, and data scale
 
@@ -128,15 +128,16 @@
 
 **Files:** R6-F protocol/config, end-to-end pipeline evaluators and tests.
 
-- [ ] Build matched A–F systems: traditional/traditional, NN/NN, NN/profile-ML, traditional/NN, joint NN, NN/profile-ML/statistical validation.
-- [ ] Test candidate propagation, null/abstain behavior, and final-chain H0 calibration; never inherit a submodule's Pfa.
-- [ ] Evaluate all chains on the same new IQ scenes at the same quality gates and count complete preprocessing/postprocessing/transfer cost.
+- [x] Build matched A–F systems: traditional/traditional, NN/NN, NN/profile-ML, traditional/NN, joint NN, NN/profile-ML/statistical validation.
+- [x] Test candidate propagation, null/abstain behavior, and final-chain H0 calibration; never inherit a submodule's Pfa.
+- [x] Evaluate all chains on the same new IQ scenes at the same quality gates and count complete preprocessing/postprocessing/transfer cost.
 
 ### Task 7: R6-G targeted teacher collaboration
 
 **Files:** R6-G protocol/config and matched student/teacher training/evaluation modules.
 
-- [ ] Use R5-C T0–T3 and R6 task/baseline outcomes to select at most one teacher knowledge form and one or two student types.
+- [x] Use R5-C T0–T3 and R6 task/baseline outcomes to select one teacher knowledge form and one student type: K3 full response with CE-TCN.
+- [x] Freeze the matched T0/T1/T3 protocol/config, implement the training/evaluation path, and pass G0/G1 on the registered CUDA device.
 - [ ] Compare against matched truth-only and required truth-assisted controls; keep true labels, teacher hard outputs, soft responses, and reliability features separately logged.
 - [ ] Add reliability or teaching-time interventions only as a later one-factor protocol if the knowledge-content contrast first shows task gain.
 
