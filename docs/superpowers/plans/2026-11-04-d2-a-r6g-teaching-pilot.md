@@ -37,9 +37,9 @@
 - Create: `docs/task_alignments/D2-A-R6G_alignment.md`
 - Modify: `docs/superpowers/specs/2026-11-04-d2-a-r6g-teaching-pilot-design.md`
 
-- [ ] Freeze T0/T1/T3, K3 target, fixed 0.05 weight, from-scratch seed707 cloned initialization, common validation truth-task-loss checkpoint selection, 51,200 updates, fresh split seed bases, evaluation gates and stops.
-- [ ] Add protocol validation tests for the fixed arms, budgets, teacher-only inputs and no blind authorization.
-- [ ] Run the config validation tests and commit this bounded protocol package.
+- [x] Freeze T0/T1/T3, K3 target, fixed 0.05 weight, from-scratch seed707 cloned initialization, common validation truth-task-loss checkpoint selection, 51,200 updates, fresh split seed bases, evaluation gates and stops.
+- [x] Add protocol validation tests for the fixed arms, budgets, teacher-only inputs and no blind authorization.
+- [x] Run the config validation tests and commit this bounded protocol package.
 
 ### Task 2: Add R6-G CE-TCN student and behavior tests
 
@@ -47,10 +47,10 @@
 - Create: `src/radardistill/students/r6g_student.py`
 - Create: `tests/test_d2a_r6g_student.py`
 
-- [ ] Add `R6GCEStudent(width=64, spectrum_frequency_bins=520)` with the R6-E CE-TCN task outputs plus optional training-only `spectrum_logits` of shape `[B,520,32]`.
-- [ ] Test equality of task-output names/shapes with R6-E CE-TCN when loading shared task weights, finite forward/backward, nonzero response-head gradients and public phase invariance of task outputs.
-- [ ] Test that `compute_spectrum=False` omits the auxiliary map while retaining identical task-head behavior.
-- [ ] Run the focused student tests and commit the model package.
+- [x] Add `R6GCEStudent(width=64, spectrum_frequency_bins=520)` with the R6-E CE-TCN task outputs plus optional training-only `spectrum_logits` of shape `[B,520,32]`.
+- [x] Test equality of task-output names/shapes with R6-E CE-TCN when loading shared task weights, finite forward/backward, nonzero response-head gradients and public phase invariance of task outputs.
+- [x] Test that `compute_spectrum=False` omits the auxiliary map while retaining identical task-head behavior.
+- [x] Run the focused student tests and commit the model package.
 
 ### Task 3: Implement isolated data and CUDA teacher-target preparation
 
