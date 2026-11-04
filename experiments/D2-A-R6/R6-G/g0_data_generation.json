@@ -1,0 +1,81 @@
+{
+  "status": "G0_PASS",
+  "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+  "protocol_sha256": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
+  "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+  "source_sha256": {
+    "trainer": "8f7657cb4d24a5fd872910da0c500883322470d824896d47df3cd7ca4d7e7d3a",
+    "student": "baccf44202a6f52834170cc09039fae31c09e022362f206aedc0fefe39773265",
+    "simulation": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+    "teacher": "780e581e69650d28f617d7642bf95b699f61070db77da012498afb87051c51b9",
+    "teacher_adapter": "868ec18fef200766af84348ab2fd88e31d2145a7e33952276d0e1ca189c77339",
+    "task_loss": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+    "protocol": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
+    "config": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754"
+  },
+  "split_scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144,
+    "g1_test": 16
+  },
+  "historical_scene_id_count": 940272,
+  "historical_scene_id_overlap": 0,
+  "cross_split_scene_id_overlap": 0,
+  "disk_free_before_generation_bytes": 40272809984,
+  "disk_total_bytes": 497777065984,
+  "minimum_free_bytes": 18924856576,
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "free_vram_before_g1_bytes": 3215196160,
+  "total_vram_bytes": 3942383616,
+  "python": "3.13.7",
+  "torch": "2.8.0+cu128",
+  "cuda_runtime": "12.8",
+  "scene_plan_summaries": {
+    "train": {
+      "scene_count": 51200,
+      "chunk_count": 3200,
+      "seed_min": 2408000000,
+      "seed_max": 2427383188,
+      "plan_sha256": "e7fa6f023878be99e1135de1103f87d291ddc3b1e93da81e395614d336460831"
+    },
+    "validation": {
+      "scene_count": 5000,
+      "chunk_count": 319,
+      "seed_min": 2428000000,
+      "seed_max": 2447262108,
+      "plan_sha256": "ab2103b824fd1874747daa0f31779ee77b99acb02700c53d8e654790bd18a9f4"
+    },
+    "h0_calibration": {
+      "scene_count": 120000,
+      "chunk_count": 7500,
+      "seed_min": 2508000000,
+      "seed_max": 2519629616,
+      "plan_sha256": "aee093cd25914fa44340b4b61c1f990886b96eaf1a7c0eee56fc2e3dc42a3780"
+    },
+    "h0_verification": {
+      "scene_count": 120000,
+      "chunk_count": 7500,
+      "seed_min": 2528000000,
+      "seed_max": 2539629616,
+      "plan_sha256": "08ef1765a7683feff4d478082500f5fe974a74a9d592ac934ffcf56b34fce779"
+    },
+    "h1_development": {
+      "scene_count": 6144,
+      "chunk_count": 384,
+      "seed_min": 2548000000,
+      "seed_max": 2559031279,
+      "plan_sha256": "64ff79d66f0bc4d74c09c590db3ecad936ceefb9c254d46f9cb29cf90c35bd73"
+    },
+    "g1_test": {
+      "scene_count": 16,
+      "chunk_count": 1,
+      "seed_min": 2598000000,
+      "seed_max": 2598000000,
+      "plan_sha256": "4981ee18da6772b43035a9efd319b55f13db1513ec7c1b1b8e836ba10b7f879a"
+    }
+  }
+}

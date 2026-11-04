@@ -1,0 +1,88 @@
+{
+  "stage": "D2-A-R6-G",
+  "status": "training_data_ready",
+  "data_generation_git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+  "current_training_preflight_git_sha": "bbe57f6e56693b4f2eb74178a47609855c6a2cb0",
+  "paired_iq": {
+    "train": {
+      "scenes": 51200,
+      "complete": true,
+      "cache_bytes": 10233907968,
+      "array_bytes": {
+        "iq_h1": 5111808128,
+        "condition_index": 51328,
+        "scene_id": 9830528,
+        "truth_range_cell": 204928,
+        "iq_h0": 5111808128,
+        "truth_doppler_hz": 204928
+      },
+      "scene_manifest": "experiments/D2-A-R6/R6-G/scene_manifest_train.csv",
+      "owner": {
+        "owner": "D2-A-R6-G-paired-cache",
+        "split": "train",
+        "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+        "plan_sha256": "e7fa6f023878be99e1135de1103f87d291ddc3b1e93da81e395614d336460831",
+        "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754"
+      }
+    },
+    "validation": {
+      "scenes": 5000,
+      "complete": true,
+      "cache_bytes": 999405768,
+      "array_bytes": {
+        "iq_h1": 499200128,
+        "condition_index": 5128,
+        "scene_id": 960128,
+        "truth_range_cell": 20128,
+        "iq_h0": 499200128,
+        "truth_doppler_hz": 20128
+      },
+      "scene_manifest": "experiments/D2-A-R6/R6-G/scene_manifest_validation.csv",
+      "owner": {
+        "owner": "D2-A-R6-G-paired-cache",
+        "split": "validation",
+        "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+        "plan_sha256": "ab2103b824fd1874747daa0f31779ee77b99acb02700c53d8e654790bd18a9f4",
+        "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754"
+      }
+    },
+    "persisted_evaluation_iq": false
+  },
+  "auxiliary_targets": {
+    "rows": 51200,
+    "shape_per_target": [
+      520,
+      32
+    ],
+    "dtype": "float16",
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "generation_batch_size": 16,
+    "generation_seconds": 162.0950701019974,
+    "target_bytes": {
+      "k3": 1703936128,
+      "t3": 1703936128
+    },
+    "total_bytes": 3407872256,
+    "owner": {
+      "owner": "D2-A-R6-G-H1-target-cache",
+      "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+      "train_cache_plan_sha256": "e7fa6f023878be99e1135de1103f87d291ddc3b1e93da81e395614d336460831",
+      "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+      "rows": 51200,
+      "targets": [
+        "K3_IQ_only",
+        "T3_truth_Dirichlet"
+      ],
+      "shape_per_target": [
+        520,
+        32
+      ],
+      "dtype": "float16"
+    },
+    "T0_target_computed": false
+  },
+  "historical_scene_id_overlap": 0,
+  "cross_split_scene_id_overlap": 0,
+  "temporary_cache_cleanup": "after R6-G evaluation; owner-scoped only"
+}

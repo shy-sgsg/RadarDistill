@@ -59,11 +59,11 @@
 - Create: `tests/test_d2a_r6g_data_and_targets.py`
 - Modify: `scripts/run_d2a_r6g.py`
 
-- [ ] Implement fresh split-ID planning, prior-ID collision audit, owner-bound temporary paired-IQ caches, and disk-budget preflight.
-- [ ] Precompute K3 maps for H1 training rows through the existing CUDA teacher path; store only compact CPU targets. Build T3 analytic soft responses from truth only in the control-target path.
-- [ ] Test H0 rows never receive teacher maps, T1 maps are finite/normalized, T3 wraps at the Nyquist boundary, splits are disjoint, and cache owner mismatch stops resume.
-- [ ] Run the targeted data/teacher tests and fresh G0/G1; require RTX 3050 `cuda:0` and no CPU fallback before formal training.
-- [ ] Commit code, tests and preflight records before training.
+- [x] Implement fresh split-ID planning, prior-ID collision audit, owner-bound temporary paired-IQ caches, and disk-budget preflight.
+- [x] Precompute K3 maps for H1 training rows through the existing CUDA teacher path; store only compact CPU targets. Build T3 analytic soft responses from truth only in the control-target path.
+- [x] Test H0 rows never receive teacher maps, T1 maps are finite/normalized, T3 wraps at the Nyquist boundary, splits are disjoint, and cache owner mismatch stops resume.
+- [x] Run the targeted data/teacher tests and fresh G0/G1; require RTX 3050 `cuda:0` and no CPU fallback before formal training.
+- [x] Commit code, tests and preflight records before training.
 
 ### Task 4: Train the matched T0/T1/T3 pilot
 

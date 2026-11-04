@@ -1,0 +1,89 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+  "protocol_sha256": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
+  "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "precision": "FP32",
+  "physical_test_seed": 2598000000,
+  "physical_test_scene_ids": [
+    "d2a-scene-2598000000-0",
+    "d2a-scene-2598000000-1",
+    "d2a-scene-2598000000-2",
+    "d2a-scene-2598000000-3",
+    "d2a-scene-2598000000-4",
+    "d2a-scene-2598000000-5",
+    "d2a-scene-2598000000-6",
+    "d2a-scene-2598000000-7",
+    "d2a-scene-2598000000-8",
+    "d2a-scene-2598000000-9",
+    "d2a-scene-2598000000-10",
+    "d2a-scene-2598000000-11",
+    "d2a-scene-2598000000-12",
+    "d2a-scene-2598000000-13",
+    "d2a-scene-2598000000-14",
+    "d2a-scene-2598000000-15"
+  ],
+  "condition": {
+    "course": "C3",
+    "scenario_id": "partial_overlap",
+    "snr_db": 0.0,
+    "cnr_db": 20.0
+  },
+  "teacher_map_shape": [
+    16,
+    520,
+    32
+  ],
+  "teacher_map_normalized": true,
+  "t3_map_shape": [
+    16,
+    520,
+    32
+  ],
+  "t3_map_normalized": true,
+  "inference_parameters": 63429,
+  "formal_microbatch": 4,
+  "arm_probes": {
+    "4": {
+      "T0": {
+        "loss": 6.454230189323425,
+        "task_gradient_finite": true,
+        "task_gradient_norm": 7.3862199783325195,
+        "response_gradient_norm": 0.0,
+        "response_gradient_expected": false,
+        "inference_parameters": 63429,
+        "training_parameters": 97229,
+        "peak_allocated_bytes": 1239268352,
+        "peak_reserved_bytes": 1537212416
+      },
+      "T1": {
+        "loss": 6.5581716895103455,
+        "task_gradient_finite": true,
+        "task_gradient_norm": 7.392364501953125,
+        "response_gradient_norm": 0.23705728352069855,
+        "response_gradient_expected": true,
+        "inference_parameters": 63429,
+        "training_parameters": 97229,
+        "peak_allocated_bytes": 1239371264,
+        "peak_reserved_bytes": 1535115264
+      },
+      "T3": {
+        "loss": 6.91080629825592,
+        "task_gradient_finite": true,
+        "task_gradient_norm": 7.392579555511475,
+        "response_gradient_norm": 0.2642607092857361,
+        "response_gradient_expected": true,
+        "inference_parameters": 63429,
+        "training_parameters": 97229,
+        "peak_allocated_bytes": 1239371264,
+        "peak_reserved_bytes": 1535115264
+      }
+    }
+  },
+  "paired_scene_order_shared": true,
+  "teacher_k3_truth_inputs": false,
+  "h0_auxiliary_targets_computed": false,
+  "seconds": 4.392661918998783
+}
