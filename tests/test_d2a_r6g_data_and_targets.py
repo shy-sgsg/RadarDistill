@@ -75,6 +75,20 @@ def test_t3_target_maps_embed_finite_cpi_response_at_truth_gate() -> None:
     assert torch.count_nonzero(maps[0, :, 8:]) == 0
     assert torch.count_nonzero(maps[1, :, :31]) == 0
     assert torch.count_nonzero(maps[1, :, 32:]) == 0
+    nyquist = torch.tensor([650.0, -650.0], dtype=torch.float32)
+    aliases = d2a_r6g.build_r6g_t3_maps(
+        torch.tensor([7.5, 7.5]), nyquist, device=torch.device("cpu")
+    )
+    assert torch.allclose(aliases[0], aliases[1], atol=1e-7, rtol=1e-6)
+
+
+def test_cache_resume_rejects_a_different_owner() -> None:
+    with pytest.raises(RuntimeError, match="owner differs"):
+        d2a_r6g._assert_cache_owner(
+            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "expected"},
+            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "other"},
+            "R6-G train",
+        )
 
 
 def test_cached_response_map_kl_has_finite_nonzero_gradients() -> None:

@@ -733,8 +733,7 @@ def _remaining_owned_cache_bytes(
             if not owner_path.is_file() or not progress_path.is_file():
                 raise RuntimeError(f"refusing to reuse unowned R6-G cache: {directory}")
             owner = json.loads(owner_path.read_text(encoding="utf-8"))
-            if owner != _cache_owner(split, plan, git_sha):
-                raise RuntimeError(f"R6-G cache owner differs from its frozen plan: {directory}")
+            _assert_cache_owner(_cache_owner(split, plan, git_sha), owner, f"R6-G {split}")
             progress = json.loads(progress_path.read_text(encoding="utf-8"))
             if progress.get("owner") != owner:
                 raise RuntimeError(f"R6-G cache progress owner mismatch: {directory}")
@@ -756,7 +755,8 @@ def _remaining_owned_cache_bytes(
             raise RuntimeError(f"refusing to reuse unowned R6-G target cache: {target_dir}")
         owner = json.loads(owner_path.read_text(encoding="utf-8"))
         progress = json.loads(progress_path.read_text(encoding="utf-8"))
-        if owner != target_owner or progress.get("owner") != owner:
+        _assert_cache_owner(target_owner, owner, "R6-G target")
+        if progress.get("owner") != owner:
             raise RuntimeError("R6-G target cache owner differs from its registered plan")
         target_rows_written = int(progress.get("completed_rows", -1))
         target_rows = int(config["data"]["splits"]["train"]["paired_scenes"])
@@ -783,6 +783,11 @@ def _cache_owner(split: str, plan: list[Mapping[str, Any]], git_sha: str) -> dic
     }
 
 
+def _assert_cache_owner(expected: Mapping[str, Any], actual: Mapping[str, Any], label: str) -> None:
+    if dict(actual) != dict(expected):
+        raise RuntimeError(f"{label} cache owner differs from the registered plan")
+
+
 def _load_pair_cache(split: str) -> dict[str, np.ndarray]:
     if split not in {"train", "validation"}:
         raise ValueError("R6-G persists only train and validation paired scenes")
@@ -797,7 +802,8 @@ def _load_pair_cache(split: str) -> dict[str, np.ndarray]:
         raise RuntimeError(f"R6-G {split} cache owner/progress is missing")
     owner = json.loads(owner_path.read_text(encoding="utf-8"))
     progress = json.loads(progress_path.read_text(encoding="utf-8"))
-    if owner != expected_owner or progress.get("owner") != owner or progress.get("rows_written") != count:
+    _assert_cache_owner(expected_owner, owner, f"R6-G {split}")
+    if progress.get("owner") != owner or progress.get("rows_written") != count:
         raise RuntimeError(f"R6-G {split} cache is incomplete or has a different owner")
     paths = _paired_cache_paths(split)
     arrays = {name: np.load(path, mmap_mode="r") for name, path in paths.items()}
@@ -871,8 +877,9 @@ def generate_r6g_pair_cache(split: str) -> dict[str, Any]:
         )
     if directory.exists():
         owner_path = directory / "owner.json"
-        if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != expected_owner:
+        if not owner_path.is_file():
             raise RuntimeError(f"refusing to reuse an unowned R6-G cache: {directory}")
+        _assert_cache_owner(expected_owner, json.loads(owner_path.read_text(encoding="utf-8")), f"R6-G {split}")
         owner = expected_owner
     else:
         directory.mkdir(parents=True)
@@ -1011,8 +1018,9 @@ def generate_r6g_target_cache(*, batch_size: int | None = None) -> dict[str, Any
         raise RuntimeError(f"R6-G target generation needs {required} free bytes; found {free}")
     if directory.exists():
         owner_path = directory / "owner.json"
-        if not owner_path.is_file() or json.loads(owner_path.read_text(encoding="utf-8")) != owner:
+        if not owner_path.is_file():
             raise RuntimeError(f"refusing to reuse an unowned R6-G target cache: {directory}")
+        _assert_cache_owner(owner, json.loads(owner_path.read_text(encoding="utf-8")), "R6-G target")
     else:
         directory.mkdir(parents=True)
         _write_json(directory / "owner.json", owner)
