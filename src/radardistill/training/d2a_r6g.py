@@ -599,6 +599,21 @@ def _expected_scene_counts(plans: Mapping[str, list[Mapping[str, Any]]]) -> dict
     return {name: sum(int(row["count"]) for row in rows) for name, rows in plans.items()}
 
 
+def _plan_summaries(plans: Mapping[str, list[Mapping[str, Any]]]) -> dict[str, Any]:
+    summaries: dict[str, Any] = {}
+    for name, rows in plans.items():
+        seeds = [int(row["seed"]) for row in rows]
+        serialized = json.dumps(list(rows), sort_keys=True, separators=(",", ":"), allow_nan=False)
+        summaries[name] = {
+            "scene_count": sum(int(row["count"]) for row in rows),
+            "chunk_count": len(rows),
+            "seed_min": min(seeds),
+            "seed_max": max(seeds),
+            "plan_sha256": hashlib.sha256(serialized.encode()).hexdigest(),
+        }
+    return summaries
+
+
 def _require_cuda(config: Mapping[str, Any]) -> tuple[torch.device, str, int, int]:
     if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
         raise RuntimeError("R6-G requires CUDA; CPU fallback is forbidden")
@@ -667,10 +682,7 @@ def r6g_preflight() -> dict[str, Any]:
         "python": platform.python_version(),
         "torch": torch.__version__,
         "cuda_runtime": torch.version.cuda,
-        "scene_plan_seed_bases": {
-            split: [int(row["seed"]) for row in rows]
-            for split, rows in plans.items()
-        },
+        "scene_plan_summaries": _plan_summaries(plans),
     }
     _write_json(STAGE / "g0.json", record)
     return record
