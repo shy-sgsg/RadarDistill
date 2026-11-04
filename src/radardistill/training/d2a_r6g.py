@@ -25,14 +25,22 @@ from radardistill.training.d2a_r5c_teaching_pilot import compute_h1_teacher_maps
 from radardistill.training.d2a_r6d_joint import (
     audit_r6d_scene_plans,
     build_r6d_paired_plan,
+    r6d_learning_rate,
     r6d_loss,
 )
+from radardistill.training.d2a_r6b_hard_negative import (
+    assemble_independent_h0_h1_batch,
+    build_h0_sample_plan,
+    build_repeated_h1_plan,
+)
 from radardistill.students.r6g_student import R6GCEStudent
+from radardistill.students.r6g_student import export_r6g_inference_model
 
 
 ROOT = Path(__file__).resolve().parents[3]
 STAGE = ROOT / "experiments/D2-A-R6/R6-G"
 CACHE = STAGE / "cache/training"
+RUNS = STAGE / "runs/seed_707"
 DEVICE_NAME = "NVIDIA GeForce RTX 3050 Laptop GPU"
 
 
@@ -276,6 +284,53 @@ def build_r6g_plans(
     return plans
 
 
+def build_r6g_sampler_plans(
+    condition_indices: np.ndarray,
+    *,
+    updates: int,
+    effective_batch: int,
+    seed: int,
+) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+    """Build a fixed H1 epoch plan and within-condition uniform H0 plan."""
+    conditions = np.asarray(condition_indices)
+    if conditions.ndim != 1 or not len(conditions) or not np.issubdtype(conditions.dtype, np.integer):
+        raise ValueError("R6-G train conditions must be a nonempty integer vector")
+    if isinstance(effective_batch, bool) or not isinstance(effective_batch, int) or effective_batch <= 0 or effective_batch % 2:
+        raise ValueError("R6-G effective_batch must be a positive even integer")
+    if isinstance(updates, bool) or not isinstance(updates, int) or updates <= 0 or seed < 0:
+        raise ValueError("R6-G updates and sampler seed must be valid")
+    h1_per_update = effective_batch // 2
+    h1_plan = build_repeated_h1_plan(
+        conditions, updates=updates, h1_per_update=h1_per_update, seed=seed
+    )
+    h0_plan, h0_audit = build_h0_sample_plan(
+        h1_plan,
+        conditions,
+        conditions,
+        {},
+        mode="uniform",
+        seed=seed + 1,
+        hard_fraction=0.0,
+    )
+    if not np.array_equal(conditions[h0_plan], conditions[h1_plan]):
+        raise RuntimeError("R6-G H0 sampler crossed registered condition groups")
+    exposure = updates * h1_per_update
+    if exposure % len(conditions):
+        raise RuntimeError("R6-G H1 plan does not provide equal whole-cohort exposure")
+    audit = {
+        "updates": updates,
+        "effective_batch": effective_batch,
+        "h1_per_update": h1_per_update,
+        "h1_exposures": exposure,
+        "h1_scene_visits_per_presence": exposure // len(conditions),
+        "h0_condition_matched": True,
+        "h0_sampling": h0_audit,
+        "h1_plan_sha256": hashlib.sha256(h1_plan.tobytes()).hexdigest(),
+        "h0_plan_sha256": hashlib.sha256(h0_plan.tobytes()).hexdigest(),
+    }
+    return h1_plan, h0_plan, audit
+
+
 def audit_r6g_plans(
     plans: Mapping[str, list[Mapping[str, Any]]],
     *,
@@ -488,6 +543,62 @@ def _r6g_g1_arm_probe(
     return record
 
 
+def _r6g_g1_effective_batch_smoke(
+    generated: Any,
+    initial_state: Mapping[str, torch.Tensor],
+    k3_maps: torch.Tensor,
+    t3_maps: torch.Tensor,
+    *,
+    microbatch: int,
+    device: torch.device,
+    config: Mapping[str, Any],
+) -> dict[str, Any]:
+    data = {
+        "iq_h0": generated.iq_h0,
+        "iq_h1": generated.iq_h1,
+        "truth_range_cell": np.asarray(generated.truth_target_range_cell, dtype=np.float32),
+        "truth_doppler_hz": np.asarray(generated.truth_target_doppler_hz, dtype=np.float32),
+    }
+    rng = np.random.default_rng(int(config["data"]["sampler_seed"]))
+    h0_indices = rng.integers(0, len(generated.base_scene_id), size=32, dtype=np.int64)
+    h1_indices = rng.integers(0, len(generated.base_scene_id), size=32, dtype=np.int64)
+    batch = assemble_independent_h0_h1_batch(data, h0_indices, h1_indices)
+    targets = {
+        "k3": k3_maps.detach().cpu().numpy().astype(np.float16),
+        "t3": t3_maps.detach().cpu().numpy().astype(np.float16),
+    }
+    results: dict[str, Any] = {}
+    for arm in ("T0", "T1", "T3"):
+        model = R6GCEStudent(width=int(config["student"]["width"])).to(device)
+        model.load_state_dict(initial_state, strict=True)
+        optimizer = torch.optim.AdamW(
+            model.parameters(),
+            lr=float(config["training"]["learning_rate_initial"]),
+            weight_decay=float(config["training"]["weight_decay"]),
+        )
+        torch.cuda.reset_peak_memory_stats(device)
+        try:
+            terms = _r6g_training_update(
+                model, optimizer, batch, h1_indices, arm=arm,
+                target_maps=None if arm == "T0" else targets,
+                microbatch=microbatch,
+                effective_batch=int(config["training"]["effective_batch_size_cpi"]),
+                device=device, config=config,
+            )
+            results[arm] = {
+                "finite_losses": all(np.isfinite(value) for value in terms.values()),
+                "truth_loss": terms["truth"],
+                "auxiliary_loss": terms["auxiliary"],
+                "total_loss": terms["total"],
+                "peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+                "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+            }
+        finally:
+            del model, optimizer
+            torch.cuda.empty_cache()
+    return results
+
+
 def r6g_run_g1() -> dict[str, Any]:
     """G1: run the physical-to-CUDA target and student-gradient smoke test."""
     g0, _ = _require_g0()
@@ -537,6 +648,10 @@ def r6g_run_g1() -> dict[str, Any]:
                 arm_report["peak_allocated_bytes"] = int(torch.cuda.max_memory_allocated(device))
                 arm_report["peak_reserved_bytes"] = int(torch.cuda.max_memory_reserved(device))
                 reports[str(candidate)][arm] = arm_report
+            reports[str(candidate)]["effective_batch_64_smoke"] = _r6g_g1_effective_batch_smoke(
+                generated, initial_state, k3_maps, t3_maps,
+                microbatch=candidate, device=device, config=config,
+            )
             formal_microbatch = candidate
             break
         except torch.cuda.OutOfMemoryError:
@@ -627,13 +742,21 @@ def _require_cuda(config: Mapping[str, Any]) -> tuple[torch.device, str, int, in
 
 
 def _source_hashes() -> dict[str, str]:
+    config = _read_yaml(STAGE / "config.yaml")
+    condition_path = ROOT / config["radar"]["condition_source"]
+    physics_path = ROOT / config["radar"]["physics_source"]
     paths = {
         "trainer": Path(__file__).resolve(),
+        "runner": ROOT / "scripts/run_d2a_r6g.py",
         "student": ROOT / "src/radardistill/students/r6g_student.py",
         "simulation": ROOT / "src/radardistill/simulation/d2a.py",
         "teacher": ROOT / "src/radardistill/teachers/d2a_k2_cuda.py",
         "teacher_adapter": ROOT / "src/radardistill/training/d2a_r5c_teaching_pilot.py",
         "task_loss": ROOT / "src/radardistill/training/d2a_r6d_joint.py",
+        "sampler": ROOT / "src/radardistill/training/d2a_r6b_hard_negative.py",
+        "response_loss": ROOT / "src/radardistill/distillation/r5c_teaching.py",
+        "condition_config": condition_path,
+        "physics_config": physics_path,
         "protocol": STAGE / "protocol.md",
         "config": STAGE / "config.yaml",
     }
@@ -693,14 +816,17 @@ def _require_g0() -> tuple[dict[str, Any], str]:
     if not path.is_file():
         raise RuntimeError("R6-G requires a successful G0 preflight")
     record = json.loads(path.read_text(encoding="utf-8"))
-    head = _git("rev-parse", "HEAD")
-    if record.get("status") != "G0_PASS" or record.get("git_sha") != head:
-        raise RuntimeError("R6-G G0 record does not match the current committed source")
+    if record.get("status") != "G0_PASS" or not isinstance(record.get("git_sha"), str):
+        raise RuntimeError("R6-G G0 record is missing its committed source revision")
+    if _git("branch", "--show-current") != "main" or _git("status", "--porcelain", "--untracked-files=no"):
+        raise RuntimeError("R6-G requires a clean tracked worktree on main")
     if record.get("protocol_sha256") != _sha256(STAGE / "protocol.md"):
         raise RuntimeError("R6-G protocol changed after G0")
     if record.get("config_sha256") != _sha256(STAGE / "config.yaml"):
         raise RuntimeError("R6-G config changed after G0")
-    return record, head
+    if record.get("source_sha256") != _source_hashes():
+        raise RuntimeError("R6-G implementation sources changed after G0")
+    return record, str(record["git_sha"])
 
 
 def _paired_bytes_per_scene() -> int:
@@ -784,7 +910,11 @@ def _cache_owner(split: str, plan: list[Mapping[str, Any]], git_sha: str) -> dic
 
 
 def _assert_cache_owner(expected: Mapping[str, Any], actual: Mapping[str, Any], label: str) -> None:
-    if dict(actual) != dict(expected):
+    expected_identity = dict(expected)
+    actual_identity = dict(actual)
+    expected_identity.pop("git_sha", None)
+    actual_identity.pop("git_sha", None)
+    if not isinstance(actual.get("git_sha"), str) or actual_identity != expected_identity:
         raise RuntimeError(f"{label} cache owner differs from the registered plan")
 
 
@@ -1089,4 +1219,523 @@ def generate_r6g_target_cache(*, batch_size: int | None = None) -> dict[str, Any
         "seconds": time.perf_counter() - start_time,
         "targets": {name: str(path.relative_to(ROOT)) for name, path in paths.items()},
         "owner": owner,
+    }
+
+
+def _cpu_tree(value: Any) -> Any:
+    if torch.is_tensor(value):
+        return value.detach().cpu()
+    if isinstance(value, dict):
+        return {key: _cpu_tree(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_cpu_tree(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_cpu_tree(item) for item in value)
+    return value
+
+
+def _atomic_torch_save(value: Any, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    torch.save(value, temporary)
+    temporary.replace(path)
+
+
+def _write_history(path: Path, rows: list[Mapping[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    columns = sorted({key for row in rows for key in row})
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+        handle.flush()
+    temporary.replace(path)
+
+
+def _load_target_cache(config: Mapping[str, Any], git_sha: str) -> dict[str, np.ndarray]:
+    count = int(config["data"]["splits"]["train"]["paired_scenes"])
+    train_owner_path = CACHE / "train" / "owner.json"
+    if not train_owner_path.is_file():
+        raise RuntimeError("R6-G target cache requires the registered training IQ cache")
+    train_owner = json.loads(train_owner_path.read_text(encoding="utf-8"))
+    expected_owner = _target_owner(git_sha, {**train_owner, "rows": count})
+    directory = CACHE / "targets"
+    owner_path, progress_path = directory / "owner.json", directory / "progress.json"
+    if not owner_path.is_file() or not progress_path.is_file():
+        raise RuntimeError("R6-G target cache owner/progress is missing")
+    owner = json.loads(owner_path.read_text(encoding="utf-8"))
+    progress = json.loads(progress_path.read_text(encoding="utf-8"))
+    _assert_cache_owner(expected_owner, owner, "R6-G target")
+    if progress.get("owner") != owner or int(progress.get("completed_rows", -1)) != count:
+        raise RuntimeError("R6-G target cache is incomplete or has a different progress owner")
+    arrays = {name: np.load(directory / f"{name}.npy", mmap_mode="r") for name in ("k3", "t3")}
+    for name, array in arrays.items():
+        if array.shape != (count, 520, 32) or array.dtype != np.dtype(np.float16):
+            raise RuntimeError(f"R6-G {name} response cache shape/dtype mismatch")
+    return arrays
+
+
+def _r6g_training_batch(
+    train: Mapping[str, np.ndarray],
+    h0_indices: np.ndarray,
+    h1_indices: np.ndarray,
+) -> dict[str, np.ndarray]:
+    return assemble_independent_h0_h1_batch(train, h0_indices, h1_indices)
+
+
+def _r6g_training_update(
+    model: R6GCEStudent,
+    optimizer: torch.optim.Optimizer,
+    batch: Mapping[str, np.ndarray],
+    h1_indices: np.ndarray,
+    *,
+    arm: str,
+    target_maps: Mapping[str, np.ndarray] | None,
+    microbatch: int,
+    effective_batch: int,
+    device: torch.device,
+    config: Mapping[str, Any],
+) -> dict[str, float]:
+    if arm not in {"T0", "T1", "T3"}:
+        raise ValueError(f"unknown R6-G arm {arm!r}")
+    if len(batch["iq_ri"]) != effective_batch or effective_batch % microbatch:
+        raise ValueError("R6-G microbatch must divide the frozen effective batch")
+    if len(h1_indices) * 2 != effective_batch:
+        raise ValueError("R6-G H1 target indices do not match the 50/50 task batch")
+    if arm != "T0" and target_maps is None:
+        raise RuntimeError(f"R6-G {arm} requires cached H1 response targets")
+
+    inputs = torch.from_numpy(batch["iq_ri"])
+    labels = {
+        key: torch.from_numpy(np.asarray(batch[key], dtype=np.float32))
+        for key in ("truth_presence", "truth_range_cell", "truth_doppler_hz")
+    }
+    optimizer.zero_grad(set_to_none=True)
+    totals = {key: 0.0 for key in ("total", "truth", "auxiliary", "presence", "range_cell", "range_offset", "doppler", "candidate")}
+    presence_np = np.asarray(batch["truth_presence"], dtype=bool)
+    for start in range(0, effective_batch, microbatch):
+        stop = start + microbatch
+        x = inputs[start:stop].to(device)
+        truth = {key: value[start:stop].to(device) for key, value in labels.items()}
+        outputs = model(x, compute_spectrum=arm != "T0")
+        task_terms = r6d_loss(
+            outputs, truth, arm="j1_joint", prf_hz=float(config["radar"]["prf_hz"])
+        )
+        task_loss = task_terms["total"]
+        auxiliary = task_loss.detach() * 0.0
+        h1_mask = truth["truth_presence"].bool()
+        h1_count = int(h1_mask.sum().item())
+        h1_offset = int(np.count_nonzero(presence_np[:start]))
+        if arm != "T0" and h1_count:
+            target_name = "k3" if arm == "T1" else "t3"
+            rows = np.asarray(h1_indices[h1_offset:h1_offset + h1_count], dtype=np.int64)
+            target_np = np.asarray(target_maps[target_name][rows], dtype=np.float32)
+            target = torch.from_numpy(target_np).to(device)
+            auxiliary = r6g_response_map_kl(outputs["spectrum_logits"][h1_mask], target)
+        loss = task_loss + float(config["training"]["teacher_loss_weight"]) * auxiliary
+        if not bool(torch.isfinite(loss)):
+            raise FloatingPointError(f"R6-G {arm} update loss is nonfinite")
+        scale = microbatch / effective_batch
+        (loss * scale).backward()
+        totals["total"] += float(loss.detach().item()) * scale
+        totals["truth"] += float(task_loss.detach().item()) * scale
+        totals["auxiliary"] += float(auxiliary.detach().item()) * scale
+        for key in ("presence", "range_cell", "range_offset", "doppler", "candidate"):
+            totals[key] += float(task_terms[key].detach().item()) * scale
+    gradient_norm = torch.nn.utils.clip_grad_norm_(
+        model.parameters(), float(config["training"]["gradient_clip_norm"])
+    )
+    if not bool(torch.isfinite(gradient_norm)):
+        raise FloatingPointError(f"R6-G {arm} gradient norm is nonfinite")
+    optimizer.step()
+    return totals
+
+
+def _r6g_validation_summary(
+    model: R6GCEStudent,
+    validation: Mapping[str, np.ndarray],
+    *,
+    microbatch: int,
+    device: torch.device,
+    config: Mapping[str, Any],
+) -> dict[str, float]:
+    count = len(validation["scene_id"])
+    keys = ("total", "presence", "range_cell", "range_offset", "doppler", "candidate")
+    totals = {key: 0.0 for key in keys}
+    model.eval()
+    with torch.inference_mode():
+        for base_start in range(0, count, 32):
+            base_indices = np.arange(base_start, min(base_start + 32, count), dtype=np.int64)
+            batch = _r6g_training_batch(validation, base_indices, base_indices)
+            if len(batch["iq_ri"]) % microbatch:
+                raise ValueError("R6-G validation cohort does not divide by the selected microbatch")
+            inputs = torch.from_numpy(batch["iq_ri"])
+            labels = {
+                key: torch.from_numpy(np.asarray(batch[key], dtype=np.float32))
+                for key in ("truth_presence", "truth_range_cell", "truth_doppler_hz")
+            }
+            for start in range(0, len(inputs), microbatch):
+                stop = start + microbatch
+                x = inputs[start:stop].to(device)
+                truth = {key: value[start:stop].to(device) for key, value in labels.items()}
+                outputs = model(x, compute_spectrum=False)
+                terms = r6d_loss(
+                    outputs, truth, arm="j1_joint", prf_hz=float(config["radar"]["prf_hz"])
+                )
+                weight = len(inputs[start:stop]) / (2 * count)
+                for key in keys:
+                    totals[key] += float(terms[key].item()) * weight
+    if not all(np.isfinite(value) for value in totals.values()):
+        raise FloatingPointError("R6-G validation truth-task loss is nonfinite")
+    return totals
+
+
+def _r6g_shared_initial_state(
+    config: Mapping[str, Any], git_sha: str
+) -> tuple[dict[str, torch.Tensor], dict[str, Any]]:
+    path = RUNS / "shared_initial_state.pt"
+    owner = {
+        "owner": "D2-A-R6-G-shared-initialization",
+        "git_sha": git_sha,
+        "config_sha256": _sha256(STAGE / "config.yaml"),
+        "seed": int(config["student"]["initialization"]["seed"]),
+        "width": int(config["student"]["width"]),
+    }
+    if path.is_file():
+        saved = torch.load(path, map_location="cpu", weights_only=False)
+        _assert_cache_owner(owner, saved.get("owner", {}), "R6-G shared initialization")
+        state = saved.get("state_dict")
+        if not isinstance(state, dict):
+            raise RuntimeError("R6-G shared initial state is missing")
+        return state, owner
+    RUNS.mkdir(parents=True, exist_ok=True)
+    if any(item.name != path.name for item in RUNS.iterdir()):
+        raise RuntimeError("R6-G run directory has files without an initialization owner")
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(int(owner["seed"]))
+        template = R6GCEStudent(width=int(owner["width"]))
+        state = {key: value.detach().cpu().clone() for key, value in template.state_dict().items()}
+        del template
+    _atomic_torch_save({"owner": owner, "state_dict": state}, path)
+    return state, owner
+
+
+def _r6g_training_owner(
+    arm: str,
+    config: Mapping[str, Any],
+    git_sha: str,
+    sampler_audit: Mapping[str, Any],
+) -> dict[str, Any]:
+    target_owner = None
+    if arm in {"T1", "T3"}:
+        target_owner = json.loads((CACHE / "targets" / "owner.json").read_text(encoding="utf-8"))
+    return {
+        "owner": "D2-A-R6-G-training-run",
+        "git_sha": git_sha,
+        "arm": arm,
+        "protocol_sha256": _sha256(STAGE / "protocol.md"),
+        "config_sha256": _sha256(STAGE / "config.yaml"),
+        "initialization_seed": int(config["student"]["initialization"]["seed"]),
+        "sampler_seed": int(config["data"]["sampler_seed"]),
+        "updates": int(config["training"]["fixed_updates_per_arm"]),
+        "effective_batch": int(config["training"]["effective_batch_size_cpi"]),
+        "h1_plan_sha256": sampler_audit["h1_plan_sha256"],
+        "h0_plan_sha256": sampler_audit["h0_plan_sha256"],
+        "target_owner": target_owner,
+    }
+
+
+def _r6g_load_resume(
+    path: Path,
+    owner: Mapping[str, Any],
+    model: R6GCEStudent,
+    optimizer: torch.optim.Optimizer,
+    device: torch.device,
+) -> dict[str, Any]:
+    saved = torch.load(path, map_location="cpu", weights_only=False)
+    _assert_cache_owner(owner, saved.get("owner", {}), "R6-G resume")
+    model.load_state_dict(saved["model_state_dict"], strict=True)
+    optimizer.load_state_dict(saved["optimizer_state_dict"])
+    if "torch_rng_state" in saved:
+        torch.set_rng_state(saved["torch_rng_state"])
+    if "cuda_rng_state" in saved:
+        torch.cuda.set_rng_state(saved["cuda_rng_state"], device=device)
+    return saved
+
+
+def r6g_train_arm(
+    arm: str,
+    *,
+    microbatch: int | None = None,
+    oom_events: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Train/resume one R6-G arm with fixed effective batch and common validation selection."""
+    if arm not in {"T0", "T1", "T3"}:
+        raise ValueError(f"unknown R6-G arm: {arm}")
+    g0, git_sha = _require_g0()
+    config, _, _ = _configs()
+    g1 = _require_matching_g1(g0)
+    device, gpu, _, _ = _require_cuda(config)
+    if g1.get("device") != str(device):
+        raise RuntimeError("R6-G G1 device does not match the active training device")
+    if microbatch is None:
+        microbatch = int(g1["formal_microbatch"])
+    effective_batch = int(config["training"]["effective_batch_size_cpi"])
+    if microbatch not in (int(config["training"]["microbatch_initial"]), *map(int, config["training"]["microbatch_oom_fallbacks"])):
+        raise ValueError("R6-G microbatch is outside the frozen fallback sequence")
+    if effective_batch % microbatch:
+        raise ValueError("R6-G microbatch must divide the fixed effective batch")
+    if oom_events is None:
+        oom_events = []
+
+    train = _load_pair_cache("train")
+    validation = _load_pair_cache("validation")
+    target_maps = _load_target_cache(config, git_sha) if arm in {"T1", "T3"} else None
+    updates = int(config["training"]["fixed_updates_per_arm"])
+    sampler_seed = int(config["data"]["sampler_seed"])
+    h1_plan, h0_plan, sampler_audit = build_r6g_sampler_plans(
+        train["condition_index"], updates=updates, effective_batch=effective_batch, seed=sampler_seed
+    )
+    if sampler_audit["h1_scene_visits_per_presence"] != int(config["training"]["expected_scene_visits_per_presence"]):
+        raise RuntimeError("R6-G H1 exposure differs from the frozen scene-visit target")
+    owner = _r6g_training_owner(arm, config, git_sha, sampler_audit)
+    initial_state, initialization_owner = _r6g_shared_initial_state(config, git_sha)
+    run_dir = RUNS / arm
+    run_dir.mkdir(parents=True, exist_ok=True)
+    owner_path = run_dir / "owner.json"
+    if owner_path.is_file():
+        _assert_cache_owner(owner, json.loads(owner_path.read_text(encoding="utf-8")), f"R6-G {arm} run")
+    else:
+        if any(path.name != "owner.json" for path in run_dir.iterdir()):
+            raise RuntimeError(f"R6-G {arm} run has files without an owner record")
+        _write_json(owner_path, owner)
+
+    record_path = run_dir / "training_record.json"
+    if record_path.is_file():
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+        _assert_cache_owner(owner, record.get("owner", {}), f"R6-G {arm} record")
+        if record.get("status") == "complete" and int(record.get("updates", -1)) == updates:
+            return record
+
+    torch.manual_seed(int(config["student"]["initialization"]["seed"]))
+    torch.cuda.manual_seed_all(int(config["student"]["initialization"]["seed"]))
+    model = R6GCEStudent(width=int(config["student"]["width"])).to(device)
+    model.load_state_dict(initial_state, strict=True)
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=float(config["training"]["learning_rate_initial"]),
+        weight_decay=float(config["training"]["weight_decay"]),
+    )
+    history_path = run_dir / "training_history.csv"
+    last_path = run_dir / "last_checkpoint.pt"
+    best_path = run_dir / "best_checkpoint.pt"
+    validation_interval = int(config["training"]["validation_interval_updates"])
+    checkpoint_interval = int(config["training"]["resume_checkpoint_interval_updates"])
+    history: list[dict[str, Any]] = []
+    best_objective = float("inf")
+    best_update = -1
+    start_update = 0
+    elapsed_before = 0.0
+    if last_path.is_file():
+        saved = _r6g_load_resume(last_path, owner, model, optimizer, device)
+        start_update = int(saved["update"])
+        history = list(saved.get("history", []))
+        best_objective = float(saved.get("best_objective", float("inf")))
+        best_update = int(saved.get("best_update", -1))
+        elapsed_before = float(saved.get("training_seconds_completed", 0.0))
+        _write_history(history_path, history)
+    elif any(path.name not in {"owner.json", "training_record.json"} for path in run_dir.iterdir()):
+        raise RuntimeError(f"R6-G {arm} artifacts exist without a resumable checkpoint")
+    else:
+        initial_validation = _r6g_validation_summary(
+            model, validation, microbatch=microbatch, device=device, config=config
+        )
+        history.append({"update": 0, "learning_rate": float(config["training"]["learning_rate_initial"]),
+                        "validation_truth_total": initial_validation["total"],
+                        **{f"validation_{key}": value for key, value in initial_validation.items()}})
+        _write_history(history_path, history)
+        _atomic_torch_save({
+            "owner": owner,
+            "update": 0,
+            "model_state_dict": _cpu_tree(model.state_dict()),
+            "optimizer_state_dict": _cpu_tree(optimizer.state_dict()),
+            "history": history,
+            "best_objective": best_objective,
+            "best_update": best_update,
+            "training_seconds_completed": 0.0,
+            "torch_rng_state": torch.get_rng_state(),
+            "cuda_rng_state": torch.cuda.get_rng_state(device).cpu(),
+            "microbatch": microbatch,
+            "oom_events": list(oom_events),
+        }, last_path)
+
+    if best_path.is_file():
+        saved_best = torch.load(best_path, map_location="cpu", weights_only=False)
+        _assert_cache_owner(owner, saved_best.get("owner", {}), f"R6-G {arm} best checkpoint")
+        saved_objective = float(saved_best["validation_truth_total"])
+        if saved_objective < best_objective:
+            best_objective = saved_objective
+            best_update = int(saved_best["update"])
+
+    target_updates = updates
+    history_every = int(config["training"]["history_interval_updates"])
+    interval_sums = {key: 0.0 for key in ("total", "truth", "auxiliary", "presence", "range_cell", "range_offset", "doppler", "candidate")}
+    interval_count = 0
+    run_start = time.perf_counter()
+    torch.cuda.reset_peak_memory_stats(device)
+    update = start_update + 1
+    while update <= target_updates:
+        try:
+            for group in optimizer.param_groups:
+                group["lr"] = r6d_learning_rate(
+                    update,
+                    total_updates=target_updates,
+                    initial=float(config["training"]["learning_rate_initial"]),
+                    final=float(config["training"]["learning_rate_final"]),
+                )
+            batch = _r6g_training_batch(train, h0_plan[update - 1], h1_plan[update - 1])
+            terms = _r6g_training_update(
+                model, optimizer, batch, h1_plan[update - 1], arm=arm,
+                target_maps=target_maps, microbatch=microbatch,
+                effective_batch=effective_batch, device=device, config=config,
+            )
+            for key in interval_sums:
+                interval_sums[key] += terms[key]
+            interval_count += 1
+
+            if update % validation_interval == 0:
+                validation_metrics = _r6g_validation_summary(
+                    model, validation, microbatch=microbatch, device=device, config=config
+                )
+                objective = float(validation_metrics["total"])
+                if objective < best_objective:
+                    best_objective, best_update = objective, update
+                    _atomic_torch_save({
+                        "owner": owner,
+                        "update": update,
+                        "validation_truth_total": objective,
+                        "validation_metrics": validation_metrics,
+                        "model_state_dict": _cpu_tree(model.state_dict()),
+                    }, best_path)
+                row = {
+                    "update": update,
+                    "learning_rate": float(optimizer.param_groups[0]["lr"]),
+                    **{f"interval_train_{key}": interval_sums[key] / max(interval_count, 1) for key in interval_sums},
+                    **{f"validation_{key}": value for key, value in validation_metrics.items()},
+                    "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+                    "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+                    "microbatch": microbatch,
+                }
+                history.append(row)
+                if update % history_every == 0:
+                    _write_history(history_path, history)
+                interval_sums = {key: 0.0 for key in interval_sums}
+                interval_count = 0
+                model.train()
+
+            if update % checkpoint_interval == 0 or update == target_updates:
+                elapsed = elapsed_before + time.perf_counter() - run_start
+                _atomic_torch_save({
+                    "owner": owner,
+                    "update": update,
+                    "model_state_dict": _cpu_tree(model.state_dict()),
+                    "optimizer_state_dict": _cpu_tree(optimizer.state_dict()),
+                    "history": history,
+                    "best_objective": best_objective,
+                    "best_update": best_update,
+                    "training_seconds_completed": elapsed,
+                    "torch_rng_state": torch.get_rng_state(),
+                    "cuda_rng_state": torch.cuda.get_rng_state(device).cpu(),
+                    "microbatch": microbatch,
+                    "oom_events": list(oom_events),
+                }, last_path)
+                print(json.dumps({
+                    "stage": "R6-G train", "arm": arm, "update": update,
+                    "train_truth": history[-1].get("interval_train_truth"),
+                    "validation_truth": history[-1].get("validation_truth_total"),
+                    "best_update": best_update, "microbatch": microbatch,
+                    "gpu": gpu,
+                }), flush=True)
+            update += 1
+        except torch.cuda.OutOfMemoryError:
+            fallbacks = [int(value) for value in config["training"]["microbatch_oom_fallbacks"]]
+            next_microbatch = next((value for value in fallbacks if value < microbatch), None)
+            if next_microbatch is None:
+                raise RuntimeError(
+                    f"R6-G {arm} OOM at microbatch 1; the fixed effective batch cannot fit"
+                ) from None
+            oom_events.append({"update": update, "from_microbatch": microbatch, "to_microbatch": next_microbatch})
+            _write_json(run_dir / "oom_events.json", {"owner": owner, "events": oom_events})
+            del model, optimizer
+            torch.cuda.empty_cache()
+            return r6g_train_arm(arm, microbatch=next_microbatch, oom_events=oom_events)
+
+    total_training_seconds = elapsed_before + time.perf_counter() - run_start
+    if not best_path.is_file():
+        raise RuntimeError(f"R6-G {arm} completed without a validation-selected checkpoint")
+    best = torch.load(best_path, map_location="cpu", weights_only=False)
+    _assert_cache_owner(owner, best.get("owner", {}), f"R6-G {arm} final best checkpoint")
+    model.load_state_dict(best["model_state_dict"], strict=True)
+    inference_model = export_r6g_inference_model(model)
+    inference_path = run_dir / "inference_checkpoint.pt"
+    _atomic_torch_save({
+        "owner": owner,
+        "update": int(best["update"]),
+        "model_state_dict": _cpu_tree(inference_model.state_dict()),
+    }, inference_path)
+    _write_history(history_path, history)
+    record = {
+        "status": "complete",
+        "arm": arm,
+        "owner": owner,
+        "updates": target_updates,
+        "best_update": int(best["update"]),
+        "best_validation_truth_total": float(best["validation_truth_total"]),
+        "training_seconds": total_training_seconds,
+        "effective_batch_size": effective_batch,
+        "microbatch": microbatch,
+        "microbatch_oom_events": list(oom_events),
+        "unique_train_paired_scenes": len(train["scene_id"]),
+        "scene_visits_per_presence": sampler_audit["h1_scene_visits_per_presence"],
+        "total_cpi_exposures_per_presence": sampler_audit["h1_exposures"],
+        "sampler_audit": sampler_audit,
+        "inference_parameters": sum(parameter.numel() for parameter in inference_model.parameters()),
+        "training_parameters": sum(parameter.numel() for parameter in model.parameters()),
+        "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+        "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+        "gpu": gpu,
+        "device": str(device),
+        "precision": "FP32",
+        "history": str(history_path.relative_to(ROOT)),
+        "best_checkpoint": str(best_path.relative_to(ROOT)),
+        "last_checkpoint": str(last_path.relative_to(ROOT)),
+        "inference_checkpoint": str(inference_path.relative_to(ROOT)),
+        "preflight_git_sha": g0["git_sha"],
+        "initialization_owner": initialization_owner,
+    }
+    _write_json(record_path, record)
+    del model, optimizer, inference_model, train, validation, target_maps
+    torch.cuda.empty_cache()
+    return record
+
+
+def r6g_train_all() -> dict[str, Any]:
+    """Run or resume T0, T1, T3 sequentially using the shared fixed scene plan."""
+    config, _, _ = _configs()
+    g0, _ = _require_g0()
+    _require_matching_g1(g0)
+    results: dict[str, Any] = {}
+    for arm in config["training"]["arm_order"]:
+        results[arm] = r6g_train_arm(str(arm))
+    expected_updates = int(config["training"]["fixed_updates_per_arm"])
+    if any(int(row["updates"]) != expected_updates or row["status"] != "complete" for row in results.values()):
+        raise RuntimeError("R6-G arms did not complete identical frozen update budgets")
+    return {
+        "status": "all_arms_complete",
+        "git_sha": g0["git_sha"],
+        "arm_order": list(config["training"]["arm_order"]),
+        "updates_per_arm": expected_updates,
+        "effective_batch_size": int(config["training"]["effective_batch_size_cpi"]),
+        "arms": results,
     }

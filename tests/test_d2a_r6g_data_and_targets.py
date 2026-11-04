@@ -85,10 +85,18 @@ def test_t3_target_maps_embed_finite_cpi_response_at_truth_gate() -> None:
 def test_cache_resume_rejects_a_different_owner() -> None:
     with pytest.raises(RuntimeError, match="owner differs"):
         d2a_r6g._assert_cache_owner(
-            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "expected"},
-            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "other"},
+            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "expected", "plan_sha256": "one"},
+            {"owner": "D2-A-R6-G-paired-cache", "git_sha": "other", "plan_sha256": "two"},
             "R6-G train",
         )
+
+
+def test_cache_resume_keeps_valid_across_result_only_commits() -> None:
+    d2a_r6g._assert_cache_owner(
+        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "preflight", "plan_sha256": "same"},
+        {"owner": "D2-A-R6-G-paired-cache", "git_sha": "later-commit", "plan_sha256": "same"},
+        "R6-G train",
+    )
 
 
 def test_cached_response_map_kl_has_finite_nonzero_gradients() -> None:

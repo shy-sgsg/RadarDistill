@@ -24,6 +24,7 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("preflight", help="run G0 frozen-source, scene, disk, and CUDA checks")
     commands.add_parser("g1", help="run the physical and CUDA student/teacher smoke test")
+    commands.add_parser("train-all", help="train or resume T0, T1, and T3 sequentially")
     paired = commands.add_parser("prepare-data", help="generate or resume paired train/validation IQ")
     paired.add_argument("--split", choices=("train", "validation"), required=True)
     targets = commands.add_parser("prepare-targets", help="generate or resume CUDA K3/T3 target maps")
@@ -34,6 +35,8 @@ def main() -> None:
         result = d2a_r6g.r6g_preflight()
     elif args.command == "g1":
         result = d2a_r6g.r6g_run_g1()
+    elif args.command == "train-all":
+        result = d2a_r6g.r6g_train_all()
     elif args.command == "prepare-data":
         result = d2a_r6g.generate_r6g_pair_cache(args.split)
     else:
