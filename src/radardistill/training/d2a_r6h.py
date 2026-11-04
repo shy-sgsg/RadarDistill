@@ -986,13 +986,18 @@ def r6h_train_arm(arm: str) -> dict[str, Any]:
 
 def r6h_train_all() -> dict[str, Any]:
     _require_preflight(require_cuda=False)
-    records = {arm: r6h_train_arm(arm) for arm in R6H_ARMS}
-    summary = {
-        "status": "complete" if all(row.get("status") == "complete" for row in records.values()) else "incomplete",
+    path = ARTIFACTS / "training_summary.json"
+    summary: dict[str, Any] = {
+        "status": "in_progress",
         "registered_order": list(R6H_ARMS),
-        "arms": records,
+        "arms": {},
     }
-    _write_json(ARTIFACTS / "training_summary.json", summary)
+    _write_json(path, summary)
+    for arm in R6H_ARMS:
+        summary["arms"][arm] = r6h_train_arm(arm)
+        _write_json(path, summary)
+    summary["status"] = "complete"
+    _write_json(path, summary)
     return summary
 
 

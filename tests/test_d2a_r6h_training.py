@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from radardistill.training.d2a_r6h import (
     validate_r6h_training_complete,
     validate_r6h_config,
 )
+from radardistill.training import d2a_r6h as r6h_training
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -69,6 +71,26 @@ def test_cache_cleanup_requires_all_three_training_arms_complete() -> None:
         "arms": {arm: {"status": "complete"} for arm in ("ce_tcn", "complex_ssm", "cnn_ssm")},
     }
     validate_r6h_training_complete(summary)
+
+
+def test_train_all_records_in_progress_before_training_each_arm(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(r6h_training, "ARTIFACTS", tmp_path)
+    monkeypatch.setattr(r6h_training, "_require_preflight", lambda **kwargs: (None, None))
+
+    def train_arm(arm: str) -> dict:
+        if arm == "complex_ssm":
+            raise RuntimeError("simulated interrupted arm")
+        return {"status": "complete", "arm": arm}
+
+    monkeypatch.setattr(r6h_training, "r6h_train_arm", train_arm)
+    with pytest.raises(RuntimeError, match="simulated interrupted"):
+        r6h_training.r6h_train_all()
+
+    summary = json.loads((tmp_path / "training_summary.json").read_text(encoding="utf-8"))
+    assert summary["status"] == "in_progress"
+    assert summary["arms"]["ce_tcn"]["status"] == "complete"
 
 
 @pytest.mark.parametrize(
