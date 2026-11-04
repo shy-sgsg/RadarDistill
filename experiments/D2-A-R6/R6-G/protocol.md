@@ -44,6 +44,8 @@ R5-C的T0–T3显示，K3完整RD教师图在R5-C Medium学生上没有改善joi
 
 训练/验证IQ由owner清单登记并临时存储；每个H1训练样本对应一个K3和一个T3软响应，先由CUDA生成，再以float16写入CPU文件，训练时按batch读取。每个batch向`cuda:0`搬运，不把全部数据驻留GPU。H0评价、H1 development原始IQ按batch生成和处理，不持久化。结束后仅清除owner列出的本阶段缓存。
 
+软响应目标生成固定采用batch size 16，以控制RTX 3050 Laptop 4 GiB显存占用；该batch仅是目标生成的microbatch，不改变学生训练的effective batch或场景曝光量。
+
 ## 4. 训练预算与实现
 
 - 初始化：PyTorch seed707；先生成一份R6G-CE-TCN随机初始state，再精确复制给T0/T1/T3。不得载入R6-E seed606权重。

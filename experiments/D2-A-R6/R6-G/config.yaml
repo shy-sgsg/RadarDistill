@@ -169,4 +169,5 @@ resources:
   simultaneous_models_resident: 1
   data_loading: CPU_cache_to_CUDA_per_microbatch
   teacher_targets_computed_on_cuda: true
+  target_generation_batch_size: 16
   cleanup_owner_scoped_only: true
