@@ -60,6 +60,11 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - J2-J 在本协议下不晋级 formal seeds/blind；J1-J保留为下一轮联合 baseline。R6-D完整分层证据、训练曲线、限制和阶段判断见 `experiments/D2-A-R6/R6-D/analysis.md` 与 `docs/stage_reviews/D2-A-R6D_review.md`。
 - 验证曲线显示 J1-D/J2-J 在12,800步后仍有改善，J1-P/J1-J则在14,400步取得验证最佳。新实验可预注册更长共同预算，但必须匹配所有 arm 的 updates、有效batch、scene exposure、schedule、验证和checkpoint规则；不追溯延长R6-D或对单臂追加训练。
 
+#### J4 物理驱动联合候选（仅设计，未冻结/未运行）
+
+- R6-D的J2是可学习软候选与反馈结构，不是固定物理前端。为覆盖用户路线中J4，已形成独立设计 [`J4设计说明`](superpowers/specs/2026-11-05-r6-j4-physics-joint-design.md) 与 [`任务对齐`](task_alignments/D2-A-R6-J4_design_alignment.md)：首选复用几何DPCA分数时移/通道差分和520点零填充频谱候选，再用学习读出联合输出null、检测与连续参数。
+- 这只是后续候选，不改R6-D冻结协议或结果；R6-G完成前不做J4 G0/G1、scene ID扫描或GPU训练。若进入新协议，须以固定物理峰值和J1原始IQ学生为参照，分别评价物理前端和学习器增量。
+
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
 - 设计依据、路线和用户授权见 `docs/superpowers/specs/2026-10-27-d2-a-r5-design.md`、执行计划 `docs/superpowers/plans/2026-10-27-d2-a-r5-implementation-plan.md` 与 `docs/task_alignments/D2-A-R5_alignment.md`。
