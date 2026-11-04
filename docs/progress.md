@@ -1,5 +1,14 @@
 # 研究进度
 
+## 2026-11-04：D2-A-R6-F完整链比较完成
+
+- **对齐与协议：** R6-F服务于总纲Q1/Q3/Q6/Q7/Q8/Q9/Q10，按protocol v1.0.2比较六条传统、神经及混合链；未改总纲、R5-C或历史冻结结果。G0/G1通过，RTX 3050 Laptop `cuda:0`神经链顺序执行。场景为独立H0 calibration/verification各120,000与H1 development 6,144，未生成final blind。
+- **主要结果：** CE-TCN原生链B H1 Pd=0.94743、AUC=0.98715、C2+C3 joint=0.85807、Doppler RMSE=18.72 Hz；相对B3+4×FFT链A的joint差`+0.57813`（99%配对CI `[+0.56141,+0.59397]`）。所有链全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败。B是开发集任务候选，不是合格低虚警系统。
+- **失败与停止：** C/F神经检测+预测候选profile-ML的Doppler RMSE约149.61 Hz、C2+C3 joint约0.722，任务保护失败；D传统检测+神经估计受B3检测率限制，joint未改善。停止本轮追加链、阈值或分数搜索，不做final blind。
+- **成本与解释：** 384个条件平衡H1、batch16的完整链benchmark中，A CPU均值0.158 ms/CPI，B CUDA均值8.219 ms/CPI，E CUDA均值1.189 ms/CPI。硬件路径不同，不作实时性能结论。
+- **研究影响：** R6-F未开展教师训练，不能回答蒸馏是否改善学习。R5-C T0–T3负结果保留。后续按R6-G范围设计一项有保护的教师知识pilot，匹配truth-only和truth-assisted，并在C3错误传播条件停止；不搜索多种教师和蒸馏权重。
+- **材料：** [R6-F协议/配置](../experiments/D2-A-R6/R6-F/)、[分析](../experiments/D2-A-R6/R6-F/analysis.md)、[指标](../experiments/D2-A-R6/R6-F/metrics.json)、[全链图](../experiments/D2-A-R6/R6-F/figures/full_chain_comparison.png)、[内部阶段报告](stage_reviews/D2-A-R6F_review.md)。
+
 ## 2026-11-03：D2-A-R6-E架构筛选完成
 
 - **对齐与协议：** R6-E服务总纲Q3/Q4/Q6/Q10；没有修改总纲、R5-C或R6-A至R6-D冻结结果。G0/G1通过，场景ID与历史/其他split互斥。按冻结protocol v1.0，J1-J、CE-TCN和RAX-Transformer在RTX 3050 Laptop `cuda:0`、FP32、seed606、有效batch64下各训练51,200 updates。每臂51,200唯一配对场景重复访问32次；training history每400步记录，不逐步写日志。

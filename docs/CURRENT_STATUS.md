@@ -1,9 +1,9 @@
 # 当前研究状态
 
-**更新日期：** 2026-11-01
+**更新日期：** 2026-11-04
 **工作分支：** `main`
-**最新完成工作：** D2-A-R6-D protocol/config v1.2 的 seed505 四臂 matched pilot、RTX 3050 Laptop `cuda:0` FP32 顺序训练、独立 H0 calibration/verification 与 H1 development 已完成。结果和内部审查见 [`R6-D 分析`](../experiments/D2-A-R6/R6-D/analysis.md)、[`metrics.json`](../experiments/D2-A-R6/R6-D/metrics.json) 和 [`R6-D 阶段审查`](stage_reviews/D2-A-R6D_review.md)。
-**阶段判断：** J2-J 相对 J1-J 的 C2+C3 joint-success 提高 +0.0447（95% paired CI `[+0.0360,+0.0536]`），range RMSE ratio=0.8966，均通过筛选/保护；Doppler RMSE ratio=1.3066（95% CI `[1.2015,1.4148]`）与 C3 六格 familywise Pfa 保护均失败。R6-D 为 **REFINE**，不晋级 formal seeds 或 final blind。J1-D/J2-J 验证 loss 在 12,800 步后继续下降，J1-P/J1-J 则较早达到验证最佳；12,800 不是通用上限，也不能把加长训练的收益外推到所有臂。研究总纲 v1.3 和历史冻结结果不变。
+**最新完成工作：** D2-A-R6-F v1.0.2 六条完整处理链开发评价已完成；G0/G1通过，使用RTX 3050 Laptop `cuda:0`运行神经链。协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
+**阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
@@ -87,11 +87,9 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-R6 P4 的 D2-A-R6-E 已按冻结协议完成。三臂在新独立数据上各训练51,200 updates：CE-TCN相对J1-J的C2+C3 joint差`+0.02713`（97.5% CI `[+0.01736,+0.03668]`），相对Pd、距离和Doppler保护通过；RAX-Transformer joint差`−0.39280`，当前候选停止。三臂都未通过C3六格familywise Pfa绝对门；因此CE-TCN是值得继续检验的候选，尚非合格低虚警检测器。CE-TCN公共相位输出一致，但三臂频移诊断均未证明频移等变。单seed开发结果不证明跨seed泛化；没有教师、蒸馏、传统检测器对照或final blind。实验分析、训练曲线、条件图和阶段审查见[`R6-E analysis`](../experiments/D2-A-R6/R6-E/analysis.md)、[`R6-E metrics`](../experiments/D2-A-R6/R6-E/metrics.json)和[`R6-E stage review`](stage_reviews/D2-A-R6E_review.md)。
+R6 P5 / D2-A-R6-F 已完成。六条链的全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败；CE-TCN原生链虽有最高C2+C3 joint和最小受测学生Doppler RMSE，仍没有绝对低虚警资格。神经检测+profile-ML链C/F的Doppler RMSE约149.61 Hz，远高于CE原生链的18.72 Hz、joint也更低；B3检测+CE参数链D则受传统检测Pd限制。详见[R6-F analysis](../experiments/D2-A-R6/R6-F/analysis.md)和[R6-F stage report](stage_reviews/D2-A-R6F_review.md)。
 
-R6-E的owner缓存清理见[`cleanup.json`](../experiments/D2-A-R6/R6-E/cleanup.json)：删除训练/验证IQ缓存11,233,318,661 bytes，清理后项目占用1,294,176,256 bytes（约1.2053 GiB），低于20 GiB限制；用户未跟踪文件未动。
-
-当前进入R6 P5：先冻结并验证R6-F端到端混合链比较；以CE-TCN作为优先NN候选，J1-J保留为匹配学生参考，每条完整处理链独立校准和报告虚警。之后依据R6-F、R5-C与R6-E证据，开展范围有限的R6-G教师知识教学对照。R6 P0–P7全部获批目标完成前不提交综合ChatGPT审查请求；研究总纲v1.3和历史冻结结果保持不变。
+**当前优先阶段：R6 P6 / D2-A-R6-G。** 在R5-C T0–T3负蒸馏结果及R6-F完整链证据基础上，先冻结一个范围有限的教师教学pilot：选定一种有任务依据的知识形式，以能力更强的CE-TCN学生为候选，匹配truth-only与truth-assisted对照，并将C3困难组教师错误传播作为独立保护门。先完成协议、实现和小样本前置验证，再按冻结预算训练；不得将蒸馏损失下降作为成功证据，也不得在pilot之前搜索教师权重、可靠性网络或教学时机。R6 P0–P7全部获批目标完成后再提交唯一综合ChatGPT审查请求；研究总纲v1.3和历史冻结结果保持不变。
 
 ## 关键材料
 

@@ -38,6 +38,14 @@
 
 # 技术决策记录
 
+## 2026-11-04：R6-F完成，进入有界R6-G教学pilot设计
+
+- **证据：** R6-F v1.0.2六链开发评价中，B（CE-TCN原生链）相对A（B3+4×FFT）的C2+C3 joint差`+0.57813`（99% paired CI `[+0.56141,+0.59397]`），Pd、range、Doppler相对保护通过；但B及其余五链的C3六格familywise Pfa门均失败。C/F的profile-ML预测候选链Doppler RMSE约149.61 Hz；D继承B3检测率，未带来joint收益。结果只适用于当前seed与development场景。
+- **决定：** R6-F为REFINE，结束本轮A–F链比较，不追加阈值/分数/估计器搜索或final blind。CE-TCN保留为任务能力较强的开发学生候选，不赋予低虚警资格。R6-F没有KD证据。
+- **下一步：** 按R6 P6进入R6-G协议与前置实现，最多选择一种有任务依据的知识表示，与matched truth-only及必要truth-assisted控制对照；冻结相同学生、种子、场景、更新预算和模型选择，预设教师错误分层/C3保护。训练前不搜索教师可靠性网络、权重、温度或教学时机。若知识无法通过前置保护门则停止该候选。
+- **治理：** 保持RESEARCH_CHARTER.md v1.3；不修改R5-C和R6-F冻结协议/结果。R6所有获批目标完成后再提交唯一综合ChatGPT审查请求。
+- **材料：** `experiments/D2-A-R6/R6-F/{protocol.md,config.yaml,metrics.json,analysis.md,figures/}`、`docs/stage_reviews/D2-A-R6F_review.md`。
+
 ## 2026-11-03：R6-E筛选CE-TCN进入R6-F，停止当前RAX候选
 
 - **依据：** D2-A-R6-E冻结单seed606架构比较完成。CE-TCN相对J1-J的可辨识C2+C3 joint差`+0.02713`（97.5% paired CI `[+0.01736,+0.03668]`），Pd、range和Doppler相对保护通过；公共相位旋转诊断与结构相符。RAX joint差`−0.39280`且Doppler RMSE比`2.8927`。三者均未通过C3六格familywise Pfa绝对门。

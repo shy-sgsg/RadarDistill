@@ -1,0 +1,135 @@
+{
+  "status": "G1_PASS",
+  "experiment": "D2-A-R6-F",
+  "git_sha": "ae81a4ed15cc305a179ebbdb3c8c5e00d283b14e",
+  "g0_status": "G0_PASS",
+  "condition_index": 10,
+  "condition": {
+    "course": "C3",
+    "scenario_id": "partial_overlap",
+    "snr_db": 0.0,
+    "cnr_db": 20.0
+  },
+  "scene_seed": 2298000000,
+  "paired_scene_count": 16,
+  "batch_equivalence_absolute_tolerance": 0.0001,
+  "batch_equivalence": {
+    "ce_tcn": {
+      "H0_A": {
+        "max_abs_difference": 0.0,
+        "by_field": {
+          "score": 0.0,
+          "candidate_range_bin": 0.0
+        }
+      },
+      "H0_B": {
+        "max_abs_difference": 2.2351741790771484e-07,
+        "by_field": {
+          "score": 2.2351741790771484e-07,
+          "candidate_range_bin": 0.0
+        }
+      },
+      "H0_C": {
+        "max_abs_difference": 2.2351741790771484e-07,
+        "by_field": {
+          "score": 2.2351741790771484e-07,
+          "candidate_range_bin": 0.0
+        }
+      },
+      "H0_D": {
+        "max_abs_difference": 0.0,
+        "by_field": {
+          "score": 0.0,
+          "candidate_range_bin": 0.0,
+          "detection_candidate_range_bin": 0.0
+        }
+      },
+      "H0_F": {
+        "max_abs_difference": 1.1691488261897365e-08,
+        "by_field": {
+          "score": 1.1691488261897365e-08,
+          "candidate_range_bin": 0.0,
+          "fit_fraction": 0.0
+        }
+      },
+      "H1_A": {
+        "max_abs_difference": 0.0,
+        "by_field": {
+          "score": 0.0,
+          "candidate_range_bin": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      },
+      "H1_B": {
+        "max_abs_difference": 1.7881393432617188e-07,
+        "by_field": {
+          "score": 1.7881393432617188e-07,
+          "candidate_range_bin": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      },
+      "H1_C": {
+        "max_abs_difference": 1.7881393432617188e-07,
+        "by_field": {
+          "score": 1.7881393432617188e-07,
+          "candidate_range_bin": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      },
+      "H1_D": {
+        "max_abs_difference": 0.0,
+        "by_field": {
+          "score": 0.0,
+          "candidate_range_bin": 0.0,
+          "detection_candidate_range_bin": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      },
+      "H1_F": {
+        "max_abs_difference": 9.157074215213057e-09,
+        "by_field": {
+          "score": 9.157074215213057e-09,
+          "candidate_range_bin": 0.0,
+          "fit_fraction": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      }
+    },
+    "j1_joint": {
+      "H0_E": {
+        "max_abs_difference": 4.470348358154297e-08,
+        "by_field": {
+          "score": 4.470348358154297e-08
+        }
+      },
+      "H1_E": {
+        "max_abs_difference": 5.21540641784668e-08,
+        "by_field": {
+          "score": 5.21540641784668e-08,
+          "candidate_range_bin": 0.0,
+          "predicted_range_cell": 0.0,
+          "predicted_doppler_hz": 0.0
+        }
+      }
+    }
+  },
+  "system_names_checked": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+  ],
+  "candidate_propagation": "pass",
+  "h0_truth_parameter_leakage": "not_applicable_to_inference_interface; no parameter labels emitted",
+  "null_abstention": "pass",
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "final_blind_generated": false
+}

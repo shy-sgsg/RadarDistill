@@ -101,11 +101,13 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 3. 单 seed 学生开发结果不能替代跨训练 seed 或盲测；传统教师的完整任务比较与蒸馏收益也未由 E003 评价。
 4. 真实 GMTI、系统级虚警率 `1e-6` 和完整链成本均未验证。
 
+## D2-A-R6-F 完整处理链结果
+
+R6-F v1.0.2已在新独立场景上完成六链开发评价。B（CE-TCN原生检测与估计）相对A（B3+4×FFT）的C2+C3 joint差为`+0.57813`（99%配对CI `[+0.56141,+0.59397]`），但所有链都未通过C3六格familywise Pfa≤0.10绝对门。E（J1-J）也有较强任务结果；C/F在预测候选上的profile-ML Doppler误差严重，D受B3漏检限制。R6-F只产生单seed development证据，不含蒸馏或final blind；范围和限制见[`analysis.md`](../experiments/D2-A-R6/R6-F/analysis.md)及[`metrics.json`](../experiments/D2-A-R6/R6-F/metrics.json)。
+
 ## 当前唯一优先任务
 
-R6 P4 的 D2-A-R6-E 已完成：J1-J、复数公共相位等变CE-TCN和全网格轴向RAX-Transformer均使用新独立scene IDs、seed606、E1真值监督、有效batch64、FP32及51,200 matched updates，按序在RTX 3050 Laptop `cuda:0`训练。CE-TCN对J1-J的可辨识C2+C3 joint增益`+0.02713`（97.5%配对CI `[+0.01736,+0.03668]`），Pd、距离和Doppler相对保护通过；其相位不变性与结构相符。当前RAX候选joint差`−0.39280`且Doppler保护明显失败，停止扩展。三个模型均未通过C3六格familywise Pfa上界≤0.10；CE-TCN不具备低虚警检测资格。频移干预没有显示稳定频移等变；单seed development不构成跨seed确认。没有蒸馏、传统基线比较或final blind。owner缓存删除11,233,318,661 bytes，清理后项目占用1,294,176,256 bytes（1.2053 GiB），未触碰用户未跟踪文件；详见R6-E `analysis.md`、`metrics.json`、`figures/`、`cleanup.json`和`docs/stage_reviews/D2-A-R6E_review.md`。
-
-**当前优先阶段：R6 P5 / D2-A-R6-F。** 先冻结传统/学生混合pipeline的端到端比较，优先将CE-TCN作为NN候选、J1-J作为匹配参考，并纳入冻结传统基线；每条最终链都用独立H0校准，不能从子模块沿用阈值。R6-F完成后，结合R5-C教学pilot、R6-E学生筛选及R6-F完整链结果，选择至多一种教师知识形式开展R6-G matched truth-only/teacher/truth-assisted对照。R6 P0–P7全部授权目标完成后再形成一份综合ChatGPT审查；R6-E单seed结果不单独触发formal seeds或blind。
+**R6 P6 / D2-A-R6-G：** 依据R5-C教学pilot、R6-E强学生筛选和R6-F完整链结果，预注册一个有界教师教学内容pilot。必须先冻结一种知识形式，使用matched truth-only、teacher-assisted及必要truth-assisted控制；共享学生、初始化、数据、训练预算和模型选择规则，独立校准H0并重点保护C3困难子组。完成协议、实现和前置检查后再训练；不开展无依据的知识形式/温度/权重/时机网格搜索。未证明最终任务增益前不开展多seed确认或final blind。R6 P0–P7全部获批目标完成后提交一份综合ChatGPT审查请求。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

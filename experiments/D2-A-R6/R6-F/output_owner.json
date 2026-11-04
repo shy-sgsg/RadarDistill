@@ -1,0 +1,8 @@
+{
+  "experiment": "D2-A-R6-F",
+  "git_sha": "3252587903f0c9ae1601b8fab3c62933905327c9",
+  "protocol_sha256": "3e24e1044fc23372589d6febf2fc391336eaa6a9d67cc83c45d759578d37416d",
+  "config_sha256": "ebb0f706bb2d421efcc9afafb57b3a476dfd7260cee471c7035835bfeb7a2913",
+  "prediction_directory": "experiments/D2-A-R6/R6-F/predictions",
+  "raw_iq_persisted": false
+}
