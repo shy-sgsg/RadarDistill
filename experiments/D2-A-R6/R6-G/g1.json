@@ -1,8 +1,8 @@
 {
   "status": "G1_PASS",
-  "git_sha": "bbe57f6e56693b4f2eb74178a47609855c6a2cb0",
-  "protocol_sha256": "684ab8bc05a4333877f08bc5097ad1b50595a953adfa8a56182666016351415c",
-  "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+  "git_sha": "3a986699f52836293f159ec850033de7c5424f69",
+  "protocol_sha256": "faf7b2983d85b0f13c4b5947394f7deed48b0ec185322e49ee8a2c5a04b9c02a",
+  "config_sha256": "a9b7ef38d26d1baa6220acb9fb24512add450b2fd6fa09d4c959e50e22aa43ce",
   "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
   "device": "cuda:0",
   "precision": "FP32",
@@ -45,6 +45,14 @@
   "t3_map_normalized": true,
   "inference_parameters": 63429,
   "formal_microbatch": 4,
+  "validation_cpi_forward_batch_size": 128,
+  "validation_forward_probe": {
+    "batch_cpi": 128,
+    "finite_task_outputs": true,
+    "peak_allocated_bytes": 1936501248,
+    "peak_reserved_bytes": 1971322880,
+    "seconds": 1.3191748820026987
+  },
   "arm_probes": {
     "4": {
       "T0": {
@@ -56,7 +64,7 @@
         "inference_parameters": 63429,
         "training_parameters": 97229,
         "peak_allocated_bytes": 1239268352,
-        "peak_reserved_bytes": 1537212416
+        "peak_reserved_bytes": 1535115264
       },
       "T1": {
         "loss": 6.5581716895103455,
@@ -111,5 +119,5 @@
   "paired_scene_order_shared": true,
   "teacher_k3_truth_inputs": false,
   "h0_auxiliary_targets_computed": false,
-  "seconds": 11.232247306001227
+  "seconds": 12.594244817999424
 }
