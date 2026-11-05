@@ -1133,11 +1133,33 @@ def cleanup_owned_r6h_training_cache() -> dict[str, Any]:
     expected_files = {"owner.json", "progress.json", *(f"{name}.npy" for name in (
         "iq_h0", "iq_h1", "truth_range_cell", "truth_doppler_hz", "condition_index", "scene_id",
     ))}
+
+    def require_no_symlink_in_cache_path(path: Path) -> None:
+        root = Path(ROOT)
+        try:
+            path.relative_to(root)
+        except ValueError as exc:
+            raise RuntimeError(f"refusing to clean a cache outside the project root: {path}") from exc
+        current = path
+        while True:
+            if current.is_symlink():
+                raise RuntimeError(f"refusing to clean through a symlinked R6-H cache path: {current}")
+            if current == root:
+                break
+            current = current.parent
+
+    require_no_symlink_in_cache_path(CACHE)
+    validated_directories: list[tuple[Path, list[Path], int]] = []
     for split in ("train", "validation"):
         directory = CACHE / split
+        require_no_symlink_in_cache_path(directory)
         if not directory.exists():
             continue
+        if not directory.is_dir():
+            raise RuntimeError(f"refusing to clean a non-directory R6-H cache: {directory}")
         owner_path, progress_path = directory / "owner.json", directory / "progress.json"
+        if owner_path.is_symlink() or progress_path.is_symlink():
+            raise RuntimeError(f"refusing to clean an R6-H cache with symlinked owner metadata: {directory}")
         if not owner_path.is_file() or not progress_path.is_file():
             raise RuntimeError(f"refusing to clean unowned R6-H cache: {directory}")
         owner = json.loads(owner_path.read_text(encoding="utf-8"))
@@ -1147,13 +1169,20 @@ def cleanup_owned_r6h_training_cache() -> dict[str, Any]:
         if progress.get("owner") != owner or int(progress.get("rows_written", -1)) != int(owner["scene_count"]):
             raise RuntimeError(f"refusing to clean incomplete R6-H cache: {directory}")
         children = list(directory.iterdir())
-        if any(not child.is_file() or child.name not in expected_files for child in children):
-            raise RuntimeError(f"unexpected file in R6-H cache directory: {directory}")
+        if (
+            {child.name for child in children} != expected_files
+            or any(child.is_symlink() or not child.is_file() for child in children)
+        ):
+            raise RuntimeError(f"R6-H cache contents differ from the complete registered file set: {directory}")
         removed_bytes = sum(child.stat().st_size for child in children)
+        validated_directories.append((directory, children, removed_bytes))
+
+    for directory, children, removed_bytes in validated_directories:
+        require_no_symlink_in_cache_path(directory)
         for child in children:
             child.unlink()
         directory.rmdir()
-        removed.append({"split": split, "bytes": removed_bytes})
+        removed.append({"split": directory.name, "bytes": removed_bytes})
     try:
         CACHE.rmdir()
     except OSError:

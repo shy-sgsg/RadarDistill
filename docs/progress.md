@@ -1,5 +1,11 @@
 # 研究进度
 
+## 2026-11-05：补强 R6-H 缓存清理保护
+
+- **触发证据：** 对尚未冻结的 R6-H 清理函数做只读审查，发现它会跟随缓存 split 或 owner 文件符号链接；若目标目录带有效 owner，可能先删除符号链接目标中的文件再在 `rmdir` 时报错。它也会接受缺文件的缓存，并逐 split 边验证边删除，后一个 split 失败时可能留下部分清理状态。
+- **修改与验证：** 在实现前新增五个清理行为测试；AISAR Python 下五项均按预期失败。随后加入路径祖先/元数据符号链接拒绝、精确完整文件集校验及先全部验证再删除。AISAR Python 下 `tests/test_d2a_r6h_cache_cleanup.py` 五项通过。
+- **范围边界：** 没有运行清理、改动 R6-G 冻结实验或使用 GPU；R6-H 仍是未授权 draft。新保护将在 R6-G 完成后随 R6-H G0/G1 一并验证。
+
 ## 2026-11-05：R6-H暂定场景计划只读预审
 
 - **审计范围：** 使用R6-H草案中的scene计划及`d2a_r6h._prior_scene_ids()`扫描当前实验目录下现有相关CSV manifests；共996,472个唯一历史scene ID。暂定train/validation/H0 calibration/H0 verification/H1 development/G1计划为51,200/5,000/120,000/120,000/6,144/16，历史重叠和计划内跨split重叠均为0。另从R6-G配置构造其302,360个登记scene ID，与R6-H暂定计划比较，交集为0。
