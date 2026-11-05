@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot、R6-A至R6-F均已完成各自冻结试验；R6-G正在按独立v1.0.1协议训练。** R5-C T1/T2未在Medium学生上产生教师增益；R6-C容量、R6-D联合模型、R6-E架构筛选和R6-F完整链均得到任务收益与低虚警限制并存的单seed开发证据。所有历史结果保留，R6-G训练完成前不启动P7正式确认。研究总纲v1.3不变，R6结果不构成final blind或跨seed确认。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot、R6-A至R6-F均已完成各自冻结试验；R6-G正在按独立v1.0.1协议训练。** R5-C T1/T2未在Medium学生上产生教师增益；R6-C容量、R6-D联合模型、R6-E架构筛选和R6-F完整链均得到任务收益与低虚警限制并存的单seed开发证据。R6-H是P4的SSM/混合架构补充草案，尚未冻结或执行；须等待R6-G安全结束、GPU释放和全仓scene-ID审计，再过独立G0/G1。P7正式确认须等R6-H完成或按其门停止后再冻结。所有历史结果保留；研究总纲v1.3不变，R6结果不构成final blind或跨seed确认。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
@@ -19,12 +19,12 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 | P1：同场景基线、低虚警诊断 | R6-A/B完成；困难C3格AUC约0.60，matched hard-negative未证明joint收益；0.05/0.01未获全条件资格，0.001仅全局通过 | 完成；1e-4未执行，不能声称其资格；低条件内可分性是主要证据之一 |
 | P2：模型容量、训练和数据规模 | R6-C比较Medium/Large/XLarge和唯一训练场景量；Large/XLarge joint提升，但C3绝对Pfa保护失败 | 完成单seed筛选；不外推容量上限或过拟合结论 |
 | P3：检测、参数、联合学习 | R6-D比较J1-D/J1-P/J1-J/J2-J；J2-J有joint/range增益，但Doppler与C3 familywise门失败 | 完成；J1-J作为受测联合基线，J2-J不晋级多seed |
-| P4：代表性架构 | R6-E完成J1-J、CE-TCN、RAX-Transformer 51,200-step单seed比较；CE-TCN任务表现较强，RAX当前配置退化 | 完成当前有界筛选；RAX结论只限当前实现，不否定整个Transformer/SSM家族 |
+| P4：代表性架构 | R6-E完成J1-J、CE-TCN、RAX-Transformer 51,200-step单seed比较；CE-TCN任务表现较强，RAX当前配置退化。R6-H已形成复数对角SSM与CNN-SSM草案，尚未冻结或运行 | R6-E筛选完成；R6-H是有前置门的补充筛选，须在R6-G安全结束后完成scene-ID审计及G0/G1，再决定执行或记录停止。RAX负结果不外推到整个Transformer/SSM家族 |
 | P5：完整混合处理链 | R6-F六链同场景独立校准完成；CE-TCN原生链任务指标领先，但六链C3六格familywise低虚警门均失败 | 完成开发比较；不宣称低虚警合格或速度优势 |
 | P6：教师教学机制 | R6-G v1.0.1的T0 truth-only、T1 truth+K3、T3 truth-assisted控制；新协议、CUDA G0/G1已通过，三臂顺序训练正在运行 | 进行中；完成51,200 updates/臂后评估独立H0与H1、训练曲线和教师错误分层；不读中间H1开发结果、不搜权重或时机 |
-| P7：正式确认 | 尚未启动 | 等P6结果后冻结少数有资格的候选、独立多seed/场景和样本量预算；先看低虚警资格及任务收益。final blind未获授权，不生成 |
+| P7：正式确认 | 尚未启动 | 等P6完成、R6-H完成或由预注册门停止后，再冻结少数有资格的候选、独立多seed/场景和样本量预算；先看低虚警资格及任务收益。final blind未获授权，不生成 |
 
-路线顺序不预设每项必须成功：若P6未见教学收益，停止当前K3教学分支；P7按证据决定是否确认truth-only候选或结束当前系统路线。缺少中间ChatGPT审查不阻塞已批准工作；整条P0–P7完成后才提交一份综合审查请求。当前项目约15 GiB，最终20 GiB限制在owner-scoped缓存清理后核验；不删除用户未跟踪源码包。
+路线顺序不预设每项必须成功：先完成正在运行的P6，不中断或与其争用GPU；随后按R6-H草案核查GPU释放、全仓scene-ID独立性和G0/G1。前置门通过才执行R6-H三臂匹配筛选，未通过则保留原因并停止该补充候选。R6-H终结后，P7按证据决定是否确认truth-only候选或结束当前系统路线。缺少中间ChatGPT审查不阻塞已批准工作；整条P0–P7完成后才提交一份综合审查请求。当前项目约15 GiB，最终20 GiB限制在owner-scoped缓存清理后核验；不删除用户未跟踪源码包。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 

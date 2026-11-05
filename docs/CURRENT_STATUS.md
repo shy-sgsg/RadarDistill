@@ -2,7 +2,7 @@
 
 **更新日期：** 2026-11-05
 **工作分支：** `main`
-**最新完成工作：** R6-H SSM/混合架构筛选器的执行器、测试与恢复/缓存清理保护已提交至 `main`（`85d4387`，全套测试611项通过）。R6-H仍是draft，尚无G0/G1、正式数据或训练结果；R6-G是当前进行中的科研阶段。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
+**最新完成工作：** R6-H SSM/混合架构筛选器的执行器、测试与恢复/缓存清理保护已提交至 `main`（`85d4387`，全套测试611项通过）。R6-H仍是draft，尚无G0/G1、正式数据或训练结果；其P4补充筛选须等R6-G安全完成、GPU释放和全仓scene-ID审计后再做正式前置检查。P7须等R6-H完成或按冻结门停止后再冻结候选。R6-G是当前进行中的科研阶段。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
 **阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
 **当前执行：** R6-G v1.0.1的T0/T1/T3匹配教学pilot按冻结协议顺序训练。最近一次里程碑核对观察到 `train-all` 仍在运行，T0 `training_history.csv` 最新记录为16,000 updates；T1/T3尚未开始。训练完成前不运行H1 development评价。保持有效batch64、FP32及既定microbatch/OOM回退规则不变；阶段完成后仅清理本阶段owner-scoped缓存。
 
@@ -90,7 +90,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 R6 P5 / D2-A-R6-F 已完成。六条链的全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败；CE-TCN原生链虽有最高C2+C3 joint和最小受测学生Doppler RMSE，仍没有绝对低虚警资格。神经检测+profile-ML链C/F的Doppler RMSE约149.61 Hz，远高于CE原生链的18.72 Hz、joint也更低；B3检测+CE参数链D则受传统检测Pd限制。详见[R6-F analysis](../experiments/D2-A-R6/R6-F/analysis.md)和[R6-F stage report](stage_reviews/D2-A-R6F_review.md)。
 
-**当前优先任务：完成R6 P6 / D2-A-R6-G。** protocol/config v1.0.1、G0/G1和评估实现已就绪；训练T0 truth-only、T1 truth+K3、T3 truth-assisted控制。三臂完成后运行独立H0 calibration/verification、H1 development、教师错误分层、注册更新点的验证任务曲线及成本评价。根据冻结门判断是否有教学收益及低虚警资格；不得将蒸馏损失下降视为成功，也不搜索权重、可靠性网络或教学时机。随后冻结P7范围并进行正式多seed/独立场景确认的前置门审查。R6 P0–P7全部目标完成前不写ChatGPT审查提示词；final blind当前未获授权；研究总纲v1.3和历史冻结结果保持不变。
+**当前优先任务：完成R6 P6 / D2-A-R6-G。** protocol/config v1.0.1、G0/G1和评估实现已就绪；训练T0 truth-only、T1 truth+K3、T3 truth-assisted控制。三臂完成后运行独立H0 calibration/verification、H1 development、教师错误分层、注册更新点的验证任务曲线及成本评价。根据冻结门判断是否有教学收益及低虚警资格；不得将蒸馏损失下降视为成功，也不搜索权重、可靠性网络或教学时机。其后先完成R6-H草案的GPU释放、scene-ID审计与G0/G1前置门；通过后执行匹配筛选，未通过则保留停止依据。R6-H终结后再冻结P7范围并审查正式多seed/独立场景确认门。R6 P0–P7全部目标完成前不写ChatGPT审查提示词；final blind当前未获授权；研究总纲v1.3和历史冻结结果保持不变。
 
 ## 关键材料
 
