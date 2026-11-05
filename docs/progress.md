@@ -1,5 +1,10 @@
 # 研究进度
 
+## 2026-11-05：R6-H暂定场景计划只读预审
+
+- **审计范围：** 使用R6-H草案中的scene计划及`d2a_r6h._prior_scene_ids()`扫描当前实验目录下现有相关CSV manifests；共996,472个唯一历史scene ID。暂定train/validation/H0 calibration/H0 verification/H1 development/G1计划为51,200/5,000/120,000/120,000/6,144/16，历史重叠和计划内跨split重叠均为0。另从R6-G配置构造其302,360个登记scene ID，与R6-H暂定计划比较，交集为0。
+- **边界：** 该预审只读且未使用GPU，没有生成R6-H数据，也不构成G0。R6-G安全结束后会产生新的评价manifests，正式冻结R6-H前必须纳入它们重新审计。明细见[R6-H preliminary audit](../experiments/D2-A-R6/R6-H/preliminary_scene_audit.json)及[draft protocol](../experiments/D2-A-R6/R6-H/protocol.md)。
+
 ## 2026-11-05：明确R6-H与P7的阶段顺序
 
 - **路线对齐：** R6-E完成了本轮CE-TCN/RAX筛选，但没有覆盖复数对角SSM与CNN-SSM。将仍为draft且 `execution_authorized: false` 的R6-H列作P4补充筛选；R6-G安全完成、GPU释放、全仓scene-ID审计和G0/G1通过前不冻结或运行R6-H。

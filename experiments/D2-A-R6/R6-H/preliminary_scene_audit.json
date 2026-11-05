@@ -1,0 +1,34 @@
+{
+  "status": "preliminary_static_audit_pass",
+  "stage": "D2-A-R6-H",
+  "protocol_version": "0.1-draft",
+  "git_sha": "b724a1982ea0b1d2fd2bb974c6de6af2776c1843",
+  "method": "R6-H prior-manifest scan and plan audit, plus R6-G/R6-H registered-plan ID comparison",
+  "prior_unique_scene_id_count": 996472,
+  "planned_scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144,
+    "g1_test": 16
+  },
+  "prior_overlap_count": 0,
+  "cross_split_overlap_count": 0,
+  "r6g_registered_scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144,
+    "g1_test": 16
+  },
+  "r6g_registered_unique_scene_id_count": 302360,
+  "r6g_plan_overlap_count": 0,
+  "gpu_used": false,
+  "formal_g0": false,
+  "limitations": [
+    "R6-G training is still active; its calibration, verification, and development manifests have not yet been generated. The current zero-overlap result includes their registered config plans but not future generated files.",
+    "Repeat the complete repository scene-ID audit at formal R6-H G0 after R6-G completes."
+  ]
+}

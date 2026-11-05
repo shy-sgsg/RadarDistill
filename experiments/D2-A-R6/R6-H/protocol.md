@@ -76,4 +76,8 @@ R6-G 完成前不运行上述 CUDA preflight、G1 或正式数据生成，以免
 
 ## 7. 当前执行状态
 
-本文件是可审阅草案，不是已冻结 protocol；配置状态为 draft，且 R6-G 前置状态仍为 false。已实现模型骨架、三臂工厂、owner-scoped 配对缓存、G0/G1、顺序 CUDA 训练、独立评价与缓存清理入口；R6-H 相关 23 项测试和全仓 609 项测试通过。当前静态 split 检查显示暂定 scene IDs 与 R6-E/R6-G 配置登记的 seed plans 无重叠；全仓历史 manifests 的正式审计仍待 G0。尚无 R6-H 数据、CUDA preflight、G1、训练、指标或阶段结论。R6-G 安全结束、确认 GPU 已释放并完成全仓 scene ID 审计后，才能冻结和推送协议、配置与 runner，再按 G0→G1→数据生成→顺序训练→独立评价执行。
+本文件是可审阅草案，不是已冻结 protocol；配置状态为 draft，且 R6-G 前置状态仍为 false。已实现模型骨架、三臂工厂、owner-scoped 配对缓存、G0/G1、顺序 CUDA 训练、独立评价与缓存清理入口；R6-H 相关 23 项测试和全仓 609 项测试通过。
+
+在 `b724a1982ea0b1d2fd2bb974c6de6af2776c1843` 上，使用 `d2a_r6h._prior_scene_ids()` 和 `r6h_scene_plan_audit()` 对现存相关 CSV manifests 做了一次只读预审：历史唯一 scene ID 为996,472；R6-H 暂定 train/validation/calibration/verification/development/G1 计划分别为51,200/5,000/120,000/120,000/6,144/16；历史重叠和计划内跨 split 重叠均为0。随后直接从R6-G配置构造其全部登记计划，再以同一 scene-ID 规则与R6-H暂定计划比较；两边各有302,360个唯一计划ID，交集为0，因此覆盖了尚未生成R6-G calibration/verification/development文件的预注册seed。机器可读记录见 `preliminary_scene_audit.json`。这不是 G0 结果：R6-G 训练结束后还会生成评价manifests，正式冻结前必须重新扫描完整工作区并复核资源。
+
+尚无 R6-H 数据、CUDA preflight、G1、训练、指标或阶段结论。R6-G 安全结束、确认 GPU 已释放并完成正式全仓 scene ID 审计后，才能冻结和推送协议、配置与 runner，再按 G0→G1→数据生成→顺序训练→独立评价执行。

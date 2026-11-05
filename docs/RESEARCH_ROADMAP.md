@@ -1,11 +1,11 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-11-04
+**更新时间：** 2026-11-05
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot、R6-A至R6-F均已完成各自冻结试验；R6-G正在按独立v1.0.1协议训练。** R5-C T1/T2未在Medium学生上产生教师增益；R6-C容量、R6-D联合模型、R6-E架构筛选和R6-F完整链均得到任务收益与低虚警限制并存的单seed开发证据。R6-H是P4的SSM/混合架构补充草案，尚未冻结或执行；须等待R6-G安全结束、GPU释放和全仓scene-ID审计，再过独立G0/G1。P7正式确认须等R6-H完成或按其门停止后再冻结。所有历史结果保留；研究总纲v1.3不变，R6结果不构成final blind或跨seed确认。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot、R6-A至R6-F均已完成各自冻结试验；R6-G正在按独立v1.0.1协议训练。** R5-C T1/T2未在Medium学生上产生教师增益；R6-C容量、R6-D联合模型、R6-E架构筛选和R6-F完整链均得到任务收益与低虚警限制并存的单seed开发证据。R6-H是P4的SSM/混合架构补充草案，尚未冻结或执行。`b724a19`上的只读预审扫描到996,472个现存唯一scene ID，且R6-H暂定302,360个计划ID与历史manifests和完整R6-G配置计划均无重叠；该预审不是G0，R6-G完成后须纳入新增评价manifests重跑正式审计，再过独立G0/G1。P7正式确认须等R6-H完成或按其门停止后再冻结。所有历史结果保留；研究总纲v1.3不变，R6结果不构成final blind或跨seed确认。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
