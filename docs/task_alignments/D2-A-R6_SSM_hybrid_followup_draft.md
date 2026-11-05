@@ -13,7 +13,7 @@ R6 的架构研究应检验哪些学生表示能从三通道复数慢时间 IQ �
 - `docs/superpowers/specs/2026-10-28-d2-a-r6-research-design.md` 的 P4 将 SSM / 混合结构列入研究范围。
 - `docs/superpowers/specs/2026-11-01-d2-a-r6e-architecture-screen-design.md` 的有界筛选实现了 J1-J、相位等变 CE-TCN 和 RAX Transformer，并明确将 SSM / 混合结构留待后续；这不是对这些架构族的否定。
 - 当前 CE-TCN 可作为已有基线；单个 RAX Transformer 候选的负结果不能外推为所有序列架构失败。
-- 相邻雷达研究展示了 SSM 在雷达任务中的可行性，但应用任务和输入不同，不能作为本项目效果证据：[Unfolding Target Detection with State Space Model](https://arxiv.org/abs/2410.22774)研究 FMCW 雷达距离-方位检测；[RadMamba](https://arxiv.org/abs/2504.12039)研究微多普勒人体活动识别，并强调保留时间/多普勒轴结构。基础 Mamba 的选择性状态空间设计来自一般序列建模：[Mamba](https://arxiv.org/abs/2312.00752)。以上只支持开展有界验证，不支持预判优于 CNN。
+- 相邻雷达研究展示了 SSM 在雷达任务中的可行性，但应用任务和输入不同，不能作为本项目效果证据：[Unfolding Target Detection with State Space Model](https://arxiv.org/abs/2410.22774)研究 FMCW 雷达距离-方位检测；[SSMRadNet](https://arxiv.org/abs/2511.08769)分别对原始 ADC 的接收通道内采样和 chirp 级帧特征进行状态空间扫描，在 RADIal FMCW 数据上评价检测与分割；[RadMamba](https://arxiv.org/abs/2504.12039)研究微多普勒人体活动识别，并强调保留时间/多普勒轴结构。SSMRadNet 支持显式处理雷达序列轴的设计，但这些结果均不证明相干脉冲 GMTI Doppler 估计或低虚警校准有效。基础 Mamba 的选择性状态空间设计来自一般序列建模：[Mamba](https://arxiv.org/abs/2312.00752)。以上只支持开展有界验证，不支持预判优于 CNN。
 
 静态检查 `src/radardistill/students/r6_architectures.py` 确认，R6-E CE-TCN 从 `[B,6,130,32]` 六平面输入还原三通道复数 IQ；使用无偏复数 `(1,3)` 距离 stem、七个慢时间扩张率为 `1,2,4,8,16,32,64` 的复数残差 TCN block、幅度 RMSNorm 与径向 modReLU，最后沿时间平均模长并输出 presence、range cell/offset、Doppler 向量。它不包含 FFT 或固定频谱层；公共相位等变性来自复线性、径向非线性和模长读出。代码和协议不声称 Doppler 频移等变。后续比较应保留 CE-TCN 作实际基线，并把公共相位性质和慢时间频率学习分开验证。
 
