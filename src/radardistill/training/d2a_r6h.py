@@ -6,6 +6,7 @@ import math
 import csv
 import hashlib
 import json
+import os
 import platform
 import shutil
 import subprocess
@@ -1120,13 +1121,37 @@ def r6h_evaluate() -> dict[str, Any]:
 
 
 def cleanup_owned_r6h_training_cache() -> dict[str, Any]:
-    """Remove only complete cache directories with matching R6-H owner records."""
+    """Remove completed R6-H caches only after results are archived, with an audit."""
 
     preflight, git_sha = _require_preflight(require_cuda=False)
+    audit_path = STAGE / "cleanup.json"
+    audit_temp = STAGE / "cleanup.json.tmp"
+    if audit_path.exists() or audit_path.is_symlink():
+        raise RuntimeError(f"R6-H cleanup audit already exists: {audit_path}")
+    if audit_temp.exists() or audit_temp.is_symlink():
+        raise RuntimeError(f"R6-H cleanup audit temporary file already exists: {audit_temp}")
+
+    def require_regular_file(path: Path, label: str) -> None:
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError(f"R6-H cleanup requires a regular {label}: {path}")
+
+    metrics_path = STAGE / "metrics.json"
+    require_regular_file(metrics_path, "completed evaluation metrics")
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    if metrics.get("status") != "evaluated" or metrics.get("final_blind_generated") is not False:
+        raise RuntimeError("R6-H cleanup requires completed development evaluation without a final blind")
+    analysis_path = STAGE / "analysis.md"
+    review_path = ROOT / "docs/stage_reviews/D2-A-R6H_review.md"
+    require_regular_file(analysis_path, "analysis report")
+    require_regular_file(review_path, "internal stage report")
+    if not analysis_path.stat().st_size or not review_path.stat().st_size:
+        raise RuntimeError("R6-H cleanup requires nonempty analysis and internal stage reports")
+
     training_summary_path = ARTIFACTS / "training_summary.json"
-    if not training_summary_path.is_file():
+    if training_summary_path.is_symlink() or not training_summary_path.is_file():
         raise RuntimeError("R6-H cache cleanup requires all registered arms must finish")
-    validate_r6h_training_complete(json.loads(training_summary_path.read_text(encoding="utf-8")))
+    training_summary = json.loads(training_summary_path.read_text(encoding="utf-8"))
+    validate_r6h_training_complete(training_summary)
     config, condition_config, _ = r6h_configs()
     plans = build_r6h_split_plans(config, condition_config)
     removed: list[dict[str, Any]] = []
@@ -1149,7 +1174,7 @@ def cleanup_owned_r6h_training_cache() -> dict[str, Any]:
             current = current.parent
 
     require_no_symlink_in_cache_path(CACHE)
-    validated_directories: list[tuple[Path, list[Path], int]] = []
+    validated_directories: list[tuple[Path, list[Path], int, dict[str, Any]]] = []
     for split in ("train", "validation"):
         directory = CACHE / split
         require_no_symlink_in_cache_path(directory)
@@ -1175,22 +1200,57 @@ def cleanup_owned_r6h_training_cache() -> dict[str, Any]:
         ):
             raise RuntimeError(f"R6-H cache contents differ from the complete registered file set: {directory}")
         removed_bytes = sum(child.stat().st_size for child in children)
-        validated_directories.append((directory, children, removed_bytes))
+        validated_directories.append((directory, children, removed_bytes, owner))
 
-    for directory, children, removed_bytes in validated_directories:
-        require_no_symlink_in_cache_path(directory)
-        for child in children:
-            child.unlink()
-        directory.rmdir()
-        removed.append({"split": directory.name, "bytes": removed_bytes})
-    try:
-        CACHE.rmdir()
-    except OSError:
-        pass
-    return {
-        "status": "cleaned",
+    audit: dict[str, Any] = {
+        "status": "in_progress",
         "preflight_git_sha": preflight["git_sha"],
-        "removed": removed,
-        "scene_manifests_preserved": True,
+        "training_arms": list(R6H_ARMS),
+        "planned_removal": [
+            {"split": directory.name, "bytes": removed_bytes, "owner": owner}
+            for directory, _children, removed_bytes, owner in validated_directories
+        ],
+        "removed": [],
+        "preserved": [
+            "scene manifests",
+            "training records and checkpoints",
+            "predictions and metrics",
+            "analysis and internal stage report",
+            "all files outside the registered R6-H train/validation cache directories",
+        ],
         "user_untracked_files_touched": False,
     }
+
+    audit_temp.parent.mkdir(parents=True, exist_ok=True)
+
+    def write_temporary_audit(mode: str) -> None:
+        with audit_temp.open(mode, encoding="utf-8") as handle:
+            json.dump(audit, handle, indent=2, ensure_ascii=False, allow_nan=False)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+
+    write_temporary_audit("x")
+    try:
+        for directory, children, removed_bytes, owner in validated_directories:
+            require_no_symlink_in_cache_path(directory)
+            for child in children:
+                child.unlink()
+            directory.rmdir()
+            removed.append({"split": directory.name, "bytes": removed_bytes, "owner": owner})
+        try:
+            CACHE.rmdir()
+        except OSError:
+            pass
+        audit["status"] = "cleaned"
+        audit["removed"] = removed
+        write_temporary_audit("w")
+        os.replace(audit_temp, audit_path)
+    except Exception as exc:
+        audit["status"] = "partial_failure"
+        audit["removed"] = removed
+        audit["error"] = f"{type(exc).__name__}: {exc}"
+        write_temporary_audit("w")
+        os.replace(audit_temp, audit_path)
+        raise
+    return audit

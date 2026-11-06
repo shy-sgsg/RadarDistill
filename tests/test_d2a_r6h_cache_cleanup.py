@@ -55,8 +55,13 @@ def cleanup_case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, P
             "arms": {arm: {"status": "complete"} for arm in d2a_r6h.R6H_ARMS},
         },
     )
+    _write_json(stage / "metrics.json", {"status": "evaluated", "final_blind_generated": False})
+    (stage / "analysis.md").write_text("R6-H analysis", encoding="utf-8")
+    report = root / "docs/stage_reviews/D2-A-R6H_review.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text("R6-H stage report", encoding="utf-8")
     cache.mkdir(parents=True)
-    return {"root": root, "stage": stage, "cache": cache}
+    return {"root": root, "stage": stage, "cache": cache, "report": report}
 
 
 def _write_complete_cache(directory: Path, split: str) -> dict[str, object]:
@@ -66,6 +71,84 @@ def _write_complete_cache(directory: Path, split: str) -> dict[str, object]:
     for name in CACHE_FILES - {"owner.json", "progress.json"}:
         (directory / name).write_bytes(b"cache")
     return owner
+
+
+@pytest.mark.parametrize("missing", ["metrics", "analysis", "report"])
+def test_cleanup_requires_evaluation_and_stage_report_before_deleting(
+    cleanup_case: dict[str, Path], missing: str
+) -> None:
+    paths = {
+        "metrics": cleanup_case["stage"] / "metrics.json",
+        "analysis": cleanup_case["stage"] / "analysis.md",
+        "report": cleanup_case["report"],
+    }
+    paths[missing].unlink()
+    train_cache = cleanup_case["cache"] / "train"
+    _write_complete_cache(train_cache, "train")
+
+    with pytest.raises(RuntimeError, match="evaluation|metrics|analysis|stage report"):
+        d2a_r6h.cleanup_owned_r6h_training_cache()
+
+    assert train_cache.exists()
+
+
+def test_cleanup_persists_audit_and_preserves_archived_results(
+    cleanup_case: dict[str, Path]
+) -> None:
+    train_cache = cleanup_case["cache"] / "train"
+    validation_cache = cleanup_case["cache"] / "validation"
+    _write_complete_cache(train_cache, "train")
+    _write_complete_cache(validation_cache, "validation")
+
+    result = d2a_r6h.cleanup_owned_r6h_training_cache()
+
+    audit_path = cleanup_case["stage"] / "cleanup.json"
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    assert result["status"] == audit["status"] == "cleaned"
+    assert {entry["split"] for entry in audit["removed"]} == {"train", "validation"}
+    assert all(entry["bytes"] > 0 and entry["owner"]["split"] == entry["split"] for entry in audit["removed"])
+    assert audit["user_untracked_files_touched"] is False
+    assert (cleanup_case["stage"] / "metrics.json").is_file()
+    assert (cleanup_case["stage"] / "analysis.md").is_file()
+    assert cleanup_case["report"].is_file()
+    assert not train_cache.exists()
+    assert not validation_cache.exists()
+
+
+def test_cleanup_refuses_to_overwrite_existing_audit(
+    cleanup_case: dict[str, Path]
+) -> None:
+    train_cache = cleanup_case["cache"] / "train"
+    _write_complete_cache(train_cache, "train")
+    audit_path = cleanup_case["stage"] / "cleanup.json"
+    _write_json(audit_path, {"status": "previous cleanup"})
+
+    with pytest.raises(RuntimeError, match="audit already exists"):
+        d2a_r6h.cleanup_owned_r6h_training_cache()
+
+    assert train_cache.exists()
+
+
+def test_interrupted_cleanup_temp_audit_does_not_claim_success(
+    cleanup_case: dict[str, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    train_cache = cleanup_case["cache"] / "train"
+    _write_complete_cache(train_cache, "train")
+    original_unlink = Path.unlink
+
+    def interrupt_before_removal(path: Path, *args: object, **kwargs: object) -> None:
+        if path.parent == train_cache:
+            raise KeyboardInterrupt("simulated interruption")
+        original_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", interrupt_before_removal)
+
+    with pytest.raises(KeyboardInterrupt, match="simulated interruption"):
+        d2a_r6h.cleanup_owned_r6h_training_cache()
+
+    temp_audit = cleanup_case["stage"] / "cleanup.json.tmp"
+    assert json.loads(temp_audit.read_text(encoding="utf-8"))["status"] == "in_progress"
+    assert train_cache.exists()
 
 
 def test_cleanup_refuses_symlinked_cache_directory_and_preserves_target(
