@@ -630,6 +630,51 @@ def _summarize_validation_checkpoint(
     return result
 
 
+def _preflight_completed_training_outputs(
+    config: Mapping[str, Any],
+) -> dict[str, tuple[dict[str, Any], dict[str, Any]]]:
+    """Validate every arm and inference checkpoint before any split is evaluated."""
+    expected_updates = int(config["training"]["fixed_updates_per_arm"])
+    records: dict[str, dict[str, Any]] = {}
+    checkpoint_paths: dict[str, Path] = {}
+    for arm in ARMS:
+        record_path = RUNS / arm / "training_record.json"
+        if not record_path.is_file():
+            raise RuntimeError(f"R6-G {arm} lacks a completed training record")
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+        if (
+            record.get("status") != "complete"
+            or int(record.get("updates", -1)) != expected_updates
+        ):
+            raise RuntimeError(f"R6-G {arm} did not complete the frozen optimizer budget")
+        owner = record.get("owner")
+        if record.get("arm") != arm or not isinstance(owner, Mapping) or owner.get("arm") != arm:
+            raise RuntimeError(f"R6-G {arm} training record has a mismatched arm owner")
+        checkpoint_relative = record.get("inference_checkpoint")
+        if not isinstance(checkpoint_relative, str) or not checkpoint_relative:
+            raise RuntimeError(f"R6-G {arm} training record lacks its inference checkpoint")
+        checkpoint_path = ROOT / checkpoint_relative
+        if not checkpoint_path.is_file():
+            raise RuntimeError(f"R6-G {arm} inference checkpoint is missing")
+        records[arm] = record
+        checkpoint_paths[arm] = checkpoint_path
+
+    completed: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+    for arm in ARMS:
+        record = records[arm]
+        checkpoint = torch.load(checkpoint_paths[arm], map_location="cpu", weights_only=False)
+        if (
+            checkpoint.get("owner") != record["owner"]
+            or int(checkpoint.get("update", -1)) != int(record["best_update"])
+        ):
+            raise RuntimeError(f"R6-G {arm} inference checkpoint does not match its training record")
+        state_dict = checkpoint.get("model_state_dict")
+        if not isinstance(state_dict, dict) or not state_dict:
+            raise RuntimeError(f"R6-G {arm} inference checkpoint has no model state")
+        completed[arm] = (record, checkpoint)
+    return completed
+
+
 def evaluate_r6g() -> dict[str, Any]:
     """Run the frozen independent H0 calibration/verification and H1 development evaluation."""
     g0, _ = training._require_g0()
@@ -637,6 +682,7 @@ def evaluate_r6g() -> dict[str, Any]:
     config, r6a, physics = training._configs()
     conditions = r6a["radar"]["conditions"]
     plans = training.build_r6g_plans(config, r6a)
+    completed_runs = _preflight_completed_training_outputs(config)
     device = torch.device("cuda:0")
     if not torch.cuda.is_available() or torch.cuda.get_device_name(0) != config["resources"]["required_gpu_name"]:
         raise RuntimeError("R6-G evaluation requires the registered CUDA device")
@@ -646,17 +692,7 @@ def evaluate_r6g() -> dict[str, Any]:
     thresholds: dict[str, float] = {}
 
     for arm in ARMS:
-        run_dir = RUNS / arm
-        record_path = run_dir / "training_record.json"
-        if not record_path.is_file():
-            raise RuntimeError(f"R6-G {arm} lacks a completed training record")
-        record = json.loads(record_path.read_text(encoding="utf-8"))
-        if record.get("status") != "complete" or int(record.get("updates", -1)) != int(config["training"]["fixed_updates_per_arm"]):
-            raise RuntimeError(f"R6-G {arm} did not complete the frozen optimizer budget")
-        checkpoint_path = ROOT / record["inference_checkpoint"]
-        checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
-        if checkpoint.get("owner") != record.get("owner") or int(checkpoint.get("update", -1)) != int(record["best_update"]):
-            raise RuntimeError(f"R6-G {arm} inference checkpoint does not match its training record")
+        record, checkpoint = completed_runs.pop(arm)
         model = R6ECEStudent(width=int(config["student"]["width"])).to(device)
         model.load_state_dict(checkpoint["model_state_dict"], strict=True)
         model.eval()

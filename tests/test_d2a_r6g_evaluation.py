@@ -8,6 +8,7 @@ import torch
 
 from radardistill.evaluation.d2a_r6g import (
     capture_validation_checkpoint,
+    evaluate_r6g,
     ensure_initial_validation_checkpoint,
     paired_r6g_contrast,
     predict_r6g_eval_split,
@@ -201,3 +202,74 @@ def test_formal_eval_rejects_cpu_instead_of_silent_fallback():
             microbatch=4,
             prf_hz=1300.0,
         )
+
+
+def test_evaluate_r6g_rejects_incomplete_arm_before_predicting_any_split(tmp_path, monkeypatch):
+    from radardistill.evaluation import d2a_r6g as evaluation
+    from radardistill.training import d2a_r6g as training
+
+    run_root = tmp_path / "runs"
+    stage = tmp_path / "stage"
+    config = {
+        "training": {"fixed_updates_per_arm": 51200},
+        "resources": {"required_gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU"},
+        "student": {"width": 64},
+        "evaluation": {"target_pfa_cpi": 0.05},
+        "radar": {"prf_hz": 1300.0},
+    }
+    r6a = {"radar": {"conditions": []}}
+    monkeypatch.setattr(evaluation, "RUNS", run_root)
+    monkeypatch.setattr(evaluation, "STAGE", stage)
+    monkeypatch.setattr(evaluation, "ROOT", tmp_path)
+    monkeypatch.setattr(training, "_require_g0", lambda: ({"git_sha": "g0"}, "g0"))
+    monkeypatch.setattr(training, "_require_matching_g1", lambda _g0: {"formal_microbatch": 4})
+    monkeypatch.setattr(training, "_configs", lambda: (config, r6a, {}))
+    monkeypatch.setattr(
+        training,
+        "build_r6g_plans",
+        lambda *_args: {name: [] for name in ("h0_calibration", "h0_verification", "h1_development")},
+    )
+    monkeypatch.setattr(evaluation.torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(
+        evaluation.torch.cuda,
+        "get_device_name",
+        lambda _index: "NVIDIA GeForce RTX 3050 Laptop GPU",
+    )
+
+    class FakeModel:
+        def to(self, _device):
+            return self
+
+        def load_state_dict(self, _state_dict, strict=True):
+            assert strict
+
+        def eval(self):
+            return self
+
+    monkeypatch.setattr(evaluation, "R6ECEStudent", lambda **_kwargs: FakeModel())
+
+    def fail_if_prediction_starts(*_args, **_kwargs):
+        pytest.fail("R6-G evaluation predicted a split before every arm was complete")
+
+    monkeypatch.setattr(evaluation, "predict_r6g_eval_split", fail_if_prediction_starts)
+
+    for arm in ("T0", "T1", "T3"):
+        run_dir = run_root / arm
+        run_dir.mkdir(parents=True)
+        owner = {"owner": "D2-A-R6-G-training-run", "arm": arm}
+        record = {
+            "status": "complete" if arm != "T3" else "running",
+            "arm": arm,
+            "updates": 51200 if arm != "T3" else 12800,
+            "best_update": 400,
+            "owner": owner,
+            "inference_checkpoint": f"artifacts/{arm}.pt",
+        }
+        (run_dir / "training_record.json").write_text(json.dumps(record), encoding="utf-8")
+        if arm != "T3":
+            checkpoint = tmp_path / record["inference_checkpoint"]
+            checkpoint.parent.mkdir(parents=True, exist_ok=True)
+            torch.save({"owner": owner, "update": 400, "model_state_dict": {}}, checkpoint)
+
+    with pytest.raises(RuntimeError, match="T3.*complete"):
+        evaluate_r6g()
