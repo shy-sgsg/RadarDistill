@@ -52,14 +52,17 @@ def build_plot_series(
         history_path = Path(runs_dir) / arm / "training_history.csv"
         with history_path.open(newline="", encoding="utf-8") as stream:
             rows = list(csv.DictReader(stream))
-        if not rows or "update" not in rows[0] or "validation_truth_total" not in rows[0]:
+        if not rows or "update" not in rows[0] or not (
+            {"validation_truth_total", "validation_total"} & rows[0].keys()
+        ):
             raise ValueError(f"R6-G {arm} history lacks truth-task validation loss")
 
         updates = [int(row["update"]) for row in rows]
-        losses = [
-            _finite_float(row["validation_truth_total"], f"{arm}.validation_truth_total")
-            for row in rows
-        ]
+        losses = []
+        for row in rows:
+            # The initial row uses the explicit alias; later validation rows log `total`.
+            value = row.get("validation_truth_total") or row.get("validation_total")
+            losses.append(_finite_float(value, f"{arm}.validation_truth_total"))
         if updates[0] != 0 or updates[-1] != 51_200 or any(
             right <= left for left, right in zip(updates, updates[1:])
         ):
