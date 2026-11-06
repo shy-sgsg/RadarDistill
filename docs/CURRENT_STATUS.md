@@ -1,10 +1,10 @@
 # 当前研究状态
 
-**更新日期：** 2026-11-05
+**更新日期：** 2026-11-06
 **工作分支：** `main`
 **最新科研准备工作：** 在`b724a19`上对R6-H暂定场景计划做了只读预审：现存相关manifests含996,472个唯一scene ID；两阶段各302,360个登记计划ID，R6-H与历史manifests及完整R6-G配置计划的重叠均为0，R6-H内部split也无重叠；预审记录见[`R6-H preliminary audit`](../experiments/D2-A-R6/R6-H/preliminary_scene_audit.json)。这不是G0：R6-G完成后还需纳入其评价manifests重跑正式审计。R6-H SSM/混合架构筛选器的执行器、测试与owner-scoped缓存清理保护已提交至`main`（执行器提交`85d4387`；R6-G独立缓存清理命令提交`b724a19`）。R6-H仍为draft，尚无G0/G1、正式数据或训练结果；其P4补充筛选须等R6-G安全完成、GPU释放和正式scene-ID审计后再做前置检查。P7须等R6-H完成或按冻结门停止后再冻结候选。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
 **阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
-**当前执行：** R6-G v1.0.1的T0/T1/T3匹配教学pilot按冻结协议顺序训练。最近一次里程碑核对观察到 `train-all` 仍在运行，T0 `training_history.csv` 最新记录为16,000 updates；T1/T3尚未开始。训练完成前不运行H1 development评价。保持有效batch64、FP32及既定microbatch/OOM回退规则不变；阶段完成后仅清理本阶段owner-scoped缓存。
+**当前执行：** 截至2026-11-06 10:30 CST，R6-G v1.0.1的T0/T1/T3匹配教学pilot仍按冻结协议顺序进行。T0已完成51,200 updates，最佳验证checkpoint为43,200。T1首次运行在1,600 updates检查点后异常结束，未留下完成记录；原因未查明，能读取的内核日志窗口未显示OOM记录。保留的T1检查点含模型、优化器和随机数状态；10:24从该点恢复原`train-all`命令，未重跑T0或改动预算。10:30核对时恢复进程仍运行，RTX 3050利用率约93%、显存占用约2,545 MiB；T1最新持久history仍为1,600，T3尚未开始。训练完成前不运行H1 development评价。有效batch64、FP32及既定microbatch/OOM回退规则保持不变。项目约15 GiB，活动R6-G缓存约14 GiB，系统可用空间约17 GiB；阶段评价和报告完成后才按owner清单清理该缓存。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
