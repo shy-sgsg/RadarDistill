@@ -144,6 +144,22 @@ def test_curve_checkpoint_capture_copies_only_registered_updates(tmp_path):
     assert torch.equal(captured["model_state_dict"]["w"], torch.ones(1))
 
 
+def test_capture_audit_recognizes_preexisting_registered_snapshots(tmp_path):
+    from scripts.run_d2a_r6g_evaluation import existing_validation_updates
+
+    run_dir = tmp_path / "T0"
+    snapshot_dir = run_dir / "validation_checkpoints"
+    snapshot_dir.mkdir(parents=True)
+    owner = {"owner": "D2-A-R6-G-training-run", "arm": "T0"}
+    for update in (0, 12800, 25600):
+        torch.save(
+            {"owner": owner, "update": update, "model_state_dict": {"w": torch.ones(1)}},
+            snapshot_dir / f"update_{update:05d}.pt",
+        )
+
+    assert existing_validation_updates("T0", run_dir) == {0, 12800, 25600}
+
+
 def test_initial_curve_checkpoint_comes_from_shared_preupdate_state(tmp_path, monkeypatch):
     from radardistill.evaluation import d2a_r6g
 

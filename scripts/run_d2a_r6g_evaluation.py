@@ -11,6 +11,8 @@ import struct
 from pathlib import Path
 from typing import Any
 
+import torch
+
 ROOT = Path(__file__).resolve().parents[1]
 import sys
 sys.path.insert(0, str(ROOT / "src"))
@@ -41,6 +43,28 @@ def _add_watch(libc: Any, fd: int, path: Path, mask: int) -> int:
     return int(watch)
 
 
+def existing_validation_updates(arm: str, run_dir: Path) -> set[int]:
+    """Return registered snapshots already present in an arm's run directory."""
+    if arm not in ARMS:
+        raise ValueError(f"unknown R6-G arm: {arm}")
+    snapshot_dir = Path(run_dir) / "validation_checkpoints"
+    updates: set[int] = set()
+    for update in VALIDATION_POINTS:
+        path = snapshot_dir / f"update_{update:05d}.pt"
+        if not path.is_file():
+            continue
+        checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+        owner = checkpoint.get("owner", {})
+        if (
+            int(checkpoint.get("update", -1)) != update
+            or owner.get("owner") != "D2-A-R6-G-training-run"
+            or owner.get("arm") != arm
+        ):
+            raise RuntimeError(f"R6-G {arm} existing curve checkpoint owner/update mismatch")
+        updates.add(update)
+    return updates
+
+
 def capture_curve_checkpoints() -> dict[str, Any]:
     """Use filesystem events to copy only update 0/12.8k/25.6k/51.2k checkpoints."""
     if not hasattr(ctypes.CDLL(None), "inotify_init1"):
@@ -64,6 +88,7 @@ def capture_curve_checkpoints() -> dict[str, Any]:
 
     def inspect_arm(arm: str) -> None:
         run_dir = RUNS / arm
+        captured[arm].update(existing_validation_updates(arm, run_dir))
         if ensure_initial_validation_checkpoint(arm):
             captured[arm].add(0)
         source = run_dir / "last_checkpoint.pt"
