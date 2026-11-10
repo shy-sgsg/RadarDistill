@@ -1,5 +1,10 @@
 # 研究进度
 
+## 2026-11-09：按用户要求暂停R6-G训练
+
+- **训练状态：** T0、T1已完成冻结的51,200 updates；T3在update 800的可恢复checkpoint处暂停，最新history同样为update 800。暂停事件记录于[`pause_events.json`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。没有改动protocol、config、seed、数据、batch或预算；待用户通知GPU可用后再恢复。独立H0与H1评价尚未运行。
+- **磁盘状态（2026-11-10复核）：** 项目约15 GiB，R6-G owner缓存约14 GiB，系统盘可用约11 GiB。该缓存仍供T3恢复及后续评价使用，当前保留；评价和必要结果归档后按现有owner-scoped流程清理。用户未跟踪源码包和其他用户数据保持不动。
+
 ## 2026-11-06：R6-G主机重启后恢复
 
 - **执行状态：** T1重启前history记录到11,600 updates，但最近的完整恢复checkpoint为11,200。系统日志显示主机17:37正常执行reboot；可读内核日志未显示该次训练有OOM证据。约17:59原`train-all`流程从11,200 checkpoint恢复；18:04检查时进程仍活跃，RTX 3050利用率约99%、显存占用约1,911 MiB。T0已完成51,200 updates，最佳验证checkpoint为43,200；T3未开始，H1 development评价尚未运行。

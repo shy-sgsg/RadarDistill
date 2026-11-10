@@ -1,0 +1,14 @@
+[
+  {
+    "event": "user_requested_training_pause",
+    "time_local": "2026-11-09T10:49:17+08:00",
+    "arm": "T3",
+    "last_resumable_checkpoint_update": 800,
+    "latest_history_update": 800,
+    "pre_pause_history_copy": null,
+    "frozen_budget_updates": 51200,
+    "effective_batch_size": 64,
+    "microbatch": 4,
+    "resume_note": "Resume from last_checkpoint.pt; training updates after the saved checkpoint may be recomputed. Protocol, configuration, seed, data, and optimizer budget remain unchanged."
+  }
+]
