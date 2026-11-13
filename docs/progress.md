@@ -1,5 +1,11 @@
 # 研究进度
 
+## 2026-11-13：按用户通知恢复R6-G T3训练
+
+- **恢复点与前置核对：** 用户通知GPU可用后，确认RTX 3050 Laptop `cuda:0`在AISAR/PyTorch环境可见；冻结protocol/config哈希及G0/G1记录匹配，T3 owner对应的可恢复checkpoint和最新history均为update 800。按原`train-all`入口恢复，T0/T1完整臂会被跳过；T3继续使用FP32、effective batch64、microbatch4及51,200步冻结预算。
+- **执行与日志：** 先启动R6-G注册曲线checkpoint捕获器，再启动训练。进程检查确认学生训练进程实际使用CUDA；训练曲线保持按协议登记的400步history和800步resume checkpoint记录，不逐步轮询或写日志。协议、配置、seed、场景、优化器、目标和更新预算均未改。
+- **磁盘：** 恢复时项目约15 GiB、系统盘可用约13 GiB；约14 GiB owner缓存继续服务训练及后续评价，未清理。阶段评价与必要结果归档后再按owner-scoped流程清理。
+
 ## 2026-11-09：按用户要求暂停R6-G训练
 
 - **训练状态：** T0、T1已完成冻结的51,200 updates；T3在update 800的可恢复checkpoint处暂停，最新history同样为update 800。暂停事件记录于[`pause_events.json`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。没有改动protocol、config、seed、数据、batch或预算；待用户通知GPU可用后再恢复。独立H0与H1评价尚未运行。
