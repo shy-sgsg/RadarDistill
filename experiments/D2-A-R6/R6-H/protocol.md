@@ -1,7 +1,7 @@
 # D2-A-R6-H：复数对角 SSM 与局部卷积混合架构筛选
 
-**协议版本：** 0.1 draft（未冻结）
-**状态：** 等待 R6-G 安全完成和全仓 scene ID 审计；不得生成正式数据或启动训练。
+**协议版本：** 1.0（已冻结）
+**状态：** 已获用户明确授权并预注册；正式数据与训练须先通过 G0/G1。
 **研究总纲：** `docs/RESEARCH_CHARTER.md` v1.3。
 **路线位置：** R6 P4 的 SSM/混合架构覆盖补充。
 **训练监督：** E1 物理真值；本阶段不做知识蒸馏。
@@ -43,7 +43,7 @@ Mamba 文献中的选择性通过输入依赖的 Δ/B/C 使状态转移随时间
 | H0 verification | 120,000 | 独立阈值迁移与条件 Pfa 评价 |
 | H1 development | 6,144 | 一次开发评价；不作 final blind |
 
-候选 seed block 暂定采用 R6-G 已登记区间之后的独立范围：train `[2608000000,2613000000,2618000000,2623000000]`，validation `[2628000000,2633000000,2638000000,2643000000]`，H0 calibration `2708000000`，H0 verification `2728000000`，H1 development `2748000000`，G1 `2798000000`。**这些 seed 仍是草案**；正式冻结前须扫描所有已提交与运行阶段 manifests，确认与历史、R6-G 和各 split 均无 scene ID 重叠，否则先更换整个 seed block 再冻结。
+候选 seed block 固定为 R6-G 已登记区间之后的独立范围：train `[2608000000,2613000000,2618000000,2623000000]`，validation `[2628000000,2633000000,2638000000,2643000000]`，H0 calibration `2708000000`，H0 verification `2728000000`，H1 development `2748000000`，G1 `2798000000`。G0 将扫描已有 CSV scene manifests，并从 R6-D/E/F/G 冻结配置重建未单独落盘的注册场景计划；再检查 R6-H 全部 split 与这些历史ID及彼此之间的重叠。若 G0 发现任何重叠，停止执行，不在看过结果后更换本协议的 seed block。
 
 训练/验证缓存预计约 11.23 GB，只在 R6-H owner 清单下临时保存；评价 IQ 流式生成且不持久化。数据生成前需有缓存空间加 4 GiB 余量。只有完成所有注册训练臂、独立开发评价、`analysis.md` 和内部阶段报告后才清理缓存。清理命令须写入持久化的 `cleanup.json`，记录缓存 owner 与删除字节数；仅删除通过 R6-H owner manifest 识别的可重建缓存，不触碰用户未跟踪数据或其他阶段缓存。最终仓库目录仍须低于 20 GiB。
 
@@ -58,11 +58,11 @@ Mamba 文献中的选择性通过输入依赖的 Δ/B/C 使状态转移随时间
 
 ## 5. 正确性门与正式执行门
 
-**G0（冻结与资源）：** 本 protocol、config、代码和测试已提交并推送 `main`；当前 tracked worktree clean；全仓 scene ID 审计零重叠；磁盘余量满足缓存要求；实际 GPU 为 RTX 3050 Laptop 且明确使用 `cuda:0`；记录 Python/PyTorch/CUDA/driver、Git SHA、GPU、空闲显存和磁盘。参数量满足预设范围。
+**G0（冻结与资源）：** 本 protocol、config、代码和测试已提交并推送 `main`；当前 tracked worktree clean；全仓 CSV manifest 与 R6-D/E/F/G 注册计划的联合 scene-ID 审计零重叠；磁盘余量满足缓存要求；实际 GPU 为 RTX 3050 Laptop 且明确使用 `cuda:0`；记录 Python/PyTorch/CUDA/driver、Git SHA、GPU、空闲显存和磁盘。参数量满足预设范围。
 
 **G1（实现学习能力）：** 三臂输出 shape、有限输出、有限非零梯度、任务 loss 与 sampler contract 通过；S/CS 的 FFT 线性卷积对照、CPI 首尾、range 轴隔离、complex64/complex128 和公共相位测试通过；各臂在相同 16 对小样本上 200 updates 的任务 loss 至少下降 10%。G1 失败时停止 formal data generation 和训练，先排除实现错误。
 
-R6-G 完成前不运行上述 CUDA preflight、G1 或正式数据生成，以免与当前阶段争用设备或读取正在写入的 scene manifests。R6-G 结果只用于路线衔接，不会改写本阶段已冻结的物理条件或任务定义。
+R6-G 已于提交 `2dacd65e249a57fc9969ee9bf8982bc5dd384c1a` 完成并释放 GPU。R6-G 结果只用于路线衔接，不会改写本阶段已冻结的物理条件、任务定义、预算或评价门。R6-H G0/G1 通过前不生成正式训练/验证缓存。
 
 ## 6. 指标与预注册判定
 
@@ -76,10 +76,8 @@ R6-G 完成前不运行上述 CUDA preflight、G1 或正式数据生成，以免
 
 ## 7. 当前执行状态
 
-本文件是可审阅草案，不是已冻结 protocol；配置状态为 draft，且 R6-G 前置状态仍为 false。已实现模型骨架、三臂工厂、owner-scoped 配对缓存、G0/G1、顺序 CUDA 训练、独立评价与缓存清理入口；R6-H 相关 23 项测试和全仓 609 项测试通过。
+已实现模型骨架、三臂工厂、owner-scoped 配对缓存、G0/G1、顺序 CUDA 训练、独立评价与缓存清理入口。此前 `b724a1982ea0b1d2fd2bb974c6de6af2776c1843` 的 `preliminary_scene_audit.json` 是历史预审，不替代本协议 G0。
 
-在 `b724a1982ea0b1d2fd2bb974c6de6af2776c1843` 上，使用 `d2a_r6h._prior_scene_ids()` 和 `r6h_scene_plan_audit()` 对现存相关 CSV manifests 做了一次只读预审：历史唯一 scene ID 为996,472；R6-H 暂定 train/validation/calibration/verification/development/G1 计划分别为51,200/5,000/120,000/120,000/6,144/16；历史重叠和计划内跨 split 重叠均为0。随后直接从R6-G配置构造其全部登记计划，再以同一 scene-ID 规则与R6-H暂定计划比较；两边各有302,360个唯一计划ID，交集为0，因此覆盖了尚未生成R6-G calibration/verification/development文件的预注册seed。机器可读记录见 `preliminary_scene_audit.json`。这不是 G0 结果：R6-G 训练结束后还会生成评价manifests，正式冻结前必须重新扫描完整工作区并复核资源。
+本次冻结前的只读复核中，AISAR 下 R6-H 注册计划含302,360个ID，split间重叠为0；现有 manifests 有996,472个唯一ID；R6-D/E/G各有302,360个注册ID，R6-F有246,160个注册ID。manifest与注册计划合并后，R6-H对历史ID及自身split的重叠均为0。G0 会在已推送冻结提交上完整重跑并把计数、设备、磁盘和代码SHA写入 `preflight.json`。目前尚无 R6-H 正式数据、G0/G1 结果、训练、指标或阶段结论；执行顺序仍为 G0→G1→数据生成→三臂顺序训练→独立评价。
 
-尚无 R6-H 数据、CUDA preflight、G1、训练、指标或阶段结论。R6-G 安全结束、确认 GPU 已释放并完成正式全仓 scene ID 审计后，才能冻结和推送协议、配置与 runner，再按 G0→G1→数据生成→顺序训练→独立评价执行。
-
-在正式冻结前，R6-H owner-scoped 缓存清理必须拒绝项目根目录到缓存 split 路径上的任意符号链接、owner/progress 符号链接、缺少或多出的缓存文件；先验证所有现存 split，再删除其中任何一个。此项只用于保护用户数据和避免部分清理，不改变实验数据、预算或科学门槛。
+protocol v1.0 冻结的 owner-scoped 缓存清理会拒绝项目根目录到缓存 split 路径上的任意符号链接、owner/progress 符号链接、缺少或多出的缓存文件；先验证所有现存 split，再删除其中任何一个。该保护用于避免误删用户数据或产生部分清理状态，不改变实验数据、预算或科学门槛。

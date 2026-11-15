@@ -1,5 +1,11 @@
 # 研究进度
 
+## 2026-11-15：按用户授权冻结 R6-H protocol/config v1.0
+
+- **研究主线：** R6-H补足R6-E未实测的复数状态空间与CNN-SSM候选，使用E1物理真值监督，独立评价架构学习能力；不把R6-G未通过的K3教师分支带入本轮。
+- **协议与数据：** 用户明确要求GPU可用后开始训练。protocol/config v1.0已冻结为`preregistered`，训练仍须先通过G0/G1；最终blind未授权。冻结前AISAR只读审计构建R6-H计划302,360个scene IDs，与现有manifests和R6-D/E/F/G注册计划重叠均为0。正式G0将在推送提交上复核。
+- **执行状态：** 当前RTX 3050 Laptop `cuda:0`可见，空闲显存约3.1 GiB；磁盘可用约27.98 GB，满足约11.22 GB训练/验证缓存加4 GiB余量。尚未生成R6-H正式数据、运行G0/G1或启动训练。
+
 ## 2026-11-15：D2-A-R6-G训练和独立开发评价完成
 
 - **协议与运行：** R6-G v1.0.1 T0/T1/T3均在RTX 3050 Laptop `cuda:0`、FP32、effective batch64、microbatch4下完成51,200 updates；无OOM/CPU回退。独立H0 calibration/verification各120,000、H1 development 6,144。协议和配置SHA与G0/G1记录一致；指标记录HEAD为`737245afe33a5a677bcfb42bee6b8e80a28adca6`，训练owner绑定G0 SHA `3a986699f52836293f159ec850033de7c5424f69`，训练核心源文件未改变。没有final blind。

@@ -8,6 +8,7 @@ import pytest
 import yaml
 
 from radardistill.training.d2a_r6h import (
+    _registered_prior_scene_ids,
     build_r6h_split_plans,
     ensure_r6h_owned_directory,
     r6h_scene_plan_audit,
@@ -28,15 +29,28 @@ def _config(stage: str) -> dict:
     return _load_yaml(ROOT / f"experiments/D2-A-R6/R6-{stage}/config.yaml")
 
 
-def test_draft_config_is_auditable_but_cannot_start_preflight_or_data_generation() -> None:
+def test_frozen_config_is_execution_ready_but_final_blind_remains_forbidden() -> None:
     config = _config("H")
 
-    summary = validate_r6h_config(config, require_execution=False)
+    summary = validate_r6h_config(config, require_execution=True)
 
-    assert summary["execution_ready"] is False
+    assert summary["execution_ready"] is True
     assert summary["final_blind_authorized"] is False
-    with pytest.raises(RuntimeError, match="not frozen and authorized"):
-        validate_r6h_config(config, require_execution=True)
+
+
+def test_r6h_prior_scene_audit_includes_registered_d_to_g_plans() -> None:
+    r6a = _config("A")
+    h_config = _config("H")
+    prior_ids_by_stage = _registered_prior_scene_ids(
+        r6a, h_config["data"]["prior_registered_plan_stages"]
+    )
+    h_plans = build_r6h_split_plans(h_config, r6a)
+    h_audit = r6h_scene_plan_audit(h_plans, prior_scene_ids=set())
+    h_ids = set().union(*h_audit["scene_ids"].values())
+
+    assert set(prior_ids_by_stage) == {"D", "E", "F", "G"}
+    assert all(prior_ids_by_stage[stage] for stage in prior_ids_by_stage)
+    assert all(h_ids.isdisjoint(ids) for ids in prior_ids_by_stage.values())
 
 
 def test_r6h_cache_owner_cannot_rebind_a_nonempty_directory(tmp_path: Path) -> None:
@@ -100,6 +114,7 @@ def test_train_all_records_in_progress_before_training_each_arm(
         (lambda c: c["training"].update(cpu_fallback="allowed"), "CPU fallback"),
         (lambda c: c["training"].update(per_update_examples={"H0": 16, "H1": 32}), "effective batch"),
         (lambda c: c["training"].update(fixed_updates_per_model=25_000), "25,600"),
+        (lambda c: c["data"].update(prior_registered_plan_stages=["R6-E"]), "prior registered plan stages"),
         (lambda c: c["models"].update(arms=["complex_ssm", "cnn_ssm"]), "three registered arms"),
     ],
 )

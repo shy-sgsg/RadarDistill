@@ -27,6 +27,7 @@ from radardistill.evaluation.d2a_r6e import (
     physical_diagnostics,
     predict_eval_split,
 )
+from radardistill.evaluation.d2a_r6f import build_r6f_split_plans
 from radardistill.simulation.d2a import generate_d2a_paired_batch
 from radardistill.students.r6_ssm import R6H_ARMS, build_r6h_student
 from radardistill.training.d2a_r6b_hard_negative import (
@@ -104,6 +105,10 @@ def validate_r6h_config(
 
     if experiment.get("id") != "D2-A-R6-H":
         raise ValueError("R6-H config has an unexpected experiment id")
+    if tuple(data.get("prior_registered_plan_stages", ())) != (
+        "R6-D", "R6-E", "R6-F", "R6-G"
+    ):
+        raise ValueError("R6-H prior registered plan stages must include R6-D/E/F/G")
     if tuple(models.get("arms", ())) != R6H_ARMS:
         raise ValueError("R6-H must use the three registered arms: ce_tcn, complex_ssm, cnn_ssm")
     if models.get("baseline") != "ce_tcn":
@@ -278,6 +283,46 @@ def _prior_scene_ids() -> set[str]:
     return result
 
 
+def _scene_ids_from_plans(
+    plans: Mapping[str, Sequence[Mapping[str, Any]]],
+) -> set[str]:
+    return {
+        f"d2a-scene-{int(row['seed'])}-{index}"
+        for rows in plans.values()
+        for row in rows
+        for index in range(int(row["count"]))
+    }
+
+
+def _registered_prior_scene_ids(
+    condition_config: Mapping[str, Any],
+    stages: Sequence[str],
+) -> dict[str, set[str]]:
+    """Build registered prior scene IDs not fully represented by manifests."""
+
+    prior: dict[str, set[str]] = {}
+    for stage_name in stages:
+        prefix, separator, stage = str(stage_name).partition("-")
+        if prefix != "R6" or not separator or stage not in {"D", "E", "F", "G"}:
+            raise ValueError(f"unsupported registered prior R6 stage: {stage_name}")
+        config = read_r6h_yaml(ROOT / f"experiments/D2-A-R6/{stage_name}/config.yaml")
+        if stage == "F":
+            plans = build_r6f_split_plans(
+                config, condition_config["radar"]["conditions"]
+            )
+            plans["g1_test"] = [{
+                "seed": int(config["data"]["g1_test_seed"]),
+                "count": int(config["data"]["g1_test_count"]),
+            }]
+        else:
+            plans = build_r6h_split_plans(config, condition_config)
+        audit = r6h_scene_plan_audit(plans, prior_scene_ids=set())
+        if audit["overlap_count"]:
+            raise RuntimeError(f"registered {stage_name} scene plan contains split overlap")
+        prior[stage] = _scene_ids_from_plans(plans)
+    return prior
+
+
 def _require_cuda() -> tuple[torch.device, str, int, int]:
     if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
         raise RuntimeError("R6-H requires CUDA; CPU fallback is forbidden")
@@ -307,7 +352,12 @@ def r6h_preflight() -> dict[str, Any]:
 
     plans = build_r6h_split_plans(config, condition_config)
     counts = {name: sum(int(row["count"]) for row in rows) for name, rows in plans.items()}
-    prior_ids = _prior_scene_ids()
+    manifest_prior_ids = _prior_scene_ids()
+    registered_prior_by_stage = _registered_prior_scene_ids(
+        condition_config, config["data"]["prior_registered_plan_stages"]
+    )
+    registered_prior_ids = set().union(*registered_prior_by_stage.values())
+    prior_ids = manifest_prior_ids | registered_prior_ids
     audit = r6h_scene_plan_audit(plans, prior_scene_ids=prior_ids)
     expected = {
         name: int(config["data"]["splits"][name]["paired_scenes"])
@@ -357,6 +407,12 @@ def r6h_preflight() -> dict[str, Any]:
         "prerequisite_r6g_completion_sha": config["prerequisites"]["r6g_completion_sha"],
         "scene_counts": audit["scene_counts"],
         "historical_scene_id_count": len(prior_ids),
+        "historical_manifest_scene_id_count": len(manifest_prior_ids),
+        "registered_prior_plan_scene_id_count": len(registered_prior_ids),
+        "registered_prior_plan_scene_id_counts_by_stage": {
+            f"R6-{stage}": len(ids)
+            for stage, ids in registered_prior_by_stage.items()
+        },
         "prior_scene_id_overlap": audit["prior_overlap_count"],
         "cross_split_scene_id_overlap": audit["overlap_count"],
         "model_parameters": params,

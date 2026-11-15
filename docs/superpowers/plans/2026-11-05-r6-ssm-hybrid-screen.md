@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing AISAR Python 3 / PyTorch 2.8.0+cu128, torch complex tensors and differentiable `torch.fft`; no new runtime dependency.
 
-**Spec:** `docs/task_alignments/D2-A-R6_SSM_hybrid_followup_draft.md` (non-frozen; exact protocol is frozen only after R6-G completes).
+**Spec:** `docs/task_alignments/D2-A-R6-H_alignment.md` and the frozen experiment protocol `experiments/D2-A-R6/R6-H/protocol.md` v1.0.
 
 ## Global Constraints
 
@@ -18,7 +18,7 @@
 - Compare E1 truth-only students with matching data, sample order, effective batch, updates, optimizer, validation, and checkpoint selection.
 - Train sequentially on explicit RTX 3050 Laptop `cuda:0`; no CPU fallback. Do not use final blind data for model selection.
 - Do not create or submit a ChatGPT review prompt until all authorized R6 goals are complete.
-- Keep the stage budget, seed allocation, stopping gates, and development split provisional until a standalone protocol passes preflight and is committed before data generation.
+- Keep the stage budget, seed allocation, stopping gates, and development split exactly as frozen in protocol v1.0; any change requires a separately registered protocol before seeing development results.
 
 ## Review Focus
 

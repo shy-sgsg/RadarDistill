@@ -26,12 +26,14 @@ def _scene_ids(plans: dict) -> set[str]:
     }
 
 
-def test_r6h_draft_is_not_executable_or_blind_authorized() -> None:
+def test_r6h_frozen_protocol_is_executable_but_not_blind_authorized() -> None:
     config = _load_config("H")
 
-    assert config["experiment"]["status"] == "draft"
-    assert config["experiment"]["execution_authorized"] is False
+    assert config["experiment"]["status"] == "preregistered"
+    assert config["experiment"]["protocol_version"] == 1.0
+    assert config["experiment"]["execution_authorized"] is True
     assert config["experiment"]["final_blind_authorized"] is False
+    assert config["data"]["prior_registered_plan_stages"] == ["R6-D", "R6-E", "R6-F", "R6-G"]
     assert config["training"]["history_written_every_update"] is False
 
 

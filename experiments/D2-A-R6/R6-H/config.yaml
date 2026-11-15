@@ -1,9 +1,10 @@
 experiment:
   id: D2-A-R6-H
-  protocol_version: "0.1-draft"
-  status: draft
+  protocol_version: 1.0
+  status: preregistered
   charter_version: "1.3"
-  execution_authorized: false
+  execution_authorized: true
+  execution_gate: G0_G1_then_formal_data_and_sequential_training
   final_blind_authorized: false
   review_request_timing: after_all_authorized_R6_P0_P7_goals
 
@@ -67,6 +68,7 @@ data:
   training_seed: 808
   sampler_seed: 809
   reuse_existing_scene_ids: false
+  prior_registered_plan_stages: [R6-D, R6-E, R6-F, R6-G]
   persist_train_validation_iq_temporarily: true
   persist_evaluation_iq: false
   estimated_train_validation_cache_bytes: 11222016000
@@ -74,9 +76,9 @@ data:
   final_project_limit_gib: 20
 
 prerequisites:
-  r6g_training_complete: false
-  r6g_gpu_released: false
-  r6g_completion_sha: ""
+  r6g_training_complete: true
+  r6g_gpu_released: true
+  r6g_completion_sha: 2dacd65e249a57fc9969ee9bf8982bc5dd384c1a
 
 training:
   supervision: physical_truth_only_E1

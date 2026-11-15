@@ -7,7 +7,7 @@
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
 **R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。owner-scoped清理移除14,641,188,309 bytes（13.636 GiB）的R6-G训练IQ与辅助响应缓存；整个项目目录现约1.3 GB（1.26 GiB），低于20 GiB。训练记录、checkpoint、scene manifest、预测、指标和分析保留；未触碰用户未跟踪源码包或其他阶段数据。
-**后续阶段：** R6-H SSM/混合架构筛选仍为`execution_authorized: false`的draft。虽然R6-G现已完成并释放GPU，但正式全仓scene-ID审计、协议冻结和G0/G1尚未完成；因此目前没有启动R6-H训练。P7待R6-H完成或按其预注册门停止后再冻结；final blind仍未授权。
+**后续阶段：** 用户已授权R6-H SSM/混合架构筛选，protocol/config v1.0已预注册；R6-G已完成，GPU当前可用。冻结提交上的正式G0（完整scene-ID、CUDA、磁盘与参数量）和G1（小样本学习能力）尚待执行；通过后才生成正式缓存并顺序训练三臂。P7待R6-H完成或按其预注册门停止后再冻结；final blind仍未授权。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
@@ -93,7 +93,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 R6 P5 / D2-A-R6-F 已完成。六条链的全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败；CE-TCN原生链虽有最高C2+C3 joint和最小受测学生Doppler RMSE，仍没有绝对低虚警资格。神经检测+profile-ML链C/F的Doppler RMSE约149.61 Hz，远高于CE原生链的18.72 Hz、joint也更低；B3检测+CE参数链D则受传统检测Pd限制。详见[R6-F analysis](../experiments/D2-A-R6/R6-F/analysis.md)和[R6-F stage report](stage_reviews/D2-A-R6F_review.md)。
 
-**当前优先任务：完成R6 P6 / D2-A-R6-G。** protocol/config v1.0.1及G0/G1已通过，T0/T1/T3都已完成51,200 updates；当前按冻结方案运行独立H0 calibration/verification、H1 development、教师错误分层、注册验证更新点曲线及成本评价。评价完成后根据预注册门判断教学收益和低虚警资格；不得将蒸馏损失下降视为成功，也不搜索权重、可靠性网络或教学时机。必要结果归档后按owner清单清理R6-G缓存。其后先完成R6-H草案的GPU释放、scene-ID审计与G0/G1前置门；通过后执行匹配筛选，未通过则保留停止依据。R6-H终结后再冻结P7范围并审查正式多seed/独立场景确认门。R6 P0–P7全部目标完成前不写ChatGPT审查提示词；final blind当前未获授权；研究总纲v1.3和历史冻结结果保持不变。
+**当前优先任务：完成R6 P4补充筛选 / D2-A-R6-H。** protocol/config v1.0已按用户明确授权冻结并预注册。下一步在RTX 3050 Laptop `cuda:0`上执行G0全仓scene-ID、磁盘、参数量与环境核验，以及三臂G1小样本训练；仅当两门全过才生成正式数据并按CE-TCN→复数SSM→CNN-SSM顺序训练，每臂25,600 updates。最终盲测仍未授权。R6-H完成或按预注册门停止后再决定P7确认范围；R6 P0–P7全部目标完成前不写ChatGPT审查提示词。研究总纲v1.3和历史冻结结果保持不变。
 
 ## 关键材料
 
