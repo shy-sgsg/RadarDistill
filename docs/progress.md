@@ -1,5 +1,11 @@
 # 研究进度
 
+## 2026-11-15：R6-G三臂训练完成，独立开发评价进行中
+
+- **训练完成：** R6-G v1.0.1 的 T0/T1/T3 均在 RTX 3050 Laptop `cuda:0` 完成冻结的 51,200 updates；AISAR、FP32、有效 batch64、microbatch4，无 OOM。三臂训练耗时分别119,289.6/132,337.4/116,624.4秒，最佳验证truth loss为0.17632/0.17736/0.17794，最佳checkpoint为update43,200/43,200/46,400。update51,200验证loss为0.17694/0.17923/0.17898；12,800至51,200的注册更新点均显示持续改善，但不据此宣称超过预算后的收敛极限。
+- **评价进度：** 冻结独立开发评价已在`cuda:0`启动。T0的120,000例H0 calibration预测已保存为`experiments/D2-A-R6/R6-G/predictions/T0/h0_calibration.npz`；截至本记录，T0 H0 verification仍在运行，`metrics.json`尚未生成，H1 development、配对bootstrap、教师错误分层和注册验证曲线待完成。未查看中间H1结果、未改变模型选择或评价门。
+- **资源与边界：** 训练缓存约14 GiB继续保留以供评价；系统盘可用空间约13 GiB。评价和必要结果归档完成后再按owner-scoped规则清理，不触碰用户未跟踪源码包。没有生成final blind。
+
 ## 2026-11-13：按用户通知恢复R6-G T3训练
 
 - **恢复点与前置核对：** 用户通知GPU可用后，确认RTX 3050 Laptop `cuda:0`在AISAR/PyTorch环境可见；冻结protocol/config哈希及G0/G1记录匹配，T3 owner对应的可恢复checkpoint和最新history均为update 800。按原`train-all`入口恢复，T0/T1完整臂会被跳过；T3继续使用FP32、effective batch64、microbatch4及51,200步冻结预算。

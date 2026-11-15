@@ -1,12 +1,13 @@
 # 当前研究状态
 
-**更新日期：** 2026-11-13
+**更新日期：** 2026-11-15
 **工作分支：** `main`
 **最新科研准备工作：** 在`b724a19`上对R6-H暂定场景计划做了只读预审：现存相关manifests含996,472个唯一scene ID；两阶段各302,360个登记计划ID，R6-H与历史manifests及完整R6-G配置计划的重叠均为0，R6-H内部split也无重叠；预审记录见[`R6-H preliminary audit`](../experiments/D2-A-R6/R6-H/preliminary_scene_audit.json)。这不是G0：R6-G完成后还需纳入其评价manifests重跑正式审计。R6-H SSM/混合架构筛选器的执行器、测试与owner-scoped缓存清理保护已提交至`main`（执行器提交`85d4387`；R6-G独立缓存清理命令提交`b724a19`）。R6-H仍为draft，尚无G0/G1、正式数据或训练结果；其P4补充筛选须等R6-G安全完成、GPU释放和正式scene-ID审计后再做前置检查。P7须等R6-H完成或按冻结门停止后再冻结候选。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
 **阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
-**当前执行：** R6-G v1.0.1的T0、T1均完成51,200 updates，最佳验证checkpoint均为43,200；耗时分别119,290秒和132,337秒。用户于2026-11-13通知GPU可用后，T3从owner匹配且update 800的可恢复checkpoint继续训练；暂停事件见[`T3 pause events`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。训练前核对的G0/G1、protocol/config和source hashes匹配，AISAR实际设备为RTX 3050 Laptop `cuda:0`；训练保持FP32、有效batch64、microbatch4、总预算51,200 updates。注册曲线checkpoint捕获器已先于训练恢复，history每400步、可恢复checkpoint每800步写入。H0 calibration/verification及H1 development评价尚未运行。项目约15 GiB，系统盘可用约13 GiB；约14 GiB R6-G缓存继续用于训练与后续评价，暂时保留。完成评价并保存必要结果后，使用owner-scoped清理流程删除该阶段缓存并核验项目最终占用低于20 GiB。
+**R6-G训练状态（2026-11-15）：** v1.0.1的T0、T1、T3均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练记录的最佳验证truth loss分别为0.17632、0.17736、0.17794，最终注册更新点validation loss分别为0.17694、0.17923、0.17898。T0/T1/T3训练耗时分别119,290、132,337、116,624秒。T3恢复及暂停历史见[`T3 pause events`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。这些训练曲线不证明51,200步之外的收敛极限。
+**当前执行：** R6-G独立开发评价正在AISAR `cuda:0`按冻结microbatch运行；T0的120,000例H0 calibration预测已写入`predictions/T0/h0_calibration.npz`，T0 H0 verification仍在计算，尚未生成完整`metrics.json`，H1 development与注册验证点曲线评价待完成。G0/G1、protocol/config和source hashes均按现存记录匹配。项目约15 GiB，系统盘可用约13 GiB；约14 GiB R6-G缓存仍用于评价，完成评价和必要结果归档后按owner-scoped流程清理并核验项目低于20 GiB。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
@@ -92,7 +93,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 R6 P5 / D2-A-R6-F 已完成。六条链的全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败；CE-TCN原生链虽有最高C2+C3 joint和最小受测学生Doppler RMSE，仍没有绝对低虚警资格。神经检测+profile-ML链C/F的Doppler RMSE约149.61 Hz，远高于CE原生链的18.72 Hz、joint也更低；B3检测+CE参数链D则受传统检测Pd限制。详见[R6-F analysis](../experiments/D2-A-R6/R6-F/analysis.md)和[R6-F stage report](stage_reviews/D2-A-R6F_review.md)。
 
-**当前优先任务：完成R6 P6 / D2-A-R6-G。** protocol/config v1.0.1、G0/G1和评估实现已就绪；T0/T1已完成，T3按用户要求暂停于update 800，等待用户通知GPU可用后从检查点恢复。训练全部完成后运行独立H0 calibration/verification、H1 development、教师错误分层、注册更新点的验证任务曲线及成本评价。根据冻结门判断是否有教学收益及低虚警资格；不得将蒸馏损失下降视为成功，也不搜索权重、可靠性网络或教学时机。评价和必要结果归档后按owner清单清理R6-G缓存。其后先完成R6-H草案的GPU释放、scene-ID审计与G0/G1前置门；通过后执行匹配筛选，未通过则保留停止依据。R6-H终结后再冻结P7范围并审查正式多seed/独立场景确认门。R6 P0–P7全部目标完成前不写ChatGPT审查提示词；final blind当前未获授权；研究总纲v1.3和历史冻结结果保持不变。
+**当前优先任务：完成R6 P6 / D2-A-R6-G。** protocol/config v1.0.1及G0/G1已通过，T0/T1/T3都已完成51,200 updates；当前按冻结方案运行独立H0 calibration/verification、H1 development、教师错误分层、注册验证更新点曲线及成本评价。评价完成后根据预注册门判断教学收益和低虚警资格；不得将蒸馏损失下降视为成功，也不搜索权重、可靠性网络或教学时机。必要结果归档后按owner清单清理R6-G缓存。其后先完成R6-H草案的GPU释放、scene-ID审计与G0/G1前置门；通过后执行匹配筛选，未通过则保留停止依据。R6-H终结后再冻结P7范围并审查正式多seed/独立场景确认门。R6 P0–P7全部目标完成前不写ChatGPT审查提示词；final blind当前未获授权；研究总纲v1.3和历史冻结结果保持不变。
 
 ## 关键材料
 
