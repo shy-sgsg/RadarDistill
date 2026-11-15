@@ -1,3 +1,10 @@
+## 2026-11-15：完成 R6-G 教师教学 pilot，停止当前 K3 全图分支
+
+- **证据：** R6-G v1.0.1 的 T0/T1/T3 在 RTX 3050 Laptop `cuda:0`、FP32 下均完成51,200 updates，并完成独立 H0 calibration/verification 与 H1 development。T1−T0 的 C2+C3 joint差为`−0.00130`（95% paired CI `[−0.00781,+0.00521]`），未达到`+0.02`收益门；Range/Doppler保护失败。T1−T3为`−0.01302`（`[−0.01953,−0.00673]`）。T3−T0为`+0.01172`（`[+0.00499,+0.01823]`），低于收益门且Range保护上界1.0576；T3是物理真值辅助控制，不是教师收益。所有臂C3六格familywise Pfa门均失败。困难C3部分重叠、0 dB场景的K3正确定位率为25/512（4.88%）。
+- **决定：** R6-G P6单种子pilot结论为REFINE；停止当前K3完整RD响应在CE-TCN上的权重、温度、可靠性和时机搜索。不晋级本配置的formal seeds或final blind；保留T3小幅真值辅助结果和所有负结果。
+- **路线影响：** 这项结果不否定所有教师或知识形式，也不改变研究总纲v1.3。R6-H仍为`execution_authorized: false`草案，需另行授权，并通过完整scene-ID审计、协议冻结及G0/G1后才可训练；GPU可用本身不替代这些前置门。P7须待R6-H完成或按预注册门停止后再冻结。
+- **资源和材料：** 独立评价完成后，按R6-G owner清单删除可重建训练IQ与K3/T3目标缓存；保留scene manifests、模型checkpoint、history/records、逐场景预测、指标和分析。未触碰其他阶段或用户未跟踪文件。
+
 ## 2026-11-05：将R6-H列为R6 P4的有门控补充筛选
 
 - **证据：** R6-E已经完成CE-TCN与当前RAX候选的有界筛选，但未覆盖复数对角SSM/CNN-SSM。R6-H协议和任务对齐仍为draft，且明确要求R6-G安全结束、GPU释放、全仓scene-ID审计及独立G0/G1后，才冻结和运行；目前没有R6-H正式数据或训练结果。

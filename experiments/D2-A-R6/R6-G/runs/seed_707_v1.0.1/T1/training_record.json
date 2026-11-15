@@ -1,0 +1,179 @@
+{
+  "status": "complete",
+  "arm": "T1",
+  "owner": {
+    "owner": "D2-A-R6-G-training-run",
+    "git_sha": "3a986699f52836293f159ec850033de7c5424f69",
+    "arm": "T1",
+    "protocol_sha256": "faf7b2983d85b0f13c4b5947394f7deed48b0ec185322e49ee8a2c5a04b9c02a",
+    "config_sha256": "a9b7ef38d26d1baa6220acb9fb24512add450b2fd6fa09d4c959e50e22aa43ce",
+    "initialization_seed": 707,
+    "sampler_seed": 708,
+    "updates": 51200,
+    "effective_batch": 64,
+    "h1_plan_sha256": "db6074735a38830a1658b567aff2939af8e45a13b29eb9e52f44faca716006bf",
+    "h0_plan_sha256": "8a2df23d09d865341bb4adda321c5741ed1ee5a0651d29c4b0e0791093f3e6a0",
+    "target_owner": {
+      "owner": "D2-A-R6-G-H1-target-cache",
+      "git_sha": "16c39555bbcfe0b33a82bf2ae177c2fbdf15ee6d",
+      "train_cache_plan_sha256": "e7fa6f023878be99e1135de1103f87d291ddc3b1e93da81e395614d336460831",
+      "config_sha256": "7cf96b72e5d37b8a2b13e34e5f9674d5257b634d7a4049e4fca08c8a6b66a754",
+      "rows": 51200,
+      "targets": [
+        "K3_IQ_only",
+        "T3_truth_Dirichlet"
+      ],
+      "shape_per_target": [
+        520,
+        32
+      ],
+      "dtype": "float16"
+    }
+  },
+  "updates": 51200,
+  "best_update": 43200,
+  "best_validation_truth_total": 0.17736285836175084,
+  "training_seconds": 132337.36646015802,
+  "effective_batch_size": 64,
+  "microbatch": 4,
+  "microbatch_oom_events": [],
+  "unique_train_paired_scenes": 51200,
+  "scene_visits_per_presence": 32,
+  "total_cpi_exposures_per_presence": 1638400,
+  "sampler_audit": {
+    "updates": 51200,
+    "effective_batch": 64,
+    "h1_per_update": 32,
+    "h1_exposures": 1638400,
+    "h1_scene_visits_per_presence": 32,
+    "h0_condition_matched": true,
+    "h0_sampling": {
+      "mode": "uniform",
+      "seed": 709,
+      "hard_fraction_requested": 0.0,
+      "hard_fraction_by_condition": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 0.0,
+        "10": 0.0,
+        "11": 0.0
+      },
+      "h0_slots_by_condition": {
+        "0": 409600,
+        "1": 204800,
+        "2": 204800,
+        "3": 136192,
+        "4": 136704,
+        "5": 136704,
+        "6": 68096,
+        "7": 68608,
+        "8": 68096,
+        "9": 68608,
+        "10": 68096,
+        "11": 68096
+      },
+      "sampling_counts_by_condition": {
+        "0": {
+          "slots": 409600,
+          "hard": 0,
+          "uniform": 409600,
+          "hard_fraction": 0.0
+        },
+        "1": {
+          "slots": 204800,
+          "hard": 0,
+          "uniform": 204800,
+          "hard_fraction": 0.0
+        },
+        "2": {
+          "slots": 204800,
+          "hard": 0,
+          "uniform": 204800,
+          "hard_fraction": 0.0
+        },
+        "3": {
+          "slots": 136192,
+          "hard": 0,
+          "uniform": 136192,
+          "hard_fraction": 0.0
+        },
+        "4": {
+          "slots": 136704,
+          "hard": 0,
+          "uniform": 136704,
+          "hard_fraction": 0.0
+        },
+        "5": {
+          "slots": 136704,
+          "hard": 0,
+          "uniform": 136704,
+          "hard_fraction": 0.0
+        },
+        "6": {
+          "slots": 68096,
+          "hard": 0,
+          "uniform": 68096,
+          "hard_fraction": 0.0
+        },
+        "7": {
+          "slots": 68608,
+          "hard": 0,
+          "uniform": 68608,
+          "hard_fraction": 0.0
+        },
+        "8": {
+          "slots": 68096,
+          "hard": 0,
+          "uniform": 68096,
+          "hard_fraction": 0.0
+        },
+        "9": {
+          "slots": 68608,
+          "hard": 0,
+          "uniform": 68608,
+          "hard_fraction": 0.0
+        },
+        "10": {
+          "slots": 68096,
+          "hard": 0,
+          "uniform": 68096,
+          "hard_fraction": 0.0
+        },
+        "11": {
+          "slots": 68096,
+          "hard": 0,
+          "uniform": 68096,
+          "hard_fraction": 0.0
+        }
+      }
+    },
+    "h1_plan_sha256": "db6074735a38830a1658b567aff2939af8e45a13b29eb9e52f44faca716006bf",
+    "h0_plan_sha256": "8a2df23d09d865341bb4adda321c5741ed1ee5a0651d29c4b0e0791093f3e6a0"
+  },
+  "inference_parameters": 63429,
+  "training_parameters": 97229,
+  "cuda_peak_allocated_bytes": 1935653888,
+  "cuda_peak_reserved_bytes": 2353004544,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "precision": "FP32",
+  "history": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T1/training_history.csv",
+  "best_checkpoint": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T1/best_checkpoint.pt",
+  "last_checkpoint": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T1/last_checkpoint.pt",
+  "inference_checkpoint": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T1/inference_checkpoint.pt",
+  "preflight_git_sha": "3a986699f52836293f159ec850033de7c5424f69",
+  "initialization_owner": {
+    "owner": "D2-A-R6-G-shared-initialization",
+    "git_sha": "3a986699f52836293f159ec850033de7c5424f69",
+    "config_sha256": "a9b7ef38d26d1baa6220acb9fb24512add450b2fd6fa09d4c959e50e22aa43ce",
+    "seed": 707,
+    "width": 64
+  }
+}

@@ -2,12 +2,12 @@
 
 **更新日期：** 2026-11-15
 **工作分支：** `main`
-**最新科研准备工作：** 在`b724a19`上对R6-H暂定场景计划做了只读预审：现存相关manifests含996,472个唯一scene ID；两阶段各302,360个登记计划ID，R6-H与历史manifests及完整R6-G配置计划的重叠均为0，R6-H内部split也无重叠；预审记录见[`R6-H preliminary audit`](../experiments/D2-A-R6/R6-H/preliminary_scene_audit.json)。这不是G0：R6-G完成后还需纳入其评价manifests重跑正式审计。R6-H SSM/混合架构筛选器的执行器、测试与owner-scoped缓存清理保护已提交至`main`（执行器提交`85d4387`；R6-G独立缓存清理命令提交`b724a19`）。R6-H仍为draft，尚无G0/G1、正式数据或训练结果；其P4补充筛选须等R6-G安全完成、GPU释放和正式scene-ID审计后再做前置检查。P7须等R6-H完成或按冻结门停止后再冻结候选。最近完成的科学结果仍为D2-A-R6-F v1.0.2，六条完整处理链开发评价的协议、指标、分析、图和阶段报告见[`R6-F`](../experiments/D2-A-R6/R6-F/)、[`R6-F阶段报告`](stage_reviews/D2-A-R6F_review.md)。
-**阶段判断：** CE-TCN原生链 B 的 H1 Pd 为0.94743、C2+C3 joint success为0.85807，相对传统 B3+4×FFT 链 A 提升`+0.57813`（99% paired CI `[+0.56141,+0.59397]`）；但六条链全部未通过C3六格familywise Pfa≤0.10门。R6-F为 **REFINE**：B是当前受测完整链中任务表现最强的开发候选，但不是合格低虚警系统。R6-F不涉及蒸馏、跨训练seed或final blind；研究总纲v1.3及历史冻结结果不变。
+**最新科研结果：** D2-A-R6-G v1.0.1 已完成三臂 51,200 步训练和独立开发评价。T1（真值+K3）相对T0（真值）C2+C3 joint差为`−0.00130`（95%配对CI `[−0.00781,+0.00521]`），未通过教师增益门且Range/Doppler保护失败；T3真值辅助控制相对T0为`+0.01172`（`[+0.00499,+0.01823]`），低于+0.02门且Range保护失败。全局H0 Pfa接近0.05，但三臂均未通过C3六格familywise门；最困难的C3部分重叠、0 dB条件中K3仅正确定位25/512（4.88%）。详见[R6-G分析](../experiments/D2-A-R6/R6-G/analysis.md)和[阶段报告](stage_reviews/D2-A-R6G_review.md)。
+**阶段判断：** R6-G为 **REFINE**：当前K3全图响应没有改善CE-TCN最终任务，停止本分支的权重、温度、可靠性或时机搜索。T3不是教师，不能作为蒸馏成功。所有三臂在C3低虚警保护均失败；单seed开发结果不构成跨seed确认、低虚警资格或final blind。研究总纲v1.3及历史冻结结果不变。
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
-**R6-G训练状态（2026-11-15）：** v1.0.1的T0、T1、T3均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练记录的最佳验证truth loss分别为0.17632、0.17736、0.17794，最终注册更新点validation loss分别为0.17694、0.17923、0.17898。T0/T1/T3训练耗时分别119,290、132,337、116,624秒。T3恢复及暂停历史见[`T3 pause events`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。这些训练曲线不证明51,200步之外的收敛极限。
-**当前执行：** R6-G独立开发评价正在AISAR `cuda:0`按冻结microbatch运行；T0和T1的H0 calibration、H0 verification、H1 development预测均已保存，T3及注册验证点曲线评价待完成，完整`metrics.json`尚未生成。所有臂预测按协议顺序生成，尚未读取中间H1内容或调整评价门。G0/G1、protocol/config和source hashes均按现存记录匹配。项目约15 GiB，系统盘可用约13 GiB；约14 GiB R6-G缓存仍用于评价，完成评价和必要结果归档后按owner-scoped流程清理并核验项目低于20 GiB。
+**R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。训练记录、checkpoint、scene manifest、预测、指标和分析保留；训练IQ及辅助响应缓存按owner-scoped流程清除，不触碰用户未跟踪源码包或其他阶段数据。
+**后续阶段：** R6-H SSM/混合架构筛选仍为`execution_authorized: false`的draft。虽然R6-G现已完成并释放GPU，但正式全仓scene-ID审计、协议冻结和G0/G1尚未完成；因此目前没有启动R6-H训练。P7待R6-H完成或按其预注册门停止后再冻结；final blind仍未授权。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
