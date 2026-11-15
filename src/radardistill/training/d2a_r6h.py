@@ -381,7 +381,7 @@ def r6h_preflight() -> dict[str, Any]:
         raise RuntimeError(f"R6-H model parameter count is outside registered bounds {bounds}: {params}")
 
     disk = shutil.disk_usage(STAGE)
-    remaining = _remaining_owned_cache_bytes(plans, git_sha)
+    remaining = _remaining_owned_cache_bytes(plans, head)
     minimum = max(
         remaining + 4 * 1024**3,
         int(config["data"]["minimum_free_disk_bytes_before_generation"]),

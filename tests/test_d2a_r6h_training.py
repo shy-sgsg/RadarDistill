@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -51,6 +52,88 @@ def test_r6h_prior_scene_audit_includes_registered_d_to_g_plans() -> None:
     assert set(prior_ids_by_stage) == {"D", "E", "F", "G"}
     assert all(prior_ids_by_stage[stage] for stage in prior_ids_by_stage)
     assert all(h_ids.isdisjoint(ids) for ids in prior_ids_by_stage.values())
+
+
+def test_preflight_uses_current_head_for_owned_cache_estimate(monkeypatch: pytest.MonkeyPatch) -> None:
+    config, condition_config, physics = r6h_training.r6h_configs()
+    head = "f" * 40
+    counts = {
+        name: int(config["data"]["splits"][name].get(
+            "paired_scenes", config["data"]["splits"][name].get("scene_count", 0)
+        ))
+        for name in ("train", "validation", "h0_calibration", "h0_verification", "h1_development")
+    }
+    counts["g1_test"] = 16
+    plans = {
+        name: [{"seed": 1_000_000_000 + index, "count": count}]
+        for index, (name, count) in enumerate(counts.items())
+    }
+    cache_sha: list[str] = []
+
+    def fake_git(*args: str) -> str:
+        if args == ("branch", "--show-current"):
+            return "main"
+        if args == ("status", "--porcelain", "--untracked-files=no"):
+            return ""
+        return head
+
+    class OneParameter:
+        @staticmethod
+        def numel() -> int:
+            return 1
+
+    class TinyModel:
+        @staticmethod
+        def parameters():
+            return iter((OneParameter(),))
+
+    monkeypatch.setattr(r6h_training, "r6h_configs", lambda: (config, condition_config, physics))
+    monkeypatch.setattr(r6h_training, "_git", fake_git)
+    monkeypatch.setattr(r6h_training, "build_r6h_split_plans", lambda *_args: plans)
+    monkeypatch.setattr(r6h_training, "_prior_scene_ids", lambda: set())
+    monkeypatch.setattr(
+        r6h_training,
+        "_registered_prior_scene_ids",
+        lambda *_args: {stage: set() for stage in ("D", "E", "F", "G")},
+    )
+    monkeypatch.setattr(
+        r6h_training,
+        "r6h_scene_plan_audit",
+        lambda *_args, **_kwargs: {
+            "scene_counts": counts,
+            "prior_overlap_count": 0,
+            "overlap_count": 0,
+        },
+    )
+    monkeypatch.setattr(r6h_training, "build_r6h_student", lambda *_args, **_kwargs: TinyModel())
+    monkeypatch.setattr(
+        r6h_training,
+        "_remaining_owned_cache_bytes",
+        lambda _plans, git_sha: (cache_sha.append(git_sha) or 0),
+    )
+    monkeypatch.setattr(
+        r6h_training,
+        "shutil",
+        SimpleNamespace(disk_usage=lambda _path: SimpleNamespace(
+            free=40 * 1024**3, total=100 * 1024**3
+        )),
+    )
+    monkeypatch.setattr(
+        r6h_training,
+        "_require_cuda",
+        lambda: (r6h_training.torch.device("cuda:0"), r6h_training.DEVICE_NAME, 2 * 1024**3, 4 * 1024**3),
+    )
+    monkeypatch.setattr(r6h_training, "_source_sha256", lambda: {})
+    monkeypatch.setattr(r6h_training, "_sha256", lambda _path: "a" * 64)
+    monkeypatch.setattr(r6h_training.subprocess, "check_output", lambda *_args, **_kwargs: "580.178.04\n")
+    written: dict = {}
+    monkeypatch.setattr(r6h_training, "_write_json", lambda _path, record: written.update(record))
+
+    result = r6h_training.r6h_preflight()
+
+    assert result["git_sha"] == head
+    assert cache_sha == [head]
+    assert written["status"] == "G0_PASS"
 
 
 def test_r6h_cache_owner_cannot_rebind_a_nonempty_directory(tmp_path: Path) -> None:
