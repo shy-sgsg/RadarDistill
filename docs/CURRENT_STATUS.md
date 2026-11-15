@@ -7,7 +7,7 @@
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
 **R6-G训练状态（2026-11-15）：** v1.0.1的T0、T1、T3均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练记录的最佳验证truth loss分别为0.17632、0.17736、0.17794，最终注册更新点validation loss分别为0.17694、0.17923、0.17898。T0/T1/T3训练耗时分别119,290、132,337、116,624秒。T3恢复及暂停历史见[`T3 pause events`](../experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/pause_events.json)。这些训练曲线不证明51,200步之外的收敛极限。
-**当前执行：** R6-G独立开发评价正在AISAR `cuda:0`按冻结microbatch运行；T0的120,000例H0 calibration预测已写入`predictions/T0/h0_calibration.npz`，T0 H0 verification仍在计算，尚未生成完整`metrics.json`，H1 development与注册验证点曲线评价待完成。G0/G1、protocol/config和source hashes均按现存记录匹配。项目约15 GiB，系统盘可用约13 GiB；约14 GiB R6-G缓存仍用于评价，完成评价和必要结果归档后按owner-scoped流程清理并核验项目低于20 GiB。
+**当前执行：** R6-G独立开发评价正在AISAR `cuda:0`按冻结microbatch运行；T0和T1的H0 calibration、H0 verification、H1 development预测均已保存，T3及注册验证点曲线评价待完成，完整`metrics.json`尚未生成。所有臂预测按协议顺序生成，尚未读取中间H1内容或调整评价门。G0/G1、protocol/config和source hashes均按现存记录匹配。项目约15 GiB，系统盘可用约13 GiB；约14 GiB R6-G缓存仍用于评价，完成评价和必要结果归档后按owner-scoped流程清理并核验项目低于20 GiB。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 

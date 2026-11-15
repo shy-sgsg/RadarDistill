@@ -21,7 +21,7 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 | P3：检测、参数、联合学习 | R6-D比较J1-D/J1-P/J1-J/J2-J；J2-J有joint/range增益，但Doppler与C3 familywise门失败 | 完成；J1-J作为受测联合基线，J2-J不晋级多seed |
 | P4：代表性架构 | R6-E完成J1-J、CE-TCN、RAX-Transformer 51,200-step单seed比较；CE-TCN任务表现较强，RAX当前配置退化。R6-H已形成复数对角SSM与CNN-SSM草案，尚未冻结或运行 | R6-E筛选完成；R6-H是有前置门的补充筛选，须在R6-G安全结束后完成scene-ID审计及G0/G1，再决定执行或记录停止。RAX负结果不外推到整个Transformer/SSM家族 |
 | P5：完整混合处理链 | R6-F六链同场景独立校准完成；CE-TCN原生链任务指标领先，但六链C3六格familywise低虚警门均失败 | 完成开发比较；不宣称低虚警合格或速度优势 |
-| P6：教师教学机制 | R6-G v1.0.1的T0 truth-only、T1 truth+K3、T3 truth-assisted控制；CUDA G0/G1已通过；三臂均完成51,200 updates，最佳checkpoint为43,200/43,200/46,400 | 进行中；独立H0 calibration已开始落盘，仍需完成H0 verification、H1 development、训练曲线和教师错误分层；不搜权重或时机 |
+| P6：教师教学机制 | R6-G v1.0.1的T0 truth-only、T1 truth+K3、T3 truth-assisted控制；CUDA G0/G1已通过；三臂均完成51,200 updates，最佳checkpoint为43,200/43,200/46,400；T0/T1三类预测文件已生成 | 进行中；T3独立H0/H1预测、注册验证点曲线、完整metrics及教师错误分层待完成；不搜权重或时机 |
 | P7：正式确认 | 尚未启动 | 等P6完成、R6-H完成或由预注册门停止后，再冻结少数有资格的候选、独立多seed/场景和样本量预算；先看低虚警资格及任务收益。final blind未获授权，不生成 |
 
 路线顺序不预设每项必须成功：R6-G三臂训练已完成，独立开发评价完成后，按R6-H草案核查GPU释放、全仓scene-ID独立性和G0/G1。前置门通过才执行R6-H三臂匹配筛选，未通过则保留原因并停止该补充候选。R6-H终结后，P7按证据决定是否确认truth-only候选或结束当前系统路线。缺少中间ChatGPT审查不阻塞已批准工作；整条P0–P7完成后才提交一份综合审查请求。当前项目约15 GiB，其中约14 GiB为训练与评价所需的R6-G owner缓存；完成评价后按owner-scoped清理并核验最终20 GiB限制，不删除用户未跟踪源码包。
