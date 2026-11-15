@@ -14,6 +14,7 @@ R6-G 服务于 RadarDistill 总纲关于任务级学生、教师知识迁移和�
 ## 执行和证据
 
 - G0/G1 通过；RTX 3050 Laptop `cuda:0`、FP32 顺序训练，三臂均完成 51,200 updates、effective batch64、microbatch4，无 OOM 或 CPU 回退。
+- R6-G 评价、绘图及缓存清理定向回归测试 **22项全部通过**（3.07秒）。
 - 训练数据为 51,200 个配对场景，H0 calibration 和独立 verification 各 120,000，H1 development 6,144；使用单个训练 seed 707，不生成 final blind。
 - T1−T0 的 C2+C3 joint 差为 `−0.00130`（95% paired CI `[−0.00781,+0.00521]`），预注册 `+0.02` 增益门未通过；Range 与 Doppler RMSE 保护上界也未通过。
 - T1−T3 joint 差为 `−0.01302`（95% CI `[−0.01953,−0.00673]`）。K3 教师没有胜过 truth-assisted 对照。
@@ -34,4 +35,4 @@ R6-G 服务于 RadarDistill 总纲关于任务级学生、教师知识迁移和�
 
 停止本轮 K3 全图教学分支、单臂追训、权重/温度搜索和 final blind。R6-H 的复数对角 SSM/混合架构实验仍是 `execution_authorized: false` 草案，须先完成正式场景 ID 审计、冻结协议和 G0/G1；当前结果不自动批准该训练。P7 在路线内下一阶段完成或按其预注册门停止后再决定。
 
-训练缓存按 owner 清单清除；保留 scene manifest、metrics、本地逐场景预测、训练 history/records、检查点、协议和本报告。cleanup audit 见 [`cleanup.json`](../../experiments/D2-A-R6/R6-G/cleanup.json)。没有清理其他阶段或用户未跟踪文件。
+按 owner 清单清理14,641,188,309 bytes（13.636 GiB）训练IQ和K3/T3目标缓存；工作区降至约1.3 GB（1.26 GiB）。保留 scene manifest、metrics、本地逐场景预测、训练 history/records、检查点、协议和本报告。cleanup audit 见 [`cleanup.json`](../../experiments/D2-A-R6/R6-G/cleanup.json)。没有清理其他阶段或用户未跟踪文件。

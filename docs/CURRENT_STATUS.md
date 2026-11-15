@@ -6,7 +6,7 @@
 **阶段判断：** R6-G为 **REFINE**：当前K3全图响应没有改善CE-TCN最终任务，停止本分支的权重、温度、可靠性或时机搜索。T3不是教师，不能作为蒸馏成功。所有三臂在C3低虚警保护均失败；单seed开发结果不构成跨seed确认、低虚警资格或final blind。研究总纲v1.3及历史冻结结果不变。
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
-**R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。训练记录、checkpoint、scene manifest、预测、指标和分析保留；训练IQ及辅助响应缓存按owner-scoped流程清除，不触碰用户未跟踪源码包或其他阶段数据。
+**R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。owner-scoped清理移除14,641,188,309 bytes（13.636 GiB）的R6-G训练IQ与辅助响应缓存；整个项目目录现约1.3 GB（1.26 GiB），低于20 GiB。训练记录、checkpoint、scene manifest、预测、指标和分析保留；未触碰用户未跟踪源码包或其他阶段数据。
 **后续阶段：** R6-H SSM/混合架构筛选仍为`execution_authorized: false`的draft。虽然R6-G现已完成并释放GPU，但正式全仓scene-ID审计、协议冻结和G0/G1尚未完成；因此目前没有启动R6-H训练。P7待R6-H完成或按其预注册门停止后再冻结；final blind仍未授权。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。

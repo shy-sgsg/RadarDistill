@@ -77,4 +77,8 @@ T1 相对 T0 在这一困难格的 joint 点估计低约 1.95 个百分点；该
 5. **研究主线：** R6-G回答了一个有界教学问题，但未证明教师知识提升最终任务或加快有效收敛。物理真值监督下学生有较强可辨识条件表现，不过绝对 C3 虚警保护仍未解决。
 6. **路线状态：** R6-G 作为 P6 单种子 pilot 完成，结论为 **REFINE**。R6-H 当前仍是 `execution_authorized: false` 的 draft；本报告不将其视为已经批准的训练，也不生成 final blind。P7 待路线授权及前置协议/阶段门完成后再冻结。
 
+## 缓存清理
+
+完成报告归档后，通过 `scripts/cleanup_d2a_r6g_cache.py` 按 owner 清理 train、validation 和 targets 三个注册目录，共释放 **14,641,188,309 bytes（13.636 GiB）**。清理前程序核对完整文件集、owner、数据维度、训练记录及报告；审计记录见 [`cleanup.json`](cleanup.json)。项目目录现在约 **1.3 GB（1.26 GiB）**，低于20 GiB。保留场景 manifest、训练 history/records/checkpoints、metrics、预测和分析；未触碰其他阶段数据或用户文件。
+
 完整条件指标与配对 bootstrap 结果见 [`metrics.json`](metrics.json)；逐场景预测在工作区 `predictions/` 中保留。训练 history、owner 和记录见 [`runs/seed_707_v1.0.1/`](runs/seed_707_v1.0.1/)；曲线见 [`training_task_curves.png`](figures/training_task_curves.png)。

@@ -5,7 +5,7 @@
 - **协议与运行：** R6-G v1.0.1 T0/T1/T3均在RTX 3050 Laptop `cuda:0`、FP32、effective batch64、microbatch4下完成51,200 updates；无OOM/CPU回退。独立H0 calibration/verification各120,000、H1 development 6,144。协议和配置SHA与G0/G1记录一致；指标记录HEAD为`737245afe33a5a677bcfb42bee6b8e80a28adca6`，训练owner绑定G0 SHA `3a986699f52836293f159ec850033de7c5424f69`，训练核心源文件未改变。没有final blind。
 - **主要结果：** T1−T0可辨识C2+C3 joint差`−0.00130`（95%配对CI `[−0.00781,+0.00521]`），未过+0.02收益门，Range/Doppler保护失败。T1−T3为`−0.01302`（`[−0.01953,−0.00673]`）。T3−T0为`+0.01172`（`[+0.00499,+0.01823]`），低于收益门且Range保护上界1.0576；不能作为教师增益。三个臂总体H0 Pfa约0.05，但C3六格familywise门均失败。最困难C3 partial-overlap/SNR0/CNR20子组K3仅25/512（4.88%）定位正确。
 - **充分性与停止：** 三臂注册训练曲线从12,800到51,200步仍有任务改善，最佳validation checkpoint为43,200/43,200/46,400；因此51,200不是已证明的模型上限，但不据此对单臂追加训练。停止当前K3/CE-TCN权重、温度、可靠性和时机搜索；单seed结果不晋级多seed/blind。
-- **清理与方向：** 按owner清理仅删除R6-G重建训练IQ和K3/T3目标缓存；保留scene manifests、预测、metrics、history/records、checkpoints、协议及阶段报告。清理审计记录删除字节数与owner，最终项目低于20 GiB；未触碰其他实验和用户未跟踪文件。R6-H仍为未授权draft，需要完整scene-ID审计、协议冻结、G0/G1后才能训练；P7待R6-H完成或按门停止后再决定。研究总纲v1.3未改。
+- **清理与方向：** 按owner清理仅删除R6-G重建训练IQ和K3/T3目标缓存，共14,641,188,309 bytes（13.636 GiB）；保留scene manifests、预测、metrics、history/records、checkpoints、协议及阶段报告。清理审计记录完整owner和文件字节数；整个项目目录清理后约1.3 GB（1.26 GiB），低于20 GiB。未触碰其他实验和用户未跟踪文件。R6-H仍为未授权draft，需要完整scene-ID审计、协议冻结、G0/G1后才能训练；P7待R6-H完成或按门停止后再决定。研究总纲v1.3未改。
 - **证据：** [R6-G protocol/config](../experiments/D2-A-R6/R6-G/)、[metrics](../experiments/D2-A-R6/R6-G/metrics.json)、[analysis](../experiments/D2-A-R6/R6-G/analysis.md)、[cleanup audit](../experiments/D2-A-R6/R6-G/cleanup.json)、[stage review](stage_reviews/D2-A-R6G_review.md)。
 
 ## 2026-11-15：R6-G训练完成后启动独立开发评价（过程记录）
