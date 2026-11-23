@@ -1,0 +1,91 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+  "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+  "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "precision": "FP32",
+  "effective_batch_size": 64,
+  "formal_microbatch": 4,
+  "resource_probe": {
+    "4": {
+      "ce_tcn": {
+        "status": "pass",
+        "peak_allocated_bytes": 1236435968,
+        "peak_reserved_bytes": 1533018112
+      },
+      "complex_ssm": {
+        "status": "pass",
+        "peak_allocated_bytes": 662366720,
+        "peak_reserved_bytes": 731906048
+      },
+      "cnn_ssm": {
+        "status": "pass",
+        "peak_allocated_bytes": 804037120,
+        "peak_reserved_bytes": 891289600
+      }
+    }
+  },
+  "physical_test_seed": 2798000000,
+  "physical_test_scene_ids": [
+    "d2a-scene-2798000000-0",
+    "d2a-scene-2798000000-1",
+    "d2a-scene-2798000000-2",
+    "d2a-scene-2798000000-3",
+    "d2a-scene-2798000000-4",
+    "d2a-scene-2798000000-5",
+    "d2a-scene-2798000000-6",
+    "d2a-scene-2798000000-7",
+    "d2a-scene-2798000000-8",
+    "d2a-scene-2798000000-9",
+    "d2a-scene-2798000000-10",
+    "d2a-scene-2798000000-11",
+    "d2a-scene-2798000000-12",
+    "d2a-scene-2798000000-13",
+    "d2a-scene-2798000000-14",
+    "d2a-scene-2798000000-15"
+  ],
+  "condition": {
+    "course": "C0",
+    "scenario_id": "separated",
+    "snr_db": 20.0,
+    "cnr_db": -5.0
+  },
+  "arms": {
+    "ce_tcn": {
+      "initial_loss": 2.3257980346679688,
+      "last20_mean_loss": 0.00851427496127144,
+      "relative_loss_reduction": 0.9963392027878779,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 4,
+      "passed": true
+    },
+    "complex_ssm": {
+      "initial_loss": 5.555253505706787,
+      "last20_mean_loss": 0.002692520456548664,
+      "relative_loss_reduction": 0.9995153199662656,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 4,
+      "passed": true
+    },
+    "cnn_ssm": {
+      "initial_loss": 5.689565658569336,
+      "last20_mean_loss": 0.008449167152866722,
+      "relative_loss_reduction": 0.9985149715004799,
+      "minimum_relative_reduction": 0.1,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "effective_batch_size": 64,
+      "microbatch": 4,
+      "passed": true
+    }
+  },
+  "formal_train_validation_data_generated": false
+}

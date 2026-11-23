@@ -1,0 +1,113 @@
+{
+  "status": "cleaned",
+  "preflight_git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+  "training_arms": [
+    "ce_tcn",
+    "complex_ssm",
+    "cnn_ssm"
+  ],
+  "planned_removal": [
+    {
+      "split": "train",
+      "bytes": 10233910298,
+      "owner": {
+        "owner": "D2-A-R6-H-paired-cache",
+        "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+        "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+        "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+        "source_sha256": {
+          "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+          "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+          "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+          "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+          "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+          "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+          "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+          "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+        },
+        "split": "train",
+        "scene_count": 51200,
+        "plan_sha256": "9a47ac61eeb78fd9031299b7864f8832072444a2599956bd4151ca619e5f16a3"
+      }
+    },
+    {
+      "split": "validation",
+      "bytes": 999408103,
+      "owner": {
+        "owner": "D2-A-R6-H-paired-cache",
+        "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+        "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+        "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+        "source_sha256": {
+          "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+          "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+          "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+          "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+          "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+          "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+          "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+          "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+        },
+        "split": "validation",
+        "scene_count": 5000,
+        "plan_sha256": "d61171c44b901c0acc2adac4a53fa8b91a5d07988119d48bbfb61929cf03dfd8"
+      }
+    }
+  ],
+  "removed": [
+    {
+      "split": "train",
+      "bytes": 10233910298,
+      "owner": {
+        "owner": "D2-A-R6-H-paired-cache",
+        "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+        "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+        "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+        "source_sha256": {
+          "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+          "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+          "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+          "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+          "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+          "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+          "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+          "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+        },
+        "split": "train",
+        "scene_count": 51200,
+        "plan_sha256": "9a47ac61eeb78fd9031299b7864f8832072444a2599956bd4151ca619e5f16a3"
+      }
+    },
+    {
+      "split": "validation",
+      "bytes": 999408103,
+      "owner": {
+        "owner": "D2-A-R6-H-paired-cache",
+        "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+        "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+        "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+        "source_sha256": {
+          "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+          "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+          "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+          "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+          "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+          "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+          "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+          "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+        },
+        "split": "validation",
+        "scene_count": 5000,
+        "plan_sha256": "d61171c44b901c0acc2adac4a53fa8b91a5d07988119d48bbfb61929cf03dfd8"
+      }
+    }
+  ],
+  "preserved": [
+    "scene manifests",
+    "training records and checkpoints",
+    "predictions and metrics",
+    "analysis and internal stage report",
+    "all files outside the registered R6-H train/validation cache directories"
+  ],
+  "user_untracked_files_touched": false
+}

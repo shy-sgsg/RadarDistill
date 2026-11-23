@@ -1,0 +1,15 @@
+{
+  "recovery_started_at": "2026-11-23 14:23 CST",
+  "launcher_pid": 589853,
+  "python_pid": 589855,
+  "session_id": 589855,
+  "process_group_id": 589855,
+  "session_group_id": 589855,
+  "detached": true,
+  "python": "/home/shy/anaconda3/envs/AISAR/bin/python3.13",
+  "command": "scripts/run_d2a_r6h.py evaluate",
+  "stdout_log": "experiments/D2-A-R6/R6-H/attempts/evaluate_direct_20261123T142051/evaluate_detached.log",
+  "recovery_scope": "Reruns the unchanged frozen evaluator in registered ce_tcn, complex_ssm, cnn_ssm order; deterministic scenes and thresholds are unchanged.",
+  "pre_recovery_partial_preserved": "experiments/D2-A-R6/R6-H/attempts/evaluate_direct_20261123T142051/metrics.partial.before_sigterm.json",
+  "final_metrics_written_at_recovery_start": false
+}

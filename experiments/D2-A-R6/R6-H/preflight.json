@@ -1,0 +1,69 @@
+{
+  "status": "G0_PASS",
+  "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+  "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+  "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+  "source_sha256": {
+    "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+    "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+    "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+    "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+    "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+    "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+    "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+    "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+  },
+  "prerequisite_r6g_completion_sha": "2dacd65e249a57fc9969ee9bf8982bc5dd384c1a",
+  "scene_counts": {
+    "train": 51200,
+    "validation": 5000,
+    "h0_calibration": 120000,
+    "h0_verification": 120000,
+    "h1_development": 6144,
+    "g1_test": 16
+  },
+  "historical_scene_id_count": 1981112,
+  "historical_manifest_scene_id_count": 996472,
+  "registered_prior_plan_scene_id_count": 1153240,
+  "registered_prior_plan_scene_id_counts_by_stage": {
+    "R6-D": 302360,
+    "R6-E": 302360,
+    "R6-F": 246160,
+    "R6-G": 302360
+  },
+  "prior_scene_id_overlap": 0,
+  "cross_split_scene_id_overlap": 0,
+  "model_parameters": {
+    "ce_tcn": 63429,
+    "complex_ssm": 65077,
+    "cnn_ssm": 71909
+  },
+  "parameter_bounds": [
+    50744,
+    76114
+  ],
+  "disk_free_before_generation_bytes": 27971497984,
+  "minimum_free_bytes": 15530376648,
+  "disk_total_bytes": 497777065984,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "device": "cuda:0",
+  "driver_version": "580.178.04",
+  "free_vram_before_g1_bytes": 3174367232,
+  "total_vram_bytes": 3942383616,
+  "python": "3.13.7",
+  "numpy": "2.3.4",
+  "torch": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "formal_data_generated": false,
+  "final_blind_generated": false,
+  "execution_ready": true,
+  "protocol_status": "preregistered",
+  "registered_arms": [
+    "ce_tcn",
+    "complex_ssm",
+    "cnn_ssm"
+  ],
+  "effective_batch_size_cpi": 64,
+  "updates_per_model": 25600,
+  "final_blind_authorized": false
+}

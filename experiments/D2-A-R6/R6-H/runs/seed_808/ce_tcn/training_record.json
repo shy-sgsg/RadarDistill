@@ -1,0 +1,262 @@
+{
+  "status": "complete",
+  "arm": "ce_tcn",
+  "owner": {
+    "owner": "D2-A-R6-H-training-run",
+    "git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1",
+    "protocol_sha256": "da6efaec2defaaf5ba7890ebd380a9fc5cea1070f2bd96782f0c9cbd8f7c2d87",
+    "config_sha256": "1c1854632bcdbee436cc1653debef4040323005604b7de8777db8e4dc1f111c5",
+    "source_sha256": {
+      "trainer": "b3a842f8cf33843ba8ba16760abdbafc4ee055553e083fa8e4a5b855c4760d93",
+      "model": "ea605830ad3d77af0ba785206d0e208fdef8aeda260b64bb7c694457fb68c643",
+      "simulator": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+      "paired_plan": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+      "sampler": "732b6ad0512799fa0c43aa694642598ebb0b43434c5e6246926edd5e63ce4347",
+      "loss": "57b19a825eebe38779c01fa5f49071074ac3b63984982f817e554333513b9178",
+      "evaluation": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+      "entrypoint": "a91274941daf427769c793e17637dd69cc13d05f372d73dfcd77bea93a4465e1"
+    },
+    "arm": "ce_tcn",
+    "training_seed": 808,
+    "sampler_seed": 809,
+    "effective_batch_size": 64,
+    "updates": 25600,
+    "parameters": 63429,
+    "sampler_audit": {
+      "mode": "uniform",
+      "seed": 809,
+      "hard_fraction_requested": 0.0,
+      "hard_fraction_by_condition": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 0.0,
+        "10": 0.0,
+        "11": 0.0
+      },
+      "h0_slots_by_condition": {
+        "0": 204800,
+        "1": 102400,
+        "2": 102400,
+        "3": 68352,
+        "4": 68096,
+        "5": 68352,
+        "6": 34304,
+        "7": 34048,
+        "8": 34048,
+        "9": 34048,
+        "10": 34304,
+        "11": 34048
+      },
+      "sampling_counts_by_condition": {
+        "0": {
+          "slots": 204800,
+          "hard": 0,
+          "uniform": 204800,
+          "hard_fraction": 0.0
+        },
+        "1": {
+          "slots": 102400,
+          "hard": 0,
+          "uniform": 102400,
+          "hard_fraction": 0.0
+        },
+        "2": {
+          "slots": 102400,
+          "hard": 0,
+          "uniform": 102400,
+          "hard_fraction": 0.0
+        },
+        "3": {
+          "slots": 68352,
+          "hard": 0,
+          "uniform": 68352,
+          "hard_fraction": 0.0
+        },
+        "4": {
+          "slots": 68096,
+          "hard": 0,
+          "uniform": 68096,
+          "hard_fraction": 0.0
+        },
+        "5": {
+          "slots": 68352,
+          "hard": 0,
+          "uniform": 68352,
+          "hard_fraction": 0.0
+        },
+        "6": {
+          "slots": 34304,
+          "hard": 0,
+          "uniform": 34304,
+          "hard_fraction": 0.0
+        },
+        "7": {
+          "slots": 34048,
+          "hard": 0,
+          "uniform": 34048,
+          "hard_fraction": 0.0
+        },
+        "8": {
+          "slots": 34048,
+          "hard": 0,
+          "uniform": 34048,
+          "hard_fraction": 0.0
+        },
+        "9": {
+          "slots": 34048,
+          "hard": 0,
+          "uniform": 34048,
+          "hard_fraction": 0.0
+        },
+        "10": {
+          "slots": 34304,
+          "hard": 0,
+          "uniform": 34304,
+          "hard_fraction": 0.0
+        },
+        "11": {
+          "slots": 34048,
+          "hard": 0,
+          "uniform": 34048,
+          "hard_fraction": 0.0
+        }
+      },
+      "h0_plan_sha256": "6a7e578201f6d620c201c5ff2ef1a07cfb59e8922892c4160b8535a4eb83f322",
+      "h1_plan_sha256": "908a22235fcc6b644d51a1aa45ceeadabadb37683117e776749a75f7db1e694c"
+    },
+    "precision": "FP32",
+    "data": "train_51200_paired_scenes"
+  },
+  "updates": 25600,
+  "best_update": 25600,
+  "best_validation_objective": 0.18502149830060083,
+  "training_seconds": 57344.681938634,
+  "effective_batch_size": 64,
+  "minimum_microbatch": 4,
+  "unique_train_paired_scenes": 51200,
+  "scene_visits_per_presence": 16.0,
+  "total_cpi_exposures_per_presence": 819200,
+  "model_parameter_count": 63429,
+  "cuda_peak_allocated_bytes": 804864,
+  "cuda_peak_reserved_bytes": 2097152,
+  "sampler_audit": {
+    "mode": "uniform",
+    "seed": 809,
+    "hard_fraction_requested": 0.0,
+    "hard_fraction_by_condition": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 0.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0,
+      "10": 0.0,
+      "11": 0.0
+    },
+    "h0_slots_by_condition": {
+      "0": 204800,
+      "1": 102400,
+      "2": 102400,
+      "3": 68352,
+      "4": 68096,
+      "5": 68352,
+      "6": 34304,
+      "7": 34048,
+      "8": 34048,
+      "9": 34048,
+      "10": 34304,
+      "11": 34048
+    },
+    "sampling_counts_by_condition": {
+      "0": {
+        "slots": 204800,
+        "hard": 0,
+        "uniform": 204800,
+        "hard_fraction": 0.0
+      },
+      "1": {
+        "slots": 102400,
+        "hard": 0,
+        "uniform": 102400,
+        "hard_fraction": 0.0
+      },
+      "2": {
+        "slots": 102400,
+        "hard": 0,
+        "uniform": 102400,
+        "hard_fraction": 0.0
+      },
+      "3": {
+        "slots": 68352,
+        "hard": 0,
+        "uniform": 68352,
+        "hard_fraction": 0.0
+      },
+      "4": {
+        "slots": 68096,
+        "hard": 0,
+        "uniform": 68096,
+        "hard_fraction": 0.0
+      },
+      "5": {
+        "slots": 68352,
+        "hard": 0,
+        "uniform": 68352,
+        "hard_fraction": 0.0
+      },
+      "6": {
+        "slots": 34304,
+        "hard": 0,
+        "uniform": 34304,
+        "hard_fraction": 0.0
+      },
+      "7": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "8": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "9": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      },
+      "10": {
+        "slots": 34304,
+        "hard": 0,
+        "uniform": 34304,
+        "hard_fraction": 0.0
+      },
+      "11": {
+        "slots": 34048,
+        "hard": 0,
+        "uniform": 34048,
+        "hard_fraction": 0.0
+      }
+    },
+    "h0_plan_sha256": "6a7e578201f6d620c201c5ff2ef1a07cfb59e8922892c4160b8535a4eb83f322",
+    "h1_plan_sha256": "908a22235fcc6b644d51a1aa45ceeadabadb37683117e776749a75f7db1e694c"
+  },
+  "history": "experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/training_history.csv",
+  "best_checkpoint": "experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/best_checkpoint.pt",
+  "last_checkpoint": "experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/last_checkpoint.pt",
+  "preflight_git_sha": "70a3e6a0b84d3be1613a7653ac018171b11b0cf1"
+}

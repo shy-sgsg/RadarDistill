@@ -1,0 +1,18 @@
+{
+  "attempt": "evaluate_direct_20261123T142051",
+  "command": "/home/shy/anaconda3/envs/AISAR/bin/python3.13 -u scripts/run_d2a_r6h.py evaluate",
+  "session_id": 21019,
+  "pid": 426517,
+  "exit_code": 143,
+  "signal": "SIGTERM",
+  "termination_observed_at": "2026-11-23 14:20:51 CST",
+  "last_partial_arms": ["ce_tcn", "complex_ssm"],
+  "final_metrics_written": false,
+  "notes": [
+    "The process was observed active at 100% CPU immediately before termination; no process remained afterward.",
+    "Kernel/system journal inspection found no OOM kill or SIGTERM event near termination.",
+    "NVIDIA memory-allocation warnings were logged at 2026-11-23 09:14; evaluation continued and completed two arms afterward, so these warnings do not explain the later SIGTERM.",
+    "A managed execution-session lifetime limit is a plausible cause, but is not proven."
+  ],
+  "recovery": "Preserved partial metrics; rerun the same frozen evaluator detached from the managed execution session. No code, protocol, config, seeds, or evaluation criteria changed."
+}

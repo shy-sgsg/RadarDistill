@@ -1,5 +1,21 @@
 # 研究进度
 
+## 2026-11-23：完成 R6-H 复数 SSM / CNN-SSM 筛选与 P7 候选判断
+
+- **冻结执行：** G0/G1通过；seed808三臂按CE-TCN→复数SSM→CNN-SSM顺序，在AISAR环境RTX 3050 Laptop `cuda:0`完成25,600 FP32 updates/effective batch64。每臂训练51,200对唯一场景，H0 calibration/verification各120,000，H1 development6,144。评价由同一冻结入口完成，未生成final blind。
+- **主要结果：** SSM−CE-TCN的C2+C3 joint差`+0.01931`（97.5% CI `[+0.01085,+0.02778]`），低于+0.02点增益门；CNN-SSM−CE-TCN为`+0.03016`（`[+0.02214,+0.03798]`），主端点通过，但range RMSE ratio 1.070、区间上界1.165，超过1.05保护。三臂C3六格familywise Pfa门均失败；最难C3 partial-overlap/SNR0格Pfa为0.0986/0.1016/0.1048，CNN-SSM超过0.10。
+- **学习曲线与物理：** 三臂最佳验证目标均落在25,600步末端，22,400→25,600步validation total净降约1.0%–1.9%，不能宣称平台。16个公共相位旋转下决策一致率至少0.99967；`±130 Hz`全场景频移未显示频率等变性，Range变化p95约20.5–21.0 cells。
+- **研究判断：** 当前SSM/混合候选未同时通过joint收益、参数保护和C3虚警要求；不晋级当前候选组的P7多种子训练或final blind。结论限定于固定实现与seed808，不否定所有SSM。下一优先项为独立预注册、基于可观测背景统计的C3低虚警稳健化实验。总纲v1.3及R6-H冻结协议保持不变。
+- **数据和资源：** 清理R6-H owner登记的可重建缓存11,233,318,401 bytes（约10.46 GiB）；工作区清理后实测1,359,208,153 bytes（1.27 GiB）。训练history、checkpoint、manifests、metrics、分析和中断/恢复审计保留，明细见`experiments/D2-A-R6/R6-H/cleanup.json`。`training_record`中CE-TCN/SSM显存字段与逐检查点history峰值不符；报告采用history峰值，原record未改。
+
+## 2026-11-21：恢复 R6-H 顺序训练；CNN-SSM 尚未产出新验证记录
+
+- **前置门与顺序臂：** 冻结的 R6-H G0/G1 均已通过，正式训练/验证缓存已生成。CE-TCN与复数SSM在seed808、FP32、effective batch64、microbatch4下各完成25,600 updates；最终记录的validation loss分别为0.18502和0.18379。这些是训练监控量，不是独立任务评价。
+- **暂停与恢复：** 用户曾要求暂停训练，随后又明确通知继续。暂停前CNN-SSM history记录到update2800，best checkpoint为update2800，最近可恢复的模型/优化器/RNG检查点是update2400。原`train-all`入口已恢复，C、S完成臂被续接为complete，CNN-SSM从update2400恢复；history由checkpoint状态重建。
+- **当前运行观察：** 2026-11-21采样时，CNN-SSM history仍停在update2400，`training_summary.json`为`in_progress`，训练进程已运行5小时57分且CPU时间累计5小时51分；单核CPU约98%，GPU利用率为0%，显存占用约1.56 GiB，未生成新检查点或训练记录。暂停前last checkpoint为update2400，best checkpoint为update2800，两个checkpoint文件的写入时间相差约10分47秒；恢复后同一段长时间没有新验证记录，说明本次恢复的吞吐显著异常。GPU时钟为1500 MHz、温度47°C。后续CPU诊断显示主线程采样在cpu5、频率约3.27 GHz（接近该核最高频率），调速器为powersave；单次看到约0.41 GHz的核心采样不能证明CPU降频导致慢点。训练脚本仍将模型和batch放在`cuda:0`，但低利用率样本不能证明此刻GPU正在执行算子；确切慢点尚未定位。未改协议、microbatch、损失或预算，没有CPU回退证据。
+- **静态性能线索：** R6-H 每次有效batch64拆为16个microbatch4；共享`_training_update`在每个microbatch中将6个loss项分别调用`.item()`，并执行设备端有限值判断；`r6d_loss`还将`torch.any(h1)`用于Python分支。这些操作会产生频繁的GPU—CPU同步，可能导致低GPU占用和吞吐下降，但静态代码不能证明它解释了本次全部延迟，且当前运行没有可用的运行时profile。冻结训练中不修改实现；后续若要优化，需单独记录实现版本并重新通过对应前置检查。
+- **科研边界：** 三臂尚未完成同阶段独立任务评价、物理诊断和统计比较；不得据validation loss比较三种架构优劣。P7、final blind和ChatGPT综合审查请求均未启动；只在R6 P0–P7全部目标完成后生成一次审查请求。
+
 ## 2026-11-15：按用户授权冻结 R6-H protocol/config v1.0
 
 - **研究主线：** R6-H补足R6-E未实测的复数状态空间与CNN-SSM候选，使用E1物理真值监督，独立评价架构学习能力；不把R6-G未通过的K3教师分支带入本轮。
