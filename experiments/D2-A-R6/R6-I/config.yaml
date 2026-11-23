@@ -1,0 +1,120 @@
+experiment:
+  id: D2-A-R6-I
+  protocol_version: "1.0"
+  status: preregistered
+  charter_version: "1.3"
+  execution_authorized: true
+  execution_gate: G0_G1_then_one_frozen_development_evaluation
+  final_blind_authorized: false
+  review_request_timing: after_all_authorized_R6_P0_P7_goals
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+  physics_source: experiments/D2-A-E001/config.yaml
+  condition_count: 12
+
+models:
+  baseline_detector: B3
+  ce_tcn:
+    architecture: R6ECEStudent
+    checkpoint: experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/best_checkpoint.pt
+    training_record: experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/training_record.json
+  cnn_ssm:
+    architecture: R6ComplexCNNSSMStudent
+    checkpoint: experiments/D2-A-R6/R6-H/runs/seed_808/cnn_ssm/best_checkpoint.pt
+    training_record: experiments/D2-A-R6/R6-H/runs/seed_808/cnn_ssm/training_record.json
+  training_performed: false
+
+data:
+  condition_count: 12
+  condition_seed_stride: 1000000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  g1_test_seed: 3290000000
+  g1_test_count: 16
+  prior_registered_plan_stages: [R6-D, R6-E, R6-F, R6-G, R6-H]
+  reuse_existing_scene_ids: false
+  persist_evaluation_iq: false
+  splits:
+    h0_scale_fit:
+      presence: H0
+      scene_count: 60000
+      count_per_condition: 5000
+      seed_base: 3200000000
+    h0_threshold_calibration:
+      presence: H0
+      scene_count: 60000
+      count_per_condition: 5000
+      seed_base: 3220000000
+    h0_verification:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 3240000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 3260000000
+
+score_correction:
+  target_arm: cnn_ssm
+  statistic: median_iq_power_over_channel_pulse_range
+  log: natural
+  fitting_presence: H0_only
+  fitting_split: h0_scale_fit
+  equal_count_bins: 20
+  minimum_bin_count: 50
+  tail_quantile: 0.95
+  tail_quantile_method: higher
+  regression: ordinary_least_squares
+  correction: "raw_logit - beta * (log_power - center)"
+  inference_inputs: [iq, fitted_beta, fitted_center]
+  forbidden_inputs: [truth, snr, cnr, condition_index]
+  correction_count: 1
+
+evaluation:
+  calibration_split: h0_threshold_calibration
+  verification_split: h0_verification
+  primary_workpoint: 0.05
+  secondary_workpoints: [0.01, 0.001]
+  threshold_quantile_method: higher
+  decision_comparator: ">="
+  primary_pfa_global_upper_maximum: 0.055
+  c3_conditions: 6
+  c3_familywise_alpha: 0.05
+  c3_cell_pfa_upper_maximum: 0.10
+  required_c3_pooled_pfa_reduction_vs_raw: 0.01
+  paired_bootstrap_unit: base_scene_id
+  paired_bootstrap_replicates: 5000
+  paired_bootstrap_seed: 2026112301
+  paired_ci_level: 0.95
+  pd_noninferiority_difference_lower_minimum: -0.02
+  joint_noninferiority_difference_lower_minimum: -0.02
+  parameter_rmse_ratio_upper_maximum: 1.05
+  range_gate_cells: 1.0
+  doppler_gate_hz: 20.0
+  frequency_error: PRF_wrapped
+  scale_intervention: [0.5, 2.0]
+  scale_intervention_condition: C3_partial_overlap_SNR0_CNR20
+  final_blind_authorized: false
+
+resources:
+  required_environment: AISAR
+  required_gpu_name: NVIDIA GeForce RTX 3050 Laptop GPU
+  required_device: cuda:0
+  precision: FP32
+  amp: false
+  cpu_fallback: forbidden_for_student_inference
+  inference_microbatch: 4
+  oom_microbatch_fallbacks: [2, 1]
+  models_resident_on_gpu: 1
+  data_loading: CPU_generated_chunks_to_cuda
+  persistent_iq_cache: false
+  minimum_free_vram_bytes: 1610612736
+  minimum_free_disk_bytes: 4294967296
+  final_project_limit_gib: 20

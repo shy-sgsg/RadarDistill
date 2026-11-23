@@ -2,13 +2,15 @@
 
 **更新日期：** 2026-11-23
 **工作分支：** `main`
+**当前执行任务：** D2-A-R6-I已依据R6-H低虚警失败冻结为一次性、仅评估的可观测尺度分数校正实验。使用固定R6-H seed808 CE-TCN/CNN-SSM检查点与B3，在AISAR的RTX 3050 `cuda:0`上顺序推理，不训练新模型；先过scene-ID、checkpoint、CUDA和G1检查，再生成新场景。ChatGPT审查请求留到R5-C/R6整条授权路线结束后一次编写。
 **最新科研结果：** D2-A-R6-H v1.0三臂均在seed808下完成25,600次FP32 CUDA更新及独立开发评价。CNN-SSM相对CE-TCN的C2+C3 joint差为`+0.03016`（97.5%配对CI `[+0.02214,+0.03798]`），通过主端点，但Range RMSE比为`1.070`（区间上界`1.165`），未过1.05保护；三臂均未通过C3六格familywise Pfa门，CNN-SSM在最难C3 partial-overlap/SNR0格Pfa点值为`0.1048`。详见[R6-H分析](../experiments/D2-A-R6/R6-H/analysis.md)和[阶段报告](stage_reviews/D2-A-R6H_review.md)。
 **阶段判断：** R6-H为 **REFINE**。复数SSM未过预注册joint点增益门；CNN-SSM主端点收益伴随range保护与C3虚警失败，未成为合格低虚警候选。当前候选组不进入P7多种子确认训练；该结论限于受测实现和seed808，不外推到全部SSM/混合架构。final blind未生成，研究总纲v1.3与历史冻结结果不变。
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
 **恢复记录（2026-11-09）：** T1完成后，原`train-all`在创建T3训练checkpoint前退出：并行的checkpoint捕获进程已按注册规则在T3目录写入update-0验证快照，训练入口将这个目录内容判定为没有可恢复checkpoint的残留文件。已核实该快照owner与T3一致，模型张量逐项等于共享初始权重。为保持冻结代码、协议与配置不变，临时将快照移出运行目录，按原入口续跑T3；T3写出初始checkpoint后重新启动捕获进程。训练预算、seed、数据、损失和优化设置均未改变。临时快照将在注册曲线采集完成后再与新快照核对并清理。
 **R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。owner-scoped清理移除14,641,188,309 bytes（13.636 GiB）的R6-G训练IQ与辅助响应缓存；整个项目目录现约1.3 GB（1.26 GiB），低于20 GiB。训练记录、checkpoint、scene manifest、预测、指标和分析保留；未触碰用户未跟踪源码包或其他阶段数据。
 **R6-H训练与评价：** G0/G1均通过。三臂使用51,200对训练场景、5,000对验证场景、有效batch64、microbatch4，每臂25,600 updates；各presence暴露819,200次、训练集平均重访16次。训练在AISAR环境RTX 3050 Laptop `cuda:0`顺序完成；训练耗时15.93/9.25/17.46小时。独立H0校准/验证各120,000、H1开发6,144。owner清理删除可重建缓存11,233,318,401 bytes（约10.46 GiB）；工作区实测约1,359,208,153 bytes（1.27 GiB）。训练记录、曲线、checkpoint、scene manifest、指标与分析保留，清理明细见[`cleanup.json`](../experiments/D2-A-R6/R6-H/cleanup.json)。
-**后续优先项：** 当前候选组没有模型同时通过joint主端点、参数保护与C3六格Pfa门，故不启动本候选组的P7多种子确认。下一步先用独立协议研究只基于可观测输入的C3困难格分数/背景尺度稳健化，并匹配CE-TCN、CNN-SSM与B3；通过后再决定是否恢复P7。最终盲测仍未授权。整条R5-C/R6路线收尾前不编写中途ChatGPT审查提示词。
+**R6-I协议与配置：** 单一候选使用H0 `h0_scale_fit`估计CNN-SSM logit对可观测稳健IQ功率的右尾斜率；独立H0 split校准阈值，独立H0验证总体和C3六格Pfa，并用独立H1开发检查Pd、参数误差及joint。预注册场景共246,144个，不缓存IQ、不训练、不生成final blind。协议/实现尚待冻结提交、G0/G1和正式运行，当前没有R6-I结果。
+**当前与下一步：** R6-I正在用独立H0拟合、H0阈值校准、H0验证和H1开发集评估唯一的可观测尺度分数校正。失败则停止该校正；全部P7准入门通过后也只进入另行预注册的多种子方案。最终盲测仍未授权。整条R5-C/R6路线收尾前不编写中途ChatGPT审查提示词。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 

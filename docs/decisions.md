@@ -1,3 +1,10 @@
+## 2026-11-23：冻结 D2-A-R6-I 单一可观测分数尺度校正
+
+- **触发证据：** R6-H CNN-SSM−CE-TCN的C2+C3 joint差为`+0.03016`，但Range RMSE ratio为`1.070`、上界`1.165`，且三臂均未通过C3六格familywise Pfa门。R6-A困难C3 partial-overlap/SNR0格AUC约0.596，R6-B hard-negative没有证明最终joint收益；因此R6-I只检验是否存在额外的可观测分数尺度漂移，不预设单纯归一化足以解决弱可分性。
+- **决定：** 对固定R6-H seed808 CE-TCN/CNN-SSM和B3执行一次新场景、无训练的匹配评估。只用H0 `h0_scale_fit`拟合一条CNN-SSM presence logit对每CPI稳健IQ功率的右尾斜率；另一H0 split独立设阈值，独立H0验证及H1开发数据评估。校正CNN-SSM与raw CNN-SSM做配对比较。
+- **冻结边界：** 场景、阈值、Pfa、paired bootstrap、任务保护和P7准入门见`experiments/D2-A-R6/R6-I/protocol.md`及`config.yaml`。不训练、不引入教师/KD、不在同一开发集上调试其它变换、不生成final blind；研究总纲与R6-H历史结果不变。G0/G1或冻结准入门失败即停止相应实验/候选。
+- **交付时机：** 先提交冻结协议、代码和测试，再按门运行；R5-C/R6整条路线完成前不编写中途ChatGPT审查请求。
+
 ## 2026-11-23：完成 R6-H 并停止当前架构候选组的 P7 晋级
 
 - **证据：** R6-H seed808三臂均完成冻结25,600更新和独立开发评价。SSM−CE-TCN C2+C3 joint差`+0.01931`（97.5% CI `[+0.01085,+0.02778]`），未达到+0.02点门；CNN-SSM−CE-TCN为`+0.03016`（`[+0.02214,+0.03798]`），但Range RMSE ratio为1.070、区间上界1.165，未过1.05保护。所有三臂C3六格familywise Pfa均失败；最难C3格CNN-SSM Pfa点估计0.1048。完整分析见`experiments/D2-A-R6/R6-H/analysis.md`。

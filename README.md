@@ -24,7 +24,7 @@ RadarDistill 研究怎样用物理仿真真值和传统雷达教师训练学生�
 
 D0-E001 简化仿真与 FFT 子链正确性检查 12/12 通过。D1-E001 的 G1/G2 通过、G3 未通过，冻结决定为 GO → D2。D1-E002 因低 SNR 检测保护门失败停止当前 AWGN Doppler 结构搜索；历史结论均保留。D2-A-E001 的 R0 T1–T12 全通过；后续 R3 固定阈值迁移决定为 **REFINE**，T1 未获固定阈值教师资格。
 
-**当前状态：** R5-A/B/C、T0–T3 teaching pilot、R6-A至H均按各自协议完成并保留阶段边界。R6-G的K3教师响应未改善CE-TCN任务。R6-H中CNN-SSM的C2+C3 joint提升3.02个百分点，但Range RMSE保护失败，且最难C3格H0 Pfa点估计为0.1048；三臂均未过C3六格familywise Pfa门。因此当前候选组不晋级P7多种子训练，下一步优先处理可观测背景下的困难格低虚警稳定性。没有final blind。R6 P0–P7路线在候选准入门结束后，只提交一次综合ChatGPT审查请求。研究总纲v1.3与历史负结果不变。详见[CURRENT_STATUS](docs/CURRENT_STATUS.md)与[路线图](docs/RESEARCH_ROADMAP.md)。
+**当前状态：** R5-A/B/C、T0–T3 teaching pilot、R6-A至H均按各自协议完成并保留阶段边界。R6-G的K3教师响应未改善CE-TCN任务。R6-H中CNN-SSM的C2+C3 joint提升3.02个百分点，但Range RMSE保护失败，且最难C3格H0 Pfa点估计为0.1048；三臂均未过C3六格familywise Pfa门。因此当前候选组不晋级P7多种子训练。当前按独立protocol执行R6-I：固定模型在新场景上检验一个仅由H0拟合的可观测尺度分数校正；协议、代码与测试通过G0/G1后才运行，不训练或蒸馏、不生成final blind。R5-C/R6路线收尾时才提交一次综合ChatGPT审查请求。研究总纲v1.3与历史负结果不变。详见[CURRENT_STATUS](docs/CURRENT_STATUS.md)与[路线图](docs/RESEARCH_ROADMAP.md)。
 
 **近期历史：** D2-A-E002 v2.1 的 A/B/C 单 seed pilot 曾显示 G3 分层虚警和 G6 公共相位/频移一致性门失败，课程与 K2 未达到预注册增益；其 **REFINE** 结论保留，不由 E003 覆盖。
 

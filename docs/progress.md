@@ -1,5 +1,12 @@
 # 研究进度
 
+## 2026-11-23：冻结并开始实现 D2-A-R6-I
+
+- **任务对齐：** R6-H CNN-SSM有C2+C3 joint收益，但Range误差保护和C3六格familywise Pfa门失败；R6-A/B证据显示困难C3可能还存在可分性不足，因此只验证一个可观测尺度漂移假设，不预设归一化能解决所有困难。任务对齐见[`D2-A-R6-I_alignment.md`](task_alignments/D2-A-R6-I_alignment.md)。
+- **冻结实验：** 新建R6-I v1.0 protocol/config。固定seed808 CE-TCN/CNN-SSM权重及B3；H0尺度拟合60,000、独立H0阈值校准60,000、H0验证120,000、H1开发6,144，共246,144个独立场景；三通道/PRF1300/N130/32距离单元/12格不变。仅CNN-SSM raw score与单斜率校正score做确认配对比较，不训练、不做KD、不生成blind。
+- **门控与资源：** 场景ID须与历史manifest和R6-D/E/F/G/H注册计划零重叠；学生仅AISAR RTX 3050 `cuda:0` FP32推理、模型顺序驻留、IQ按CPU chunk生成且不缓存。完成协议、实现和定向测试的冻结提交后，运行G0/G1；仅通过后生成正式split。
+- **当前状态：** 目前只有协议/配置和动态路线登记，无R6-I数据、训练或实验结果。按用户要求，不在路线中途创建ChatGPT审查提示词；完成整个授权路线后再统一提交一次。
+
 ## 2026-11-23：完成 R6-H 复数 SSM / CNN-SSM 筛选与 P7 候选判断
 
 - **冻结执行：** G0/G1通过；seed808三臂按CE-TCN→复数SSM→CNN-SSM顺序，在AISAR环境RTX 3050 Laptop `cuda:0`完成25,600 FP32 updates/effective batch64。每臂训练51,200对唯一场景，H0 calibration/verification各120,000，H1 development6,144。评价由同一冻结入口完成，未生成final blind。
