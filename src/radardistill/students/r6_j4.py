@@ -56,18 +56,23 @@ def r6j4_dpca_fft(
     if isinstance(nfft, bool) or not isinstance(nfft, int) or nfft < R6J4_PULSE_COUNT:
         raise ValueError("nfft must be an integer no smaller than the pulse count")
 
-    complex_iq = torch.complex(iq_ri[:, :R6J4_CHANNEL_COUNT], iq_ri[:, R6J4_CHANNEL_COUNT:])
+    # The fractional geometry shift subtracts two nearly coherent channels.
+    # Accumulate this fixed phase shift in complex128 so the registered CUDA
+    # implementation remains within the complex128 reference tolerance; cast
+    # its output back to complex64 before the FFT and FP32 learned readout.
+    shifted_pair = torch.complex(iq_ri[:, :2], iq_ri[:, R6J4_CHANNEL_COUNT:R6J4_CHANNEL_COUNT + 2])
+    shifted_pair = shifted_pair.to(torch.complex128)
     frequencies_hz = torch.fft.fftfreq(
         R6J4_PULSE_COUNT,
         d=1.0 / prf_hz,
         device=iq_ri.device,
-        dtype=iq_ri.dtype,
+        dtype=torch.float64,
     )
     phase = torch.polar(torch.ones_like(frequencies_hz), 2.0 * math.pi * frequencies_hz * dpca_delay_s)
     shifted_second = torch.fft.ifft(
-        torch.fft.fft(complex_iq[:, 1], dim=1) * phase[None, :, None], dim=1
+        torch.fft.fft(shifted_pair[:, 1], dim=1) * phase[None, :, None], dim=1
     )
-    difference = complex_iq[:, 0] - shifted_second
+    difference = (shifted_pair[:, 0] - shifted_second).to(torch.complex64)
     return torch.fft.fftshift(torch.fft.fft(difference, n=nfft, dim=1), dim=1)
 
 

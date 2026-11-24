@@ -10,6 +10,7 @@ import yaml
 
 from radardistill.d2a_baselines import dpca_time_shift_s
 from radardistill.distillation.task_losses import encode_doppler_hz
+from radardistill.simulation.d2a import generate_d2a_paired_batch
 from radardistill.students.r6_j4 import (
     R6J4Student,
     r6j4_dpca_fft,
@@ -52,6 +53,25 @@ def test_fixed_frontend_matches_complex128_reference_on_cpu_and_cuda() -> None:
         np.testing.assert_allclose(
             response.detach().cpu().numpy(), reference, rtol=1e-4, atol=1e-6
         )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="R6-J4 G1 requires the registered CUDA device")
+def test_registered_g1_cuda_scene_matches_complex128_reference() -> None:
+    generated = generate_d2a_paired_batch(
+        16,
+        3_620_000_000,
+        20.0,
+        -5.0,
+        PHYSICS,
+        scenario_id="separated",
+    )
+    iq = np.asarray(generated.iq_h1[:4], dtype=np.complex64)
+    iq_ri = np.concatenate((iq.real, iq.imag), axis=1).astype(np.float32)
+    reference = _numpy_reference(torch.from_numpy(iq_ri), delay_s=DELAY_S)
+    response = r6j4_dpca_fft(
+        torch.from_numpy(iq_ri).cuda(), dpca_delay_s=DELAY_S, prf_hz=PRF, nfft=NFFT
+    )
+    np.testing.assert_allclose(response.cpu().numpy(), reference, rtol=1e-4, atol=1e-6)
 
 
 def test_frontend_doppler_peak_follows_tone_and_wraps_circularly() -> None:

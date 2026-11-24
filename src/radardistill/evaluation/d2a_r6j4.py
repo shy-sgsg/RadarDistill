@@ -427,6 +427,11 @@ def r6j4_g1() -> dict[str, Any]:
         "gpu": gpu,
         "device": "cuda:0",
         "precision": "FP32",
+        "fixed_frontend_precision": {
+            "dpca_shift_accumulation": "complex128",
+            "doppler_fft": "complex64",
+            "learned_readout": "FP32",
+        },
         "microbatch_probe": resource_probe,
         "formal_microbatch": selected_microbatch,
         "frontend_complex128_reference_max_relative_error": relative_error,

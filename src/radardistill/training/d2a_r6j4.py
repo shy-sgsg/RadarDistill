@@ -560,7 +560,9 @@ def _owner(arm: str, config: Mapping[str, Any], source_sha: Mapping[str, str], s
         "updates": int(config["training"]["fixed_updates"]),
         "effective_batch_size": int(config["training"]["effective_batch_size_cpi"]),
         "model_parameter_count": sum(parameter.numel() for parameter in model.parameters()),
-        "precision": "FP32",
+        "neural_network_precision": "FP32",
+        "fixed_dpca_shift_accumulation": "complex128",
+        "fixed_doppler_fft_precision": "complex64",
     }
 
 
