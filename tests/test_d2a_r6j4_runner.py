@@ -11,6 +11,7 @@ import yaml
 from radardistill.evaluation.d2a_r6j4 import ensure_r6j4_gates_passed
 from radardistill.training.d2a_r6j4 import (
     audit_r6j4_scene_plans,
+    _accumulate_validation_losses,
     build_r6j4_scene_plans,
     checkpoint_owner_matches,
     _paired_batch,
@@ -97,6 +98,34 @@ def test_cosine_schedule_has_frozen_endpoints_and_is_bounded() -> None:
     assert 1e-5 < r6j4_learning_rate(12_800) < 1e-3
     with pytest.raises(ValueError):
         r6j4_learning_rate(25_601)
+
+
+def test_validation_accumulator_supports_both_arms_distinct_loss_names() -> None:
+    j1_totals: dict[str, float] = {}
+    _accumulate_validation_losses(
+        j1_totals,
+        {"presence": 1.0, "range_cell": 2.0, "range_offset": 3.0, "doppler": 4.0,
+         "candidate": 5.0, "total": 15.0},
+        0.25,
+    )
+    _accumulate_validation_losses(
+        j1_totals,
+        {"presence": 3.0, "range_cell": 4.0, "range_offset": 5.0, "doppler": 6.0,
+         "candidate": 7.0, "total": 25.0},
+        0.75,
+    )
+    assert j1_totals == {
+        "presence": 2.5, "range_cell": 3.5, "range_offset": 4.5,
+        "doppler": 5.5, "candidate": 6.5, "total": 22.5,
+    }
+
+    j4_totals: dict[str, float] = {}
+    _accumulate_validation_losses(
+        j4_totals,
+        {"presence": 1.0, "candidate": 2.0, "range": 3.0, "doppler": 4.0, "total": 10.0},
+        1.0,
+    )
+    assert j4_totals == {"presence": 1.0, "candidate": 2.0, "range": 3.0, "doppler": 4.0, "total": 10.0}
 
 
 def test_checkpoint_payload_must_match_all_owner_fields() -> None:

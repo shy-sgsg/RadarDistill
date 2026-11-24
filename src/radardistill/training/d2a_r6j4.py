@@ -522,6 +522,18 @@ def _loss_batch(model: torch.nn.Module, iq: torch.Tensor, truth: Mapping[str, to
     return totals
 
 
+def _accumulate_validation_losses(
+    totals: dict[str, float], values: Mapping[str, float], weight: float
+) -> None:
+    """Accumulate one validation batch without assuming both arms share loss names."""
+    if totals and set(totals) != set(values):
+        raise ValueError("R6-J4 validation loss keys changed between batches")
+    if not totals:
+        totals.update({key: 0.0 for key in values})
+    for key, value in values.items():
+        totals[key] += float(value) * weight
+
+
 def _training_update(model: torch.nn.Module, optimizer: torch.optim.Optimizer, iq: torch.Tensor,
                      truth: Mapping[str, torch.Tensor], *, arm: str, config: Mapping[str, Any],
                      microbatch: int, device: torch.device) -> dict[str, float]:
@@ -684,15 +696,16 @@ def r6j4_train_all() -> dict[str, Any]:
             checkpoint_every = int(training["checkpoint_interval_updates"])
             if update % validate_every == 0:
                 # Validation follows the same 32 H0 / 32 H1 contract but streams scene pairs.
-                val_losses = {key: 0.0 for key in ("presence", "candidate", "range", "doppler", "total")}
+                val_losses: dict[str, float] = {}
                 for start in range(0, len(validation["scene_id"]), pairs_per_update):
                     indices = np.arange(start, min(len(validation["scene_id"]), start + pairs_per_update))
                     val_np, val_truth_np = _paired_batch(validation, indices)
                     val_tensor = torch.from_numpy(val_np).to(device)
                     val_truth = {key: torch.from_numpy(value).to(device) for key, value in val_truth_np.items()}
                     vals = _loss_batch(model, val_tensor, val_truth, arm, config, microbatch)
-                    for key, value in vals.items():
-                        val_losses[key] += value * (len(indices) / len(validation["scene_id"]))
+                    _accumulate_validation_losses(
+                        val_losses, vals, len(indices) / len(validation["scene_id"])
+                    )
                 objective = float(val_losses["total"])
                 if objective < best_objective:
                     best_objective, best_update = objective, update
