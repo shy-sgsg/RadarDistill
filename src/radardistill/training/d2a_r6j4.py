@@ -232,6 +232,10 @@ def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
     temporary.replace(path)
 
 
+def _emit_r6j4_training_progress(payload: Mapping[str, Any]) -> None:
+    print(json.dumps(payload, allow_nan=False), flush=True)
+
+
 def _atomic_torch_save(value: Any, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -722,10 +726,12 @@ def r6j4_train_all() -> dict[str, Any]:
                 }
                 history.append(row)
                 _atomic_json(history_path, {"owner": owner, "rows": history})
-                print(json.dumps({"stage": "train", "arm": arm, "update": update,
-                                  "train_total": row["train_interval"]["total"], "validation_total": objective,
-                                  "best_update": best_update, "microbatch": microbatch,
-                                  "cuda_peak_allocated_bytes": row["cuda_peak_allocated_bytes"]}, flush=True))
+                _emit_r6j4_training_progress({
+                    "stage": "train", "arm": arm, "update": update,
+                    "train_total": row["train_interval"]["total"], "validation_total": objective,
+                    "best_update": best_update, "microbatch": microbatch,
+                    "cuda_peak_allocated_bytes": row["cuda_peak_allocated_bytes"],
+                })
                 interval, interval_n = {}, 0
                 model.train()
             if update % checkpoint_every == 0:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,7 @@ import numpy as np
 import torch
 import yaml
 
+import radardistill.training.d2a_r6j4 as r6j4_training
 from radardistill.evaluation.d2a_r6j4 import ensure_r6j4_gates_passed
 from radardistill.training.d2a_r6j4 import (
     audit_r6j4_scene_plans,
@@ -126,6 +128,29 @@ def test_validation_accumulator_supports_both_arms_distinct_loss_names() -> None
         1.0,
     )
     assert j4_totals == {"presence": 1.0, "candidate": 2.0, "range": 3.0, "doppler": 4.0, "total": 10.0}
+
+
+def test_training_progress_is_json_and_flushes_stdout(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FlushTrackingWriter:
+        def __init__(self) -> None:
+            self.value = ""
+            self.flush_count = 0
+
+        def write(self, value: str) -> int:
+            self.value += value
+            return len(value)
+
+        def flush(self) -> None:
+            self.flush_count += 1
+
+    output = FlushTrackingWriter()
+    monkeypatch.setattr("sys.stdout", output)
+    payload = {"stage": "train", "arm": "j1_joint", "update": 400, "validation_total": 0.5}
+
+    r6j4_training._emit_r6j4_training_progress(payload)
+
+    assert json.loads(output.value) == payload
+    assert output.flush_count == 1
 
 
 def test_checkpoint_payload_must_match_all_owner_fields() -> None:
