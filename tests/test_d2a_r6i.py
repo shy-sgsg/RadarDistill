@@ -173,15 +173,17 @@ def test_metrics_pipeline_emits_all_workpoints_and_frozen_gates() -> None:
     count = len(condition_index)
     fit_index = np.repeat(np.arange(12), 2).astype(np.uint8)
     fit = {
-        "scene_id": np.asarray([f"fit-{i}" for i in range(len(fit_index))]),
-        "condition_index": fit_index,
-        "log_power": np.linspace(-3.0, 2.0, len(fit_index)),
         "beta": 0.2,
         "center": 0.0,
         "intercept": 0.5,
         "bin_counts": [50] * 20,
         "tail_log_power_medians": np.linspace(-3.0, 2.0, 20).tolist(),
         "tail_logit_quantiles": np.linspace(-0.1, 0.9, 20).tolist(),
+    }
+    fit_observations = {
+        "scene_id": np.asarray([f"fit-{i}" for i in range(len(fit_index))]),
+        "condition_index": fit_index,
+        "log_power": np.linspace(-3.0, 2.0, len(fit_index)),
     }
 
     def h0(prefix: str) -> dict[str, np.ndarray]:
@@ -208,7 +210,10 @@ def test_metrics_pipeline_emits_all_workpoints_and_frozen_gates() -> None:
         development[f"predicted_range_{arm}"] = np.zeros(count, dtype=np.float32)
         development[f"predicted_doppler_{arm}"] = np.zeros(count, dtype=np.float32)
 
-    result = _compute_metrics(config, condition_config, fit, calibration, verification, development)
+    result = _compute_metrics(
+        config, condition_config, fit, fit_observations,
+        calibration, verification, development,
+    )
 
     assert set(result["workpoints"]) == {"0.05", "0.01", "0.001"}
     assert set(result["p7_readmission"]["gates"]) == {
@@ -221,3 +226,5 @@ def test_metrics_pipeline_emits_all_workpoints_and_frozen_gates() -> None:
         "paired_doppler_rmse_noninferiority",
     }
     assert result["observable_log_power_by_split_and_condition"]["h0_verification"]["n"] == count
+    assert result["split_counts"]["h0_scale_fit"] == len(fit_index)
+    assert result["score_scale_fit"] == fit

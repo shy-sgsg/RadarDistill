@@ -1,0 +1,310 @@
+{
+  "condition": {
+    "cnr_db": 20.0,
+    "course": "C3",
+    "scenario_id": "partial_overlap",
+    "snr_db": 0.0
+  },
+  "condition_index": 10,
+  "diagnostic_only": true,
+  "factors": {
+    "H0": {
+      "b3": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 0.78125,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.001953125,
+          "mean_log_power": 2.361155202687673,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": 3140.938627810202
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.220703125,
+          "mean_log_power": 3.747449563807563,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": 12563.754511240808
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 0.505859375,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.71484375,
+          "mean_log_power": 5.133743924927454,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": 50255.01804496323
+        }
+      },
+      "ce_tcn": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.08984375,
+          "mean_log_power": 2.361155202687673,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -2.4352173805236816
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.08984375,
+          "mean_log_power": 3.747449563807563,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -2.4352173805236816
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.08984375,
+          "mean_log_power": 5.133743924927454,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -2.4352173805236816
+        }
+      },
+      "cnn_ssm_corrected": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 0.970703125,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.033203125,
+          "mean_log_power": 2.361155202687673,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -4.730206032485503
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.00390625,
+          "mean_log_power": 3.747449563807563,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -6.326773516649
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 0.99609375,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.0,
+          "mean_log_power": 5.133743924927454,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -7.923341000812498
+        }
+      },
+      "cnn_ssm_raw": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.09375,
+          "mean_log_power": 2.361155202687673,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -2.470942258834839
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.09375,
+          "mean_log_power": 3.747449563807563,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -2.470942258834839
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.09375,
+          "mean_log_power": 5.133743924927454,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -2.470942258834839
+        }
+      }
+    },
+    "H1": {
+      "b3": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 0.783203125,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.001953125,
+          "mean_log_power": 2.3615049083921793,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": 3154.8758222652705
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.21875,
+          "mean_log_power": 3.74779926951207,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": 12619.503289061082
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 0.5,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.71875,
+          "mean_log_power": 5.134093630631961,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": 50478.01315624433
+        }
+      },
+      "ce_tcn": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.3515625,
+          "mean_log_power": 2.3615049083921793,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -0.7990946769714355
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.3515625,
+          "mean_log_power": 3.74779926951207,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -0.7990946769714355
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.3515625,
+          "mean_log_power": 5.134093630631961,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -0.7990946769714355
+        }
+      },
+      "cnn_ssm_corrected": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 0.923828125,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.23828125,
+          "mean_log_power": 2.3615049083921793,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -2.9144451326986274
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.162109375,
+          "mean_log_power": 3.74779926951207,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -4.511012616862125
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 0.97265625,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.134765625,
+          "mean_log_power": 5.134093630631961,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -6.107580101025623
+        }
+      },
+      "cnn_ssm_raw": {
+        "0.5": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.359375,
+          "mean_log_power": 2.3615049083921793,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -0.6547787189483643
+        },
+        "1.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "fixed_threshold_event_rate": 0.359375,
+          "mean_log_power": 3.74779926951207,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "score_mean": -0.6547787189483643
+        },
+        "2.0": {
+          "decision_consistency_vs_unscaled": 1.0,
+          "doppler_abs_change_mean_hz": 0.0,
+          "doppler_abs_change_p95_hz": 0.0,
+          "fixed_threshold_event_rate": 0.359375,
+          "mean_log_power": 5.134093630631961,
+          "n": 512,
+          "power_ratio_relative_error_max": 0.0,
+          "range_abs_change_mean_cells": 0.0,
+          "range_abs_change_p95_cells": 0.0,
+          "score_mean": -0.6547787189483643
+        }
+      }
+    }
+  },
+  "thresholds_from_primary_h0_calibration": {
+    "b3": 19497.834109804728,
+    "ce_tcn": -1.5058702230453491,
+    "cnn_ssm_corrected": -2.60894775390625,
+    "cnn_ssm_raw": -1.665002703666687
+  }
+}

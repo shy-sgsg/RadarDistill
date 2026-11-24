@@ -1,0 +1,55 @@
+{
+  "common_scale_relative_error_max": 1e-05,
+  "correction_equation_check": "PASS",
+  "environment": {
+    "conda_default_env": "AISAR",
+    "python_executable": "/home/shy/anaconda3/envs/AISAR/bin/python3.13",
+    "python_version": "3.13.7",
+    "required_environment": "AISAR",
+    "torch_version": "2.8.0+cu128"
+  },
+  "final_blind_generated": false,
+  "git_sha": "c26a24f63e1bbfd874d7e7ea03dd974fceecd9c8",
+  "gpu": {
+    "available": true,
+    "device": "cuda:0",
+    "free_vram_bytes": 1787035648,
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "torch_cuda_version": "12.8",
+    "total_vram_bytes": 3942383616
+  },
+  "models_resident_on_gpu": 1,
+  "phase": "G1",
+  "precision": "FP32",
+  "status": "PASS",
+  "student_output_checks": [
+    {
+      "arm": "ce_tcn",
+      "count": 8,
+      "finite_outputs": true,
+      "microbatch_used": 4,
+      "presence": "H0"
+    },
+    {
+      "arm": "cnn_ssm",
+      "count": 8,
+      "finite_outputs": true,
+      "microbatch_used": 4,
+      "presence": "H0"
+    },
+    {
+      "arm": "ce_tcn",
+      "count": 8,
+      "finite_outputs": true,
+      "microbatch_used": 4,
+      "presence": "H1"
+    },
+    {
+      "arm": "cnn_ssm",
+      "count": 8,
+      "finite_outputs": true,
+      "microbatch_used": 4,
+      "presence": "H1"
+    }
+  ]
+}

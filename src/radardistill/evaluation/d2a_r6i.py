@@ -1144,6 +1144,7 @@ def _compute_metrics(
     config: Mapping[str, Any],
     condition_config: Mapping[str, Any],
     fit: Mapping[str, Any],
+    fit_observations: Mapping[str, np.ndarray],
     calibration: Mapping[str, np.ndarray],
     verification: Mapping[str, np.ndarray],
     development: Mapping[str, np.ndarray],
@@ -1158,7 +1159,7 @@ def _compute_metrics(
         "training_performed": False,
         "final_blind_generated": False,
         "split_counts": {
-            "h0_scale_fit": int(len(fit["scene_id"])),
+            "h0_scale_fit": int(len(fit_observations["scene_id"])),
             "h0_threshold_calibration": int(len(calibration["scene_id"])),
             "h0_verification": int(len(verification["scene_id"])),
             "h1_development": int(len(development["scene_id"])),
@@ -1167,7 +1168,7 @@ def _compute_metrics(
         "score_scale_diagnostics": _score_correlation_diagnostics(fit),
         "observable_log_power_by_split_and_condition": _observable_scale_summary(
             {
-                "h0_scale_fit": fit,
+                "h0_scale_fit": fit_observations,
                 "h0_threshold_calibration": calibration,
                 "h0_verification": verification,
                 "h1_development": development,
@@ -1463,7 +1464,8 @@ def r6i_analyze() -> dict[str, Any]:
         c2c3 = h1["by_group"]["C2_C3"]
         lines.append(
             f"| {arm} | {h1['pd']:.5f} | {c2c3['joint_success']:.5f} "
-            f"| {all_group['range_rmse_cells']:.5f} | {all_group['doppler_rmse_hz']:.5f} |"
+            f"| {all_group['all_h1']['range_rmse_cells']:.5f} "
+            f"| {all_group['all_h1']['doppler_rmse_hz']:.5f} |"
         )
     lines.extend([
         "",
@@ -1663,7 +1665,8 @@ def r6i_evaluate() -> dict[str, Any]:
         git_sha=preflight["commit"]["git_sha"],
     )
     metrics = _compute_metrics(
-        config, condition_config, fit, calibration, verification, development
+        config, condition_config, fit, fit_predictions,
+        calibration, verification, development,
     )
     primary_key = f"{float(config['evaluation']['primary_workpoint']):g}"
     primary_thresholds = {

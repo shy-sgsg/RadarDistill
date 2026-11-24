@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "frozen_prediction_commit": "c26a24f63e1bbfd874d7e7ea03dd974fceecd9c8",
+  "initial_runner_error": "KeyError: 'scene_id' in _compute_metrics split-count assembly",
+  "recovery_method": "The initial fit-split metric assembly was recovered from its cached scene_id, condition_index, and log_power arrays; all four frozen prediction split files were reused, and only the preregistered scale intervention was computed during final aggregation.",
+  "prediction_splits_regenerated": [],
+  "training_performed": false,
+  "final_blind_generated": false,
+  "p7_readmission_status": "FAIL",
+  "post_run_code_repairs": [
+    "Separated H0 fit coefficients from fit-split per-scene observations in the metric assembly interface.",
+    "Corrected the analyzer to read all-H1 Range and Doppler RMSE from the nested all_h1 result schema."
+  ],
+  "post_run_validation": {
+    "targeted_test_file": "tests/test_d2a_r6i.py",
+    "targeted_tests_passed": 12,
+    "cached_metric_groups_recomputed": 13,
+    "cached_metric_mismatches": 0,
+    "prediction_splits_regenerated": []
+  },
+  "evaluation_wall_seconds_scope": "metrics.json evaluation_wall_seconds covers cached finalization/scale intervention, not initial prediction generation."
+}
