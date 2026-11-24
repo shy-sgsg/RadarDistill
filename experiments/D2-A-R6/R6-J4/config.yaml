@@ -1,0 +1,209 @@
+experiment:
+  id: D2-A-R6-J4
+  protocol_version: "1.0"
+  status: preregistered
+  charter_version: "1.3"
+  execution_authorized: true
+  execution_gate: G0_G1_then_one_frozen_development_pilot
+  final_blind_authorized: false
+  review_request_timing: after_all_authorized_R5_C_and_R6_route_goals
+  objective: compare_a_fixed_geometry_physics_frontend_and_learned_joint_readout_with_matched_raw_iq_student
+  teacher_training: false
+  knowledge_distillation: false
+
+radar:
+  channel_count: 3
+  prf_hz: 1300.0
+  pulse_count: 130
+  range_bin_count: 32
+  clutter: stationary
+  source_config: experiments/D2-A-E001/config.yaml
+  condition_source: experiments/D2-A-R6/R6-A/config.yaml
+  condition_count: 12
+  conditions:
+    - {course: C0, scenario_id: separated, snr_db: 20.0, cnr_db: -5.0}
+    - {course: C1, scenario_id: separated, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C1, scenario_id: near_clutter_edge, snr_db: 15.0, cnr_db: 0.0}
+    - {course: C2, scenario_id: separated, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C2, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 10.0}
+    - {course: C3, scenario_id: separated, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: separated, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: near_clutter_edge, snr_db: 10.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 0.0, cnr_db: 20.0}
+    - {course: C3, scenario_id: partial_overlap, snr_db: 10.0, cnr_db: 20.0}
+
+models:
+  arms: [j1_joint, j4_joint]
+  j1_joint:
+    architecture: R6J1Student_width96_raw_complex_iq
+    input: complex_iq_as_real_imag_planes
+    width: 96
+    trainable_physical_frontend: false
+  j4_joint:
+    architecture: R6J4Student_fixed_dpca_520_fft_width48
+    input: complex_iq_as_real_imag_planes
+    width: 48
+    trainable_physical_frontend: false
+  arms_share_scene_ids: true
+  arms_share_scene_order: true
+  arms_share_update_budget: true
+  initialization_seed_by_arm: {j1_joint: 909, j4_joint: 909}
+  report_actual_parameter_counts: true
+  fixed_baselines:
+    - b3_130_fft
+    - fixed_dpca_130_fft_peak
+    - fixed_dpca_520_fft_peak
+  j4_frontend:
+    type: fixed_geometry_dpca_plus_zero_padded_fft
+    channel_pair: [0, 1]
+    dpca_shift_source: frozen_platform_and_channel_geometry
+    doppler_fft_bins: 520
+    fft_axis: slow_time
+    fftshift: true
+    feature: log1p_complex_response_power
+    input_shape: [batch, 6, 130, 32]
+    candidate_shape: [520, 32]
+    null_candidate: explicit
+    continuous_range_readout: bounded_offset_from_candidate
+    continuous_doppler_readout: prf_wrapped_residual_hz
+    bounded_candidate_feedback: true
+    truth_or_condition_input: false
+
+data:
+  condition_seed_stride: 1000000
+  condition_offset_stride: 850000
+  chunk_size: 16
+  chunk_seed_stride: 1009
+  g1_test_seed: 3620000000
+  g1_test_count: 16
+  prior_manifest_scan: all_experiments_scene_manifests
+  prior_registered_plan_stages: [R6-A, R6-B, R6-C, R6-D, R6-E, R6-F, R6-G, R6-H, R6-I]
+  reuse_prior_scene_ids: false
+  same_iq_across_arms: true
+  persist_train_validation_iq_temporarily: true
+  persist_evaluation_iq: false
+  estimated_train_validation_cache_bytes: 11222016000
+  minimum_free_disk_bytes_before_generation: 15516983296
+  splits:
+    train:
+      paired_scenes: 51200
+      seed_bases_by_course: [3500000000, 3505000000, 3510000000, 3515000000]
+      assignment_seed: 2026112401
+    validation:
+      paired_scenes: 5000
+      seed_bases_by_course: [3540000000, 3545000000, 3550000000, 3555000000]
+      assignment_seed: 2026112402
+    h0_calibration:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 3560000000
+    h0_verification:
+      presence: H0
+      scene_count: 120000
+      count_per_condition: 10000
+      seed_base: 3580000000
+    h1_development:
+      presence: H1
+      scene_count: 6144
+      count_per_condition: 512
+      seed_base: 3600000000
+  train_validation_cache_owner: experiments/D2-A-R6/R6-J4/owner_manifest.json
+  owner_cleanup_only: true
+  final_project_limit_gib: 20
+
+training:
+  supervision: physical_truth_only
+  training_seed: 909
+  sampler_seed: 910
+  fixed_updates: 25600
+  effective_batch_size_cpi: 64
+  per_update_examples: {H0: 32, H1: 32}
+  arms_share_scene_order: true
+  arms_share_update_budget: true
+  h0_loss: presence_only
+  h1_losses:
+    presence: binary_cross_entropy
+    candidate: cross_entropy_on_registered_520_by_32_target
+    range: smooth_l1
+    range_beta: 0.1
+    doppler: prf_wrapped_circular_loss
+  main_loss_weights: {presence: 1.0, candidate_or_range_cell: 1.0, range: 1.0, doppler: 1.0}
+  optimizer: AdamW
+  learning_rate_initial: 0.001
+  learning_rate_final: 0.00001
+  learning_rate_schedule: single_cosine_over_all_updates
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  validation_interval_updates: 400
+  history_interval_updates: 400
+  checkpoint_interval_updates: 800
+  history_written_every_update: false
+  microbatch_initial: 16
+  microbatch_candidates_after_oom: [8, 4]
+  oom_preserve_effective_batch: true
+  precision: FP32
+  amp: false
+  training_seed_by_arm: {j1_joint: 909, j4_joint: 909}
+  cuda_required: true
+  device: cuda:0
+  cpu_fallback: forbidden
+  simultaneous_models_on_gpu: 1
+  g1_micro_overfit_pairs: 16
+  g1_micro_overfit_updates: 200
+  g1_min_relative_loss_reduction: 0.10
+
+evaluation:
+  calibration_split: h0_calibration
+  verification_split: h0_verification
+  development_split: h1_development
+  target_pfa_cpi: 0.05
+  threshold_quantile_method: higher
+  threshold_comparator: ">="
+  primary_contrast: j4_joint_minus_j1_joint
+  primary_metric: identifiable_C2_C3_joint_success
+  primary_minimum_gain: 0.02
+  paired_bootstrap_unit: base_scene_id
+  paired_bootstrap_replicates: 2000
+  paired_bootstrap_seed: 2026112403
+  ci_level: 0.95
+  primary_ci_lower_must_exceed: 0.0
+  overall_pd_difference_ci_lower_minimum: -0.02
+  all_h1_range_rmse_ratio_ci_upper_maximum: 1.05
+  all_h1_doppler_rmse_ratio_ci_upper_maximum: 1.05
+  c3_condition_count: 6
+  c3_familywise_alpha: 0.05
+  c3_cell_pfa_upper_maximum: 0.10
+  c3_cell_interval_method: bonferroni_exact_one_sided_clopper_pearson
+  include_all_h1_and_detected_only_parameter_errors: true
+  report_per_condition_pd_pfa_auc_rmse_bias_joint: true
+  threshold_data_used_for_model_selection: false
+  verification_data_used_for_model_selection: false
+  development_data_is_final_blind: false
+  final_blind_authorized: false
+  comparisons:
+    - [j4_joint, fixed_dpca_520_fft_peak]
+    - [fixed_dpca_520_fft_peak, fixed_dpca_130_fft_peak]
+    - [j4_joint, j1_joint]
+    - [j1_joint, b3_130_fft]
+  interpretation:
+    j4_vs_fixed_520: learned_readout_contribution_conditional_on_fixed_frontend
+    fixed_520_vs_130: zero_padding_grid_density_contribution
+    j4_vs_j1: complete_representation_and_learning_system_comparison_not_single_factor_causal_effect
+
+resources:
+  required_environment: AISAR
+  required_gpu_name: NVIDIA GeForce RTX 3050 Laptop GPU
+  required_device: cuda:0
+  required_vram_bytes: 4294967296
+  minimum_free_vram_bytes: 1610612736
+  precision: FP32
+  amp: false
+  cpu_fallback: forbidden
+  data_loading: deterministic_cpu_generated_chunks_to_cuda
+  model_residency: sequential_one_model_at_a_time
+  cleanup_owner_manifest: experiments/D2-A-R6/R6-J4/owner_manifest.json
+  preserve_user_untracked_files: true
+  max_project_size_gib: 20
