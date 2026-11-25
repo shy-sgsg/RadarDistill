@@ -1,0 +1,1571 @@
+{
+  "owner": {
+    "owner": "D2-A-R6-J4-training-run",
+    "arm": "j1_joint",
+    "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+    "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+    "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+    "source_sha256": {
+      "src/radardistill/evaluation/d2a_r6j4.py": "d7e2902dca16e77bdaba057a1926e269ee589bcf0c4a6005f8d8cb67bbaaa806",
+      "src/radardistill/training/d2a_r6j4.py": "09218b4e9f0cac1fa909c93c5521ad47ea64df90223af10afbc360963addfa0a",
+      "src/radardistill/students/r6_j4.py": "a41a5b343e8234f5f2f45b3c0327559aa9093c8cbebffecac213b68a1c8c6b16",
+      "src/radardistill/students/r6_joint.py": "3e719c554a9107c8f9c9cc113c6fadbe773b2ff08dda4deabfa7a89387ee844c",
+      "src/radardistill/training/d2a_r6d_joint.py": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+      "src/radardistill/evaluation/d2a_r6a.py": "4999197108d2e6708158897b3ef5f4c9f8954f7183ad1de073ead44abc20f914",
+      "src/radardistill/evaluation/d2a_r6e.py": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+      "src/radardistill/simulation/d2a.py": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+      "src/radardistill/d2a_baselines.py": "6ed7a12c51401cbdf275c195b7f9be021e0982614a7b064361916be7b2c66d87",
+      "scripts/run_d2a_r6j4.py": "9865e704868097a7c66d2664ee43f82572d9c934c738117eb746f11d28a74211",
+      "experiments/D2-A-E001/config.yaml": "b97f2b1125ed15ff8ee782d8fa1ee4228529411ed300beabadffff9fcb3aa9ce",
+      "experiments/D2-A-R6/R6-A/config.yaml": "99fd0bbfd3e1a4801105e81a59dff395c503ccdece3ddb96eb686de3fe21f598",
+      "experiments/D2-A-R6/R6-J4/protocol.md": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+      "experiments/D2-A-R6/R6-J4/config.yaml": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd"
+    },
+    "training_seed": 909,
+    "sampler_sha256": "371c90d2486e2f7956d77335ba3ae05b71eaf997f9a99d6f60ca527a7fa26ecb",
+    "updates": 25600,
+    "effective_batch_size": 64,
+    "model_parameter_count": 70277,
+    "neural_network_precision": "FP32",
+    "fixed_dpca_shift_accumulation": "complex128",
+    "fixed_doppler_fft_precision": "complex64"
+  },
+  "rows": [
+    {
+      "update": 400,
+      "learning_rate": 0.0009994066814031292,
+      "train_interval": {
+        "presence": 0.28745378512903696,
+        "range_cell": 0.8251360093722119,
+        "range_offset": 0.10332348993280903,
+        "doppler": 0.10011921545024961,
+        "candidate": 0.0,
+        "total": 1.3160325009410736
+      },
+      "validation": {
+        "presence": 0.18405447839424016,
+        "range_cell": 0.43339405691608723,
+        "range_offset": 0.07180115572884681,
+        "doppler": 0.026543442165851586,
+        "candidate": 0.0,
+        "total": 0.7157931350305676
+      },
+      "best_update": 400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 820685312,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 800,
+      "learning_rate": 0.0009976222044944141,
+      "train_interval": {
+        "presence": 0.1452491270072278,
+        "range_cell": 0.3705969962486313,
+        "range_offset": 0.0767118954070611,
+        "doppler": 0.018113147169351577,
+        "candidate": 0.0,
+        "total": 0.61067116608785
+      },
+      "validation": {
+        "presence": 0.12179164635718336,
+        "range_cell": 0.2922860881978614,
+        "range_offset": 0.060066242730990024,
+        "doppler": 0.015459605467319492,
+        "candidate": 0.0,
+        "total": 0.4896035848293453
+      },
+      "best_update": 800,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 1200,
+      "learning_rate": 0.0009946508648432414,
+      "train_interval": {
+        "presence": 0.1200547696864669,
+        "range_cell": 0.2945446881068347,
+        "range_offset": 0.06480663533104235,
+        "doppler": 0.013758867932483553,
+        "candidate": 0.0,
+        "total": 0.4931649605644634
+      },
+      "validation": {
+        "presence": 0.13088623564629234,
+        "range_cell": 0.24594988878958068,
+        "range_offset": 0.050582058011740455,
+        "doppler": 0.013399677300453185,
+        "candidate": 0.0,
+        "total": 0.4408178621545434
+      },
+      "best_update": 1200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 1600,
+      "learning_rate": 0.0009904998212262454,
+      "train_interval": {
+        "presence": 0.10256325471013042,
+        "range_cell": 0.24631990689711133,
+        "range_offset": 0.0548630342107208,
+        "doppler": 0.009810712719336152,
+        "candidate": 0.0,
+        "total": 0.4135569083542214
+      },
+      "validation": {
+        "presence": 0.0940287420447916,
+        "range_cell": 0.24251760801978542,
+        "range_offset": 0.06524546177983283,
+        "doppler": 0.012399727523326874,
+        "candidate": 0.0,
+        "total": 0.41419154322147383
+      },
+      "best_update": 1600,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 2000,
+      "learning_rate": 0.0009851790746522443,
+      "train_interval": {
+        "presence": 0.1025790976627286,
+        "range_cell": 0.24897177526946987,
+        "range_offset": 0.04724148211054853,
+        "doppler": 0.008581872656941414,
+        "candidate": 0.0,
+        "total": 0.4073742287037021
+      },
+      "validation": {
+        "presence": 0.09513674714409281,
+        "range_cell": 0.2347119434764453,
+        "range_offset": 0.052369369385764,
+        "doppler": 0.0063847271561622634,
+        "candidate": 0.0,
+        "total": 0.38860278864428394
+      },
+      "best_update": 2000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 2400,
+      "learning_rate": 0.0009787014442670528,
+      "train_interval": {
+        "presence": 0.09413316803348608,
+        "range_cell": 0.23236678865398525,
+        "range_offset": 0.042744402426142185,
+        "doppler": 0.008051300002261997,
+        "candidate": 0.0,
+        "total": 0.37729565846180774
+      },
+      "validation": {
+        "presence": 0.11511133215661833,
+        "range_cell": 0.21900496892970886,
+        "range_offset": 0.0488010845951736,
+        "doppler": 0.008308664464950563,
+        "candidate": 0.0,
+        "total": 0.391226048227772
+      },
+      "best_update": 2000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 2800,
+      "learning_rate": 0.0009710825364686236,
+      "train_interval": {
+        "presence": 0.09102602439409566,
+        "range_cell": 0.22455138273648673,
+        "range_offset": 0.040763998457696286,
+        "doppler": 0.006696781031787395,
+        "candidate": 0.0,
+        "total": 0.3630381875038438
+      },
+      "validation": {
+        "presence": 0.08704506354788319,
+        "range_cell": 0.20971154735809652,
+        "range_offset": 0.05130784153416753,
+        "doppler": 0.009556444561481478,
+        "candidate": 0.0,
+        "total": 0.3576208973042668
+      },
+      "best_update": 2800,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 3200,
+      "learning_rate": 0.0009623407073069304,
+      "train_interval": {
+        "presence": 0.0912882151779013,
+        "range_cell": 0.22504950142830818,
+        "range_offset": 0.03764190131361829,
+        "doppler": 0.006789115476422012,
+        "candidate": 0.0,
+        "total": 0.36076873391662956
+      },
+      "validation": {
+        "presence": 0.09885202731170431,
+        "range_cell": 0.20306366170192544,
+        "range_offset": 0.03332262716144325,
+        "doppler": 0.00571010023355484,
+        "candidate": 0.0,
+        "total": 0.3409484116610139
+      },
+      "best_update": 3200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 3600,
+      "learning_rate": 0.0009524970182591833,
+      "train_interval": {
+        "presence": 0.08310447527293946,
+        "range_cell": 0.20603587974223067,
+        "range_offset": 0.03484841166275146,
+        "doppler": 0.005633941749110818,
+        "candidate": 0.0,
+        "total": 0.3296227089012245
+      },
+      "validation": {
+        "presence": 0.07754769751189743,
+        "range_cell": 0.1898346334345786,
+        "range_offset": 0.032381063983589406,
+        "doppler": 0.004573713231086732,
+        "candidate": 0.0,
+        "total": 0.30433710711412126
+      },
+      "best_update": 3600,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 4000,
+      "learning_rate": 0.0009415751854869205,
+      "train_interval": {
+        "presence": 0.08112011487967492,
+        "range_cell": 0.2010451417810776,
+        "range_offset": 0.03355696780636208,
+        "doppler": 0.005323086492717266,
+        "candidate": 0.0,
+        "total": 0.3210453103578766
+      },
+      "validation": {
+        "presence": 0.07934699337400382,
+        "range_cell": 0.19695037073758279,
+        "range_offset": 0.031923370040953164,
+        "doppler": 0.01024893219470978,
+        "candidate": 0.0,
+        "total": 0.318469667185843
+      },
+      "best_update": 3600,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 4400,
+      "learning_rate": 0.0009296015226972353,
+      "train_interval": {
+        "presence": 0.07881859032629791,
+        "range_cell": 0.19470996080560116,
+        "range_offset": 0.030107950674719178,
+        "doppler": 0.005351336300373077,
+        "candidate": 0.0,
+        "total": 0.30898783882017594
+      },
+      "validation": {
+        "presence": 0.08037300410866738,
+        "range_cell": 0.2071395435297287,
+        "range_offset": 0.027010086994664746,
+        "doppler": 0.010808361661434175,
+        "candidate": 0.0,
+        "total": 0.32533099360801276
+      },
+      "best_update": 3600,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 4800,
+      "learning_rate": 0.0009166048777457992,
+      "train_interval": {
+        "presence": 0.08127070124641705,
+        "range_cell": 0.19958954915870117,
+        "range_offset": 0.031628111830505075,
+        "doppler": 0.004852260975167155,
+        "candidate": 0.0,
+        "total": 0.3173406238181633
+      },
+      "validation": {
+        "presence": 0.0755343695048243,
+        "range_cell": 0.18242284021017283,
+        "range_offset": 0.03216283570118248,
+        "doppler": 0.007286942625045777,
+        "candidate": 0.0,
+        "total": 0.29740698600783944
+      },
+      "best_update": 4800,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 5200,
+      "learning_rate": 0.0009026165631344221,
+      "train_interval": {
+        "presence": 0.07534152486812673,
+        "range_cell": 0.1852942472823303,
+        "range_offset": 0.028032228210722678,
+        "doppler": 0.004148667464032769,
+        "candidate": 0.0,
+        "total": 0.29281666784911065
+      },
+      "validation": {
+        "presence": 0.07902899932903967,
+        "range_cell": 0.1909102194393844,
+        "range_offset": 0.05116579129695895,
+        "doppler": 0.004114967131614684,
+        "candidate": 0.0,
+        "total": 0.32521997467353936
+      },
+      "best_update": 4800,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 5600,
+      "learning_rate": 0.0008876702805706002,
+      "train_interval": {
+        "presence": 0.07582815518268263,
+        "range_cell": 0.18593819992770486,
+        "range_offset": 0.028563089548188144,
+        "doppler": 0.0042867040308192375,
+        "candidate": 0.0,
+        "total": 0.29461614913641826
+      },
+      "validation": {
+        "presence": 0.07403973426246085,
+        "range_cell": 0.18797077166859202,
+        "range_offset": 0.027202924244105822,
+        "doppler": 0.0034282429099082956,
+        "candidate": 0.0,
+        "total": 0.292641672885418
+      },
+      "best_update": 5600,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 6000,
+      "learning_rate": 0.0008718020397708087,
+      "train_interval": {
+        "presence": 0.07316517624659469,
+        "range_cell": 0.18218749307615567,
+        "range_offset": 0.027521997449766786,
+        "doppler": 0.004116928954608738,
+        "candidate": 0.0,
+        "total": 0.28699159605130264
+      },
+      "validation": {
+        "presence": 0.06967287986744196,
+        "range_cell": 0.18817287909952007,
+        "range_offset": 0.027519565833918756,
+        "doppler": 0.003264730906486511,
+        "candidate": 0.0,
+        "total": 0.2886300575241447
+      },
+      "best_update": 6000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 6400,
+      "learning_rate": 0.0008550500717031645,
+      "train_interval": {
+        "presence": 0.06971942304466552,
+        "range_cell": 0.1731362261233727,
+        "range_offset": 0.025361936978988524,
+        "doppler": 0.003305751332081854,
+        "candidate": 0.0,
+        "total": 0.2715233379933488
+      },
+      "validation": {
+        "presence": 0.0727124978769105,
+        "range_cell": 0.1756973597188021,
+        "range_offset": 0.02485359261501581,
+        "doppler": 0.002726789820194245,
+        "candidate": 0.0,
+        "total": 0.27599023945052176
+      },
+      "best_update": 6400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 6800,
+      "learning_rate": 0.0008374547364784803,
+      "train_interval": {
+        "presence": 0.0681494460395129,
+        "range_cell": 0.17508722971525045,
+        "range_offset": 0.024919062650533307,
+        "doppler": 0.003288675546646118,
+        "candidate": 0.0,
+        "total": 0.271444414390462
+      },
+      "validation": {
+        "presence": 0.06808345214556905,
+        "range_cell": 0.17058139660980198,
+        "range_offset": 0.031636804984789345,
+        "doppler": 0.003180699026584625,
+        "candidate": 0.0,
+        "total": 0.2734823500020431
+      },
+      "best_update": 6800,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 7200,
+      "learning_rate": 0.0008190584261116284,
+      "train_interval": {
+        "presence": 0.06789790795586213,
+        "range_cell": 0.16031937704549903,
+        "range_offset": 0.023672995322485804,
+        "doppler": 0.0030949517246335744,
+        "candidate": 0.0,
+        "total": 0.25498523190704875
+      },
+      "validation": {
+        "presence": 0.0675870542167686,
+        "range_cell": 0.1713828121608121,
+        "range_offset": 0.02358780872952193,
+        "doppler": 0.0027269344329833986,
+        "candidate": 0.0,
+        "total": 0.2652846090426669
+      },
+      "best_update": 7200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 7600,
+      "learning_rate": 0.0007999054623874855,
+      "train_interval": {
+        "presence": 0.07230355115156158,
+        "range_cell": 0.16832370749845144,
+        "range_offset": 0.022785121413235174,
+        "doppler": 0.0029743309877812863,
+        "candidate": 0.0,
+        "total": 0.26638671210886966
+      },
+      "validation": {
+        "presence": 0.06722341537568718,
+        "range_cell": 0.1715367199219927,
+        "range_offset": 0.03355634617991746,
+        "doppler": 0.0032504305005073555,
+        "candidate": 0.0,
+        "total": 0.2755669105254113
+      },
+      "best_update": 7200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 8000,
+      "learning_rate": 0.0007800419900775305,
+      "train_interval": {
+        "presence": 0.06727079917114338,
+        "range_cell": 0.16362681372125493,
+        "range_offset": 0.022592338508438843,
+        "doppler": 0.0031787713477388025,
+        "candidate": 0.0,
+        "total": 0.2566687224696216
+      },
+      "validation": {
+        "presence": 0.06955409955389333,
+        "range_cell": 0.17015681023737136,
+        "range_offset": 0.024764490077178923,
+        "doppler": 0.003379509198665619,
+        "candidate": 0.0,
+        "total": 0.26785490936860445
+      },
+      "best_update": 7200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 8400,
+      "learning_rate": 0.0007595158657643644,
+      "train_interval": {
+        "presence": 0.06416379882875446,
+        "range_cell": 0.15705702374903646,
+        "range_offset": 0.021537824419610843,
+        "doppler": 0.002913753855973482,
+        "candidate": 0.0,
+        "total": 0.24567240140691865
+      },
+      "validation": {
+        "presence": 0.06319103313852101,
+        "range_cell": 0.16636047795258047,
+        "range_offset": 0.02461412552893162,
+        "doppler": 0.002851526868343354,
+        "candidate": 0.0,
+        "total": 0.2570171617832035
+      },
+      "best_update": 8400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 8800,
+      "learning_rate": 0.0007383765425420055,
+      "train_interval": {
+        "presence": 0.06658862191496383,
+        "range_cell": 0.15799012583922312,
+        "range_offset": 0.021257072966682243,
+        "doppler": 0.0029443743126466872,
+        "candidate": 0.0,
+        "total": 0.24878019429728737
+      },
+      "validation": {
+        "presence": 0.07786322754537688,
+        "range_cell": 0.1856094114365435,
+        "range_offset": 0.021894069043104546,
+        "doppler": 0.002495116972923279,
+        "candidate": 0.0,
+        "total": 0.28786182855749504
+      },
+      "best_update": 8400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 9200,
+      "learning_rate": 0.0007166749508697479,
+      "train_interval": {
+        "presence": 0.06644848634652988,
+        "range_cell": 0.15884934819142232,
+        "range_offset": 0.021857163120766927,
+        "doppler": 0.0025839415332302453,
+        "candidate": 0.0,
+        "total": 0.2497389394861966
+      },
+      "validation": {
+        "presence": 0.07233945080981356,
+        "range_cell": 0.18441205906925467,
+        "range_offset": 0.021388728236220775,
+        "doppler": 0.0026330118179321294,
+        "candidate": 0.0,
+        "total": 0.2807732523882762
+      },
+      "best_update": 8400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 9600,
+      "learning_rate": 0.0006944633758666402,
+      "train_interval": {
+        "presence": 0.06355299107060602,
+        "range_cell": 0.15773466801235198,
+        "range_offset": 0.020193335716576256,
+        "doppler": 0.0025939351553097368,
+        "candidate": 0.0,
+        "total": 0.244074929459166
+      },
+      "validation": {
+        "presence": 0.06990206926367246,
+        "range_cell": 0.18752101913480837,
+        "range_offset": 0.02017576402439736,
+        "doppler": 0.0024898046493530284,
+        "candidate": 0.0,
+        "total": 0.280088660165202
+      },
+      "best_update": 8400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 10000,
+      "learning_rate": 0.000671795331342214,
+      "train_interval": {
+        "presence": 0.061857281253311955,
+        "range_cell": 0.1402325771836777,
+        "range_offset": 0.020150713512648508,
+        "doppler": 0.0025199414929375054,
+        "candidate": 0.0,
+        "total": 0.22476051367506444
+      },
+      "validation": {
+        "presence": 0.06651787160662935,
+        "range_cell": 0.16769996465417583,
+        "range_offset": 0.021824080483522267,
+        "doppler": 0.0023489150643348695,
+        "candidate": 0.0,
+        "total": 0.258390832994273
+      },
+      "best_update": 8400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 10400,
+      "learning_rate": 0.00064872543086696,
+      "train_interval": {
+        "presence": 0.06327105487233667,
+        "range_cell": 0.1488110450320352,
+        "range_offset": 0.019691058856078598,
+        "doppler": 0.0023274181550368665,
+        "candidate": 0.0,
+        "total": 0.23410057738583417
+      },
+      "validation": {
+        "presence": 0.062059702176228165,
+        "range_cell": 0.15638297087179662,
+        "range_offset": 0.018669764983537607,
+        "doppler": 0.00218192275762558,
+        "candidate": 0.0,
+        "total": 0.2392943588197697
+      },
+      "best_update": 10400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 10800,
+      "learning_rate": 0.0006253092561931755,
+      "train_interval": {
+        "presence": 0.0640086930306893,
+        "range_cell": 0.1476188823911161,
+        "range_offset": 0.019171171014677385,
+        "doppler": 0.0024733509495854377,
+        "candidate": 0.0,
+        "total": 0.23327209725386638
+      },
+      "validation": {
+        "presence": 0.06996843749042601,
+        "range_cell": 0.161260728923377,
+        "range_offset": 0.0191515610330156,
+        "doppler": 0.0024133334279060367,
+        "candidate": 0.0,
+        "total": 0.2527940597441048
+      },
+      "best_update": 10400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 11200,
+      "learning_rate": 0.0006016032233431948,
+      "train_interval": {
+        "presence": 0.06366162493673812,
+        "range_cell": 0.15370017071155997,
+        "range_offset": 0.01846701014608698,
+        "doppler": 0.0025350720854476093,
+        "candidate": 0.0,
+        "total": 0.23836387843810372
+      },
+      "validation": {
+        "presence": 0.06193457899084315,
+        "range_cell": 0.15461382310986643,
+        "range_offset": 0.019209276164649052,
+        "doppler": 0.0024106816411018374,
+        "candidate": 0.0,
+        "total": 0.2381683601644822
+      },
+      "best_update": 11200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 11600,
+      "learning_rate": 0.0005776644466876336,
+      "train_interval": {
+        "presence": 0.06048609722000151,
+        "range_cell": 0.13937196715987404,
+        "range_offset": 0.01772299007325273,
+        "doppler": 0.002191418148577213,
+        "candidate": 0.0,
+        "total": 0.21977247367911332
+      },
+      "validation": {
+        "presence": 0.06282343942939769,
+        "range_cell": 0.15509262725718592,
+        "range_offset": 0.01961178159066475,
+        "doppler": 0.0024120303392410284,
+        "candidate": 0.0,
+        "total": 0.2399398751828354
+      },
+      "best_update": 11200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 12000,
+      "learning_rate": 0.0005535506013411204,
+      "train_interval": {
+        "presence": 0.05907045935301283,
+        "range_cell": 0.12988820490448694,
+        "range_offset": 0.017066658466483205,
+        "doppler": 0.0022532520443201065,
+        "candidate": 0.0,
+        "total": 0.20827857468550065
+      },
+      "validation": {
+        "presence": 0.0627866604546085,
+        "range_cell": 0.15562218990758994,
+        "range_offset": 0.019232467360759623,
+        "doppler": 0.0022342088699340815,
+        "candidate": 0.0,
+        "total": 0.2398755278605968
+      },
+      "best_update": 11200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 12400,
+      "learning_rate": 0.0005293197842070386,
+      "train_interval": {
+        "presence": 0.06343936127458732,
+        "range_cell": 0.14884104238238793,
+        "range_offset": 0.018364594479990046,
+        "doppler": 0.0022982926853001118,
+        "candidate": 0.0,
+        "total": 0.2329432908456147
+      },
+      "validation": {
+        "presence": 0.0653240950544132,
+        "range_cell": 0.1615827188543501,
+        "range_offset": 0.019062403258681304,
+        "doppler": 0.0024607538700103754,
+        "candidate": 0.0,
+        "total": 0.2484299692930654
+      },
+      "best_update": 11200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 12800,
+      "learning_rate": 0.0005050303740060659,
+      "train_interval": {
+        "presence": 0.06047776619224351,
+        "range_cell": 0.13535806659131813,
+        "range_offset": 0.017353948870641032,
+        "doppler": 0.0021572314808145166,
+        "candidate": 0.0,
+        "total": 0.21534701257696726
+      },
+      "validation": {
+        "presence": 0.06151910858422052,
+        "range_cell": 0.15720027350182417,
+        "range_offset": 0.01982579228361138,
+        "doppler": 0.0021065760493278506,
+        "candidate": 0.0,
+        "total": 0.24065174909569328
+      },
+      "best_update": 11200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 13200,
+      "learning_rate": 0.00048074089062573593,
+      "train_interval": {
+        "presence": 0.06121878843615264,
+        "range_cell": 0.13176088398930552,
+        "range_offset": 0.017313233601871616,
+        "doppler": 0.002220668299123645,
+        "candidate": 0.0,
+        "total": 0.21251357468976495
+      },
+      "validation": {
+        "presence": 0.060649202922242705,
+        "range_cell": 0.1541308743651496,
+        "range_offset": 0.01968618069090881,
+        "doppler": 0.0019458890676498414,
+        "candidate": 0.0,
+        "total": 0.2364121463026386
+      },
+      "best_update": 13200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 13600,
+      "learning_rate": 0.0004565098541298925,
+      "train_interval": {
+        "presence": 0.05679802393157729,
+        "range_cell": 0.1253801895336024,
+        "range_offset": 0.015998855310017462,
+        "doppler": 0.0020096907392144203,
+        "candidate": 0.0,
+        "total": 0.20018675948840609
+      },
+      "validation": {
+        "presence": 0.06236715175987921,
+        "range_cell": 0.17668134364950835,
+        "range_offset": 0.018678598361089826,
+        "doppler": 0.002518731915950775,
+        "candidate": 0.0,
+        "total": 0.26024582402007657
+      },
+      "best_update": 13200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 14000,
+      "learning_rate": 0.000432395643767716,
+      "train_interval": {
+        "presence": 0.06071842861299728,
+        "range_cell": 0.1384665077188937,
+        "range_offset": 0.016700142651138776,
+        "doppler": 0.001984364059753716,
+        "candidate": 0.0,
+        "total": 0.21786944292980479
+      },
+      "validation": {
+        "presence": 0.06149016068547499,
+        "range_cell": 0.15620322891401994,
+        "range_offset": 0.017032851106813178,
+        "doppler": 0.0020617767333984374,
+        "candidate": 0.0,
+        "total": 0.23678801927976315
+      },
+      "best_update": 13200,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 14400,
+      "learning_rate": 0.0004084563573220137,
+      "train_interval": {
+        "presence": 0.05764375732117685,
+        "range_cell": 0.12268285822196326,
+        "range_offset": 0.01580863838793448,
+        "doppler": 0.001998650683090091,
+        "candidate": 0.0,
+        "total": 0.19813390542813977
+      },
+      "validation": {
+        "presence": 0.05897947621890344,
+        "range_cell": 0.15465290382495334,
+        "range_offset": 0.016010752242465974,
+        "doppler": 0.0019490060806274419,
+        "candidate": 0.0,
+        "total": 0.2315921364261187
+      },
+      "best_update": 14400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 14800,
+      "learning_rate": 0.0003847496711356381,
+      "train_interval": {
+        "presence": 0.058609439625662674,
+        "range_cell": 0.1196808100223897,
+        "range_offset": 0.015493192951544188,
+        "doppler": 0.0018863815627992153,
+        "candidate": 0.0,
+        "total": 0.19566982397434912
+      },
+      "validation": {
+        "presence": 0.06145402063518996,
+        "range_cell": 0.16591940937111008,
+        "range_offset": 0.01628790631722659,
+        "doppler": 0.0018522113204002383,
+        "candidate": 0.0,
+        "total": 0.24551354801363776
+      },
+      "best_update": 14400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 15200,
+      "learning_rate": 0.00036133270115327315,
+      "train_interval": {
+        "presence": 0.05798324771841521,
+        "range_cell": 0.12712026400776674,
+        "range_offset": 0.015127165671547118,
+        "doppler": 0.0019493907224386931,
+        "candidate": 0.0,
+        "total": 0.202180068315065
+      },
+      "validation": {
+        "presence": 0.06296202088230056,
+        "range_cell": 0.1622990153049544,
+        "range_offset": 0.016780646641517523,
+        "doppler": 0.001855145597457886,
+        "candidate": 0.0,
+        "total": 0.24389682692191564
+      },
+      "best_update": 14400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 15600,
+      "learning_rate": 0.00033826186531337094,
+      "train_interval": {
+        "presence": 0.05532922852464537,
+        "range_cell": 0.11635119387449742,
+        "range_offset": 0.015391718778246286,
+        "doppler": 0.0017875324981287122,
+        "candidate": 0.0,
+        "total": 0.18885967395275657
+      },
+      "validation": {
+        "presence": 0.06082856039697071,
+        "range_cell": 0.1545792938393947,
+        "range_offset": 0.015669456678163263,
+        "doppler": 0.0017495542883872988,
+        "candidate": 0.0,
+        "total": 0.23282686306748074
+      },
+      "best_update": 14400,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 16000,
+      "learning_rate": 0.0003155927476217798,
+      "train_interval": {
+        "presence": 0.057592096876792315,
+        "range_cell": 0.12424737143756612,
+        "range_offset": 0.014754921715230011,
+        "doppler": 0.00184283216483891,
+        "candidate": 0.0,
+        "total": 0.19843722252626322
+      },
+      "validation": {
+        "presence": 0.06043900581173366,
+        "range_cell": 0.1527945719117952,
+        "range_offset": 0.015946726139844394,
+        "doppler": 0.002055217456817626,
+        "candidate": 0.0,
+        "total": 0.23123552009365525
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 16400,
+      "learning_rate": 0.00029337996423454624,
+      "train_interval": {
+        "presence": 0.05723633936331481,
+        "range_cell": 0.11231205019027737,
+        "range_offset": 0.01401935525913359,
+        "doppler": 0.0017890272103250027,
+        "candidate": 0.0,
+        "total": 0.1853567718958402
+      },
+      "validation": {
+        "presence": 0.061278846731083476,
+        "range_cell": 0.1587668170231315,
+        "range_offset": 0.01624510730386246,
+        "doppler": 0.0021667877793312075,
+        "candidate": 0.0,
+        "total": 0.23845755983900746
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 16800,
+      "learning_rate": 0.00027167703187253245,
+      "train_interval": {
+        "presence": 0.057052455679400114,
+        "range_cell": 0.1140389780669496,
+        "range_offset": 0.014690288884203255,
+        "doppler": 0.0018395410804077984,
+        "candidate": 0.0,
+        "total": 0.18762126335055654
+      },
+      "validation": {
+        "presence": 0.06279277382533183,
+        "range_cell": 0.15661496655303592,
+        "range_offset": 0.015563112567941425,
+        "doppler": 0.0018466769814491273,
+        "candidate": 0.0,
+        "total": 0.23681752709147988
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 17200,
+      "learning_rate": 0.00025053623888487845,
+      "train_interval": {
+        "presence": 0.054833213563706525,
+        "range_cell": 0.10986467204510265,
+        "range_offset": 0.014204025336866835,
+        "doppler": 0.001801599757745862,
+        "candidate": 0.0,
+        "total": 0.18070351083610148
+      },
+      "validation": {
+        "presence": 0.06371620061044816,
+        "range_cell": 0.1612950590905121,
+        "range_offset": 0.016552649934729557,
+        "doppler": 0.0019655452489852903,
+        "candidate": 0.0,
+        "total": 0.2435294570200611
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 17600,
+      "learning_rate": 0.0002300085192719481,
+      "train_interval": {
+        "presence": 0.05586165177138014,
+        "range_cell": 0.1089276796636963,
+        "range_offset": 0.014463722499076539,
+        "doppler": 0.0016396505245938897,
+        "candidate": 0.0,
+        "total": 0.18089270459540785
+      },
+      "validation": {
+        "presence": 0.05852480813544245,
+        "range_cell": 0.1584033779105794,
+        "range_offset": 0.015030699283839202,
+        "doppler": 0.0018718427181243897,
+        "candidate": 0.0,
+        "total": 0.2338307299922919
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 18000,
+      "learning_rate": 0.00021014332997127669,
+      "train_interval": {
+        "presence": 0.05296302362864111,
+        "range_cell": 0.0992866447906218,
+        "range_offset": 0.012772585128493575,
+        "doppler": 0.001763401343487203,
+        "candidate": 0.0,
+        "total": 0.16678565411188173
+      },
+      "validation": {
+        "presence": 0.06134875198109075,
+        "range_cell": 0.15847417506242065,
+        "range_offset": 0.0150405806831026,
+        "doppler": 0.0018282468199729916,
+        "candidate": 0.0,
+        "total": 0.23669175582861063
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 18400,
+      "learning_rate": 0.00019098853170216971,
+      "train_interval": {
+        "presence": 0.05600789780382257,
+        "range_cell": 0.10058495442074147,
+        "range_offset": 0.014042205612668113,
+        "doppler": 0.0016858348669484258,
+        "candidate": 0.0,
+        "total": 0.17232089296861886
+      },
+      "validation": {
+        "presence": 0.061357860869739676,
+        "range_cell": 0.15823786100955253,
+        "range_offset": 0.01640932754143141,
+        "doppler": 0.001820703756809235,
+        "candidate": 0.0,
+        "total": 0.2378257539145183
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 18800,
+      "learning_rate": 0.0001725902736560306,
+      "train_interval": {
+        "presence": 0.0551309271326096,
+        "range_cell": 0.10355014573998673,
+        "range_offset": 0.013960527458521029,
+        "doppler": 0.0016883841017261147,
+        "candidate": 0.0,
+        "total": 0.17432998384591883
+      },
+      "validation": {
+        "presence": 0.05936865800859524,
+        "range_cell": 0.16334314440132464,
+        "range_offset": 0.015306362163741141,
+        "doppler": 0.0017491127967834477,
+        "candidate": 0.0,
+        "total": 0.2397672756259097
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 19200,
+      "learning_rate": 0.00015499288231023256,
+      "train_interval": {
+        "presence": 0.05579810462876025,
+        "range_cell": 0.10879563358270965,
+        "range_offset": 0.013397071385534219,
+        "doppler": 0.0016169048845767974,
+        "candidate": 0.0,
+        "total": 0.1796077145579875
+      },
+      "validation": {
+        "presence": 0.06222846621822683,
+        "range_cell": 0.15953226693187006,
+        "range_offset": 0.014948234767862598,
+        "doppler": 0.0018073310136795045,
+        "candidate": 0.0,
+        "total": 0.2385163001652574
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 19600,
+      "learning_rate": 0.00013823875463341064,
+      "train_interval": {
+        "presence": 0.05055866245591517,
+        "range_cell": 0.08722231846157814,
+        "range_offset": 0.012014007692177983,
+        "doppler": 0.001534014963544905,
+        "candidate": 0.0,
+        "total": 0.15132900357886683
+      },
+      "validation": {
+        "presence": 0.06070447454273234,
+        "range_cell": 0.16040871017379768,
+        "range_offset": 0.014669627492735168,
+        "doppler": 0.0016994333744049072,
+        "candidate": 0.0,
+        "total": 0.23748224470831925
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 20000,
+      "learning_rate": 0.00012236825593947163,
+      "train_interval": {
+        "presence": 0.054784228548132606,
+        "range_cell": 0.09697123288753044,
+        "range_offset": 0.012852083205016242,
+        "doppler": 0.0015212110988795757,
+        "candidate": 0.0,
+        "total": 0.16612875583874484
+      },
+      "validation": {
+        "presence": 0.061081783166358934,
+        "range_cell": 0.16376442266210928,
+        "range_offset": 0.014692536000453395,
+        "doppler": 0.001751979923248291,
+        "candidate": 0.0,
+        "total": 0.2412907207845943
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 20400,
+      "learning_rate": 0.00010741962263642226,
+      "train_interval": {
+        "presence": 0.05547421794720947,
+        "range_cell": 0.09478774708781376,
+        "range_offset": 0.012770950223857653,
+        "doppler": 0.0016696503292769193,
+        "candidate": 0.0,
+        "total": 0.1647025651255535
+      },
+      "validation": {
+        "presence": 0.06084924203571281,
+        "range_cell": 0.1617275151791043,
+        "range_offset": 0.014262548663653434,
+        "doppler": 0.0016528222680091858,
+        "candidate": 0.0,
+        "total": 0.23849212736843622
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 20800,
+      "learning_rate": 9.342887010431667e-05,
+      "train_interval": {
+        "presence": 0.05531180665015313,
+        "range_cell": 0.09463725560033484,
+        "range_offset": 0.012885362742263168,
+        "doppler": 0.0017262934846803545,
+        "candidate": 0.0,
+        "total": 0.1645607186900088
+      },
+      "validation": {
+        "presence": 0.05847881144747372,
+        "range_cell": 0.16086005557048935,
+        "range_offset": 0.014447905424894998,
+        "doppler": 0.0018197656750679014,
+        "candidate": 0.0,
+        "total": 0.23560653598465142
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 21200,
+      "learning_rate": 8.042970592427432e-05,
+      "train_interval": {
+        "presence": 0.051886552366172796,
+        "range_cell": 0.0829500508636976,
+        "range_offset": 0.01175685296816482,
+        "doppler": 0.0014570804499089718,
+        "candidate": 0.0,
+        "total": 0.14805053699928977
+      },
+      "validation": {
+        "presence": 0.06056352480364149,
+        "range_cell": 0.16562778932221478,
+        "range_offset": 0.015095172803674358,
+        "doppler": 0.0017138346433639528,
+        "candidate": 0.0,
+        "total": 0.24300032318774611
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 21600,
+      "learning_rate": 6.845344866762165e-05,
+      "train_interval": {
+        "presence": 0.054671156294371887,
+        "range_cell": 0.08702433633487101,
+        "range_offset": 0.012236604804152194,
+        "doppler": 0.001621786099858582,
+        "candidate": 0.0,
+        "total": 0.15555388382298588
+      },
+      "validation": {
+        "presence": 0.05827911281761482,
+        "range_cell": 0.16144313790724107,
+        "range_offset": 0.014526520966319371,
+        "doppler": 0.0017236936211586001,
+        "candidate": 0.0,
+        "total": 0.2359724641638808
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 22000,
+      "learning_rate": 5.7528952440816627e-05,
+      "train_interval": {
+        "presence": 0.053864156322383394,
+        "range_cell": 0.08839894716291732,
+        "range_offset": 0.01234857126552015,
+        "doppler": 0.0016848095459863544,
+        "candidate": 0.0,
+        "total": 0.15629648387279305
+      },
+      "validation": {
+        "presence": 0.0587391877465183,
+        "range_cell": 0.1640900149613105,
+        "range_offset": 0.014251467764796692,
+        "doppler": 0.001760824775695801,
+        "candidate": 0.0,
+        "total": 0.23884149518311026
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 22400,
+      "learning_rate": 4.76825373679489e-05,
+      "train_interval": {
+        "presence": 0.05256933710854895,
+        "range_cell": 0.08851395743830855,
+        "range_offset": 0.012472661400615835,
+        "doppler": 0.001474357801489532,
+        "candidate": 0.0,
+        "total": 0.15503031333140826
+      },
+      "validation": {
+        "presence": 0.05886249894459615,
+        "range_cell": 0.16548517539788918,
+        "range_offset": 0.01470185371405096,
+        "doppler": 0.0017332283496856692,
+        "candidate": 0.0,
+        "total": 0.2407827568098321
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 22800,
+      "learning_rate": 3.893792617830317e-05,
+      "train_interval": {
+        "presence": 0.051086804049146506,
+        "range_cell": 0.08064183465395329,
+        "range_offset": 0.012213558582952828,
+        "doppler": 0.001597979818470776,
+        "candidate": 0.0,
+        "total": 0.14554017700150326
+      },
+      "validation": {
+        "presence": 0.06050388018282829,
+        "range_cell": 0.1622353383756924,
+        "range_offset": 0.013909511154243956,
+        "doppler": 0.0016862326622009282,
+        "candidate": 0.0,
+        "total": 0.23833496195939372
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 23200,
+      "learning_rate": 3.131618705176169e-05,
+      "train_interval": {
+        "presence": 0.05046634979117357,
+        "range_cell": 0.07754013220438322,
+        "range_offset": 0.011337852584213125,
+        "doppler": 0.001601894642226398,
+        "candidate": 0.0,
+        "total": 0.14094622903326126
+      },
+      "validation": {
+        "presence": 0.060205665279302045,
+        "range_cell": 0.16604678686755173,
+        "range_offset": 0.014246855534194039,
+        "doppler": 0.0017794672966003416,
+        "candidate": 0.0,
+        "total": 0.242278773997107
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 23600,
+      "learning_rate": 2.4835682859748932e-05,
+      "train_interval": {
+        "presence": 0.05348217932281159,
+        "range_cell": 0.08200815768656163,
+        "range_offset": 0.012186178015135739,
+        "doppler": 0.0014243216114118696,
+        "candidate": 0.0,
+        "total": 0.14910083674167254
+      },
+      "validation": {
+        "presence": 0.059556050705263625,
+        "range_cell": 0.16542715179005085,
+        "range_offset": 0.014012655385967809,
+        "doppler": 0.001694393944740296,
+        "candidate": 0.0,
+        "total": 0.24069025242897918
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 24000,
+      "learning_rate": 1.9512026924010587e-05,
+      "train_interval": {
+        "presence": 0.054965874204986845,
+        "range_cell": 0.08693876934643895,
+        "range_offset": 0.011766385578785048,
+        "doppler": 0.0015599286369979383,
+        "candidate": 0.0,
+        "total": 0.15523095740827558
+      },
+      "validation": {
+        "presence": 0.05925844030399458,
+        "range_cell": 0.16684148251032152,
+        "range_offset": 0.014050722960196436,
+        "doppler": 0.00171770293712616,
+        "candidate": 0.0,
+        "total": 0.2418683504721499
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 24400,
+      "learning_rate": 1.5358045399815683e-05,
+      "train_interval": {
+        "presence": 0.05506522738611011,
+        "range_cell": 0.09056249712429303,
+        "range_offset": 0.01256389935443167,
+        "doppler": 0.0017341201892122626,
+        "candidate": 0.0,
+        "total": 0.15992574380527003
+      },
+      "validation": {
+        "presence": 0.059281995110929714,
+        "range_cell": 0.1655093022108631,
+        "range_offset": 0.014035474502528088,
+        "doppler": 0.001919037735462189,
+        "candidate": 0.0,
+        "total": 0.2407458087250358
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 24800,
+      "learning_rate": 1.2383746374211291e-05,
+      "train_interval": {
+        "presence": 0.048542398665854025,
+        "range_cell": 0.07480688174028223,
+        "range_offset": 0.011256719742632412,
+        "doppler": 0.0013818115508183837,
+        "candidate": 0.0,
+        "total": 0.1359878115075844
+      },
+      "validation": {
+        "presence": 0.06084944466419984,
+        "range_cell": 0.16554678371724077,
+        "range_offset": 0.013952803274907638,
+        "doppler": 0.001768260443210602,
+        "candidate": 0.0,
+        "total": 0.24211729343499755
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 25200,
+      "learning_rate": 1.059629575378109e-05,
+      "train_interval": {
+        "presence": 0.05286998806188393,
+        "range_cell": 0.07772674836375726,
+        "range_offset": 0.011445034195148765,
+        "doppler": 0.0014229467418044805,
+        "candidate": 0.0,
+        "total": 0.14346471715305598
+      },
+      "validation": {
+        "presence": 0.05960668453017716,
+        "range_cell": 0.16617989542388154,
+        "range_offset": 0.014138919745851311,
+        "doppler": 0.0017285583019256597,
+        "candidate": 0.0,
+        "total": 0.24165405649752358
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    },
+    {
+      "update": 25600,
+      "learning_rate": 1e-05,
+      "train_interval": {
+        "presence": 0.05105836152416316,
+        "range_cell": 0.07248956517477832,
+        "range_offset": 0.011505770481749096,
+        "doppler": 0.0015699454210698605,
+        "candidate": 0.0,
+        "total": 0.13662364308584074
+      },
+      "validation": {
+        "presence": 0.05963083548950381,
+        "range_cell": 0.16630421277156415,
+        "range_offset": 0.01394524637523573,
+        "doppler": 0.0017225920796394352,
+        "candidate": 0.0,
+        "total": 0.2416028861372499
+      },
+      "best_update": 16000,
+      "microbatch": 16,
+      "cuda_peak_allocated_bytes": 822284288,
+      "cuda_peak_reserved_bytes": 897581056
+    }
+  ]
+}

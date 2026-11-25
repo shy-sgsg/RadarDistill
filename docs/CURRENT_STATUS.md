@@ -1,9 +1,10 @@
 # 当前研究状态
 
-**更新日期：** 2026-11-24
+**更新日期：** 2026-11-26
 **工作分支：** `main`
-**当前执行任务：** D2-A-R6-I已完成并触发冻结停止门。当前按整合路线推进R6-J4：先把既有物理驱动联合模型设计转为独立协议、完成正确性测试与G0/G1，再决定是否训练；训练使用AISAR `cuda:0`，不把R6-I失败当成J4证据。整条R5-C/R6路线完成前不编写ChatGPT审查请求。
-**最新科研结果：** R6-I单斜率可观测尺度校正未通过P7准入：C3 pooled Pfa只下降`0.00905`（未达到0.01门），overall Pd差`−0.01921`（95% CI `[-0.02230,-0.01611]`，未通过非劣门），C3六格familywise虚警仍失败。校正使C3 pooled Pfa从`0.09985`降至`0.09080`，但SNR=10 dB三格Pfa升至`0.1742–0.1836`；因此总体改善掩盖逐格失稳。重算的13个指标组与保存值完全一致。详见[R6-I分析](../experiments/D2-A-R6/R6-I/analysis.md)与[阶段报告](stage_reviews/D2-A-R6I_review.md)。
+**当前执行任务：** 完成R5-C/R6整合路线的结果归档与综合报告。R6-J4已按冻结协议完成G0/G1、seed909匹配训练和配对独立评价；实验指标绑定冻结提交`e6b17e1e8d01b66457d9889db6d9672efb02ae7f`。R5/R6学生、传统检测/估计基线、教师知识审计和完整处理链已汇总进[模型与教师性能总表](research/D2-A_model_performance_matrix.md)。整条路线汇报完成后只提交一次ChatGPT综合审查请求。
+**最新科研结果：** R6-J4相对J1-J的C2+C3 joint success提高`+3.26`个百分点（95%配对CI `[+2.41,+4.08]`），总体Pd和range保护通过；Doppler RMSE比为`1.72–2.08`，C3六格familywise虚警门失败。最难格joint为`2.15%`，低于J1-J的`10.35%`。因此当前J4参数化不晋级多种子确认，未生成final blind。详见[R6-J4分析](../experiments/D2-A-R6/R6-J4/analysis.md)与[阶段报告](stage_reviews/D2-A-R6J4_review.md)。
+**R6-I阶段结果：** R6-I单斜率可观测尺度校正未通过P7准入：C3 pooled Pfa只下降`0.00905`（未达到0.01门），overall Pd差`−0.01921`（95% CI `[-0.02230,-0.01611]`，未通过非劣门），C3六格familywise虚警仍失败。校正使C3 pooled Pfa从`0.09985`降至`0.09080`，但SNR=10 dB三格Pfa升至`0.1742–0.1836`；因此总体改善掩盖逐格失稳。重算的13个指标组与保存值完全一致。详见[R6-I分析](../experiments/D2-A-R6/R6-I/analysis.md)与[阶段报告](stage_reviews/D2-A-R6I_review.md)。
 **R6-H背景结果：** 三臂均在seed808下完成25,600次FP32 CUDA更新及独立开发评价。CNN-SSM相对CE-TCN的C2+C3 joint差为`+0.03016`（97.5%配对CI `[+0.02214,+0.03798]`），通过主端点，但Range RMSE比为`1.070`（区间上界`1.165`），未过1.05保护；三臂均未通过C3六格familywise Pfa门，CNN-SSM在最难C3 partial-overlap/SNR0格Pfa点值为`0.1048`。详见[R6-H分析](../experiments/D2-A-R6/R6-H/analysis.md)和[阶段报告](stage_reviews/D2-A-R6H_review.md)。
 **阶段判断：** R6-H为 **REFINE**。复数SSM未过预注册joint点增益门；CNN-SSM主端点收益伴随range保护与C3虚警失败，未成为合格低虚警候选。当前候选组不进入P7多种子确认训练；该结论限于受测实现和seed808，不外推到全部SSM/混合架构。final blind未生成，研究总纲v1.3与历史冻结结果不变。
 **恢复记录（2026-11-06）：** 主机于17:37正常重启，系统日志未显示训练OOM证据。R6-G T1 history曾到11,600，但最后可恢复checkpoint为11,200，包含模型、优化器及随机数状态；约17:59从该checkpoint恢复原`train-all`流程，已完成的T0会被跳过。该恢复过程没有改变训练配置。
@@ -11,7 +12,7 @@
 **R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。owner-scoped清理移除14,641,188,309 bytes（13.636 GiB）的R6-G训练IQ与辅助响应缓存；整个项目目录现约1.3 GB（1.26 GiB），低于20 GiB。训练记录、checkpoint、scene manifest、预测、指标和分析保留；未触碰用户未跟踪源码包或其他阶段数据。
 **R6-H训练与评价：** G0/G1均通过。三臂使用51,200对训练场景、5,000对验证场景、有效batch64、microbatch4，每臂25,600 updates；各presence暴露819,200次、训练集平均重访16次。训练在AISAR环境RTX 3050 Laptop `cuda:0`顺序完成；训练耗时15.93/9.25/17.46小时。独立H0校准/验证各120,000、H1开发6,144。owner清理删除可重建缓存11,233,318,401 bytes（约10.46 GiB）；工作区实测约1,359,208,153 bytes（1.27 GiB）。训练记录、曲线、checkpoint、scene manifest、指标与分析保留，清理明细见[`cleanup.json`](../experiments/D2-A-R6/R6-H/cleanup.json)。
 **R6-I执行记录：** 固定seed808检查点和四个独立split按AISAR RTX 3050 Laptop `cuda:0` FP32推理；60,000 H0拟合、60,000 H0阈值校准、120,000 H0验证、6,144 H1开发，未训练、未生成final blind。预测文件完整，恢复指标时未重生成数据。汇总字段与分析字段问题已修复，12项定向测试通过；从缓存复算与保存的13组指标逐项完全一致。恢复细节见[`runtime_recovery.json`](../experiments/D2-A-R6/R6-I/runtime_recovery.json)。
-**当前与下一步：** R6-I失败仅停止该分数校正，不继续搜公式，也不进入P7多种子或blind。R6-J4已完成先前设计但尚未冻结协议/实现/测试；作为获批R6路线的独立后续任务，先完成协议与前置门后再训练。最终盲测仍未授权；ChatGPT综合审查提示词留到整条授权路线结束后一次性编写。
+**当前与下一步：** R6-I单一校正和R6-J4当前候选均按各自冻结门停止；没有模型满足P7正式确认条件，因此不启动多种子确认或final blind。R6-J4 owner授权的12个训练/验证缓存文件已清理，共释放`11,233,313,736` bytes（10.46 GiB）；保留训练记录、预测、指标、图表、scene manifest和审计材料。项目目录现约1.5 GiB，低于20 GiB；清理明细见[`cleanup.json`](../experiments/D2-A-R6/R6-J4/cleanup.json)。当前授权路线以综合报告、阶段验收和一次ChatGPT审查请求收尾；后续新实验需另立有界协议。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
@@ -101,13 +102,14 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 R6 P5 / D2-A-R6-F 已完成。六条链的全局H0 Pfa上界均通过0.055，但C3六格familywise门全部失败；CE-TCN原生链虽有最高C2+C3 joint和最小受测学生Doppler RMSE，仍没有绝对低虚警资格。神经检测+profile-ML链C/F的Doppler RMSE约149.61 Hz，远高于CE原生链的18.72 Hz、joint也更低；B3检测+CE参数链D则受传统检测Pd限制。详见[R6-F analysis](../experiments/D2-A-R6/R6-F/analysis.md)和[R6-F stage report](stage_reviews/D2-A-R6F_review.md)。
 
-**当前优先任务：** D2-A-R6-J4物理驱动联合检测估计候选。R6-I唯一预注册分数校正已失败并停止：overall H0上界和C2+C3 joint/参数比保护部分通过，但C3六格门、C3 Pfa最小下降门及overall Pd非劣门失败；不进入P7多种子或blind，也不在同一数据上搜索替代变换。J4已有设计说明和任务对齐，尚无独立冻结协议、G0/G1或训练结果；先验证固定DPCA/频谱候选层、学习读出和端到端增量，再按冻结门决定是否使用AISAR CUDA训练。当前项目目录约1.4 GiB，低于20 GiB；保留未跟踪用户文件，研究总纲v1.3及历史结果不变。
+**阶段状态更新（2026-11-26）：** R6-J4冻结候选已完成；学习读出相对固定DPCA+520峰值提高C2+C3 joint，但未满足Doppler和C3逐格虚警保护，且最难格较J1-J退化。只停止本参数化，不外推到所有物理前端架构。综合性能表覆盖R5/R6已评价方法，数据集标签与口径边界见[总表说明](research/D2-A_model_performance_matrix.md)。研究总纲v1.3与历史结果不变。
 
 ## 关键材料
 
 - 总纲/路线：[研究总纲](RESEARCH_CHARTER.md)、[动态路线图](RESEARCH_ROADMAP.md)、[假设登记](research/ASSUMPTION_REGISTER.md)
 - 当前审查：[D2-A-R3](stage_reviews/D2-A-R3_review.md)、[D2-A-E001](stage_reviews/D2-A-E001_review.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
 - 最新学生阶段：[D2-A-E002 阶段审查](stage_reviews/D2-A-E002_review.md)、[结果分析](../experiments/D2-A-E002/analysis.md)、[指标 JSON](../experiments/D2-A-E002/metrics.json)；缓存清理记录：[容量审计](maintenance/CACHE_CLEANUP_2026-10-25.md)
+- R5-C/R6综合性能报告：[模型与教师性能总表](research/D2-A_model_performance_matrix.md)；[R6-J4阶段报告](stage_reviews/D2-A-R6J4_review.md)
 - 当前提案：[D2-A-E002 v2 对齐](task_alignments/D2-A-E002_curriculum_k2_alignment.md)、[模型与损失审查](../experiments/D2-A-E002/architecture_and_loss_review.md)、[E002 v2 协议](../experiments/D2-A-E002/protocol.md)；[v1 对齐与审查](task_alignments/D2-A-E002_alignment.md)保留为历史记录
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)

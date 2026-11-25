@@ -1,11 +1,11 @@
 # RadarDistill 动态研究路线图
 
-**更新时间：** 2026-11-24
+**更新时间：** 2026-11-26
 **权威关系：** 长期使命见 [`RESEARCH_CHARTER.md`](RESEARCH_CHARTER.md)；简要状态见 [`CURRENT_STATUS.md`](CURRENT_STATUS.md)；历史指标和冻结门以对应 protocol、metrics 与阶段审查为准。
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot、R6-A至R6-I均已完成各自冻结试验或阶段门。** R6-I的单一可观测尺度分数校正没有通过预注册P7准入，按协议停止该校正；不进入P7多种子训练或final blind。R6-I从已有CUDA推理缓存复算的13组指标与归档完全一致。当前整合路线转向此前已设计、尚未冻结协议的R6-J4物理驱动联合检测估计候选；先做协议、正确性和前置门，再决定是否训练。研究总纲v1.3不变，ChatGPT审查请求留到R5-C/R6整条授权路线结束后一次编写。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot及R6-A至R6-J4均已完成各自冻结试验或候选阶段门。** R6-I单一尺度校正与R6-J4当前物理驱动联合候选均未通过完整晋级保护门，因此不进入P7多种子确认或final blind。R6-J4训练与独立开发评价绑定提交`e6b17e1e8d01b66457d9889db6d9672efb02ae7f`；R5/R6所有已评价学生、教师和处理链已经纳入[综合性能报告与总表](research/D2-A_model_performance_matrix.md)。研究总纲v1.3不变；整条路线收尾时只提交一次ChatGPT综合审查请求。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
@@ -18,13 +18,13 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 | P0：R5-C T0–T3 | 四臂、seed303、12,800 updates均完成；T1/T2相对T0 joint差为−0.01042/−0.01380，C3 Pfa均约0.18–0.20 | 完成；停止当前K3/K2-local教师内容分支，不做其多seed/时机/可靠性搜索 |
 | P1：同场景基线、低虚警诊断 | R6-A/B完成；困难C3格AUC约0.60，matched hard-negative未证明joint收益；0.05/0.01未获全条件资格，0.001仅全局通过 | 完成；1e-4未执行，不能声称其资格；低条件内可分性是主要证据之一 |
 | P2：模型容量、训练和数据规模 | R6-C比较Medium/Large/XLarge和唯一训练场景量；Large/XLarge joint提升，但C3绝对Pfa保护失败 | 完成单seed筛选；不外推容量上限或过拟合结论 |
-| P3：检测、参数、联合学习 | R6-D比较J1-D/J1-P/J1-J/J2-J；J2-J有joint/range增益，但Doppler与C3 familywise门失败 | 完成；J1-J作为受测联合基线，J2-J不晋级多seed |
+| P3：检测、参数、联合学习 | R6-D比较J1-D/J1-P/J1-J/J2-J；R6-J4后续比较固定DPCA+频谱候选学习读出与匹配raw-IQ J1-J。J4的C2+C3 joint提高3.26pp，但Doppler和C3六格保护失败 | 完成有界筛选；J2-J与当前J4参数化均不晋级多seed；不外推否定其他联合结构 |
 | P4：代表性架构 | R6-E的J1-J、CE-TCN、RAX-Transformer筛选已完成；R6-H三臂完成25,600步与独立评价。CNN-SSM−CE-TCN C2+C3 joint差`+0.03016`，但range保护失败；SSM主增益未过+0.02，三臂C3六格familywise Pfa均失败 | 当前筛选完成，R6-H结论REFINE；不晋级现有架构候选到P7正式多种子。单seed结果不外推到所有Transformer/SSM家族，也不宣称收敛 |
 | P5：完整混合处理链 | R6-F六链同场景独立校准完成；CE-TCN原生链任务指标领先，但六链C3六格familywise低虚警门均失败 | 完成开发比较；不宣称低虚警合格或速度优势 |
 | P6：教师教学机制 | R6-G v1.0.1的T0 truth-only、T1 truth+K3、T3 truth-assisted控制均完成51,200 updates和独立H0/H1开发评价；T1−T0 C2+C3 joint差−0.00130（95% CI `[−0.00781,+0.00521]`），T3−T0为+0.01172（`[+0.00499,+0.01823]`） | 完成，结论REFINE；K3未通过教学收益和参数保护门；T3低于预设收益门且不是教师；所有臂C3六格familywise Pfa门失败。停止当前K3参数、时机和可靠性搜索 |
-| P7：正式确认 | R6-H无模型同时通过主joint与参数保护；R6-I唯一校正未过C3六格familywise Pfa、最低C3 Pfa改善和Pd非劣门 | 当前候选组不进入多seed确认或final blind。R6-I分支停止；后续J4是独立R6候选，须先通过自己的冻结协议与前置门 |
+| P7：正式确认 | R6-H、R6-I和R6-J4当前候选均未同时通过任务增益、参数保护与C3六格familywise Pfa门 | 不进入多seed确认或final blind；各分支按协议停止当前候选，下一轮须有独立证据和新冻结协议 |
 
-路线顺序不预设每项必须成功：R6-G训练IQ和K3/T3目标缓存按owner清理，R6-H训练/验证缓存也已清理；保留scene manifests、预测、metrics、history/records、checkpoints和审计报告。R6-I使用AISAR RTX 3050 `cuda:0` FP32完成固定模型推理，训练为零；H0拟合、独立阈值校准、H0验证和H1开发的注册数量均完成，恢复汇总没有重生成预测，13组指标复算完全一致。P7候选准入门已完成判断，但没有候选同时通过joint收益、参数保护和C3 familywise虚警要求，因此不启动多种子确认或final blind。J4已在R6-D之后形成独立设计，R6-G前置约束现已满足；下一步把J4转成新协议并过正确性/G0/G1门，不能复用R6-I数据作调参。整条R5-C/R6路线收尾后只提交一次综合ChatGPT审查请求。
+路线顺序不预设每项必须成功：R6-G训练IQ和K3/T3目标缓存按owner清理，R6-H训练/验证缓存也已清理；保留scene manifests、预测、metrics、history/records、checkpoints和审计报告。R6-I固定模型推理及13组指标复算均已完成；R6-J4在AISAR RTX 3050 `cuda:0` FP32下完成两臂匹配训练和新split独立评价。按J4 owner manifest清理了12个可重建训练/验证缓存数组，共11,233,313,736 bytes；完整结果与scene manifests保留，清理审计在`experiments/D2-A-R6/R6-J4/cleanup.json`。P7候选准入门已结束判断，没有候选同时通过joint收益、参数保护与C3逐格虚警要求，不启动多种子确认或final blind。当前路线转入综合报告、结果归档和一次ChatGPT审查请求，不新增架构搜索。
 
 **D2-A-T001 v1.2 已完成，教师候选 STOP。** CUDA covariance 与 ACE×AMF 候选使用 RTX 3050 `cuda:0`；4096 H0 covariance、15k H0 calibration、15k H0 verification、12k paired development 全部完成。总体验证 Pfa 为0.05007（exact单侧95%上限0.05309），但 C3/SNR0/CNR20 三个大分组的上限为0.125–0.127；主困难条件 ACE×AMF joint success为0，低于B3的0.01。A/B/C pooled Pd与joint success分别较T1低0.2267和0.2441，95%区间均完全低于0。G1因公共尺度误差4.58e−5超过冻结1e−6失败；G2失败，G3按协议未评估，S2 pilot未运行。运行代码提交 `91dfb81673e45cad3f3330d90adc707a0cdf859d`，全阶段约59分钟。结果见 T001 分析、指标与阶段审查；该负结果不改变 R3、E002 或总纲。
 
@@ -60,10 +60,10 @@ R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot 
 - J2-J 在本协议下不晋级 formal seeds/blind；J1-J保留为下一轮联合 baseline。R6-D完整分层证据、训练曲线、限制和阶段判断见 `experiments/D2-A-R6/R6-D/analysis.md` 与 `docs/stage_reviews/D2-A-R6D_review.md`。
 - 验证曲线显示 J1-D/J2-J 在12,800步后仍有改善，J1-P/J1-J则在14,400步取得验证最佳。新实验可预注册更长共同预算，但必须匹配所有 arm 的 updates、有效batch、scene exposure、schedule、验证和checkpoint规则；不追溯延长R6-D或对单臂追加训练。
 
-#### J4 物理驱动联合候选（仅设计，未冻结/未运行）
+#### R6-J4 物理驱动联合候选（已完成单seed筛选）
 
-- R6-D的J2是可学习软候选与反馈结构，不是固定物理前端。为覆盖用户路线中J4，已形成独立设计 [`J4设计说明`](superpowers/specs/2026-11-05-r6-j4-physics-joint-design.md) 与 [`任务对齐`](task_alignments/D2-A-R6-J4_design_alignment.md)：首选复用几何DPCA分数时移/通道差分和520点零填充频谱候选，再用学习读出联合输出null、检测与连续参数。
-- 这只是后续候选，不改R6-D冻结协议或结果；R6-G完成前不做J4 G0/G1、scene ID扫描或GPU训练。若进入新协议，须以固定物理峰值和J1原始IQ学生为参照，分别评价物理前端和学习器增量。
+- R6-J4使用固定几何DPCA与520点零填充候选谱，加学习式null/候选及连续参数读出；在AISAR RTX 3050 `cuda:0`、FP32下以seed909、有效batch64、25,600 updates完成J1-J和J4配对训练。
+- 相对J1-J，J4的C2+C3 joint差`+0.03255`（95% CI `[+0.02408,+0.04080]`），总体Pd与range保护通过；Doppler RMSE比区间`[1.723,2.085]`、C3六格familywise Pfa保护失败。最难格joint由10.35%降至2.15%。相对固定DPCA+520峰值，学习读出明显提高joint，但这不等于优于raw-IQ学生或取得低虚警资格。按冻结门停止当前参数化；不追加蒸馏、多seed或blind。详见[R6-J4分析](../experiments/D2-A-R6/R6-J4/analysis.md)与[阶段报告](stage_reviews/D2-A-R6J4_review.md)。
 
 ### D2-A-R5（R5-A/B学生pilot、R5-C教师审计与R5-C teaching pilot均已完成）
 
@@ -129,7 +129,7 @@ R6-F v1.0.2已在新独立场景上完成六链开发评价。B（CE-TCN原生�
 
 ## 当前唯一优先任务
 
-**路线状态：** R6-I已完成，单一可观测尺度分数校正未通过冻结准入门并停止；不搜索更多变换，不启动P7多种子或final blind。当前唯一优先任务是R6-J4：先完成独立协议、物理/数值/梯度正确性测试和G0/G1，再按前置门决定是否训练。J4与R6-I是独立候选，不继承其校正结果或scene ID。R6-G当前K3分支仍停止；研究总纲v1.3不变。整条已授权R5-C/R6路线结束后只提交一次综合ChatGPT审查请求。
+**路线状态：** R5-C/R6整合路线已完成全部获准的候选筛选和阶段门。R6-I单一尺度校正与R6-J4当前参数化均按各自协议停止；无候选晋级P7多种子确认或final blind。当前唯一工作是归档综合报告及性能总表，随后按用户要求提交一次ChatGPT综合审查请求。研究总纲v1.3不变；新的研究实验须另行形成有界protocol。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

@@ -1,0 +1,144 @@
+{
+  "owner": "D2-A-R6-J4-cache-owner",
+  "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+  "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+  "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+  "cache_root": "experiments/D2-A-R6/R6-J4/cache/training",
+  "owned_splits": {
+    "train": {
+      "owner": {
+        "owner": "D2-A-R6-J4-paired-cache",
+        "split": "train",
+        "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+        "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+        "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+        "scene_count": 51200,
+        "seed_plan_sha256": "f2ce871e7f3d8cabae77cf6d7c95de021b075241d70e85fed079f48285f32a6d",
+        "dtype": "complex64 IQ / float32 truth",
+        "stage": "D2-A-R6-J4"
+      },
+      "files": [
+        "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h0.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h1.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/train/truth_range_cell.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/train/truth_doppler_hz.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/train/condition_index.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/train/scene_id.npy"
+      ],
+      "manifest": "experiments/D2-A-R6/R6-J4/scene_manifest_train.csv",
+      "manifest_owner": "experiments/D2-A-R6/R6-J4/scene_manifest_train.owner.json"
+    },
+    "validation": {
+      "owner": {
+        "owner": "D2-A-R6-J4-paired-cache",
+        "split": "validation",
+        "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+        "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+        "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+        "scene_count": 5000,
+        "seed_plan_sha256": "ca6b97868436be0ed5c841c2b2af02baac98799a45f0bfaba77bd84ff456d17f",
+        "dtype": "complex64 IQ / float32 truth",
+        "stage": "D2-A-R6-J4"
+      },
+      "files": [
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h0.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h1.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_range_cell.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_doppler_hz.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/condition_index.npy",
+        "experiments/D2-A-R6/R6-J4/cache/training/validation/scene_id.npy"
+      ],
+      "manifest": "experiments/D2-A-R6/R6-J4/scene_manifest_validation.csv",
+      "manifest_owner": "experiments/D2-A-R6/R6-J4/scene_manifest_validation.owner.json"
+    }
+  },
+  "cleanup_permitted_paths": [
+    "experiments/D2-A-R6/R6-J4/cache/training/train/condition_index.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h0.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h1.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/train/scene_id.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/train/truth_doppler_hz.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/train/truth_range_cell.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/condition_index.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h0.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h1.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/owner.json",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/progress.json",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/scene_id.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_doppler_hz.npy",
+    "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_range_cell.npy"
+  ],
+  "lineage_rebinds": [
+    {
+      "from_git_sha": "12286d66caf75c32438c9ce4e5dced3f51d6e3b4",
+      "to_git_sha": "6fc5b542612ccf9b2a7b89f71ed6710825e14cf4",
+      "reason": "The only changed source is the J1/J4 validation-loss key accumulator; protocol, config, scene planner, simulator, physics configuration, cache-writer logic, scene IDs, and cache bytes are unchanged.",
+      "changed_source_paths": [
+        "src/radardistill/training/d2a_r6j4.py"
+      ],
+      "split_owners": {
+        "train": {
+          "old": {
+            "owner": "D2-A-R6-J4-paired-cache",
+            "split": "train",
+            "git_sha": "12286d66caf75c32438c9ce4e5dced3f51d6e3b4",
+            "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+            "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+            "scene_count": 51200,
+            "seed_plan_sha256": "f2ce871e7f3d8cabae77cf6d7c95de021b075241d70e85fed079f48285f32a6d",
+            "dtype": "complex64 IQ / float32 truth",
+            "stage": "D2-A-R6-J4"
+          },
+          "new": {
+            "owner": "D2-A-R6-J4-paired-cache",
+            "split": "train",
+            "git_sha": "6fc5b542612ccf9b2a7b89f71ed6710825e14cf4",
+            "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+            "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+            "scene_count": 51200,
+            "seed_plan_sha256": "f2ce871e7f3d8cabae77cf6d7c95de021b075241d70e85fed079f48285f32a6d",
+            "dtype": "complex64 IQ / float32 truth",
+            "stage": "D2-A-R6-J4"
+          },
+          "rows_written": 51200
+        },
+        "validation": {
+          "old": {
+            "owner": "D2-A-R6-J4-paired-cache",
+            "split": "validation",
+            "git_sha": "12286d66caf75c32438c9ce4e5dced3f51d6e3b4",
+            "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+            "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+            "scene_count": 5000,
+            "seed_plan_sha256": "ca6b97868436be0ed5c841c2b2af02baac98799a45f0bfaba77bd84ff456d17f",
+            "dtype": "complex64 IQ / float32 truth",
+            "stage": "D2-A-R6-J4"
+          },
+          "new": {
+            "owner": "D2-A-R6-J4-paired-cache",
+            "split": "validation",
+            "git_sha": "6fc5b542612ccf9b2a7b89f71ed6710825e14cf4",
+            "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+            "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+            "scene_count": 5000,
+            "seed_plan_sha256": "ca6b97868436be0ed5c841c2b2af02baac98799a45f0bfaba77bd84ff456d17f",
+            "dtype": "complex64 IQ / float32 truth",
+            "stage": "D2-A-R6-J4"
+          },
+          "rows_written": 5000
+        }
+      }
+    },
+    {
+      "from_git_sha": "6fc5b542612ccf9b2a7b89f71ed6710825e14cf4",
+      "to_git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+      "reason": "Only the R6-J4 progress JSON emission changed; protocol, config, deterministic scene planner, simulator, cache data and scene plans are unchanged. The 400-update run was archived because its optimizer checkpoint remained at update 0.",
+      "changed_source_paths": [
+        "src/radardistill/training/d2a_r6j4.py"
+      ],
+      "scene_plan_csvs_rewritten": false,
+      "cache_array_files_rewritten": false,
+      "failed_run_archived": "experiments/D2-A-R6/R6-J4/attempts/training_json_flush_e6b17e1"
+    }
+  ]
+}

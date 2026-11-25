@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-11-25T23:52:00.047710+00:00",
+  "stage": "D2-A-R6-J4",
+  "owner_manifest": "experiments/D2-A-R6/R6-J4/owner_manifest.json",
+  "result_git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+  "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+  "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+  "reason": "Training and validation arrays are reproducible from retained registered scene plans; training and evaluation are complete.",
+  "deleted_files": [
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/condition_index.npy",
+      "bytes": 51328
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h0.npy",
+      "bytes": 5111808128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/iq_h1.npy",
+      "bytes": 5111808128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/scene_id.npy",
+      "bytes": 9830528
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/truth_doppler_hz.npy",
+      "bytes": 204928
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/train/truth_range_cell.npy",
+      "bytes": 204928
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/condition_index.npy",
+      "bytes": 5128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h0.npy",
+      "bytes": 499200128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/iq_h1.npy",
+      "bytes": 499200128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/scene_id.npy",
+      "bytes": 960128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_doppler_hz.npy",
+      "bytes": 20128
+    },
+    {
+      "path": "experiments/D2-A-R6/R6-J4/cache/training/validation/truth_range_cell.npy",
+      "bytes": 20128
+    }
+  ],
+  "deleted_total_bytes": 11233313736,
+  "retained": [
+    "scene manifests and registered scene plans",
+    "owner manifests and progress records",
+    "training histories and checkpoints",
+    "evaluation predictions, metrics, analysis, and figures",
+    "all files outside the exact owner-authorized R6-J4 training cache paths"
+  ]
+}

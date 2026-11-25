@@ -1,0 +1,94 @@
+{
+  "status": "G1_PASS",
+  "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+  "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+  "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+  "gpu": {
+    "device": "cuda:0",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "free_vram_bytes": 3293839360,
+    "minimum_free_vram_bytes": 1610612736,
+    "cpu_fallback": false,
+    "total_vram_bytes": 3942383616,
+    "torch_version": "2.8.0+cu128",
+    "torch_cuda_version": "12.8",
+    "python_version": "3.13.7",
+    "conda_environment": "AISAR",
+    "python_executable": "/home/shy/anaconda3/envs/AISAR/bin/python"
+  },
+  "device": "cuda:0",
+  "precision": "FP32",
+  "fixed_frontend_precision": {
+    "dpca_shift_accumulation": "complex128",
+    "doppler_fft": "complex64",
+    "learned_readout": "FP32"
+  },
+  "microbatch_probe": {
+    "16": {
+      "j1_joint": {
+        "status": "pass",
+        "gradient_parameter_count": 39,
+        "gradient_norm": 91.2945556640625,
+        "peak_allocated_bytes": 821420544,
+        "peak_reserved_bytes": 897581056
+      },
+      "j4_joint": {
+        "status": "pass",
+        "gradient_parameter_count": 24,
+        "gradient_norm": 21.05068588256836,
+        "peak_allocated_bytes": 965360640,
+        "peak_reserved_bytes": 1046478848
+      }
+    }
+  },
+  "formal_microbatch": 16,
+  "frontend_complex128_reference_max_relative_error": 8.043172619911568e-05,
+  "public_phase_power_max_absolute_error": 0.015625,
+  "input_scale_two_power_ratio_max_absolute_error_from_four": 0.0,
+  "physical_scene_ids": [
+    "d2a-scene-3620000000-0",
+    "d2a-scene-3620000000-1",
+    "d2a-scene-3620000000-2",
+    "d2a-scene-3620000000-3",
+    "d2a-scene-3620000000-4",
+    "d2a-scene-3620000000-5",
+    "d2a-scene-3620000000-6",
+    "d2a-scene-3620000000-7",
+    "d2a-scene-3620000000-8",
+    "d2a-scene-3620000000-9",
+    "d2a-scene-3620000000-10",
+    "d2a-scene-3620000000-11",
+    "d2a-scene-3620000000-12",
+    "d2a-scene-3620000000-13",
+    "d2a-scene-3620000000-14",
+    "d2a-scene-3620000000-15"
+  ],
+  "physical_condition": {
+    "course": "C0",
+    "scenario_id": "separated",
+    "snr_db": 20.0,
+    "cnr_db": -5.0
+  },
+  "overfit_arms": {
+    "j1_joint": {
+      "initial_loss": 10.018037796020508,
+      "last20_mean_loss": 0.05214233455481008,
+      "relative_reduction": 0.9947951549378738,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "minimum_reduction": 0.1,
+      "passed": true
+    },
+    "j4_joint": {
+      "initial_loss": 19.487361907958984,
+      "last20_mean_loss": 0.06278090793639421,
+      "relative_reduction": 0.9967783783031837,
+      "updates": 200,
+      "unique_paired_scenes": 16,
+      "minimum_reduction": 0.1,
+      "passed": true
+    }
+  },
+  "formal_train_validation_data_generated": true,
+  "final_blind_generated": false
+}

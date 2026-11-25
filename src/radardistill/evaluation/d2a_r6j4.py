@@ -834,18 +834,19 @@ def _plot_results(metrics: Mapping[str, Any]) -> None:
     figure_dir.mkdir(parents=True, exist_ok=True)
     h1 = metrics["methods"]
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
-    labels = ["B3/130", "DPCA 520", "J1-J", "J4"]
-    names = ["b3_130_fft", "fixed_dpca_520_fft_peak", "j1_joint", "j4_joint"]
-    c3_pfa, joint = [], []
-    for name in names:
-        entry = h1[name]
-        c3_pfa.append(entry["h0"]["c3_pooled"]["pfa"])
-        joint.append(entry["h1"].get("by_group", {}).get("C2_C3", {}).get("joint_success"))
-    axes[0].bar(labels, c3_pfa, color=["#777777", "#4682b4", "#52796f", "#d08c60"])
+    pfa_labels = ["B3/130", "DPCA 520", "J1-J", "J4"]
+    pfa_names = ["b3_130_fft", "fixed_dpca_520_fft_peak", "j1_joint", "j4_joint"]
+    joint_labels = ["DPCA 130", "DPCA 520", "J1-J", "J4"]
+    joint_names = ["fixed_dpca_130_fft_peak", "fixed_dpca_520_fft_peak", "j1_joint", "j4_joint"]
+    colors = ["#777777", "#4682b4", "#52796f", "#d08c60"]
+    c3_pfa = [h1[name]["h0"]["c3_pooled"]["pfa"] for name in pfa_names]
+    joint = [h1[name]["h1"]["by_group"]["C2_C3"]["joint_success"] for name in joint_names]
+    axes[0].bar(pfa_labels, c3_pfa, color=colors)
     axes[0].axhline(0.10, color="black", linestyle="--", linewidth=1)
+    axes[0].set_ylim(0, max(0.11, max(c3_pfa) * 1.10))
     axes[0].set_ylabel("C3 pooled H0 Pfa")
     axes[0].tick_params(axis="x", rotation=20)
-    axes[1].bar(labels, joint, color=["#777777", "#4682b4", "#52796f", "#d08c60"])
+    axes[1].bar(joint_labels, joint, color=colors)
     axes[1].set_ylabel("C2+C3 joint success")
     axes[1].tick_params(axis="x", rotation=20)
     fig.tight_layout()

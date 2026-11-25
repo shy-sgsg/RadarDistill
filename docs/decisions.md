@@ -1,3 +1,10 @@
+## 2026-11-26：停止当前 R6-J4 参数化并完成 R5-C/R6 综合归档
+
+- **证据：** R6-J4在AISAR RTX 3050 Laptop `cuda:0`以seed909对matched J1-J完成25,600 updates和同场景独立开发评价。J4−J1-J可辨识C2+C3 joint差`+0.03255`（95% CI `[+0.02408,+0.04080]`），总体Pd与Range保护通过，但Doppler RMSE ratio CI为`[1.723,2.085]`，C3六格familywise Pfa门失败；最难格joint从J1-J 10.35%降至J4 2.15%。结果见`experiments/D2-A-R6/R6-J4/metrics.json`及`analysis.md`。
+- **决定：** 按冻结门停止当前J4参数化；不启动J4多seed、蒸馏或final blind。R6-H/I/J4当前候选均未同时达到任务收益、估计保护和C3逐格虚警要求，P7正式确认不启动。该决定不外推否定所有物理驱动联合结构。
+- **综合发现：** R5-C/R6表明，truth-only学生能在受测合成开发集上学习有用检测/参数信息，部分更大模型/联合结构提升某些端点；但低虚警与连续Doppler仍限制候选晋级。已测K3/K2-local没有显示独立蒸馏收益；物理教师知识质量不能代替学生最终任务收益。
+- **交付与边界：** 60行模型/教师总表及阶段综合分析见`docs/research/D2-A_model_performance_matrix.md`。整条路线的内部阶段材料齐备后，仅编写一次ChatGPT综合审查请求。研究总纲v1.3、已冻结协议、历史负结果和用户未跟踪数据保持不变。
+
 ## 2026-11-24：停止 R6-I 单一尺度校正，推进独立的 R6-J4 工作包
 
 - **证据：** R6-I校正的C3 pooled Pfa差为`−0.00905`（95% CI `[-0.01180,-0.00627]`），未达到至少下降0.01的门；overall Pd差`−0.01921`（`[-0.02230,-0.01611]`），非劣门失败；C3六格familywise门仍失败。虽然C3 pooled Pfa由0.09985降到0.09080，SNR10三个C3格升至0.1742–0.1836，说明总体值掩盖逐格失稳。复算13组指标与保存结果完全一致；见`experiments/D2-A-R6/R6-I/analysis.md`和`runtime_recovery.json`。

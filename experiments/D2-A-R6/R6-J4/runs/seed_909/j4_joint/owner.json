@@ -1,0 +1,31 @@
+{
+  "owner": "D2-A-R6-J4-training-run",
+  "arm": "j4_joint",
+  "git_sha": "e6b17e1e8d01b66457d9889db6d9672efb02ae7f",
+  "protocol_sha256": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+  "config_sha256": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd",
+  "source_sha256": {
+    "src/radardistill/evaluation/d2a_r6j4.py": "d7e2902dca16e77bdaba057a1926e269ee589bcf0c4a6005f8d8cb67bbaaa806",
+    "src/radardistill/training/d2a_r6j4.py": "09218b4e9f0cac1fa909c93c5521ad47ea64df90223af10afbc360963addfa0a",
+    "src/radardistill/students/r6_j4.py": "a41a5b343e8234f5f2f45b3c0327559aa9093c8cbebffecac213b68a1c8c6b16",
+    "src/radardistill/students/r6_joint.py": "3e719c554a9107c8f9c9cc113c6fadbe773b2ff08dda4deabfa7a89387ee844c",
+    "src/radardistill/training/d2a_r6d_joint.py": "2430f4929b3b389357adc657a51a7cb4d3d81f77c40378d325387fcc8f3e901c",
+    "src/radardistill/evaluation/d2a_r6a.py": "4999197108d2e6708158897b3ef5f4c9f8954f7183ad1de073ead44abc20f914",
+    "src/radardistill/evaluation/d2a_r6e.py": "d54a95ba516b6b21d70eeda020cafb8ef4b8cf7bb382493a3ed4ad5e6200cf77",
+    "src/radardistill/simulation/d2a.py": "5bfc1530c8b8d36ee533bfb88dfa5908131fc7ad376ff1601854357c73f2b638",
+    "src/radardistill/d2a_baselines.py": "6ed7a12c51401cbdf275c195b7f9be021e0982614a7b064361916be7b2c66d87",
+    "scripts/run_d2a_r6j4.py": "9865e704868097a7c66d2664ee43f82572d9c934c738117eb746f11d28a74211",
+    "experiments/D2-A-E001/config.yaml": "b97f2b1125ed15ff8ee782d8fa1ee4228529411ed300beabadffff9fcb3aa9ce",
+    "experiments/D2-A-R6/R6-A/config.yaml": "99fd0bbfd3e1a4801105e81a59dff395c503ccdece3ddb96eb686de3fe21f598",
+    "experiments/D2-A-R6/R6-J4/protocol.md": "736a1c7ff4dc43e346159517c9d7bc8eec16ae28ac915659ac8f0ec4e50e36fa",
+    "experiments/D2-A-R6/R6-J4/config.yaml": "42165d5e5be6f5647f35759ed60a7454ae70dea9797acac1d83452ca1b2d8edd"
+  },
+  "training_seed": 909,
+  "sampler_sha256": "371c90d2486e2f7956d77335ba3ae05b71eaf997f9a99d6f60ca527a7fa26ecb",
+  "updates": 25600,
+  "effective_batch_size": 64,
+  "model_parameter_count": 10494,
+  "neural_network_precision": "FP32",
+  "fixed_dpca_shift_accumulation": "complex128",
+  "fixed_doppler_fft_precision": "complex64"
+}

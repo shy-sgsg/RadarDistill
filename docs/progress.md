@@ -1,5 +1,14 @@
 # 研究进度
 
+## 2026-11-26：完成 R5-C/R6 综合性能报告与 R6-J4 候选判断
+
+- **综合交付：** 建立并收尾[`R5/R6模型与教师性能总表`](research/D2-A_model_performance_matrix.md)，共60条已运行的学生、教师软响应、传统检测/参数基线和完整处理链记录；每行注明数据集/样本量、参数量、Pfa/Pd/AUC、Range/Doppler RMSE、joint success及来源链接。所有180个本地证据链接均可解析；跨阶段 split 不混作同场景排名。
+- **J4训练与评价：** 按冻结protocol v1.0，J1-J与J4在AISAR RTX 3050 Laptop `cuda:0`、FP32、seed909、有效batch64下各完成25,600 updates；训练数据51,200对、验证5,000对，H0独立校准/验证各120,000，H1 development 6,144。训练记录显示模型规模70,277/10,494参数；无CPU回退或OOM。指标和配对预测绑定结果基准提交`e6b17e1e8d01b66457d9889db6d9672efb02ae7f`。
+- **冻结门：** J4−J1-J的C2+C3 joint差`+0.03255`（95% paired bootstrap CI `[+0.02408,+0.04080]`），总体Pd和Range保护通过；Doppler RMSE ratio CI `[1.723,2.085]`及C3六格familywise Pfa门失败。最难condition10 joint为J4 2.15%、J1-J 10.35%。因此停止当前J4参数化，不晋级多seed、KD或final blind；不外推否定其他物理前端架构。
+- **磁盘与清理：** 完成训练/评价后，按[`owner_manifest.json`](../experiments/D2-A-R6/R6-J4/owner_manifest.json)仅删除其明确授权的12个可重建缓存数组，释放11,233,313,736 bytes；保留manifest、owner记录、训练历史/checkpoint、预测和全部指标。清理审计见[`cleanup.json`](../experiments/D2-A-R6/R6-J4/cleanup.json)。项目目录清理后约1.5 GiB，低于20 GiB。
+- **路线结论：** R5-C/R6已评价证据显示模型规模/架构会影响任务折衷，但没有当前候选同时通过C3逐格低虚警、连续Doppler与联合任务保护。R5-C/R6-G均未证明已测K3/K2-local知识在truth-only之外带来教师独立收益。R6-C规模收益及R6-J4 joint收益均为开发筛选，不是跨seed或盲测确认。
+- **资料：** 新增[`D2-A-R6J4阶段报告`](stage_reviews/D2-A-R6J4_review.md)，并更新当前状态、路线图、假设登记和决定记录；研究总纲v1.3与历史冻结结果不变。路线收尾后仅提交一次综合ChatGPT审查请求。
+
 ## 2026-11-24：完成 D2-A-R6-I 固定尺度校正并停止该候选
 
 - **实际执行：** 固定 R6-H seed808 的 CE-TCN/CNN-SSM 检查点与 B3，在 AISAR / RTX 3050 Laptop `cuda:0`、FP32 上完成冻结推理。四个 split 分别为 H0拟合60,000、H0阈值校准60,000、H0验证120,000、H1开发6,144；没有训练或生成final blind。
