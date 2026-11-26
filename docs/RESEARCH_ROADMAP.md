@@ -5,7 +5,7 @@
 
 ## 当前阶段
 
-**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot及R6-A至R6-J4均已完成各自冻结试验或候选阶段门。** R6-I单一尺度校正与R6-J4当前物理驱动联合候选均未通过完整晋级保护门，因此不进入P7多种子确认或final blind。R6-J4训练与独立开发评价绑定提交`e6b17e1e8d01b66457d9889db6d9672efb02ae7f`；R5/R6所有已评价学生、教师和处理链已经纳入[综合性能报告与总表](research/D2-A_model_performance_matrix.md)。研究总纲v1.3不变；整条路线收尾时只提交一次ChatGPT综合审查请求。
+**D2-A-E001、R3、E002 v2.1 pilot、T001、R4、E003、R5-A/B/C教师审计、R5-C T0–T3 teaching pilot及R6-A至R6-J4均已完成各自冻结试验或候选阶段门。** R6-I单一尺度校正与R6-J4当前物理驱动联合候选均未通过完整晋级保护门，因此不进入P7多种子确认或final blind。R6-J4训练与独立开发评价绑定提交`e6b17e1e8d01b66457d9889db6d9672efb02ae7f`；R5/R6所有已评价学生、教师和处理链已经纳入[综合性能报告与总表](research/D2-A_model_performance_matrix.md)。最终综合审查请求已写入[`D2-A-R5C-R6_comprehensive_review_request.md`](stage_reviews/D2-A-R5C-R6_comprehensive_review_request.md)，结果基准为`bf99c3bf268a1c136bd082b4be8f481918bf1d58`。研究总纲v1.3不变。
 
 R5-A/B学生及T0–T3四臂的C3 H0 Pfa均未通过绝对0.10保护；本pilot T0/T1/T2/T3的C3 Pfa为0.1943/0.2031/0.1824/0.1973。T1−T0、T2−T0的C2+C3 joint差为−0.0104/−0.0138。教师审计与教学pilot均显示C3 partial-overlap / 0 dB教师定位率约4%–5%。R6-A中Medium全局0.05阈值下joint success为0.8306，但condition 10 AUC=0.5956、joint=0.0391；R6-B预注册困难格AUC bootstrap上界0.63295低于0.70，故运行R分支hard-negative训练对照。HardNegative−TruthOnly全局joint差为−0.00212（paired 95% CI `[-0.00651,+0.00195]`），C3与困难格也未见增益；0.05/0.01全局Pfa上界未达标，0.001仅全局过门，分层仍失败。R6-B裁决为 **REFINE**，不晋级hard-negative多seed。用户允许未来新实验在公平比较下增加updates并探索至多两倍batch；本轮冻结设置不变。当前不启动教师时机/可靠性搜索、R5-D完整机制实验或final blind；研究总纲v1.3不变。
 
@@ -129,7 +129,7 @@ R6-F v1.0.2已在新独立场景上完成六链开发评价。B（CE-TCN原生�
 
 ## 当前唯一优先任务
 
-**路线状态：** R5-C/R6整合路线已完成全部获准的候选筛选和阶段门。R6-I单一尺度校正与R6-J4当前参数化均按各自协议停止；无候选晋级P7多种子确认或final blind。当前唯一工作是归档综合报告及性能总表，随后按用户要求提交一次ChatGPT综合审查请求。研究总纲v1.3不变；新的研究实验须另行形成有界protocol。
+**路线状态：** R5-C/R6整合路线已完成全部获准的候选筛选和阶段门。R6-I单一尺度校正与R6-J4当前参数化均按各自协议停止；无候选晋级P7多种子确认或final blind。综合报告、性能总表和一次ChatGPT审查请求均已完成；外部审查回复不是后续已获授权任务的默认前置条件。研究总纲v1.3不变；新的研究实验须另行形成有界protocol。
 
 详细阶段门见 [`D2-A-E001_review.md`](stage_reviews/D2-A-E001_review.md)、[`D2-A-R3_review.md`](stage_reviews/D2-A-R3_review.md)、[`D2-A-T001_review.md`](stage_reviews/D2-A-T001_review.md) 和 [`D2-A-E003_review.md`](stage_reviews/D2-A-E003_review.md)。本结果不触发多目标、通道误差或加速度扩展，也不构成网络优于传统方法的证据。
 

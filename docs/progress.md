@@ -8,6 +8,7 @@
 - **磁盘与清理：** 完成训练/评价后，按[`owner_manifest.json`](../experiments/D2-A-R6/R6-J4/owner_manifest.json)仅删除其明确授权的12个可重建缓存数组，释放11,233,313,736 bytes；保留manifest、owner记录、训练历史/checkpoint、预测和全部指标。清理审计见[`cleanup.json`](../experiments/D2-A-R6/R6-J4/cleanup.json)。项目目录清理后约1.5 GiB，低于20 GiB。
 - **路线结论：** R5-C/R6已评价证据显示模型规模/架构会影响任务折衷，但没有当前候选同时通过C3逐格低虚警、连续Doppler与联合任务保护。R5-C/R6-G均未证明已测K3/K2-local知识在truth-only之外带来教师独立收益。R6-C规模收益及R6-J4 joint收益均为开发筛选，不是跨seed或盲测确认。
 - **资料：** 新增[`D2-A-R6J4阶段报告`](stage_reviews/D2-A-R6J4_review.md)，并更新当前状态、路线图、假设登记和决定记录；研究总纲v1.3与历史冻结结果不变。路线收尾后仅提交一次综合ChatGPT审查请求。
+- **最终审查交付：** 整条授权路线的材料完成后，仅编写一次[`R5-C/R6 ChatGPT综合审查请求`](stage_reviews/D2-A-R5C-R6_comprehensive_review_request.md)，以综合报告提交`bf99c3bf268a1c136bd082b4be8f481918bf1d58`为研究结果基准；不等待外部回复来认定本轮已完成。
 
 ## 2026-11-24：完成 D2-A-R6-I 固定尺度校正并停止该候选
 
