@@ -1,0 +1,36 @@
+experiment: D2-A-R7-B
+protocol_version: "0.1"
+status: frozen_before_execution
+source_config: experiments/D2-A-E001/config.yaml
+signal:
+  channel_count: 3
+  pulses: 130
+  prf_hz: 1300.0
+  range_cells: 32
+  tx_model: common_phase_center_assumption
+  phase_convention: exp(-j*2*pi*(R_tx+R_rx)/wavelength)
+diagnostic_conditions:
+  - {scenario_id: separated, snr_db: 10.0, cnr_db: 10.0, scenes: 256, seed_offset: 0}
+  - {scenario_id: separated, snr_db: 10.0, cnr_db: 0.0, scenes: 256, seed_offset: 10000}
+  - {scenario_id: separated, snr_db: 10.0, cnr_db: 20.0, scenes: 256, seed_offset: 20000}
+  - {scenario_id: separated, snr_db: 0.0, cnr_db: 10.0, scenes: 256, seed_offset: 30000}
+  - {scenario_id: separated, snr_db: 20.0, cnr_db: 10.0, scenes: 256, seed_offset: 40000}
+seed_start: 87320101
+batch_size: 16
+bootstrap:
+  replicates: 2000
+  confidence: 0.95
+  seed: 87320999
+controlled_diagnostics:
+  analytic_static_scatterers: [1, 4]
+components: [static_clutter, noise_only, target_only, mixed_h0, mixed_h1]
+cuda_parity:
+  device: cuda:0
+  cpu_fallback: forbidden
+  oversampling_factor: 1
+  expected_output_dtype: float32
+  maximum_absolute_difference_tolerance: 1.0e-6
+storage:
+  save_iq: false
+  save_rd_maps: false
+  save_per_scene_metrics_only: false

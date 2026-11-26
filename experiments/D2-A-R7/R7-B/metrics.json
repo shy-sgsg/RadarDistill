@@ -1,0 +1,1818 @@
+{
+  "experiment": "D2-A-R7-B",
+  "status": "completed_diagnostic_only",
+  "scientific_performance_claim": "NOT_EVALUATED",
+  "config_path": "experiments/D2-A-E001/config.yaml",
+  "new_scene_count": 1280,
+  "seed_start": 87320101,
+  "conditions": {
+    "snr_10_cnr_10": {
+      "static_clutter": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8495582327989075,
+        "coherence_before_magnitude_p05": 0.7770636104773943,
+        "coherence_before_magnitude_p95": 0.901669282536942,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8450538224437867,
+          0.8526694555055935
+        ],
+        "coherence_after_magnitude_median": 0.9862095972404777,
+        "coherence_after_magnitude_p05": 0.9789853220506997,
+        "coherence_after_magnitude_p95": 0.991167023309808,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9857511375433377,
+          0.9869207924919821
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.003856975545682264,
+        "coherence_after_circular_mean_phase_rad": -0.00018645691665169787,
+        "phase_residual_after_median_abs_rad": 0.0018548508994011596,
+        "phase_residual_after_p95_abs_rad": 0.005982992645501588,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9998508612139023,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9973621233381278,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0029404577734327,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.999635170676352,
+          1.0001302518520574
+        ],
+        "residual_power_ratio_unaligned_median": 0.3130134972307229,
+        "residual_power_ratio_unaligned_p05": 0.20894348842087912,
+        "residual_power_ratio_unaligned_p95": 0.4706929507811747,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.3060444595806418,
+          0.32449639415773207
+        ],
+        "aligned_residual_power_ratio_median": 0.027594097001947773,
+        "aligned_residual_power_ratio_p05": 0.01769923947546463,
+        "aligned_residual_power_ratio_p95": 0.04199170007734798,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.026199297980329595,
+          0.028511659253002242
+        ],
+        "suppression_db_relative_to_channel_a_median": 15.591857860789968,
+        "suppression_db_relative_to_channel_a_p05": 13.768366347877397,
+        "suppression_db_relative_to_channel_a_p95": 17.52047181539416,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          15.449775079288933,
+          15.817103456021528
+        ]
+      },
+      "noise_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.011952087673081577,
+        "coherence_before_magnitude_p05": 0.0034201682885737507,
+        "coherence_before_magnitude_p95": 0.024382503704433886,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.01101967324173623,
+          0.012869177729570618
+        ],
+        "coherence_after_magnitude_median": 0.013172921928099709,
+        "coherence_after_magnitude_p05": 0.003604644842346372,
+        "coherence_after_magnitude_p95": 0.028402817798424698,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.011943939049131401,
+          0.01425006631034789
+        ],
+        "coherence_before_circular_mean_phase_rad": -1.0812007359417488,
+        "coherence_after_circular_mean_phase_rad": -1.5540850918602758,
+        "phase_residual_after_median_abs_rad": 1.5174821337902134,
+        "phase_residual_after_p95_abs_rad": 3.0269517013782545,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.99980540583877,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9824713527611417,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0177674558162226,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9982048272180128,
+          1.0020128976474236
+        ],
+        "residual_power_ratio_unaligned_median": 1.9975131264868344,
+        "residual_power_ratio_unaligned_p05": 1.951062469253169,
+        "residual_power_ratio_unaligned_p95": 2.0502685850598614,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.9943137241043887,
+          2.0032957727800236
+        ],
+        "aligned_residual_power_ratio_median": 1.999780167062502,
+        "aligned_residual_power_ratio_p05": 1.9457177281084057,
+        "aligned_residual_power_ratio_p95": 2.052228503052712,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.9964825162364328,
+          2.0052363826638167
+        ],
+        "suppression_db_relative_to_channel_a_median": -3.009822555340887,
+        "suppression_db_relative_to_channel_a_p05": -3.1222569197742125,
+        "suppression_db_relative_to_channel_a_p95": -2.8907983231776178,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -3.0216557411351643,
+          -3.0026551130650114
+        ]
+      },
+      "target_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.9999990048038058,
+        "coherence_before_magnitude_p05": 0.9999986410415125,
+        "coherence_before_magnitude_p95": 0.9999991113695853,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.9999989739451979,
+          0.9999990292685339
+        ],
+        "coherence_after_magnitude_median": 0.9868226348235805,
+        "coherence_after_magnitude_p05": 0.9727897669670424,
+        "coherence_after_magnitude_p95": 0.9994503992557783,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9845433529893881,
+          0.9902438841372315
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.05685546607223196,
+        "coherence_after_circular_mean_phase_rad": 2.5310858347908156,
+        "phase_residual_after_median_abs_rad": 2.5313780716194456,
+        "phase_residual_after_p95_abs_rad": 2.5445363249946986,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9999998119223825,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999901063261898,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.000008529552158,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9999993423393878,
+          1.0000002980557787
+        ],
+        "residual_power_ratio_unaligned_median": 0.25226231819254086,
+        "residual_power_ratio_unaligned_p05": 0.0027127746078248758,
+        "residual_power_ratio_unaligned_p95": 1.0344759253834703,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.19680716219936883,
+          0.33541306213728467
+        ],
+        "aligned_residual_power_ratio_median": 3.618374147312713,
+        "aligned_residual_power_ratio_p05": 3.5893669325824202,
+        "aligned_residual_power_ratio_p95": 3.641966331473665,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          3.6143041014921224,
+          3.6222826653847804
+        ],
+        "suppression_db_relative_to_channel_a_median": -5.585134715727017,
+        "suppression_db_relative_to_channel_a_p05": -5.613359265977603,
+        "suppression_db_relative_to_channel_a_p95": -5.550178570335401,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -5.589823374516447,
+          -5.580246904438851
+        ]
+      },
+      "mixed_h0": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7724359116309775,
+        "coherence_before_magnitude_p05": 0.7055974980359587,
+        "coherence_before_magnitude_p95": 0.8201201818447018,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.768355939950265,
+          0.7764692775505346
+        ],
+        "coherence_after_magnitude_median": 0.8969854877483612,
+        "coherence_after_magnitude_p05": 0.8897117041384791,
+        "coherence_after_magnitude_p95": 0.9020232066611149,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.8961386205787759,
+          0.8974773145772836
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.004285028656654931,
+        "coherence_after_circular_mean_phase_rad": -0.0004437780961414425,
+        "phase_residual_after_median_abs_rad": 0.0042483795946399346,
+        "phase_residual_after_p95_abs_rad": 0.01132355408769388,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9998576068609129,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9926609596276861,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0076372738696455,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9994559858880453,
+          1.0006434046260717
+        ],
+        "residual_power_ratio_unaligned_median": 0.46796876792557784,
+        "residual_power_ratio_unaligned_p05": 0.370219081850022,
+        "residual_power_ratio_unaligned_p95": 0.6105612181278707,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.457921650682722,
+          0.47771268136893097
+        ],
+        "aligned_residual_power_ratio_median": 0.2059720415807999,
+        "aligned_residual_power_ratio_p05": 0.19572453020221833,
+        "aligned_residual_power_ratio_p95": 0.2207117355907447,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.20521260448304637,
+          0.20768419278230688
+        ],
+        "suppression_db_relative_to_channel_a_median": 6.861917380181519,
+        "suppression_db_relative_to_channel_a_p05": 6.56174574443517,
+        "suppression_db_relative_to_channel_a_p95": 7.08355379003759,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          6.8259655742288885,
+          6.877959923015009
+        ]
+      },
+      "mixed_h1": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7738885748388963,
+        "coherence_before_magnitude_p05": 0.704572400462763,
+        "coherence_before_magnitude_p95": 0.8212624834854378,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.7679728959606815,
+          0.7778546503868162
+        ],
+        "coherence_after_magnitude_median": 0.8567591410546439,
+        "coherence_after_magnitude_p05": 0.8459435378374148,
+        "coherence_after_magnitude_p95": 0.8718687119018487,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.8556457067943675,
+          0.8581063718091811
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.0058573321185596584,
+        "coherence_after_circular_mean_phase_rad": 0.014629515783777145,
+        "phase_residual_after_median_abs_rad": 0.014170441196802119,
+        "phase_residual_after_p95_abs_rad": 0.025354189392511044,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9998729323500648,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9925688521536853,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.007349838615371,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9992072543781455,
+          1.0007963289932744
+        ],
+        "residual_power_ratio_unaligned_median": 0.46723699416541786,
+        "residual_power_ratio_unaligned_p05": 0.365510783257618,
+        "residual_power_ratio_unaligned_p95": 0.6062943825513833,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.4541514515095441,
+          0.47627766573323316
+        ],
+        "aligned_residual_power_ratio_median": 0.2863789460782354,
+        "aligned_residual_power_ratio_p05": 0.25603038742588324,
+        "aligned_residual_power_ratio_p95": 0.3073840263653302,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.2841019082655824,
+          0.28880862411306907
+        ],
+        "suppression_db_relative_to_channel_a_median": 5.430589145071819,
+        "suppression_db_relative_to_channel_a_p05": 5.123187288206877,
+        "suppression_db_relative_to_channel_a_p95": 5.917084966392375,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          5.393899914088774,
+          5.465258491829806
+        ]
+      }
+    },
+    "snr_10_cnr_0": {
+      "static_clutter": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8487730153680185,
+        "coherence_before_magnitude_p05": 0.7851739468807595,
+        "coherence_before_magnitude_p95": 0.8969967898998623,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8437579004081573,
+          0.8552977294042314
+        ],
+        "coherence_after_magnitude_median": 0.985177645294758,
+        "coherence_after_magnitude_p05": 0.9782335559049766,
+        "coherence_after_magnitude_p95": 0.9905765129431772,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.984663674199272,
+          0.9857728627498333
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.00406013485818331,
+        "coherence_after_circular_mean_phase_rad": -6.879718959182962e-05,
+        "phase_residual_after_median_abs_rad": 0.0021845088546432892,
+        "phase_residual_after_p95_abs_rad": 0.006104012508871464,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9999688174987893,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9972278729777913,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.002585699820259,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9998208289754771,
+          1.0002581600571423
+        ],
+        "residual_power_ratio_unaligned_median": 0.31571143271628965,
+        "residual_power_ratio_unaligned_p05": 0.21692456835722257,
+        "residual_power_ratio_unaligned_p95": 0.454734909456724,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.30555742206548137,
+          0.33004630158551473
+        ],
+        "aligned_residual_power_ratio_median": 0.029626303983842736,
+        "aligned_residual_power_ratio_p05": 0.018866131521616675,
+        "aligned_residual_power_ratio_p95": 0.043639085772901286,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.028434587042867086,
+          0.030701098963492327
+        ],
+        "suppression_db_relative_to_channel_a_median": 15.283231469552417,
+        "suppression_db_relative_to_channel_a_p05": 13.60124363638232,
+        "suppression_db_relative_to_channel_a_p95": 17.24317199070605,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          15.12846087588996,
+          15.461531061397132
+        ]
+      },
+      "noise_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.012914388379536516,
+        "coherence_before_magnitude_p05": 0.003589583100392466,
+        "coherence_before_magnitude_p95": 0.02732157663321992,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.012175154593450978,
+          0.014163033758081424
+        ],
+        "coherence_after_magnitude_median": 0.01207111152334998,
+        "coherence_after_magnitude_p05": 0.003002688527210092,
+        "coherence_after_magnitude_p95": 0.026987453156507343,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.010883926499017763,
+          0.013545002819506864
+        ],
+        "coherence_before_circular_mean_phase_rad": 2.491940216712252,
+        "coherence_after_circular_mean_phase_rad": 1.9880714127461985,
+        "phase_residual_after_median_abs_rad": 1.679516983450247,
+        "phase_residual_after_p95_abs_rad": 3.000416268976356,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9994258398584096,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9825674872602592,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0165987381247121,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9977838419600024,
+          1.0012031035140903
+        ],
+        "residual_power_ratio_unaligned_median": 2.0026907350797147,
+        "residual_power_ratio_unaligned_p05": 1.9527875741441145,
+        "residual_power_ratio_unaligned_p95": 2.0525725858114745,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.99646955356071,
+          2.00693457766064
+        ],
+        "aligned_residual_power_ratio_median": 2.0012147168466408,
+        "aligned_residual_power_ratio_p05": 1.952961010194199,
+        "aligned_residual_power_ratio_p95": 2.0523778598480935,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.995723647136447,
+          2.0057111702314074
+        ],
+        "suppression_db_relative_to_channel_a_median": -3.012936832370043,
+        "suppression_db_relative_to_channel_a_p05": -3.1225731821436273,
+        "suppression_db_relative_to_channel_a_p95": -2.9069351374738788,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -3.0226839293468695,
+          -3.0010040323178435
+        ]
+      },
+      "target_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.9999990008180211,
+        "coherence_before_magnitude_p05": 0.9999986476088811,
+        "coherence_before_magnitude_p95": 0.9999991109827924,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.9999989747192322,
+          0.9999990199278473
+        ],
+        "coherence_after_magnitude_median": 0.9824304513564044,
+        "coherence_after_magnitude_p05": 0.972127168405015,
+        "coherence_after_magnitude_p95": 0.9992954641226587,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9812960890026703,
+          0.9847493146905942
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.008887643869108583,
+        "coherence_after_circular_mean_phase_rad": 2.5316415605949656,
+        "phase_residual_after_median_abs_rad": 2.532603372960212,
+        "phase_residual_after_p95_abs_rad": 2.5445879406799943,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0000000414925538,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999900686084113,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0000097196023026,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9999993599654233,
+          1.000000330063199
+        ],
+        "residual_power_ratio_unaligned_median": 0.2692425832477584,
+        "residual_power_ratio_unaligned_p05": 0.0044360586982257495,
+        "residual_power_ratio_unaligned_p95": 1.027014851276811,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.22360945012318897,
+          0.3194826799596325
+        ],
+        "aligned_residual_power_ratio_median": 3.61497765760085,
+        "aligned_residual_power_ratio_p05": 3.58944526559735,
+        "aligned_residual_power_ratio_p95": 3.6416671372704013,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          3.608025389095838,
+          3.6206927938868194
+        ],
+        "suppression_db_relative_to_channel_a_median": -5.581056171287557,
+        "suppression_db_relative_to_channel_a_p05": -5.613002470428649,
+        "suppression_db_relative_to_channel_a_p95": -5.550273352898765,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -5.5879167516458415,
+          -5.572695847967376
+        ]
+      },
+      "mixed_h0": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.42387158728737667,
+        "coherence_before_magnitude_p05": 0.38843750978023167,
+        "coherence_before_magnitude_p95": 0.4520839075214889,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.4212266806808218,
+          0.42693555448763754
+        ],
+        "coherence_after_magnitude_median": 0.4925833757089625,
+        "coherence_after_magnitude_p05": 0.4803065785482382,
+        "coherence_after_magnitude_p95": 0.5053725965148576,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.49147994199335127,
+          0.49381977788411174
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.005534461706563197,
+        "coherence_after_circular_mean_phase_rad": 0.0012892819118137154,
+        "phase_residual_after_median_abs_rad": 0.013537665513439351,
+        "phase_residual_after_p95_abs_rad": 0.040021561078690024,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9997656843219924,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9835985566700103,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0146862552843086,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.99833066814133,
+          1.0020076155225084
+        ],
+        "residual_power_ratio_unaligned_median": 1.160213571442826,
+        "residual_power_ratio_unaligned_p05": 1.096940961857366,
+        "residual_power_ratio_unaligned_p95": 1.2414060344238793,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.1547163128833255,
+          1.1653978342934657
+        ],
+        "aligned_residual_power_ratio_median": 1.0154624705850472,
+        "aligned_residual_power_ratio_p05": 0.9851452816887504,
+        "aligned_residual_power_ratio_p95": 1.0455023667412298,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.0133484813250324,
+          1.018206845233499
+        ],
+        "suppression_db_relative_to_channel_a_median": -0.0666387740207143,
+        "suppression_db_relative_to_channel_a_p05": -0.19324862981568985,
+        "suppression_db_relative_to_channel_a_p95": 0.06500105039728758,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -0.07836011773667118,
+          -0.05758820843119543
+        ]
+      },
+      "mixed_h1": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.47457091147089503,
+        "coherence_before_magnitude_p05": 0.4233975497817436,
+        "coherence_before_magnitude_p95": 0.5160494080361288,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.46819031775224007,
+          0.48047133811211196
+        ],
+        "coherence_after_magnitude_median": 0.3475294630769244,
+        "coherence_after_magnitude_p05": 0.32203960099071893,
+        "coherence_after_magnitude_p95": 0.39632844542603307,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.34389589575665047,
+          0.35144248751077745
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.004164031646678012,
+        "coherence_after_circular_mean_phase_rad": 0.18528480349015064,
+        "phase_residual_after_median_abs_rad": 0.18862051045888234,
+        "phase_residual_after_p95_abs_rad": 0.2631047051976233,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9997920479598439,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.98399060632794,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0154963086267208,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9984366223687234,
+          1.0012486244356062
+        ],
+        "residual_power_ratio_unaligned_median": 1.0682740729297926,
+        "residual_power_ratio_unaligned_p05": 0.9669336030383615,
+        "residual_power_ratio_unaligned_p95": 1.1734589042737384,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.050377673444476,
+          1.0766750828181288
+        ],
+        "aligned_residual_power_ratio_median": 1.317490769086282,
+        "aligned_residual_power_ratio_p05": 1.2147992177577158,
+        "aligned_residual_power_ratio_p95": 1.382171555763727,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.3066237959133271,
+          1.3233588496016973
+        ],
+        "suppression_db_relative_to_channel_a_median": -1.1974755690412064,
+        "suppression_db_relative_to_channel_a_p05": -1.4056185472890186,
+        "suppression_db_relative_to_channel_a_p95": -0.8450448445726241,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -1.2167760617733296,
+          -1.161504888113542
+        ]
+      }
+    },
+    "snr_10_cnr_20": {
+      "static_clutter": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8447475794097725,
+        "coherence_before_magnitude_p05": 0.7858921036588827,
+        "coherence_before_magnitude_p95": 0.8958523419387658,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8387585916218365,
+          0.8508802527988477
+        ],
+        "coherence_after_magnitude_median": 0.9858659350552268,
+        "coherence_after_magnitude_p05": 0.9800981780967494,
+        "coherence_after_magnitude_p95": 0.9898413017621854,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9853838625670437,
+          0.9862907785579552
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.017342214248100424,
+        "coherence_after_circular_mean_phase_rad": -4.132663200107666e-05,
+        "phase_residual_after_median_abs_rad": 0.0021499574181651593,
+        "phase_residual_after_p95_abs_rad": 0.006293572810885131,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0001681278774712,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9972859376399967,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0029155137959855,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9998622524958906,
+          1.0003739271182739
+        ],
+        "residual_power_ratio_unaligned_median": 0.32667305411822467,
+        "residual_power_ratio_unaligned_p05": 0.2236521566188503,
+        "residual_power_ratio_unaligned_p95": 0.4426662536847634,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.31720390430995093,
+          0.34122176552225864
+        ],
+        "aligned_residual_power_ratio_median": 0.02825533532954841,
+        "aligned_residual_power_ratio_p05": 0.020324887327929347,
+        "aligned_residual_power_ratio_p95": 0.03982371820418178,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.027445862269034806,
+          0.029199818273663775
+        ],
+        "suppression_db_relative_to_channel_a_median": 15.489006029640464,
+        "suppression_db_relative_to_channel_a_p05": 13.998583488475074,
+        "suppression_db_relative_to_channel_a_p95": 16.919728556132807,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          15.34619945829397,
+          15.61523420757064
+        ]
+      },
+      "noise_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.013525396400853712,
+        "coherence_before_magnitude_p05": 0.003595784758763808,
+        "coherence_before_magnitude_p95": 0.02799348096192429,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.012383012926918728,
+          0.01435011143883121
+        ],
+        "coherence_after_magnitude_median": 0.01194108366336162,
+        "coherence_after_magnitude_p05": 0.003224884167096425,
+        "coherence_after_magnitude_p95": 0.025733635652055647,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.010715040134734972,
+          0.012917645164271869
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.2508993844613624,
+        "coherence_after_circular_mean_phase_rad": 2.710512044683522,
+        "phase_residual_after_median_abs_rad": 1.6465625678378377,
+        "phase_residual_after_p95_abs_rad": 3.0278308048920892,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0005036312690172,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9828894829353061,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0187525050791,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9985653606783864,
+          1.0020595200717104
+        ],
+        "residual_power_ratio_unaligned_median": 1.9964905750115742,
+        "residual_power_ratio_unaligned_p05": 1.949685417901657,
+        "residual_power_ratio_unaligned_p95": 2.047254173960552,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.9920153019185944,
+          1.9997254061305703
+        ],
+        "aligned_residual_power_ratio_median": 2.0002915392897282,
+        "aligned_residual_power_ratio_p05": 1.9475205900739505,
+        "aligned_residual_power_ratio_p95": 2.0483481558976617,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.995454853109046,
+          2.0054039572965836
+        ],
+        "suppression_db_relative_to_channel_a_median": -3.0109329799997875,
+        "suppression_db_relative_to_channel_a_p05": -3.114037711935052,
+        "suppression_db_relative_to_channel_a_p95": -2.894820562988314,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -3.022018674495805,
+          -3.000419012873665
+        ]
+      },
+      "target_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.9999989690042965,
+        "coherence_before_magnitude_p05": 0.9999986628602763,
+        "coherence_before_magnitude_p95": 0.9999991099555731,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.9999989390683086,
+          0.9999989883365771
+        ],
+        "coherence_after_magnitude_median": 0.9829941873609422,
+        "coherence_after_magnitude_p05": 0.9720874828912222,
+        "coherence_after_magnitude_p95": 0.9992641078758523,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9815258354488676,
+          0.9842218913912605
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.047424859497037,
+        "coherence_after_circular_mean_phase_rad": 2.5322094930819476,
+        "phase_residual_after_median_abs_rad": 2.533695972159932,
+        "phase_residual_after_p95_abs_rad": 2.54521807038459,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.000000870094267,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999895954835214,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0000111207988143,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          1.0000003108230946,
+          1.0000016611390496
+        ],
+        "residual_power_ratio_unaligned_median": 0.3441571094300666,
+        "residual_power_ratio_unaligned_p05": 0.007078695995560479,
+        "residual_power_ratio_unaligned_p95": 0.9945689277939747,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.2979508333112532,
+          0.4064549585355553
+        ],
+        "aligned_residual_power_ratio_median": 3.6118581739692726,
+        "aligned_residual_power_ratio_p05": 3.589696390717031,
+        "aligned_residual_power_ratio_p95": 3.6418335873321235,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          3.608217299516515,
+          3.619394836397064
+        ],
+        "suppression_db_relative_to_channel_a_median": -5.577306880995165,
+        "suppression_db_relative_to_channel_a_p05": -5.613200969344717,
+        "suppression_db_relative_to_channel_a_p95": -5.550577175631184,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -5.58635962413429,
+          -5.572926843962842
+        ]
+      },
+      "mixed_h0": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8364786311534778,
+        "coherence_before_magnitude_p05": 0.7778111694955715,
+        "coherence_before_magnitude_p95": 0.8870320208638443,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8295395759073089,
+          0.841654825075111
+        ],
+        "coherence_after_magnitude_median": 0.9762720287987693,
+        "coherence_after_magnitude_p05": 0.9703767148029414,
+        "coherence_after_magnitude_p95": 0.9800469535028462,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9755598031496283,
+          0.9765897001008947
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.01730932791544927,
+        "coherence_after_circular_mean_phase_rad": -6.596016447717449e-05,
+        "phase_residual_after_median_abs_rad": 0.0023516602130245895,
+        "phase_residual_after_p95_abs_rad": 0.006505268121462199,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0002793996241532,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9963452036037133,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.00406163904993,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          1.000045792317424,
+          1.0006700853725576
+        ],
+        "residual_power_ratio_unaligned_median": 0.34248581924391786,
+        "residual_power_ratio_unaligned_p05": 0.24144056326404528,
+        "residual_power_ratio_unaligned_p95": 0.45626859027377975,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.33362562514908795,
+          0.35854554678696393
+        ],
+        "aligned_residual_power_ratio_median": 0.047452605626175884,
+        "aligned_residual_power_ratio_p05": 0.03994796158146689,
+        "aligned_residual_power_ratio_p95": 0.05931521804831185,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.04683888682883141,
+          0.04889087239090737
+        ],
+        "suppression_db_relative_to_channel_a_median": 13.237399660195019,
+        "suppression_db_relative_to_channel_a_p05": 12.268340477634588,
+        "suppression_db_relative_to_channel_a_p95": 13.985059756099615,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          13.107722135882074,
+          13.29393434902848
+        ]
+      },
+      "mixed_h1": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8368931474449723,
+        "coherence_before_magnitude_p05": 0.7777958832878249,
+        "coherence_before_magnitude_p95": 0.8869388198029856,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8297440354575464,
+          0.8417323331181594
+        ],
+        "coherence_after_magnitude_median": 0.9717045229099115,
+        "coherence_after_magnitude_p05": 0.9658751968965827,
+        "coherence_after_magnitude_p95": 0.9760782551848268,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9713310853838435,
+          0.9721241293850459
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.017389136944059323,
+        "coherence_after_circular_mean_phase_rad": 0.0013412879300047623,
+        "phase_residual_after_median_abs_rad": 0.002514463827082267,
+        "phase_residual_after_p95_abs_rad": 0.007211119657212975,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0002729775641304,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9963900469827973,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.004019669543487,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          1.0000370941492434,
+          1.0006123798430413
+        ],
+        "residual_power_ratio_unaligned_median": 0.343461683750366,
+        "residual_power_ratio_unaligned_p05": 0.24221769022774225,
+        "residual_power_ratio_unaligned_p95": 0.4552648589587352,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.3330042426611911,
+          0.35826824208518926
+        ],
+        "aligned_residual_power_ratio_median": 0.056551467031246985,
+        "aligned_residual_power_ratio_p05": 0.04787558266949452,
+        "aligned_residual_power_ratio_p95": 0.06837611838929145,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.05575207184587197,
+          0.057426786019143625
+        ],
+        "suppression_db_relative_to_channel_a_median": 12.47556326186126,
+        "suppression_db_relative_to_channel_a_p05": 11.650955592377539,
+        "suppression_db_relative_to_channel_a_p95": 13.198859473665635,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          12.408854962864995,
+          12.537390925200114
+        ]
+      }
+    },
+    "snr_0_cnr_10": {
+      "static_clutter": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8480525531619842,
+        "coherence_before_magnitude_p05": 0.7751039014380249,
+        "coherence_before_magnitude_p95": 0.9027934093956038,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8428884581509064,
+          0.8527571680053739
+        ],
+        "coherence_after_magnitude_median": 0.9856991440864071,
+        "coherence_after_magnitude_p05": 0.9806714147963014,
+        "coherence_after_magnitude_p95": 0.990465869316041,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9852400422956777,
+          0.9861448130444743
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.010505733687520207,
+        "coherence_after_circular_mean_phase_rad": -0.00016927167061233877,
+        "phase_residual_after_median_abs_rad": 0.00215415521921575,
+        "phase_residual_after_p95_abs_rad": 0.0060112636116366955,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.999936489133056,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9968762411162866,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0025737740294975,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9997393210783891,
+          1.000154190427295
+        ],
+        "residual_power_ratio_unaligned_median": 0.32056723343293725,
+        "residual_power_ratio_unaligned_p05": 0.21909127722568802,
+        "residual_power_ratio_unaligned_p95": 0.47635864804516415,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.3126834718544129,
+          0.3307140298869357
+        ],
+        "aligned_residual_power_ratio_median": 0.028540155463225816,
+        "aligned_residual_power_ratio_p05": 0.019088384680955094,
+        "aligned_residual_power_ratio_p95": 0.03865910580770604,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.02766308813215526,
+          0.029509574627304025
+        ],
+        "suppression_db_relative_to_channel_a_median": 15.445437151813627,
+        "suppression_db_relative_to_channel_a_p05": 14.12748198550671,
+        "suppression_db_relative_to_channel_a_p95": 17.192331629841902,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          15.300370804393175,
+          15.580993563756536
+        ]
+      },
+      "noise_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.012437664094832528,
+        "coherence_before_magnitude_p05": 0.003467206837081885,
+        "coherence_before_magnitude_p95": 0.024984299266607758,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.011060975018764919,
+          0.013413015289483106
+        ],
+        "coherence_after_magnitude_median": 0.01214063623319436,
+        "coherence_after_magnitude_p05": 0.0032857672638517714,
+        "coherence_after_magnitude_p95": 0.027151683315295196,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.010954085549188346,
+          0.01299262810511231
+        ],
+        "coherence_before_circular_mean_phase_rad": 2.594387645175305,
+        "coherence_after_circular_mean_phase_rad": 0.6195695829603564,
+        "phase_residual_after_median_abs_rad": 1.5072199095559675,
+        "phase_residual_after_p95_abs_rad": 2.9944225594145912,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9998082550071574,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9816186909528878,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0180144811182277,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9980475368332247,
+          1.0021672933551167
+        ],
+        "residual_power_ratio_unaligned_median": 1.9994743731248659,
+        "residual_power_ratio_unaligned_p05": 1.9552075700117135,
+        "residual_power_ratio_unaligned_p95": 2.054244737437398,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.9941881682576599,
+          2.0044344872695903
+        ],
+        "aligned_residual_power_ratio_median": 1.9974140777686171,
+        "aligned_residual_power_ratio_p05": 1.9523281833174702,
+        "aligned_residual_power_ratio_p95": 2.05028960801216,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.9928538276086416,
+          2.0024958197733254
+        ],
+        "suppression_db_relative_to_channel_a_median": -3.0046810542378886,
+        "suppression_db_relative_to_channel_a_p05": -3.1181520297811915,
+        "suppression_db_relative_to_channel_a_p95": -2.905524003917897,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -3.015716181638794,
+          -2.994754433312041
+        ]
+      },
+      "target_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.9999989895711152,
+        "coherence_before_magnitude_p05": 0.9999986674257038,
+        "coherence_before_magnitude_p95": 0.999999111525748,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.999998961608359,
+          0.9999990245023549
+        ],
+        "coherence_after_magnitude_median": 0.9847151332125326,
+        "coherence_after_magnitude_p05": 0.97246278681473,
+        "coherence_after_magnitude_p95": 0.9992596061135848,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9829299449200125,
+          0.986802549354102
+        ],
+        "coherence_before_circular_mean_phase_rad": 0.02385570654765149,
+        "coherence_after_circular_mean_phase_rad": 2.5301455220917526,
+        "phase_residual_after_median_abs_rad": 2.5285064156906816,
+        "phase_residual_after_p95_abs_rad": 2.5447265103447454,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0000003648122462,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999903001946429,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.000009780246638,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9999998966477369,
+          1.000001185534682
+        ],
+        "residual_power_ratio_unaligned_median": 0.2994478450978043,
+        "residual_power_ratio_unaligned_p05": 0.0024444940593844303,
+        "residual_power_ratio_unaligned_p95": 0.9743874200921213,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.21523692899186633,
+          0.3506213587895254
+        ],
+        "aligned_residual_power_ratio_median": 3.612476937540409,
+        "aligned_residual_power_ratio_p05": 3.5887409580970697,
+        "aligned_residual_power_ratio_p95": 3.641715411463513,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          3.6077288326230894,
+          3.618438222271549
+        ],
+        "suppression_db_relative_to_channel_a_median": -5.5780508274075515,
+        "suppression_db_relative_to_channel_a_p05": -5.613060040106148,
+        "suppression_db_relative_to_channel_a_p95": -5.5494211127098945,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -5.585211622997531,
+          -5.57233886996495
+        ]
+      },
+      "mixed_h0": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7715014148552721,
+        "coherence_before_magnitude_p05": 0.7052670965360495,
+        "coherence_before_magnitude_p95": 0.8190676375446342,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.7657733302778605,
+          0.7757216761299013
+        ],
+        "coherence_after_magnitude_median": 0.8957794243454835,
+        "coherence_after_magnitude_p05": 0.8902744218371506,
+        "coherence_after_magnitude_p95": 0.9013232665471362,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.8954126286763675,
+          0.8964283803934998
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.010700831528169762,
+        "coherence_after_circular_mean_phase_rad": -0.0005605133199398908,
+        "phase_residual_after_median_abs_rad": 0.004007558857998404,
+        "phase_residual_after_p95_abs_rad": 0.011506783041569284,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9999893151768819,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9920308439036802,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0086993873187735,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9989704189621664,
+          1.0007132378493988
+        ],
+        "residual_power_ratio_unaligned_median": 0.4721323614070374,
+        "residual_power_ratio_unaligned_p05": 0.37772446274079186,
+        "residual_power_ratio_unaligned_p95": 0.6133638780866472,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.46707730595792496,
+          0.4849090132644366
+        ],
+        "aligned_residual_power_ratio_median": 0.20823728333054226,
+        "aligned_residual_power_ratio_p05": 0.1975421360149407,
+        "aligned_residual_power_ratio_p95": 0.21960573077232468,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.20745199287248725,
+          0.20933678396435496
+        ],
+        "suppression_db_relative_to_channel_a_median": 6.81441512075882,
+        "suppression_db_relative_to_channel_a_p05": 6.583564881648208,
+        "suppression_db_relative_to_channel_a_p95": 7.043402666109909,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          6.7915447590815745,
+          6.830823887966028
+        ]
+      },
+      "mixed_h1": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7713637010693406,
+        "coherence_before_magnitude_p05": 0.7058073319624458,
+        "coherence_before_magnitude_p95": 0.8192117251625113,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.7659066655540882,
+          0.7758560479141516
+        ],
+        "coherence_after_magnitude_median": 0.8919832958442242,
+        "coherence_after_magnitude_p05": 0.8863018911998173,
+        "coherence_after_magnitude_p95": 0.8976164916273418,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.891604910045085,
+          0.8923911888941644
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.010601720450168873,
+        "coherence_after_circular_mean_phase_rad": 0.0008709340980526941,
+        "phase_residual_after_median_abs_rad": 0.003990265126806506,
+        "phase_residual_after_p95_abs_rad": 0.01195529681121315,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9999646178640442,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9920489546389172,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0085249405854233,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9990372104810528,
+          1.000704276663642
+        ],
+        "residual_power_ratio_unaligned_median": 0.4721206958756068,
+        "residual_power_ratio_unaligned_p05": 0.37818310312059655,
+        "residual_power_ratio_unaligned_p95": 0.6127138944318843,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.46636200857281174,
+          0.48539337257946114
+        ],
+        "aligned_residual_power_ratio_median": 0.21637697439506573,
+        "aligned_residual_power_ratio_p05": 0.20404456916298783,
+        "aligned_residual_power_ratio_p95": 0.22810039947075322,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.21499199674806363,
+          0.21710336427614263
+        ],
+        "suppression_db_relative_to_channel_a_median": 6.647889562739776,
+        "suppression_db_relative_to_channel_a_p05": 6.418739579598362,
+        "suppression_db_relative_to_channel_a_p95": 6.902753374812958,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          6.633334834671928,
+          6.675777069010815
+        ]
+      }
+    },
+    "snr_20_cnr_10": {
+      "static_clutter": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.8513086330573854,
+        "coherence_before_magnitude_p05": 0.7890418603957521,
+        "coherence_before_magnitude_p95": 0.9035845546423432,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.8468640158059486,
+          0.8547367645602235
+        ],
+        "coherence_after_magnitude_median": 0.9861198381253093,
+        "coherence_after_magnitude_p05": 0.9789399764714755,
+        "coherence_after_magnitude_p95": 0.9906581580026044,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.9856630866614511,
+          0.9866910550276757
+        ],
+        "coherence_before_circular_mean_phase_rad": -1.7569281484668464e-05,
+        "coherence_after_circular_mean_phase_rad": -8.217562698311188e-05,
+        "phase_residual_after_median_abs_rad": 0.0019484563936732356,
+        "phase_residual_after_p95_abs_rad": 0.006331985104251345,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0001902224752426,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9974841279001249,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0024564861522811,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          1.000010407586112,
+          1.000623744722763
+        ],
+        "residual_power_ratio_unaligned_median": 0.3165032513059167,
+        "residual_power_ratio_unaligned_p05": 0.20943960321473676,
+        "residual_power_ratio_unaligned_p95": 0.44748282086145424,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.3086333398546456,
+          0.33325444101903506
+        ],
+        "aligned_residual_power_ratio_median": 0.02778756846857778,
+        "aligned_residual_power_ratio_p05": 0.018688968938602283,
+        "aligned_residual_power_ratio_p95": 0.04214154998578852,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.026622103277332616,
+          0.0287110944587943
+        ],
+        "suppression_db_relative_to_channel_a_median": 15.56149580578371,
+        "suppression_db_relative_to_channel_a_p05": 13.75294834889139,
+        "suppression_db_relative_to_channel_a_p95": 17.284175152895635,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          15.419502520052204,
+          15.747583427144622
+        ]
+      },
+      "noise_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.012251124121156295,
+        "coherence_before_magnitude_p05": 0.0030488167194147957,
+        "coherence_before_magnitude_p95": 0.027838415089009715,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.011476802776833966,
+          0.013999739039915495
+        ],
+        "coherence_after_magnitude_median": 0.01326070001355737,
+        "coherence_after_magnitude_p05": 0.0028535943300682333,
+        "coherence_after_magnitude_p95": 0.026771316664698,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.011916156455467482,
+          0.01439124673888323
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.8454428036036163,
+        "coherence_after_circular_mean_phase_rad": -0.23152606699567757,
+        "phase_residual_after_median_abs_rad": 1.4674566112219365,
+        "phase_residual_after_p95_abs_rad": 3.0030742880413586,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 0.9996936787813491,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9829234701528278,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.019019324380565,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9982162329143378,
+          1.001284602120581
+        ],
+        "residual_power_ratio_unaligned_median": 1.9998843705479616,
+        "residual_power_ratio_unaligned_p05": 1.9437672477497112,
+        "residual_power_ratio_unaligned_p95": 2.046761564483699,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          1.994029277463889,
+          2.003857817609226
+        ],
+        "aligned_residual_power_ratio_median": 1.9999654834909046,
+        "aligned_residual_power_ratio_p05": 1.9481199422528284,
+        "aligned_residual_power_ratio_p95": 2.0510574234566477,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          1.9955525389120907,
+          2.0055630263252855
+        ],
+        "suppression_db_relative_to_channel_a_median": -3.010225001774332,
+        "suppression_db_relative_to_channel_a_p05": -3.1197781521964973,
+        "suppression_db_relative_to_channel_a_p95": -2.89615582783628,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -3.022363128079755,
+          -3.000631663767375
+        ]
+      },
+      "target_only": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.9999990024935165,
+        "coherence_before_magnitude_p05": 0.9999986631730545,
+        "coherence_before_magnitude_p95": 0.9999991119671617,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.9999989662170397,
+          0.9999990319387202
+        ],
+        "coherence_after_magnitude_median": 0.9865995282511432,
+        "coherence_after_magnitude_p05": 0.9726202074196704,
+        "coherence_after_magnitude_p95": 0.9994931553802537,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.984583938968605,
+          0.9891599411277684
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.04579914590265793,
+        "coherence_after_circular_mean_phase_rad": 2.5303024987117517,
+        "phase_residual_after_median_abs_rad": 2.529543204918386,
+        "phase_residual_after_p95_abs_rad": 2.5447559727963895,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.0000002298057054,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999898862621603,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.000009169382809,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9999994049148879,
+          1.0000007370806308
+        ],
+        "residual_power_ratio_unaligned_median": 0.26671366823065157,
+        "residual_power_ratio_unaligned_p05": 0.001986679664694128,
+        "residual_power_ratio_unaligned_p95": 1.0047155425966214,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.19451857887295043,
+          0.3460284840954458
+        ],
+        "aligned_residual_power_ratio_median": 3.6158595958589808,
+        "aligned_residual_power_ratio_p05": 3.5895589065083917,
+        "aligned_residual_power_ratio_p95": 3.6418534682077657,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          3.609459432832261,
+          3.6203502248884774
+        ],
+        "suppression_db_relative_to_channel_a_median": -5.582115584377654,
+        "suppression_db_relative_to_channel_a_p05": -5.613224677545631,
+        "suppression_db_relative_to_channel_a_p95": -5.550410847130313,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          -5.587505852788299,
+          -5.574421650690806
+        ]
+      },
+      "mixed_h0": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7736249705812221,
+        "coherence_before_magnitude_p05": 0.7167235236316115,
+        "coherence_before_magnitude_p95": 0.81962747845179,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.7705048301388794,
+          0.7781991502540034
+        ],
+        "coherence_after_magnitude_median": 0.8963470563738292,
+        "coherence_after_magnitude_p05": 0.8901294283539866,
+        "coherence_after_magnitude_p95": 0.9010300959918107,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.8958685199586275,
+          0.8966931118329585
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.0005822933432461975,
+        "coherence_after_circular_mean_phase_rad": -0.0005752565051272754,
+        "phase_residual_after_median_abs_rad": 0.0038918705668079005,
+        "phase_residual_after_p95_abs_rad": 0.011276266551874938,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.000168807730243,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9917406889928004,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0086170793335016,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.999538757872159,
+          1.0008974944666047
+        ],
+        "residual_power_ratio_unaligned_median": 0.46929815353725246,
+        "residual_power_ratio_unaligned_p05": 0.3689681507066169,
+        "residual_power_ratio_unaligned_p95": 0.5883877378812128,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.46151008548234246,
+          0.4837316778607999
+        ],
+        "aligned_residual_power_ratio_median": 0.2077139449296677,
+        "aligned_residual_power_ratio_p05": 0.19781875429519583,
+        "aligned_residual_power_ratio_p95": 0.22095225773661092,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.20661135268651043,
+          0.208279860017402
+        ],
+        "suppression_db_relative_to_channel_a_median": 6.825343465727096,
+        "suppression_db_relative_to_channel_a_p05": 6.557015575402333,
+        "suppression_db_relative_to_channel_a_p95": 7.037325501624609,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          6.813527228917492,
+          6.8484581895556556
+        ]
+      },
+      "mixed_h1": {
+        "n_scenes": 256,
+        "shift_samples": -1.8416666666666668,
+        "coherence_before_magnitude_median": 0.7906436690751,
+        "coherence_before_magnitude_p05": 0.713929565977089,
+        "coherence_before_magnitude_p95": 0.844129276475891,
+        "coherence_before_magnitude_median_bootstrap_ci95": [
+          0.7839974809843281,
+          0.796342815152665
+        ],
+        "coherence_after_magnitude_median": 0.5753611992370208,
+        "coherence_after_magnitude_p05": 0.5347028547695755,
+        "coherence_after_magnitude_p95": 0.6741593343102927,
+        "coherence_after_magnitude_median_bootstrap_ci95": [
+          0.5654513953326097,
+          0.5837878894726899
+        ],
+        "coherence_before_circular_mean_phase_rad": -0.007724651603659667,
+        "coherence_after_circular_mean_phase_rad": 0.18267164537330557,
+        "phase_residual_after_median_abs_rad": 0.18959973001450464,
+        "phase_residual_after_p95_abs_rad": 0.2372467875999298,
+        "channel_amplitude_ratio_a_to_aligned_b_median": 1.000142721012833,
+        "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9925854497610802,
+        "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0074396812798239,
+        "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+          0.9990700147461754,
+          1.000894517763864
+        ],
+        "residual_power_ratio_unaligned_median": 0.44433568596342443,
+        "residual_power_ratio_unaligned_p05": 0.33002264207431314,
+        "residual_power_ratio_unaligned_p95": 0.5987256241007468,
+        "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+          0.4336086724495896,
+          0.4549439096875629
+        ],
+        "aligned_residual_power_ratio_median": 0.8703329362526464,
+        "aligned_residual_power_ratio_p05": 0.6606581171543595,
+        "aligned_residual_power_ratio_p95": 0.9601961097467954,
+        "aligned_residual_power_ratio_median_bootstrap_ci95": [
+          0.8551575271182918,
+          0.8888405287531874
+        ],
+        "suppression_db_relative_to_channel_a_median": 0.6031504439371496,
+        "suppression_db_relative_to_channel_a_p05": 0.17640081384974898,
+        "suppression_db_relative_to_channel_a_p95": 1.8002322533851411,
+        "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+          0.5117619475582197,
+          0.6795405871043249
+        ]
+      }
+    }
+  },
+  "pooled_components": {
+    "static_clutter": {
+      "n_scenes": 1280,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.8485949817658902,
+      "coherence_before_magnitude_p05": 0.7820677589231567,
+      "coherence_before_magnitude_p95": 0.9015118207986643,
+      "coherence_before_magnitude_median_bootstrap_ci95": [
+        0.8465443683488034,
+        0.8507457005621574
+      ],
+      "coherence_after_magnitude_median": 0.9858351250690769,
+      "coherence_after_magnitude_p05": 0.979052179574948,
+      "coherence_after_magnitude_p95": 0.9906262252935825,
+      "coherence_after_magnitude_median_bootstrap_ci95": [
+        0.9856532236444343,
+        0.9860392972906402
+      ],
+      "coherence_before_circular_mean_phase_rad": 0.0014108774450128322,
+      "coherence_after_circular_mean_phase_rad": -0.00010960561753446903,
+      "phase_residual_after_median_abs_rad": 0.0020868480074664065,
+      "phase_residual_after_p95_abs_rad": 0.006148383399334503,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 1.0000122030809147,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.997237321224232,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0026710951798115,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+        0.9999221864826032,
+        1.0001405791099682
+      ],
+      "residual_power_ratio_unaligned_median": 0.31960148636298963,
+      "residual_power_ratio_unaligned_p05": 0.21390925531916263,
+      "residual_power_ratio_unaligned_p95": 0.45991890192499235,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+        0.3151248129279353,
+        0.32395155353635835
+      ],
+      "aligned_residual_power_ratio_median": 0.02832628235081957,
+      "aligned_residual_power_ratio_p05": 0.018737906652655838,
+      "aligned_residual_power_ratio_p95": 0.04187756512576168,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": [
+        0.027924933114999644,
+        0.028707054723310133
+      ],
+      "suppression_db_relative_to_channel_a_median": 15.478104213170438,
+      "suppression_db_relative_to_channel_a_p05": 13.780185923672919,
+      "suppression_db_relative_to_channel_a_p95": 17.272789320817242,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+        15.420113628162447,
+        15.540078830242905
+      ]
+    },
+    "noise_only": {
+      "n_scenes": 1280,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.01269980064831249,
+      "coherence_before_magnitude_p05": 0.003434010111764255,
+      "coherence_before_magnitude_p95": 0.026758960043582497,
+      "coherence_before_magnitude_median_bootstrap_ci95": [
+        0.012216517999924091,
+        0.013085170508521322
+      ],
+      "coherence_after_magnitude_median": 0.012446525933394053,
+      "coherence_after_magnitude_p05": 0.0030644630130797455,
+      "coherence_after_magnitude_p95": 0.026914193804344233,
+      "coherence_after_magnitude_median_bootstrap_ci95": [
+        0.011941006269912643,
+        0.012987931854637886
+      ],
+      "coherence_before_circular_mean_phase_rad": -0.7444352015020299,
+      "coherence_after_circular_mean_phase_rad": 1.4584814894245086,
+      "phase_residual_after_median_abs_rad": 1.5514477209799629,
+      "phase_residual_after_p95_abs_rad": 3.014773337010533,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 0.99980540583877,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9824340651979623,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0180051302099504,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+        0.9990447163668963,
+        1.0008002627575454
+      ],
+      "residual_power_ratio_unaligned_median": 1.9988570913657706,
+      "residual_power_ratio_unaligned_p05": 1.9505980408176788,
+      "residual_power_ratio_unaligned_p95": 2.050148004450109,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+        1.9965579609843151,
+        2.000946473029517
+      ],
+      "aligned_residual_power_ratio_median": 1.9998809100589483,
+      "aligned_residual_power_ratio_p05": 1.9488776902856964,
+      "aligned_residual_power_ratio_p95": 2.0508387621553967,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": [
+        1.9973625550435776,
+        2.0018713180435204
+      ],
+      "suppression_db_relative_to_channel_a_median": -3.0100413483740804,
+      "suppression_db_relative_to_channel_a_p05": -3.11931517279966,
+      "suppression_db_relative_to_channel_a_p95": -2.897845830121431,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+        -3.0143615722932378,
+        -3.00456903591083
+      ]
+    },
+    "target_only": {
+      "n_scenes": 1280,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.9999989908516103,
+      "coherence_before_magnitude_p05": 0.9999986590624976,
+      "coherence_before_magnitude_p95": 0.9999991114760648,
+      "coherence_before_magnitude_median_bootstrap_ci95": [
+        0.9999989789605132,
+        0.9999990029501207
+      ],
+      "coherence_after_magnitude_median": 0.98453278248625,
+      "coherence_after_magnitude_p05": 0.9723774418940296,
+      "coherence_after_magnitude_p95": 0.9993713367727565,
+      "coherence_after_magnitude_median_bootstrap_ci95": [
+        0.983604858496124,
+        0.985715663200064
+      ],
+      "coherence_before_circular_mean_phase_rad": -0.008481042035272805,
+      "coherence_after_circular_mean_phase_rad": 2.5310769803842246,
+      "phase_residual_after_median_abs_rad": 2.530715222692727,
+      "phase_residual_after_p95_abs_rad": 2.544740846113247,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 1.000000184048091,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999899013287324,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0000097235741991,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+        0.999999965187918,
+        1.0000003994548574
+      ],
+      "residual_power_ratio_unaligned_median": 0.29314300227103873,
+      "residual_power_ratio_unaligned_p05": 0.0028588034177859686,
+      "residual_power_ratio_unaligned_p95": 1.01450457897713,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+        0.26357202950962905,
+        0.31478857228865337
+      ],
+      "aligned_residual_power_ratio_median": 3.615130445165499,
+      "aligned_residual_power_ratio_p05": 3.5893215831597383,
+      "aligned_residual_power_ratio_p95": 3.641850484279064,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": [
+        3.612640860570637,
+        3.618260634421838
+      ],
+      "suppression_db_relative_to_channel_a_median": -5.5812397260976105,
+      "suppression_db_relative_to_channel_a_p05": -5.613221119186066,
+      "suppression_db_relative_to_channel_a_p95": -5.550123704354876,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+        -5.584998472154239,
+        -5.578247896817849
+      ]
+    },
+    "mixed_h0": {
+      "n_scenes": 1280,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.7722542306997138,
+      "coherence_before_magnitude_p05": 0.40980378889061286,
+      "coherence_before_magnitude_p95": 0.8583471002179411,
+      "coherence_before_magnitude_median_bootstrap_ci95": [
+        0.7685387596746969,
+        0.7741838749866824
+      ],
+      "coherence_after_magnitude_median": 0.89636643491448,
+      "coherence_after_magnitude_p05": 0.487775657237558,
+      "coherence_after_magnitude_p95": 0.9781269517138266,
+      "coherence_after_magnitude_median_bootstrap_ci95": [
+        0.895855832114069,
+        0.896766242411273
+      ],
+      "coherence_before_circular_mean_phase_rad": 0.0014618480868448577,
+      "coherence_after_circular_mean_phase_rad": -7.129828404386286e-05,
+      "phase_residual_after_median_abs_rad": 0.004238108069130433,
+      "phase_residual_after_p95_abs_rad": 0.02264657553960402,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 1.0001526779066165,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9906275727123443,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0090511623491982,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+        0.9998330657858143,
+        1.0004354113435168
+      ],
+      "residual_power_ratio_unaligned_median": 0.4716940575959593,
+      "residual_power_ratio_unaligned_p05": 0.2952511488384081,
+      "residual_power_ratio_unaligned_p95": 1.1891530759026236,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+        0.46631349453574744,
+        0.48176008086592625
+      ],
+      "aligned_residual_power_ratio_median": 0.20765247306637868,
+      "aligned_residual_power_ratio_p05": 0.04372500481007533,
+      "aligned_residual_power_ratio_p95": 1.0274469377357154,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": [
+        0.20660746995196677,
+        0.20825156027458866
+      ],
+      "suppression_db_relative_to_channel_a_median": 6.826628922696143,
+      "suppression_db_relative_to_channel_a_p05": -0.11759401877784206,
+      "suppression_db_relative_to_channel_a_p95": 13.592701340918703,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+        6.814117360668219,
+        6.848539805647014
+      ]
+    },
+    "mixed_h1": {
+      "n_scenes": 1280,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.7762924001159994,
+      "coherence_before_magnitude_p05": 0.4500712184418354,
+      "coherence_before_magnitude_p95": 0.8602339906234724,
+      "coherence_before_magnitude_median_bootstrap_ci95": [
+        0.7730197275128836,
+        0.7791022863412489
+      ],
+      "coherence_after_magnitude_median": 0.8567591410546439,
+      "coherence_after_magnitude_p05": 0.3324440174885937,
+      "coherence_after_magnitude_p95": 0.9737384091584542,
+      "coherence_after_magnitude_median_bootstrap_ci95": [
+        0.8540920634787661,
+        0.8602691409241213
+      ],
+      "coherence_before_circular_mean_phase_rad": -0.0005165658081015,
+      "coherence_after_circular_mean_phase_rad": 0.07686966427157958,
+      "phase_residual_after_median_abs_rad": 0.014604308466578666,
+      "phase_residual_after_p95_abs_rad": 0.23394322438165505,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 1.0001569664071983,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9912821352544716,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0088024144574923,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": [
+        0.9997938636032856,
+        1.0004215632615487
+      ],
+      "residual_power_ratio_unaligned_median": 0.46543245173745007,
+      "residual_power_ratio_unaligned_p05": 0.2945265188710456,
+      "residual_power_ratio_unaligned_p95": 1.1151659569879822,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": [
+        0.4576505590222343,
+        0.4712658621241746
+      ],
+      "aligned_residual_power_ratio_median": 0.2863789460782354,
+      "aligned_residual_power_ratio_p05": 0.05235681841639494,
+      "aligned_residual_power_ratio_p95": 1.3490088459904692,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": [
+        0.28007960161530443,
+        0.2923776904054929
+      ],
+      "suppression_db_relative_to_channel_a_median": 5.430589145071819,
+      "suppression_db_relative_to_channel_a_p05": -1.300147960553383,
+      "suppression_db_relative_to_channel_a_p95": 12.81026764617013,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": [
+        5.340557703457862,
+        5.5271852054023105
+      ]
+    }
+  },
+  "analytic_finite_cpi": {
+    "one_scatterer": {
+      "n_scenes": 1,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.9999986402164324,
+      "coherence_before_magnitude_p05": 0.9999986402164324,
+      "coherence_before_magnitude_p95": 0.9999986402164324,
+      "coherence_before_magnitude_median_bootstrap_ci95": null,
+      "coherence_after_magnitude_median": 0.9984525287084544,
+      "coherence_after_magnitude_p05": 0.9984525287084544,
+      "coherence_after_magnitude_p95": 0.9984525287084544,
+      "coherence_after_magnitude_median_bootstrap_ci95": null,
+      "coherence_before_circular_mean_phase_rad": -1.074776992257669,
+      "coherence_after_circular_mean_phase_rad": -0.006360630142278385,
+      "phase_residual_after_median_abs_rad": 0.006360630142278385,
+      "phase_residual_after_p95_abs_rad": 0.006360630142278385,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 0.9999866049715967,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 0.9999866049715967,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 0.9999866049715967,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": null,
+      "residual_power_ratio_unaligned_median": 1.0481585609640802,
+      "residual_power_ratio_unaligned_p05": 1.0481585609640802,
+      "residual_power_ratio_unaligned_p95": 1.0481585609640802,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": null,
+      "aligned_residual_power_ratio_median": 0.003135379633636844,
+      "aligned_residual_power_ratio_p05": 0.003135379633636844,
+      "aligned_residual_power_ratio_p95": 0.003135379633636844,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": null,
+      "suppression_db_relative_to_channel_a_median": 25.03709867014517,
+      "suppression_db_relative_to_channel_a_p05": 25.03709867014517,
+      "suppression_db_relative_to_channel_a_p95": 25.03709867014517,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": null
+    },
+    "four_scatterers": {
+      "n_scenes": 1,
+      "shift_samples": -1.8416666666666668,
+      "coherence_before_magnitude_median": 0.8933781263743215,
+      "coherence_before_magnitude_p05": 0.8933781263743215,
+      "coherence_before_magnitude_p95": 0.8933781263743215,
+      "coherence_before_magnitude_median_bootstrap_ci95": null,
+      "coherence_after_magnitude_median": 0.9993419885869051,
+      "coherence_after_magnitude_p05": 0.9993419885869051,
+      "coherence_after_magnitude_p95": 0.9993419885869051,
+      "coherence_after_magnitude_median_bootstrap_ci95": null,
+      "coherence_before_circular_mean_phase_rad": -0.057056582520804006,
+      "coherence_after_circular_mean_phase_rad": 0.0016512416701445997,
+      "phase_residual_after_median_abs_rad": 0.0016512416701445997,
+      "phase_residual_after_p95_abs_rad": 0.0016512416701445997,
+      "channel_amplitude_ratio_a_to_aligned_b_median": 1.0000116947712625,
+      "channel_amplitude_ratio_a_to_aligned_b_p05": 1.0000116947712625,
+      "channel_amplitude_ratio_a_to_aligned_b_p95": 1.0000116947712625,
+      "channel_amplitude_ratio_a_to_aligned_b_median_bootstrap_ci95": null,
+      "residual_power_ratio_unaligned_median": 0.21614878170868232,
+      "residual_power_ratio_unaligned_p05": 0.21614878170868232,
+      "residual_power_ratio_unaligned_p95": 0.21614878170868232,
+      "residual_power_ratio_unaligned_median_bootstrap_ci95": null,
+      "aligned_residual_power_ratio_median": 0.0013187323449831566,
+      "aligned_residual_power_ratio_p05": 0.0013187323449831566,
+      "aligned_residual_power_ratio_p95": 0.0013187323449831566,
+      "aligned_residual_power_ratio_median_bootstrap_ci95": null,
+      "suppression_db_relative_to_channel_a_median": 28.798433415972603,
+      "suppression_db_relative_to_channel_a_p05": 28.798433415972603,
+      "suppression_db_relative_to_channel_a_p95": 28.798433415972603,
+      "suppression_db_relative_to_channel_a_median_bootstrap_ci95": null
+    }
+  },
+  "cpu_cuda_parity": {
+    "device": "cuda:0",
+    "by_condition": {
+      "snr_10_cnr_10": {
+        "static_clutter": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h0": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h1": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        }
+      },
+      "snr_10_cnr_0": {
+        "static_clutter": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h0": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h1": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        }
+      },
+      "snr_10_cnr_20": {
+        "static_clutter": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h0": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h1": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        }
+      },
+      "snr_0_cnr_10": {
+        "static_clutter": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h0": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h1": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        }
+      },
+      "snr_20_cnr_10": {
+        "static_clutter": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h0": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        },
+        "mixed_h1": {
+          "shape": [
+            16,
+            130,
+            32
+          ],
+          "cpu_dtype": "float32",
+          "cuda_dtype": "float32",
+          "max_absolute_difference": 0.0,
+          "mean_absolute_difference": 0.0,
+          "max_total_mass_difference": 0.0
+        }
+      }
+    },
+    "max_absolute_difference": 0.0,
+    "tolerance": 1e-06,
+    "passed": true
+  },
+  "historical_e001_recomputation": {
+    "old_scene_count": 1280,
+    "old_median_clutter_suppression_db": 15.406020978730135,
+    "new_median_clutter_suppression_db": 15.478104213170438,
+    "new_minus_old_suppression_db": 0.07208323444030285,
+    "old_median_unscaled_target_power_ratio": 3.6137915674725614,
+    "new_median_unscaled_target_power_ratio": 3.615130445165499,
+    "target_ratio_definition": "mean(|DPCA(target)|^2)/mean(|target channel 0|^2); may exceed 1"
+  },
+  "environment": {
+    "python": "3.13.7",
+    "numpy": "2.3.4",
+    "torch": "2.8.0+cu128",
+    "torch_cuda": "12.8",
+    "platform": "Linux-7.0.0-44-generic-x86_64-with-glibc2.43",
+    "device": "cuda:0",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "cuda_free_bytes_before_end": 2852454400,
+    "cuda_total_bytes": 3942383616,
+    "cuda_peak_allocated_bytes": 9588736,
+    "cuda_peak_reserved_bytes": 23068672,
+    "cpu_fallback": false
+  },
+  "runtime_seconds": {
+    "scene_generation": 14.548971347947372,
+    "cpu_cuda_parity_total": 0.24784765901131323,
+    "total": 18.20524134599691
+  },
+  "storage": {
+    "iq_written": false,
+    "rd_maps_written": false
+  }
+}

@@ -8,6 +8,7 @@
 - **约束：** R7-A要区分dense CUT、稀疏学生候选、CPI级Pfa；零填充不增大物理独立格点；相关单元不得当独立样本。未到G5前不启动新学生训练。7kg目录只读，不整体复制；最终项目小于20GiB。
 
 - **R7-A实际运行：** 新增`d2a_r7_metrics.py`及10项边界测试，完成32个H0场景的流式资源预检。CPU NumPy B3生成吞吐约129.8场景/秒、评分约4,285.8场景/秒，未写IQ/RD磁盘缓存。独立CUT平均Pfa在零事件下达到95%上界`1e-6`需2,995,731个场景；对4,160个固定CUT作95% Bonferroni保证需11,328,997个场景。当前shell无PyTorch；预检是CPU资源测量，不代表GPU训练或低虚警性能。历史Pfa口径分类见`experiments/D2-A-R7/R7-A/history_pfa_audit.csv`；详细边界和资源限制见R7-A分析。G1部分完成，不能宣称达到`1e-6`。
+- **R7-B实际运行：** AISAR环境PyTorch 2.8.0+cu128、RTX 3050 Laptop `cuda:0`运行1,280个新场景的DPCA分量诊断。纯静止杂波补偿前后相干幅值中位数0.849→0.986，通道幅值比1.000012，残差功率比0.02833，对应抑制15.478 dB（scene-bootstrap 95% CI 15.420–15.540）；CPU/CUDA K2响应最大绝对差0，峰值GPU分配约9.59 MB。独立噪声差分功率比约2.0，不能称为噪声抑制；运动目标差分功率比约3.615，是相对输入通道的未缩放比值。该结果支持当前声明的合成DPCA公式和历史CCR定义，不证明真实硬件教师资格、低虚警检测或蒸馏收益。`tests/test_d2a_k2_cuda.py`与R7-B诊断测试在AISAR共12项通过。详见`experiments/D2-A-R7/R7-B/analysis.md`和`docs/research/D2-A-R7_TEACHER_CORRECTNESS.md`。
 
 
 ## 2026-11-26：完成 R5-C/R6 综合性能报告与 R6-J4 候选判断
