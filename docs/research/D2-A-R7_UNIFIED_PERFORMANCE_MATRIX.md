@@ -4,8 +4,6 @@
 
 本阶段报告已将此矩阵作为正式结果部分：见[D2-A-R7综合阶段报告](../stage_reviews/D2-A-R7_review.md)，其中提供R7-D逐SNR检测、Range/Doppler估计与Joint摘要，以及教师正确性/教学结果。
 
-本阶段报告已将此矩阵作为正式结果部分：见[D2-A-R7综合阶段报告](../stage_reviews/D2-A-R7_review.md)，其中提供R7-D逐SNR检测、Range/Doppler估计与Joint摘要，以及教师正确性/教学结果。
-
 ## 完整机器可读表
 
 完整表为单张长格式CSV：[下载/打开完整矩阵](../../experiments/D2-A-R7/unified_performance_matrix.csv)。它纳入D0/D1可追溯结果（包括D1-R1、D1-E001和D1-E002）、D2-A-E001/R3/R4/E002/E003/T001、R5/R6历史结果、R7-B物理教师诊断、R7-D共同L0/L1复评，以及R7-E明确尚未运行/不适用的方法。R5/R6原有60行综合记录以原文JSON保留，同时增加可追溯的详细指标记录。
