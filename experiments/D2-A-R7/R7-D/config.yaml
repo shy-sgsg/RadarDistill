@@ -1,0 +1,83 @@
+experiment:
+  id: D2-A-R7-D
+  protocol_version: "0.1"
+  status: preregistered_historical_checkpoint_reevaluation
+  charter: docs/RESEARCH_CHARTER.md v1.4
+  new_training: false
+  distillation: false
+  final_blind: false
+  code_scope: R7 evaluation only; do not alter historical checkpoints/protocols
+
+physics:
+  source_config: experiments/D2-A-E001/config.yaml
+  channels: 3
+  pulses: 130
+  range_bins: 32
+  prf_hz: 1300.0
+  clutter_in_final_input: exactly_zero
+  clutter_generation_component: discarded_before_input_cache
+  noise: circular_complex_awgn_identity_channel_covariance
+  snr_definition: target_reference_amplitude_squared_over_noise_power_at_continuous_range_psf_peak
+  snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+  target_range_cell_interval: [4.0, 28.0]
+  target_azimuth_interval_deg: [88.86, 91.14]
+  target_radial_velocity_mps_uniform: [-15.0, 15.0]
+  reference_amplitude_db_interval: [-6.0, 6.0]
+  initial_phase_rad_interval: [0.0, 6.283185307179586]
+  doppler_error: circular_prf_wrapped
+
+splits:
+  seed_block_start: 3700000000
+  seed_stride_by_split: 100000
+  seed_stride_by_snr_index: 10000
+  l0_h0_scenes: 2048
+  l0_h1_scenes: 2048
+  l1_h0_calibration_per_snr: 2048
+  l1_h0_verification_per_snr: 2048
+  l1_h1_per_snr: 2048
+  target_pfa_cpi: 0.01
+  threshold_quantile_method: higher
+  threshold_comparator: strict_greater_than
+  profile_ml_h1_per_snr: 256
+  scene_bootstrap_replicates: 1000
+  bootstrap_seed: 3707000001
+
+joint_success:
+  range_error_max_cells: 1.0
+  doppler_error_max_hz: 20.0
+
+runtime:
+  conda_environment: AISAR
+  device: cuda:0
+  cpu_fallback: forbidden
+  inference_batch_size: 16
+  oom_retries: [8, 4]
+  simultaneous_models_on_gpu: 1
+  cache_iq_temporarily: true
+  owner_scoped_cleanup_after_review: true
+
+checkpoint_inventory:
+  checkpoint_selection: formal_best_only
+  include_families:
+    - D1-E001/formal/*/*/best_inference.pt
+    - D1-E002/formal/*/S1/best_inference.pt
+    - D1-E002/formal/*/S2/best_inference.pt
+    - D2-A-R5/R5-A/runs/*/*/best_checkpoint.pt
+    - D2-A-R5/R5-A/capacity/runs/*/*/best_checkpoint.pt
+    - D2-A-R5/R5-B/runs/*/*/best_checkpoint.pt
+    - D2-A-R5/R5-C-teaching/runs/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-B/runs/*/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-C/runs/*/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-D/runs/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-E/runs/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-G/runs/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-H/runs/*/*/best_checkpoint.pt
+    - D2-A-R6/R6-J4/runs/*/*/best_checkpoint.pt
+  exclude: [pilot, attempts, initial_checkpoint, last_checkpoint, best_checkpoint_12800_duplicates]
+
+outputs:
+  checkpoint_inventory: experiments/D2-A-R7/R7-D/checkpoint_inventory.csv
+  scene_plan: experiments/D2-A-R7/R7-D/scene_plan.csv
+  metrics: experiments/D2-A-R7/R7-D/metrics.json
+  analysis: experiments/D2-A-R7/R7-D/analysis.md
+  temporary_cache_root: experiments/D2-A-R7/R7-D/cache/
