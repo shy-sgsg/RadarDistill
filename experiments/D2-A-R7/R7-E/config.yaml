@@ -1,0 +1,52 @@
+experiment:
+  id: D2-A-R7-E
+  status: preregistered_applicability_and_frozen_baseline_integration
+  protocol: experiments/D2-A-R7/R7-E/protocol.md
+  research_matrix: docs/research/D2-A-R7_CLASSICAL_REFERENCE_MATRIX.md
+  new_training: false
+  new_scene_generation: false
+  threshold_or_window_search: false
+
+evidence:
+  dpca_physics:
+    source: experiments/D2-A-R7/R7-B/metrics.json
+    claim_scope: declared_synthetic_geometry_physics_diagnostic
+  matched_no_clutter_baselines:
+    source: experiments/D2-A-R7/R7-D/metrics.json
+    source_protocol: experiments/D2-A-R7/R7-D/protocol.md
+    datasets: [L0_TARGET_ONLY, L1_AWGN_NO_CLUTTER]
+    l1_snr_db: [-20, -15, -10, -5, 0, 5, 10, 20]
+    h0_calibration_per_snr: 2048
+    h0_verification_per_snr: 2048
+    h1_per_snr: 2048
+    target_pfa_cpi: 0.01
+    profile_ml_h1_per_snr: 256
+  engineering_reference:
+    source: docs/research/D2-A-R7_ENGINEERING_REFERENCE.md
+    status: NOT_QUALIFIED_NOT_RUN
+
+method_handling:
+  r7d_evaluated_classical_references:
+    - B0_single_channel_FFT_peak
+    - B1_three_channel_noncoherent_FFT_peak
+    - B1_detection_plus_native_FFT_parameters
+    - B1_detection_plus_log_parabolic_parameters
+    - B1_detection_plus_4x_zero_pad_parameters
+    - lag_one_phase_difference_estimator
+    - profile_ML_finite_grid_256_H1
+  not_represented_as_cell_pfa:
+    - scalar_cpi_presence_scores
+    - sparse_single_candidate_outputs
+    - local_cfar_like_historical_scores
+  future_protocol_required:
+    - ATI_phase_geometry
+    - dense_CA_or_OS_CFAR
+    - Kelly_AMF_or_ACE
+    - full_or_reduced_STAP
+    - knowledge_aided_covariance
+    - 7kg_engineering_integration
+
+interpretation:
+  historical_false_alarm_units_preserved: true
+  pfa_cell_1e_6_qualification: NOT_VERIFIED
+  cross_stage_ranking: prohibited

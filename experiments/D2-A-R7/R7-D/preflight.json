@@ -1,0 +1,745 @@
+{
+  "status": "PASS",
+  "protocol": "experiments/D2-A-R7/R7-D/protocol.md",
+  "config": "experiments/D2-A-R7/R7-D/config.yaml",
+  "checkpoint_inventory": "experiments/D2-A-R7/R7-D/checkpoint_inventory.csv",
+  "source_commit": "afea5f32fdffe210f117d8ad6a930e750986e79e",
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "torch": "2.8.0+cu128",
+  "cuda_runtime": "12.8",
+  "free_vram_mib_start": 2821.69,
+  "total_vram_mib": 3759.75,
+  "checkpoint_count": 47,
+  "models": [
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_1/A_truth_only/best_inference.pt",
+      "checkpoint_sha256": "bfbe1eef9946a1a5d7a953686eb95ee3280d1ca40d16ec511c25bbf5ef4517d1",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_1/B_teacher_pretrain_then_truth/best_inference.pt",
+      "checkpoint_sha256": "249a46ca306d0d6c74e07fcd899c97c0ce4e70a146b21a86cf717b6e85f9066a",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_1/C_joint_truth_and_teacher/best_inference.pt",
+      "checkpoint_sha256": "7db17a625b48b0077838faee3f9b8cb9f95e90be829aab942551d9927832d1eb",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_1/D_progressive_distillation/best_inference.pt",
+      "checkpoint_sha256": "958cf2c0b813c88ce26aa6f67b35279cbac5973ed2b6354d45f8dca09e1dbcb3",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_2/A_truth_only/best_inference.pt",
+      "checkpoint_sha256": "ea85e2c863169daaf53fc0e6bc2241d1ae2469ec333c8e63fbc4a4679ac29345",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_2/B_teacher_pretrain_then_truth/best_inference.pt",
+      "checkpoint_sha256": "641ee0095386ca70a30e899c5a7006f5a30d7798e27cc7f92550043d24d3bb4d",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_2/C_joint_truth_and_teacher/best_inference.pt",
+      "checkpoint_sha256": "02c3b48cdba968950c49b272cbb77a4ad76b822dacd6db47c3fd5634490224fb",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_2/D_progressive_distillation/best_inference.pt",
+      "checkpoint_sha256": "d12421cb8044ad003346b790d887aeba293e0c03d34b9d11b3887419a99506b4",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_3/A_truth_only/best_inference.pt",
+      "checkpoint_sha256": "97c998b7b37ccbd4857793a950dfbd067474bb391f918a9eee3318a439e8b757",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_3/B_teacher_pretrain_then_truth/best_inference.pt",
+      "checkpoint_sha256": "9a99bb22e27e8660dd9206b8e441664f9dd68fcb7d10240003bb826a04bbba5e",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_3/C_joint_truth_and_teacher/best_inference.pt",
+      "checkpoint_sha256": "0af785038e44aa0884fc9f4222bb7eef2277abbbe161f6c8a7f56126036149fa",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E001/formal/seed_3/D_progressive_distillation/best_inference.pt",
+      "checkpoint_sha256": "821aeebbab1630cc34de7b69160279099e0e154273645b636d6aafcd0b70575a",
+      "task_scope": "joint",
+      "model_label": "D1-E001 lightweight depthwise-separable TCN",
+      "parameter_count": 9093,
+      "trainable_parameter_count": 9093,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_1/S1/best_inference.pt",
+      "checkpoint_sha256": "e7b3969810dbab8bf5819199dd0675dce90f08e6bbce77226720ba1d6d0d2642",
+      "task_scope": "joint",
+      "model_label": "D1-E002 S1",
+      "parameter_count": 9285,
+      "trainable_parameter_count": 9285,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_1/S2/best_inference.pt",
+      "checkpoint_sha256": "d583f0df1f1d0afbabd16e87f1d91de6983fb74ac1c1916249c1284e19e1f22f",
+      "task_scope": "joint_with_lag_one_feature",
+      "model_label": "D1-E002 S2",
+      "parameter_count": 9105,
+      "trainable_parameter_count": 9105,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_2/S1/best_inference.pt",
+      "checkpoint_sha256": "7ca157efc6fae79dc9875f685a612e4e5cae0d07d37e987f87b3bda4a81bbcdc",
+      "task_scope": "joint",
+      "model_label": "D1-E002 S1",
+      "parameter_count": 9285,
+      "trainable_parameter_count": 9285,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_2/S2/best_inference.pt",
+      "checkpoint_sha256": "361a239c330bcd015c5ecca1e21d7bbe5d1090e6c62b870b0a8780e7fc7ae75b",
+      "task_scope": "joint_with_lag_one_feature",
+      "model_label": "D1-E002 S2",
+      "parameter_count": 9105,
+      "trainable_parameter_count": 9105,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_3/S1/best_inference.pt",
+      "checkpoint_sha256": "ed7a5b119f5ffae52efb464bac97420ece2d1a26aefce763832a5ffdcd0e2b85",
+      "task_scope": "joint",
+      "model_label": "D1-E002 S1",
+      "parameter_count": 9285,
+      "trainable_parameter_count": 9285,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D1-E002/formal/seed_3/S2/best_inference.pt",
+      "checkpoint_sha256": "aa56d74da52bb013a47a9bf1ff5c284e1b45dd023097b486dad2debfb779667d",
+      "task_scope": "joint_with_lag_one_feature",
+      "model_label": "D1-E002 S2",
+      "parameter_count": 9105,
+      "trainable_parameter_count": 9105,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-A/capacity/runs/seed_101/Medium/best_checkpoint.pt",
+      "checkpoint_sha256": "785ba966c52e629f0f73ff10f8347c27a216ab1faaf56783b7fbe3dcd01b89cd",
+      "task_scope": "joint",
+      "model_label": "R5-A TaskStudent",
+      "parameter_count": 82887,
+      "trainable_parameter_count": 82887,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S0/best_checkpoint.pt",
+      "checkpoint_sha256": "e68689f59dbe103c4950de4eddd14d38178fe10367b0d8fb20ad29fd0aefb42b",
+      "task_scope": "joint",
+      "model_label": "R5-A TaskStudent",
+      "parameter_count": 13383,
+      "trainable_parameter_count": 13383,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-A/runs/seed_101/S2/best_checkpoint.pt",
+      "checkpoint_sha256": "4617cce645421f50b4a514d6d546c7409f0b487541bbe59d5ca346c4316fe082",
+      "task_scope": "joint",
+      "model_label": "R5-A S2 fixed-coherence physics-guided student",
+      "parameter_count": 13557,
+      "trainable_parameter_count": 13557,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-B/runs/seed_101/TFAS/best_checkpoint.pt",
+      "checkpoint_sha256": "a452d47f35c6f49f32f563e0f92b911db335a21eeed1996db8396addf2501752",
+      "task_scope": "joint",
+      "model_label": "R5-B TemporalFrequencyAttentionStudent",
+      "parameter_count": 79638,
+      "trainable_parameter_count": 79638,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T0/best_checkpoint.pt",
+      "checkpoint_sha256": "3ededa42237a2a300d731395ee6fd63f08e6a2bd4241ec3e52df1a004e5e25f3",
+      "task_scope": "joint",
+      "model_label": "R5-C-teaching TaskStudent",
+      "parameter_count": 120717,
+      "trainable_parameter_count": 120717,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T1/best_checkpoint.pt",
+      "checkpoint_sha256": "98147a0090db92b39012bcfd67e9d055e79bc55414aff0aebde120b9ee3c56ae",
+      "task_scope": "joint",
+      "model_label": "R5-C-teaching TaskStudent",
+      "parameter_count": 120717,
+      "trainable_parameter_count": 120717,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T2/best_checkpoint.pt",
+      "checkpoint_sha256": "a3cca45d475801d45ac287432b4a82f7b38f420656427e49fdffa0303bc438be",
+      "task_scope": "joint",
+      "model_label": "R5-C-teaching TaskStudent",
+      "parameter_count": 120717,
+      "trainable_parameter_count": 120717,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R5/R5-C-teaching/runs/seed_303/T3/best_checkpoint.pt",
+      "checkpoint_sha256": "eaa6e403b40ac3b3f94f1bb3f3da2cbefc63253821d388ce9af0e98bf5c84a96",
+      "task_scope": "joint",
+      "model_label": "R5-C-teaching TaskStudent",
+      "parameter_count": 120717,
+      "trainable_parameter_count": 120717,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-B/runs/seed_303/HardNegative/microbatch_32/best_checkpoint.pt",
+      "checkpoint_sha256": "0d6da91247cdcd8d0ce8efc39ab9c453524d9e4f99f9913320c4484726cd0268",
+      "task_scope": "joint",
+      "model_label": "R6-B TaskStudent",
+      "parameter_count": 82887,
+      "trainable_parameter_count": 82887,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-B/runs/seed_303/TruthOnly/microbatch_32/best_checkpoint.pt",
+      "checkpoint_sha256": "7074025864b2f73b4ec49b284c9adffcb51dc2874f687c1990852946f47274a7",
+      "task_scope": "joint",
+      "model_label": "R6-B TaskStudent",
+      "parameter_count": 82887,
+      "trainable_parameter_count": 82887,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-C/runs/seed_404/train_core/Large/best_checkpoint.pt",
+      "checkpoint_sha256": "cf08463f0c22b2b7801a24305783a58188a27aa1d4aed8a1e7e5f72bf10d8fc6",
+      "task_scope": "joint",
+      "model_label": "R6-C Large TaskStudent",
+      "parameter_count": 292005,
+      "trainable_parameter_count": 292005,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-C/runs/seed_404/train_core/Medium/best_checkpoint.pt",
+      "checkpoint_sha256": "4e1ece87b273bb36c25d5fec4bb334d18c2bc1109c9b4412fed706294aac14e0",
+      "task_scope": "joint",
+      "model_label": "R6-C Medium TaskStudent",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-C/runs/seed_404/train_core/XLarge/best_checkpoint.pt",
+      "checkpoint_sha256": "fabc4a85c6ffb1275bbf137d2f23551a7a4678611ee9c4edceb6fa9eeab77182",
+      "task_scope": "joint",
+      "model_label": "R6-C XLarge TaskStudent",
+      "parameter_count": 1012197,
+      "trainable_parameter_count": 1012197,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-C/runs/seed_404/train_extended/Medium/best_checkpoint.pt",
+      "checkpoint_sha256": "88e08650316d4e75f58e565077ce8ca4bf6f5914240ee1a524c80be6331e8f8c",
+      "task_scope": "joint",
+      "model_label": "R6-C Medium TaskStudent",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_detection/best_checkpoint.pt",
+      "checkpoint_sha256": "9edb12e1ad82ff70619e0626581a1c5215349a5861b7cbbaffd1ba3c9f98ed9d",
+      "task_scope": "detection_only",
+      "model_label": "R6-D j1_detection",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_joint/best_checkpoint.pt",
+      "checkpoint_sha256": "982a5ea45e9b4a114670b967b7de493390cb2ee454d53a78318bef581094c287",
+      "task_scope": "joint",
+      "model_label": "R6-D j1_joint",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-D/runs/seed_505/j1_parameter/best_checkpoint.pt",
+      "checkpoint_sha256": "57d89b35fdd0077dadfbd007c1e012ac26780981f14efdcb8cea3aa8c1203941",
+      "task_scope": "parameter_only",
+      "model_label": "R6-D j1_parameter",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-D/runs/seed_505/j2_joint/best_checkpoint.pt",
+      "checkpoint_sha256": "9f6a7c96f5808747dc3aa9e9e518f6a7546754bc69eaf01bd4325db6a2db65a1",
+      "task_scope": "joint",
+      "model_label": "R6-D j2_joint",
+      "parameter_count": 143294,
+      "trainable_parameter_count": 143294,
+      "status": "PASS",
+      "output_keys": [
+        "candidate_doppler_hz",
+        "candidate_doppler_vector",
+        "candidate_logits",
+        "candidate_logits_base",
+        "candidate_probability",
+        "candidate_range",
+        "doppler_vector",
+        "doppler_vector_pooled",
+        "nonnull_probability",
+        "null_logit",
+        "parameter_feedback",
+        "presence_logit",
+        "range_cell_estimate",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-E/runs/seed_606/ce_tcn/best_checkpoint.pt",
+      "checkpoint_sha256": "25fdce5cf7911d3fc8055b5b473e2c06d43d78e27e548464bb41ea2acf05bc58",
+      "task_scope": "joint",
+      "model_label": "R6-E ce_tcn",
+      "parameter_count": 63429,
+      "trainable_parameter_count": 63429,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-E/runs/seed_606/j1_joint/best_checkpoint.pt",
+      "checkpoint_sha256": "44f83dbffb8b6f1178046bca6de048f8e9c702efb2b9482b3af21093c7947939",
+      "task_scope": "joint",
+      "model_label": "R6-E j1_joint",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-E/runs/seed_606/rax_transformer/best_checkpoint.pt",
+      "checkpoint_sha256": "8c059f468f7ef99708c3f640784a8b58b445c6b2d0fbc535b1bbd557abbb6c79",
+      "task_scope": "joint",
+      "model_label": "R6-E rax_transformer",
+      "parameter_count": 60085,
+      "trainable_parameter_count": 60085,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T0/best_checkpoint.pt",
+      "checkpoint_sha256": "09f168f722ab37ecc9498ea918c1d2f001a972dd7d39ef47b93d9df43712534f",
+      "task_scope": "joint",
+      "model_label": "R6-G T0 CE-TCN",
+      "parameter_count": 97229,
+      "trainable_parameter_count": 97229,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T1/best_checkpoint.pt",
+      "checkpoint_sha256": "31dec3c5c4f824f5e4015f938b1eb4b30d30d078dc54f523540c5e8a4384b6bd",
+      "task_scope": "joint",
+      "model_label": "R6-G T1 CE-TCN",
+      "parameter_count": 97229,
+      "trainable_parameter_count": 97229,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-G/runs/seed_707_v1.0.1/T3/best_checkpoint.pt",
+      "checkpoint_sha256": "cd51928468544b054ac2fca15ba184196cc9d561e2491a6b4c87229101f30831",
+      "task_scope": "joint",
+      "model_label": "R6-G T3 CE-TCN",
+      "parameter_count": 97229,
+      "trainable_parameter_count": 97229,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-H/runs/seed_808/ce_tcn/best_checkpoint.pt",
+      "checkpoint_sha256": "fe94afdae67271f22f650d985bd74270152d1be656e8b6872550d9459708a55e",
+      "task_scope": "joint",
+      "model_label": "R6-H ce_tcn",
+      "parameter_count": 63429,
+      "trainable_parameter_count": 63429,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-H/runs/seed_808/cnn_ssm/best_checkpoint.pt",
+      "checkpoint_sha256": "3b9e6572a9ed2bdd5c16d7ff7da3bf2ce663e4c027981ba90989be11f7ec7c87",
+      "task_scope": "joint",
+      "model_label": "R6-H cnn_ssm",
+      "parameter_count": 71909,
+      "trainable_parameter_count": 71909,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-H/runs/seed_808/complex_ssm/best_checkpoint.pt",
+      "checkpoint_sha256": "22e8dec9cec23bfbc66dfd10ea5535aabe5fd63d9871bddbf5e76bdb578b2370",
+      "task_scope": "joint",
+      "model_label": "R6-H complex_ssm",
+      "parameter_count": 65077,
+      "trainable_parameter_count": 65077,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-J4/runs/seed_909/j1_joint/best_checkpoint.pt",
+      "checkpoint_sha256": "81d7a0cdbada420c0c9cff2eb1ad92cfa63dd5b8af3bbdaef4e7f5d33526afe5",
+      "task_scope": "joint",
+      "model_label": "R6-J4 J1-J raw-IQ student",
+      "parameter_count": 70277,
+      "trainable_parameter_count": 70277,
+      "status": "PASS",
+      "output_keys": [
+        "doppler_vector",
+        "presence_logit",
+        "range_logits",
+        "range_offset"
+      ]
+    },
+    {
+      "checkpoint_path": "experiments/D2-A-R6/R6-J4/runs/seed_909/j4_joint/best_checkpoint.pt",
+      "checkpoint_sha256": "646c6e8aac6cc3ee767b8a4cc73643d430ea4870e80225b1f2397de1942fb273",
+      "task_scope": "joint",
+      "model_label": "R6-J4 fixed DPCA/FFT candidate student",
+      "parameter_count": 10494,
+      "trainable_parameter_count": 10494,
+      "status": "PASS",
+      "output_keys": [
+        "candidate_doppler_hz",
+        "candidate_doppler_vector",
+        "candidate_logits",
+        "candidate_logits_base",
+        "candidate_probability",
+        "candidate_range",
+        "doppler_vector",
+        "doppler_vector_pooled",
+        "nonnull_probability",
+        "null_logit",
+        "parameter_feedback",
+        "presence_logit",
+        "range_cell_estimate",
+        "range_logits",
+        "range_offset"
+      ]
+    }
+  ],
+  "gpu_peak_allocated_mib": 41.922,
+  "passed": 47,
+  "failed": 0
+}

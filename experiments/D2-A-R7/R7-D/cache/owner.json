@@ -1,0 +1,16 @@
+{
+  "owner_id": "D2-A-R7-D",
+  "status": "complete",
+  "files": [
+    "l0_h1.npy",
+    "l1_h0_calibration.npy",
+    "l1_h0_verification.npy",
+    "l1_h1.npy",
+    "truth_arrays.npz"
+  ],
+  "created_by": "scripts/run_d2a_r7d_unified_eval.py",
+  "expected_iq_bytes": 5111808000,
+  "scene_plan": "experiments/D2-A-R7/R7-D/scene_plan.csv",
+  "scene_count": 53248,
+  "bytes_on_disk": 5112088079
+}

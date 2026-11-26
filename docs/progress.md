@@ -1,16 +1,20 @@
 # 研究进度
 
-## 2026-11-26：启动 D2-A-R7，冻结统一性能矩阵为最终交付
+## 2026-11-26：完成 D2-A-R7 A–E 基础性能重建与统一性能矩阵
 
 - **总纲：** 按用户在D2-A-R7任务中的明确授权，将`docs/RESEARCH_CHARTER.md`升级至v1.4；新增单元级低虚警长期目标、传统教师正确性门、L0–L6递进验证和成熟工程参考原则。Q1–Q10及历史冻结结论未改。总纲独立提交`029d6c9`并推送到`main`。
-- **任务路线：** 建立R7整体计划及任务对齐，先执行R7-A虚警定义/历史口径审计，再做R7-B DPCA审计、R7-C 7kg只读核查、R7-D无杂波复评和R7-E传统参考。当前协议/代码与实测R7指标尚未完成，不把路线文件写成结果。
+- **任务路线：** 按已批准的R7计划完成R7-A评价定义/历史Pfa口径审计、R7-B DPCA教师物理审计、R7-C 7kg只读核查、R7-D无杂波复评和R7-E传统参考适用性分析；根据证据决定R7-F未满足准入门而延后。
 - **用户要求的表：** 最终报告的必要章节是一张覆盖历史D0/D1证据、R5/R6 60条汇总、R7实际L0/L1结果、传统方法和教师的统一性能矩阵。每行明确数据集/条件、检测口径和能力、距离/Doppler RMSE、训练量/参数量、教师角色、样本数、置信区间、证据链接及`NOT_RUN`/`NOT_APPLICABLE`/缺少checkpoint等状态；没有依据的数字不补写。
 - **约束：** R7-A要区分dense CUT、稀疏学生候选、CPI级Pfa；零填充不增大物理独立格点；相关单元不得当独立样本。未到G5前不启动新学生训练。7kg目录只读，不整体复制；最终项目小于20GiB。
 
 - **R7-A实际运行：** 新增`d2a_r7_metrics.py`及10项边界测试，完成32个H0场景的流式资源预检。CPU NumPy B3生成吞吐约129.8场景/秒、评分约4,285.8场景/秒，未写IQ/RD磁盘缓存。独立CUT平均Pfa在零事件下达到95%上界`1e-6`需2,995,731个场景；对4,160个固定CUT作95% Bonferroni保证需11,328,997个场景。当前shell无PyTorch；预检是CPU资源测量，不代表GPU训练或低虚警性能。历史Pfa口径分类见`experiments/D2-A-R7/R7-A/history_pfa_audit.csv`；详细边界和资源限制见R7-A分析。G1部分完成，不能宣称达到`1e-6`。
 - **R7-B实际运行：** AISAR环境PyTorch 2.8.0+cu128、RTX 3050 Laptop `cuda:0`运行1,280个新场景的DPCA分量诊断。纯静止杂波补偿前后相干幅值中位数0.849→0.986，通道幅值比1.000012，残差功率比0.02833，对应抑制15.478 dB（scene-bootstrap 95% CI 15.420–15.540）；CPU/CUDA K2响应最大绝对差0，峰值GPU分配约9.59 MB。独立噪声差分功率比约2.0，不能称为噪声抑制；运动目标差分功率比约3.615，是相对输入通道的未缩放比值。该结果支持当前声明的合成DPCA公式和历史CCR定义，不证明真实硬件教师资格、低虚警检测或蒸馏收益。`tests/test_d2a_k2_cuda.py`与R7-B诊断测试在AISAR共12项通过。详见`experiments/D2-A-R7/R7-B/analysis.md`和`docs/research/D2-A-R7_TEACHER_CORRECTNESS.md`。
 - **R7-C只读审计：** `/home/shy/AIR/7kg`约31 GiB，有多个带日期源码快照但无可用Git历史/标签，未发现源码再分发许可证；README自述状态为`NOT_CERTIFIED`，Doppler解析失败且有一项双支持融合测试失败。本轮未独立构建/复跑，目录声明结果不能当作独立验证。该软件使用原始/完整回波与XML控制边界，D2-A-R7则使用`[3,130,32]`距离压缩复数IQ，未找到已验证适配器。没有复制或修改该目录；当前标记为`NOT_RUN / NOT_QUALIFIED`，详见`docs/research/D2-A-R7_ENGINEERING_REFERENCE.md`。
-- **R7-D冻结和预检：** 协议/配置固定了L0精确无噪声、L1无杂波复AWGN、8个历史SNR、每SNR H0 calibration/verification/H1各2,048个场景、分层Pfa_CPI=0.01、联合参数容差、只复用冻结checkpoint且禁止训练。47个正式checkpoint清单含路径、文件大小、SHA-256、训练更新/seed和checkpoint张量元素数，见`experiments/D2-A-R7/R7-D/checkpoint_inventory.csv`。AISAR RTX 3050 Laptop `cuda:0`对47个模型全部完成严格state_dict加载及前向输出预检（47/47通过，峰值分配41.9 MiB）；模型真实可训练参数量由模型实例统计，未把固定buffer算作参数。新L0/L1数据已流式生成，场景计划共53,248个唯一ID，临时IQ缓存4.76 GiB，owner记录位于`R7-D/cache/owner.json`。这仍是性能评价的准备结果，模型/教师传统方法在新数据上的实际指标尚未运行；当前没有R7-D性能结论。
+- **R7-D实际复评：** 47/47个历史checkpoint和7种传统参考完成L0/L1共同场景评价，0个模型失败。AISAR / PyTorch 2.8.0+cu128 / CUDA 12.8 / RTX 3050 Laptop GPU上运行，峰值CUDA分配516.94 MiB。R7-D未训练、未蒸馏；L1每方法/SNR分别为2,048 H0校准、2,048独立H0验证、2,048 H1，并按目标`Pfa_CPI=0.01`分层设阈值。R6-J4混合学生在−10/−5 dB取得最高受测学生Pd/Joint点值；中高SNR传统FFT/profile-ML的连续Doppler误差更低。所有输出为CPI级分数，`Pfa_cell`不适用。
+- **R7-E适用性：** B0/B1、FFT细化、lag-one和有限网格profile-ML均已实测；ATI、dense CFAR、Kelly/AMF/ACE、全秩/降秩STAP、知识辅助方法及7kg工程链明确标为未运行/不适用/未获资格，没有填造数值。详见`docs/research/D2-A-R7_CLASSICAL_REFERENCE_MATRIX.md`及`experiments/D2-A-R7/R7-E/analysis.md`。
+- **统一表和阶段判断：** `experiments/D2-A-R7/unified_performance_matrix.csv`覆盖28,058条可追溯行，包括D0/D1、D2-A、R5/R6历史结果、R7-B教师诊断、R7-D实际评估和R7-E状态；其中R7-D 485行、47个学生checkpoint与7种传统方法。完整指标、来源路径、逐SNR检测/参数估计表和教师结果见`docs/research/D2-A-R7_UNIFIED_PERFORMANCE_MATRIX.md`及`docs/stage_reviews/D2-A-R7_review.md`。阶段结论`REFINE`：G1部分完成、G2限合成DPCA、G3在L0/L1范围完成、G4部分完成、G5未通过；不启动新训练、蒸馏或final blind。
+- **缓存清理与空间：** 评价完成后只删除R7-D owner清单中的4个可重建IQ数组和紧凑真值数组，共5,112,088,079 bytes；保留owner清单、scene plan、checkpoint inventory、preflight、metrics和分析。清理后项目占用及审计见`experiments/D2-A-R7/R7-D/cleanup.json`，最终目录保持低于20 GiB。
+- **下一步与审查：** 当前建议唯一优先项是另行预注册无杂波dense CUT评估接口及独立H0校准/验证预算，先建立可实测的cell级Pfa路径，再复议G5。该建议未执行；本轮一次性综合ChatGPT审查请求见`docs/stage_reviews/D2-A-R7_comprehensive_review_request.md`。
 
 
 ## 2026-11-26：完成 R5-C/R6 综合性能报告与 R6-J4 候选判断

@@ -2,7 +2,7 @@
 
 **更新日期：** 2026-11-26
 **工作分支：** `main`
-**当前执行任务：** D2-A-R7基础性能重建、传统教师正确性与单元级低虚警评价。研究总纲v1.4于`029d6c9`单独提交并推送。R7-A统计接口、10项边界测试、32场景流式资源预检和历史Pfa口径审计已完成；正式低虚警资格尚未验证。R7-B完成1,280个新场景的DPCA分量诊断及AISAR RTX 3050 CUDA一致性检查，结论限于声明的合成几何。R7-C已只读审查7kg来源、测试自述、许可证线索及输入边界；因版本/正确性/接口证据不足，它目前不可作为可比数值基线。R7-D无杂波评价协议已冻结；47个正式历史checkpoint均通过AISAR RTX 3050 CUDA严格加载和前向接口预检。L0/L1新场景已生成53,248个唯一场景ID，4.76 GiB临时IQ缓存已就绪；模型与传统方法的实际性能复评正在进行，当前尚无R7-D性能结论。R7-E传统参考资格和1e-6正式验证仍待完成。
+**当前执行任务：** D2-A-R7基础性能重建、传统教师正确性与单元级低虚警评价。研究总纲v1.4于`029d6c9`单独提交并推送。R7-A统计定义、10项边界测试、历史Pfa口径审计和32场景资源预检完成；正式`Pfa_cell≈1e-6`资格未验证。R7-B以1,280个新场景完成DPCA分量诊断及AISAR RTX 3050 CUDA一致性检查，结论限于声明的合成几何。R7-C完成7kg只读审查；因版本、许可证、正确性和输入接口证据不足，它不是可比数值基线。R7-D已完成47个历史checkpoint和7种传统参考的共同L0/L1复评，0个模型失败。R7-E已完成适用性矩阵。28,058行统一性能表、R7-D结果分析与阶段报告已形成。当前没有学生通过单元级低虚警资格，也没有自动启动新训练或final blind。
 **最新科研结果：** R6-J4相对J1-J的C2+C3 joint success提高`+3.26`个百分点（95%配对CI `[+2.41,+4.08]`），总体Pd和range保护通过；Doppler RMSE比为`1.72–2.08`，C3六格familywise虚警门失败。最难格joint为`2.15%`，低于J1-J的`10.35%`。因此当前J4参数化不晋级多种子确认，未生成final blind。详见[R6-J4分析](../experiments/D2-A-R6/R6-J4/analysis.md)与[阶段报告](stage_reviews/D2-A-R6J4_review.md)。
 **R6-I阶段结果：** R6-I单斜率可观测尺度校正未通过P7准入：C3 pooled Pfa只下降`0.00905`（未达到0.01门），overall Pd差`−0.01921`（95% CI `[-0.02230,-0.01611]`，未通过非劣门），C3六格familywise虚警仍失败。校正使C3 pooled Pfa从`0.09985`降至`0.09080`，但SNR=10 dB三格Pfa升至`0.1742–0.1836`；因此总体改善掩盖逐格失稳。重算的13个指标组与保存值完全一致。详见[R6-I分析](../experiments/D2-A-R6/R6-I/analysis.md)与[阶段报告](stage_reviews/D2-A-R6I_review.md)。
 **R6-H背景结果：** 三臂均在seed808下完成25,600次FP32 CUDA更新及独立开发评价。CNN-SSM相对CE-TCN的C2+C3 joint差为`+0.03016`（97.5%配对CI `[+0.02214,+0.03798]`），通过主端点，但Range RMSE比为`1.070`（区间上界`1.165`），未过1.05保护；三臂均未通过C3六格familywise Pfa门，CNN-SSM在最难C3 partial-overlap/SNR0格Pfa点值为`0.1048`。详见[R6-H分析](../experiments/D2-A-R6/R6-H/analysis.md)和[阶段报告](stage_reviews/D2-A-R6H_review.md)。
@@ -12,7 +12,7 @@
 **R6-G训练与评价：** 三臂均在RTX 3050 Laptop `cuda:0`完成冻结的51,200 updates，FP32、有效batch64、microbatch4，无OOM。最佳验证checkpoint分别为43,200、43,200、46,400；训练曲线未证明51,200步之外的收敛极限。独立评价的H0 calibration/verification各120,000、H1 development 6,144，指标记录与配对预测已完成。owner-scoped清理移除14,641,188,309 bytes（13.636 GiB）的R6-G训练IQ与辅助响应缓存；整个项目目录现约1.3 GB（1.26 GiB），低于20 GiB。训练记录、checkpoint、scene manifest、预测、指标和分析保留；未触碰用户未跟踪源码包或其他阶段数据。
 **R6-H训练与评价：** G0/G1均通过。三臂使用51,200对训练场景、5,000对验证场景、有效batch64、microbatch4，每臂25,600 updates；各presence暴露819,200次、训练集平均重访16次。训练在AISAR环境RTX 3050 Laptop `cuda:0`顺序完成；训练耗时15.93/9.25/17.46小时。独立H0校准/验证各120,000、H1开发6,144。owner清理删除可重建缓存11,233,318,401 bytes（约10.46 GiB）；工作区实测约1,359,208,153 bytes（1.27 GiB）。训练记录、曲线、checkpoint、scene manifest、指标与分析保留，清理明细见[`cleanup.json`](../experiments/D2-A-R6/R6-H/cleanup.json)。
 **R6-I执行记录：** 固定seed808检查点和四个独立split按AISAR RTX 3050 Laptop `cuda:0` FP32推理；60,000 H0拟合、60,000 H0阈值校准、120,000 H0验证、6,144 H1开发，未训练、未生成final blind。预测文件完整，恢复指标时未重生成数据。汇总字段与分析字段问题已修复，12项定向测试通过；从缓存复算与保存的13组指标逐项完全一致。恢复细节见[`runtime_recovery.json`](../experiments/D2-A-R6/R6-I/runtime_recovery.json)。
-**当前与下一步：** R6-I单一校正和R6-J4当前候选均按各自冻结门停止；没有模型满足P7正式确认条件，因此不启动其多种子确认或final blind。R6-J4 owner授权的12个训练/验证缓存文件已清理，共释放`11,233,313,736` bytes（10.46 GiB）；保留训练记录、预测、指标、图表、scene manifest和审计材料。R7-D目前已完成47个模型的CUDA接口预检与新L0/L1场景生成；尚无复评性能结果，临时缓存将在结果审核后按owner清单清理。R5/R6审查材料属于上一整条路线。本轮按R7先做虚警单位/DPCA/7kg/无杂波基准，再根据G0–G5决定后续训练；最终表格会同时列历史和实际R7结果，并标明数据集、统计单位、证据与不可比项。
+**当前与下一步：** R5/R6候选晋级门均按原协议停止。D2-A-R7 A–E已完成：R7-A正式cell级低虚警资格未验证；R7-B DPCA仅在声明的合成几何中获物理正确性支持；R7-C的7kg工程软件未取得可比输入/版本/许可资格；R7-D完成47个历史checkpoint和7种传统方法的新L0/L1复评；R7-E记录适用、未运行及不适用方法。完整统一CSV已包含历史D0/D1、R5/R6、R7教师诊断、R7-D逐SNR结果和R7-E状态。由于没有dense CUT检测输出、低虚警证据不足且中高SNR参数精度仍有明显差距，G5暂不通过；下一步先预注册cell级检测评价，不自动开始新训练、蒸馏或final blind。R7-D可重建场景缓存按owner清单清理，审计见`experiments/D2-A-R7/R7-D/cleanup.json`。
 
 **R5-D 预备：** 已准备 teacher/student 分层错误矩阵与 Doppler 响应评价及组件干预输入构造器；这些仍是诊断工具，没有开展同场景匹配模型机制比较。R5-C教学结果不构成开展教师可靠性/时机搜索的依据。
 
@@ -100,9 +100,9 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 
 ## 当前唯一优先任务
 
-**D2-A-R7先完成R7-A至R7-E：** R7-A定义、边界测试、资源预检与历史Pfa审计已完成；正式极低虚警资格仍未验证。R7-B的1,280场景DPCA分量诊断及CUDA一致性已完成，范围限于声明的合成模型。R7-C已完成7kg只读审计，当前工程未取得可追溯版本/许可证/统一输入边界/正确性比较资格。下一步统一复评可恢复学生与适用传统基线的L0/L1无杂波性能，并完成传统方法适用性分析。新训练、知识蒸馏或final blind均不自动启动，须由实际G5判断。研究总纲v1.4是最高研究指导，历史R5/R6门和结果不追溯修改。
+**D2-A-R7 A–E执行状态：** R7-A评价口径与统计工具测试完成，但正式低虚警资格未验证；R7-B在所声明的合成模型内未发现DPCA实现错误；R7-C的7kg工程目录未取得版本/许可证/输入输出和正确性比较资格；R7-D完成47个历史模型、7种传统方法的L0/L1复评；R7-E完成方法适用性矩阵。R7-D显示R6-J4混合学生在−10/−5 dB取得最高受测学生检测与联合成功点值；中高SNR下传统FFT/profile-ML参数估计明显更准。完整记录见[统一性能矩阵](../experiments/D2-A-R7/unified_performance_matrix.csv)、[矩阵说明](research/D2-A-R7_UNIFIED_PERFORMANCE_MATRIX.md)、[R7-D分析](../experiments/D2-A-R7/R7-D/analysis.md)和[阶段报告](stage_reviews/D2-A-R7_review.md)。G5未通过，暂不训练/蒸馏或生成final blind。
 
-本次最终阶段报告必须附一张覆盖D0/D1历史证据、R5/R6的60条历史汇总、R7实际L0/L1评价和教师/传统参考的统一性能矩阵。按“方法×数据集/split×SNR或冻结条件”记录检测、距离估计和周期Doppler估计，附虚警单位、样本数、参数量/训练暴露、置信区间、教师角色和证据路径。未运行、缺少checkpoint、不适用和跨协议不可比项分别明示，不填造数字。
+统一表按“方法×数据集/split×SNR或冻结条件”记录检测统计单位、距离/周期Doppler误差、样本量、参数量/训练更新、置信区间、教师角色和来源路径。未运行、缺少checkpoint、不适用和跨协议不可比项分别明示，历史负结果保持不变。
 
 此前R5/R6阶段审查是历史证据，不是R7新实验结果。
 
@@ -111,7 +111,7 @@ H0 场景标签独立性检查逐元素通过；噪声/杂波尺度按 A、SNR�
 - 总纲/路线：[研究总纲](RESEARCH_CHARTER.md)、[动态路线图](RESEARCH_ROADMAP.md)、[假设登记](research/ASSUMPTION_REGISTER.md)
 - 当前审查：[D2-A-R3](stage_reviews/D2-A-R3_review.md)、[D2-A-E001](stage_reviews/D2-A-E001_review.md)、[D1-E001](stage_reviews/D1-E001_review.md)、[D1-E002](stage_reviews/D1-E002_review.md)
 - 最新学生阶段：[D2-A-E002 阶段审查](stage_reviews/D2-A-E002_review.md)、[结果分析](../experiments/D2-A-E002/analysis.md)、[指标 JSON](../experiments/D2-A-E002/metrics.json)；缓存清理记录：[容量审计](maintenance/CACHE_CLEANUP_2026-10-25.md)
-- R5-C/R6综合性能报告：[模型与教师性能总表](research/D2-A_model_performance_matrix.md)；[R6-J4阶段报告](stage_reviews/D2-A-R6J4_review.md)
+- 模型与教师性能报告：[R7综合阶段报告](stage_reviews/D2-A-R7_review.md)、[统一性能矩阵说明](research/D2-A-R7_UNIFIED_PERFORMANCE_MATRIX.md)、[完整CSV](../experiments/D2-A-R7/unified_performance_matrix.csv)、[R7-D同场景分析](../experiments/D2-A-R7/R7-D/analysis.md)；历史[R6-J4阶段报告](stage_reviews/D2-A-R6J4_review.md)
 - 当前提案：[D2-A-E002 v2 对齐](task_alignments/D2-A-E002_curriculum_k2_alignment.md)、[模型与损失审查](../experiments/D2-A-E002/architecture_and_loss_review.md)、[E002 v2 协议](../experiments/D2-A-E002/protocol.md)；[v1 对齐与审查](task_alignments/D2-A-E002_alignment.md)保留为历史记录
 - R3 协议和结果：[`experiments/D2-A-R3/`](../experiments/D2-A-R3/)
 - D2-A-T001 协议、[分析与指标](../experiments/D2-A-T001/analysis.md)、[阶段审查](stage_reviews/D2-A-T001_review.md)、[任务对齐](task_alignments/D2-A-T001_teacher_alignment.md)
