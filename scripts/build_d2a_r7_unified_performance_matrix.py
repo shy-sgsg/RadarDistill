@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "experiments/D2-A-R7/unified_performance_matrix.csv"
 LEGACY_TABLE = ROOT / "docs/research/D2-A_model_performance_matrix.md"
 R7_METRICS = ROOT / "experiments/D2-A-R7/R7-D/metrics.json"
+R7E_REFERENCE_MATRIX = ROOT / "docs/research/D2-A-R7_CLASSICAL_REFERENCE_MATRIX.md"
 
 FIELDS = [
     "record_grain", "study", "experiment", "dataset", "split", "metric_group",
@@ -78,6 +79,45 @@ def rel(path: Path) -> str:
         return path.relative_to(ROOT).as_posix()
     except ValueError:
         return str(path)
+
+
+def json_pointer(segments: tuple[str, ...] | list[str]) -> str:
+    """Encode object keys as RFC 6901 JSON Pointer path segments."""
+    if not segments:
+        return ""
+    encoded = (str(segment).replace("~", "~0").replace("/", "~1") for segment in segments)
+    return "/" + "/".join(encoded)
+
+
+def legacy_parameter_counts(value: str) -> tuple[str, str]:
+    """Normalize the old summary's display-only parameter text into numeric/status fields."""
+    text = (value or "").strip()
+    if not text:
+        return "NOT_RECORDED_LEGACY_SUMMARY", "NOT_RECORDED_LEGACY_SUMMARY"
+    if "非学习" in text or "无可训练参数" in text:
+        return "NOT_APPLICABLE_NONLEARNED", "NOT_APPLICABLE_NONLEARNED"
+    if "训练" in text and "推理" in text:
+        values = re.findall(r"\d[\d,]*", text)
+        if len(values) >= 2:
+            training = int(values[0].replace(",", ""))
+            inference = int(values[1].replace(",", ""))
+            return str(inference), str(training)
+    match = re.search(r"\d[\d,]*", text)
+    if match:
+        return str(int(match.group(0).replace(",", ""))), "NOT_RECORDED_LEGACY_SUMMARY"
+    return "NOT_RECORDED_LEGACY_SUMMARY", "NOT_RECORDED_LEGACY_SUMMARY"
+
+
+def markdown_line_pointer(path: Path, target: str) -> str:
+    """Return a source-linked pointer to exactly one Markdown line."""
+    matches = [
+        line_number
+        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1)
+        if target in line
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"expected one Markdown line containing {target!r} in {path}, found {len(matches)}")
+    return f"markdown table row at line {matches[0]}: {target}"
 
 
 def related_doc(metrics_path: Path, name: str) -> str:
@@ -422,7 +462,7 @@ def add_json_metric_file(rows: list[dict[str, Any]], path: Path) -> None:
             group = "H1_DETECTION_ESTIMATION"
         if SIGNALS.intersection(node):
             rows.append(normalized_row(node, stage=stage, experiment=experiment, path=path,
-                                       pointer="/" + "/".join(pointer), context=context,
+                                       pointer=json_pointer(pointer), context=context,
                                        method_id=current_model or "STAGE_AGGREGATE", metric_group=group))
             if not current_model:
                 rows[-1]["method_name"] = "Stage-level aggregate; method not specified by source"
@@ -475,7 +515,7 @@ def add_d0(rows: list[dict[str, Any]]) -> None:
     if not path.exists():
         return
     data = json.loads(path.read_text())
-    for item in data.get("teacher_by_snr", []):
+    for index, item in enumerate(data.get("teacher_by_snr", [])):
         rows.append(base_row(
             record_grain="SNR", study="D0-E001", experiment="D0-E001", dataset="D0 single-target complex AWGN",
             split="teacher diagnostic", metric_group="TEACHER_SCORE_AND_ESTIMATION",
@@ -486,7 +526,7 @@ def add_d0(rows: list[dict[str, Any]]) -> None:
             false_alarm_unit="NOT_APPLICABLE_NO_THRESHOLD", pfa_cpi="NOT_APPLICABLE", pd="NOT_APPLICABLE",
             metric_status="EXTRACTED", source_metrics=rel(path),
             source_protocol="experiments/D0-E001/protocol.md", source_analysis="experiments/D0-E001/analysis.md",
-            source_pointer=f"/teacher_by_snr/{item.get('snr_db')}", metric_payload_json=text_json(item),
+            source_pointer=json_pointer(("teacher_by_snr", str(index))), metric_payload_json=text_json(item),
         ))
 
 
@@ -519,7 +559,7 @@ def add_r7b_physics(rows: list[dict[str, Any]]) -> None:
                 clutter_suppression_db=component_metrics.get("suppression_db_relative_to_channel_a_median", ""),
                 comparability_status="R7-B_COMPONENT_DIAGNOSTIC_ONLY", metric_status="RECOMPUTED_COMPONENT_DIAGNOSTIC",
                 source_metrics=rel(path), source_protocol="experiments/D2-A-R7/R7-B/protocol.md",
-                source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer=f"/conditions/{condition_key}/{component}",
+                source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer=json_pointer(("conditions", condition_key, component)),
                 metric_payload_json=text_json(component_metrics),
             ))
     for component, component_metrics in metrics.get("pooled_components", {}).items():
@@ -537,7 +577,7 @@ def add_r7b_physics(rows: list[dict[str, Any]]) -> None:
             clutter_suppression_db=component_metrics.get("suppression_db_relative_to_channel_a_median", ""),
             comparability_status="R7-B_POOLED_COMPONENT_DIAGNOSTIC", metric_status="RECOMPUTED_COMPONENT_DIAGNOSTIC",
             source_metrics=rel(path), source_protocol="experiments/D2-A-R7/R7-B/protocol.md",
-            source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer=f"/pooled_components/{component}",
+            source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer=json_pointer(("pooled_components", component)),
             metric_payload_json=text_json(component_metrics),
         ))
     old = metrics.get("historical_e001_recomputation", {})
@@ -551,7 +591,7 @@ def add_r7b_physics(rows: list[dict[str, Any]]) -> None:
             clutter_suppression_db=old.get("new_median_clutter_suppression_db", ""),
             comparability_status="HISTORICAL_RECOMPUTATION_NOT_MODEL_RANKING", metric_status="RECOMPUTED_HISTORICAL_DEFINITION",
             source_metrics=rel(path), source_protocol="experiments/D2-A-R7/R7-B/protocol.md",
-            source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer="/historical_e001_recomputation",
+            source_analysis="experiments/D2-A-R7/R7-B/analysis.md", source_pointer=json_pointer(("historical_e001_recomputation",)),
             metric_payload_json=text_json(old),
         ))
 
@@ -559,7 +599,7 @@ def add_r7b_physics(rows: list[dict[str, Any]]) -> None:
 def add_legacy_rows(rows: list[dict[str, Any]]) -> None:
     lines = LEGACY_TABLE.read_text(encoding="utf-8").splitlines()
     headers: list[str] | None = None
-    for line in lines:
+    for line_number, line in enumerate(lines, start=1):
         if not line.startswith("|"):
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
@@ -573,14 +613,15 @@ def add_legacy_rows(rows: list[dict[str, Any]]) -> None:
         record = dict(zip(headers, cells))
         if len(record) < 4:
             continue
+        parameter_count, trainable_parameter_count = legacy_parameter_counts(record.get("参数量（训练/推理；如不同）", ""))
         rows.append(base_row(
             record_grain="HISTORICAL_SUMMARY", study="D2-A R5/R6", experiment=record.get("实验 / 数据集与样本", ""),
             dataset=record.get("实验 / 数据集与样本", ""), method_name=record.get("模型 / 方法", ""),
-            parameter_count=record.get("参数量（训练/推理；如不同）", ""),
+            parameter_count=parameter_count, trainable_parameter_count=trainable_parameter_count,
             method_role="HISTORICAL_SUMMARY_ROW", metric_group="DETECTION_AND_ESTIMATION_SUMMARY",
             comparability_status="CROSS_STAGE_NOT_DIRECTLY_RANKED",
             metric_status="VERBATIM_EXISTING_60_ROW_SUMMARY", source_metrics=rel(LEGACY_TABLE),
-            source_pointer=f"markdown table row: {record.get('模型 / 方法','')}", legacy_record_json=text_json(record),
+            source_pointer=f"markdown table row at line {line_number}: {record.get('模型 / 方法','')}", legacy_record_json=text_json(record),
         ))
 
 
@@ -591,7 +632,7 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
     if metrics.get("status") != "COMPLETE":
         raise SystemExit(f"R7-D result is not COMPLETE: {metrics.get('status')}")
     path = R7_METRICS
-    for model in metrics.get("models", []):
+    for model_index, model in enumerate(metrics.get("models", [])):
         common = dict(
             study="D2-A-R7", experiment="R7-D", method_id=model.get("method_id", ""),
             method_name=model.get("model_label", model.get("arm", "")), method_role=model.get("task_scope", ""),
@@ -620,9 +661,9 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
                            joint_success="NOT_APPLICABLE", pfa_cell="NOT_APPLICABLE_SPARSE_CPI_SCORE",
                            pfa_cell_ci95_upper="NOT_APPLICABLE", pfa_cell_verification_status="NOT_APPLICABLE_NO_DENSE_SCORE_MAP",
                            metric_status=det.get("status", model.get("status", "")),
-                           source_pointer=f"/models/{model.get('method_id')}/datasets/L0_TARGET_ONLY", metric_payload_json=text_json(l0))
+                           source_pointer=json_pointer(("models", str(model_index), "datasets", "L0_TARGET_ONLY")), metric_payload_json=text_json(l0))
             rows.append(row)
-        for item in datasets.get("L1_AWGN_NO_CLUTTER", []):
+        for snr_index, item in enumerate(datasets.get("L1_AWGN_NO_CLUTTER", [])):
             det = item.get("detection", {})
             params = item.get("parameters") or {}
             all_h1 = params.get("all_h1", {})
@@ -647,10 +688,10 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
                            doppler_rmse_hz=all_h1.get("doppler_rmse_hz", ""),
                            doppler_rmse_detected_hz=detected.get("doppler_rmse_hz", ""),
                            joint_success=params.get("joint_success", ""), metric_status=det.get("status", ""),
-                           source_pointer=f"/models/{model.get('method_id')}/datasets/L1_AWGN_NO_CLUTTER/snr={item.get('snr_db')}",
+                           source_pointer=json_pointer(("models", str(model_index), "datasets", "L1_AWGN_NO_CLUTTER", str(snr_index))),
                            metric_payload_json=text_json(item))
             rows.append(row)
-    for model in metrics.get("classical", []):
+    for model_index, model in enumerate(metrics.get("classical", [])):
         common = dict(study="D2-A-R7", experiment="R7-D", method_id=model.get("method_id", ""),
                       method_name=model.get("method_label", model.get("method_id", "")), method_role=model.get("method_role", "CLASSICAL"),
                       parameter_count="NOT_APPLICABLE_NONLEARNED", trainable_parameter_count="NOT_APPLICABLE_NONLEARNED",
@@ -660,10 +701,14 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
                       comparability_status="PAIRED_ON_SHARED_R7D_L0_L1_SCENE_IDS",
                       source_metrics=rel(path), source_protocol="experiments/D2-A-R7/R7-D/protocol.md",
                       source_analysis="experiments/D2-A-R7/R7-D/analysis.md")
-        for item in as_items(model.get("datasets", {}).get("L0_TARGET_ONLY", [])):
+        l0_dataset = model.get("datasets", {}).get("L0_TARGET_ONLY", [])
+        for item_index, item in enumerate(as_items(l0_dataset)):
             det = item.get("detection", {})
             param = item.get("parameters", {})
             all_h1 = param.get("all_h1", {})
+            l0_pointer_segments = ["classical", str(model_index), "datasets", "L0_TARGET_ONLY"]
+            if isinstance(l0_dataset, list):
+                l0_pointer_segments.append(str(item_index))
             rows.append(base_row(**common, record_grain="DIAGNOSTIC", dataset="L0_TARGET_ONLY", scenario_level="L0", split="noiseless target-only diagnostic",
                                  metric_group="CLASSICAL_BASELINE", n_h1=all_h1.get("n", ""),
                                  false_alarm_unit=det.get("false_alarm_unit", "NOT_APPLICABLE_NO_THRESHOLD"),
@@ -674,8 +719,8 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
                                  pfa_cell_ci95_upper="NOT_APPLICABLE", pfa_cell_verification_status="NOT_APPLICABLE_NO_DENSE_SCORE_MAP",
                                  range_rmse_cells=all_h1.get("range_rmse_cells", ""), doppler_rmse_hz=all_h1.get("doppler_rmse_hz", ""),
                                  joint_success=param.get("joint_success", "NOT_APPLICABLE"), metric_status=det.get("status", ""),
-                                 source_pointer=f"/classical/{model.get('method_id')}/L0_TARGET_ONLY", metric_payload_json=text_json(item)))
-        for item in as_items(model.get("datasets", {}).get("L1_AWGN_NO_CLUTTER", [])):
+                                 source_pointer=json_pointer(l0_pointer_segments), metric_payload_json=text_json(item)))
+        for item_index, item in enumerate(as_items(model.get("datasets", {}).get("L1_AWGN_NO_CLUTTER", []))):
             det = item.get("detection", {})
             param = item.get("parameters", {})
             rows.append(base_row(**common, record_grain="SNR", dataset="L1_AWGN_NO_CLUTTER", scenario_level="L1", split="new independent R7-D H0/H1",
@@ -694,22 +739,22 @@ def add_r7_rows(rows: list[dict[str, Any]]) -> None:
                                  pd_ci95_upper=(det.get("h1_pd_ci95") or ["", ""])[1], auc=det.get("auc", ""),
                                  range_rmse_cells=param.get("range_rmse_cells", ""), doppler_rmse_hz=param.get("doppler_rmse_hz", ""),
                                  joint_success=param.get("joint_success", ""), metric_status=det.get("status", ""),
-                                 source_pointer=f"/classical/{model.get('method_id')}/L1/snr={item.get('snr_db')}", metric_payload_json=text_json(item)))
+                                 source_pointer=json_pointer(("classical", str(model_index), "datasets", "L1_AWGN_NO_CLUTTER", str(item_index))), metric_payload_json=text_json(item)))
 
 
 def add_r7e_nonrun_rows(rows: list[dict[str, Any]]) -> None:
     methods = [
-        ("ATI_phase_interferometry", "ATI相位干涉", "NOT_RUN_REQUIRES_SEPARATE_GEOMETRY_PROTOCOL", "NOT_RUN"),
-        ("CA_CFAR_dense_cell", "CA-CFAR逐CUT检测", "NOT_RUN_REQUIRES_DENSE_CELL_PROTOCOL", "NOT_RUN"),
-        ("OS_CFAR_dense_cell", "OS-CFAR逐CUT检测", "NOT_RUN_REQUIRES_DENSE_CELL_PROTOCOL", "NOT_RUN"),
-        ("Kelly_GLRT", "Kelly自适应GLRT", "NOT_RUN_SECONDARY_SAMPLE_AND_TARGET_STEERING_NOT_QUALIFIED", "NOT_RUN"),
-        ("AMF_ACE", "AMF/ACE自适应检测", "NOT_RUN_COVARIANCE_AND_STEERING_ASSUMPTIONS_NOT_QUALIFIED", "NOT_RUN"),
-        ("full_STAP_SMI_390D", "全秩390维STAP/SMI", "NOT_APPLICABLE_CURRENT_TRAINING_SUPPORT", "NOT_APPLICABLE"),
-        ("reduced_rank_post_Doppler_STAP", "Post-Doppler降秩STAP", "DEFERRED_UNTIL_CLUTTER_SUBSPACE_IS_IDENTIFIABLE", "NOT_RUN"),
-        ("knowledge_aided_covariance", "知识辅助协方差处理", "NOT_APPLICABLE_CURRENT_INPUTS", "NOT_RUN"),
-        ("APX15_7kg", "7kg APX15工程参考", "NOT_QUALIFIED_NOT_RUN", "NOT_RUN"),
+        ("ATI_phase_interferometry", "ATI相位干涉", "NOT_RUN_REQUIRES_SEPARATE_GEOMETRY_PROTOCOL", "NOT_RUN", "ATI / 相位干涉"),
+        ("CA_CFAR_dense_cell", "CA-CFAR逐CUT检测", "NOT_RUN_REQUIRES_DENSE_CELL_PROTOCOL", "NOT_RUN", "CA/OS-CFAR (Rohling)"),
+        ("OS_CFAR_dense_cell", "OS-CFAR逐CUT检测", "NOT_RUN_REQUIRES_DENSE_CELL_PROTOCOL", "NOT_RUN", "CA/OS-CFAR (Rohling)"),
+        ("Kelly_GLRT", "Kelly自适应GLRT", "NOT_RUN_SECONDARY_SAMPLE_AND_TARGET_STEERING_NOT_QUALIFIED", "NOT_RUN", "Kelly GLRT / AMF / ACE"),
+        ("AMF_ACE", "AMF/ACE自适应检测", "NOT_RUN_COVARIANCE_AND_STEERING_ASSUMPTIONS_NOT_QUALIFIED", "NOT_RUN", "Kelly GLRT / AMF / ACE"),
+        ("full_STAP_SMI_390D", "全秩390维STAP/SMI", "NOT_APPLICABLE_CURRENT_TRAINING_SUPPORT", "NOT_APPLICABLE", "full STAP / SMI"),
+        ("reduced_rank_post_Doppler_STAP", "Post-Doppler降秩STAP", "DEFERRED_UNTIL_CLUTTER_SUBSPACE_IS_IDENTIFIABLE", "NOT_RUN", "post-Doppler / 降秩STAP"),
+        ("knowledge_aided_covariance", "知识辅助协方差处理", "NOT_APPLICABLE_CURRENT_INPUTS", "NOT_RUN", "Knowledge-aided covariance"),
+        ("APX15_7kg", "7kg APX15工程参考", "NOT_QUALIFIED_NOT_RUN", "NOT_RUN", "7kg APX15 engineering pipeline"),
     ]
-    for method_id, method_name, applicability, status in methods:
+    for method_id, method_name, applicability, status, source_target in methods:
         rows.append(base_row(
             record_grain="APPLICABILITY", study="D2-A-R7", experiment="R7-E",
             dataset="R7 declared methods and inputs", split="applicability inventory; no new performance evaluation",
@@ -721,8 +766,8 @@ def add_r7e_nonrun_rows(rows: list[dict[str, Any]]) -> None:
             joint_success="NOT_RUN", applicability_status=applicability,
             comparability_status="NO_PERFORMANCE_RANKING_NO_EVALUATION",
             metric_status=status, source_protocol="experiments/D2-A-R7/R7-E/protocol.md",
-            source_analysis="docs/research/D2-A-R7_CLASSICAL_REFERENCE_MATRIX.md",
-            source_pointer=f"/methods/{method_id}",
+            source_analysis=rel(R7E_REFERENCE_MATRIX),
+            source_pointer=markdown_line_pointer(R7E_REFERENCE_MATRIX, source_target),
             metric_payload_json=text_json({"applicability_status": applicability, "performance_status": status}),
         ))
 

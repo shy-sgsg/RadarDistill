@@ -701,3 +701,12 @@ P0-E005 已执行，继续价值门仍未通过，**P1 不启动**。显式相�
 - **物理诊断及边界：** 公共相位32旋转与频移诊断复用已见development/verification IDs；phase下H1判决一致率中位数0.9258，Doppler变化p95最高122.18 Hz；frequency shift未呈现稳定等变。仅为描述性诊断。训练、校准、验证与开发数据来自已用E003/R5-A ID；单seed、非blind，不估计seed方差。
 - **决定：** G0/G1/G2通过、G3失败。停止本TFAS候选，不进行额外seed、KD、Large、调参或final blind；不外推否定所有非CNN/attention，也不声称CNN或任何教师已通过全门。H-ARCH-003对当前TFAS为NOT_SUPPORTED；H-LEARN-002保持INCONCLUSIVE。阶段建议 **REFINE**，下一唯一任务为独立ChatGPT阶段审查；审查前不启动R5-C/D或新架构。
 - **交付与复核：** R5-B protocol/config、训练history、模型checkpoint、逐场景输出、metrics、物理诊断、曲线和 `docs/stage_reviews/D2-A-R5B_review.md` 已归档。可重建IQ缓存（manifest 90 files，14,232,309,192 bytes）未纳入Git；项目目录当前约15 GiB，低于20 GiB最终上限。ChatGPT审查请求将在结果提交后记录准确结果SHA。
+
+
+## 2026-11-26：完成 D2-A-R7-S 证据综合与模型能力总表
+
+- **主表和可比子表：** 保留28,058行跨阶段统一性能矩阵，审计到76列；另生成R7-D 485行L0/L1同场景学生/传统能力表、47行训练/checkpoint身份表、9张指标CSV和8幅图。主矩阵包含教师诊断与历史数据集记录；R7-D子表用于严格共同条件比较。
+- **来源审计：** 独立审计重复全行/身份组均0，27,661个JSON、328个CSV、69个Markdown来源指针均可解析，47/47 checkpoint哈希匹配，最终finding=0。构建时修正了统一矩阵路径映射与历史参数量字段，未修改原始metrics。
+- **能力结论：** 无杂波L0/L1中受测学生随SNR和任务表现不同；J4在部分中低SNR受测学生检测/Joint点值较强但为固定DPCA/FFT混合模型，且Doppler和困难条件保护失败；传统FFT/profile-ML在中高SNR参数精估计明显更强。全H1与命中子集估计误差分别保留。
+- **虚警/教师：** 全矩阵没有数值型Pfa_cell记录；不能把历史Pfa_CPI换算为cell级。R3显示幅度尺度nuisance对绝对分数有影响，T1/T2未通过固定阈值G2。B3只通过合成几何下物理组件诊断；K3/K2-local在困难重叠条件知识定位很弱，R5-C/R6-G均无教师相对truth-only的预设收益。7kg仍未资格。
+- **路线与交付：** R7-S阶段结论REFINE；未训练、未蒸馏、未生成final blind；总纲v1.4保持不变。唯一下一项优先建议为单独预注册L1 dense CUT分数、物理CUT边界和独立H0校准/验证预算，再重审G5。完整报告[`D2-A-R7-S_review.md`](stage_reviews/D2-A-R7-S_review.md)直接链接了用户要求的跨阶段总表和共同条件能力表。
