@@ -429,13 +429,17 @@ def _prediction_summary(
     if calibration_scores is None or verification_scores is None or h1_scores is None:
         auc = binary_auc(verification_scores, h1_scores) if verification_scores is not None and h1_scores is not None else None
         detection = {"status": "UNTHRESHOLDED", "auc": auc, "threshold": None,
-                     "verification_pfa": None, "h1_pd": None}
+                     "verification_pfa": None, "h1_pd": None,
+                     "false_alarm_unit": "Pfa_CPI" if h1_scores is not None else "NOT_APPLICABLE",
+                     "pfa_cell": "NOT_APPLICABLE_SINGLE_SCALAR_OUTPUT" if h1_scores is not None else "NOT_APPLICABLE"}
     else:
         threshold = calibrate_score_threshold(calibration_scores, target_pfa)
         detection = summarize_detection_scores(verification_scores, h1_scores, threshold)
         detection["status"] = "EVALUATED"
         detection["auc"] = binary_auc(verification_scores, h1_scores)
         detection["target_pfa_cpi"] = float(target_pfa)
+        detection["false_alarm_unit"] = "Pfa_CPI"
+        detection["pfa_cell"] = "NOT_APPLICABLE_SINGLE_SCALAR_OUTPUT"
         detection_mask = h1_scores > threshold
 
     parameters: dict[str, Any] | None = None
