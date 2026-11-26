@@ -39,6 +39,10 @@ splits:
   threshold_quantile_method: higher
   threshold_comparator: strict_greater_than
   profile_ml_h1_per_snr: 256
+  profile_ml_range_cell_interval: [4.0, 28.0]
+  profile_ml_range_grid_step_cell: 0.25
+  profile_ml_frequency_fft_factor: 16
+  profile_ml_subset_selection: first_indices
   scene_bootstrap_replicates: 1000
   bootstrap_seed: 3707000001
 
@@ -76,6 +80,7 @@ checkpoint_inventory:
   exclude: [pilot, attempts, initial_checkpoint, last_checkpoint, best_checkpoint_12800_duplicates]
 
 outputs:
+  preflight: experiments/D2-A-R7/R7-D/preflight.json
   checkpoint_inventory: experiments/D2-A-R7/R7-D/checkpoint_inventory.csv
   scene_plan: experiments/D2-A-R7/R7-D/scene_plan.csv
   metrics: experiments/D2-A-R7/R7-D/metrics.json

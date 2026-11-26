@@ -27,7 +27,7 @@ FIELDS = (
     "seed_id",
     "arm",
     "model_name",
-    "inference_parameter_count",
+    "checkpoint_state_tensor_elements",
     "task_scope",
     "status",
 )
@@ -96,7 +96,7 @@ def discover_inventory(root: Path = ROOT, config_path: Path = CONFIG) -> list[di
                 "seed_id": seed,
                 "arm": arm,
                 "model_name": str(payload.get("model", payload.get("student", payload.get("model_name", "")))),
-                "inference_parameter_count": params,
+                "checkpoint_state_tensor_elements": params,
                 "task_scope": task,
                 "status": "FROZEN_FOR_R7D",
             }
