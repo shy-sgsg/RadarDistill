@@ -1,0 +1,52 @@
+{
+  "experiment": "D2-A-R7-A-resource-preflight",
+  "evidence_class": "small_streaming_resource_preflight_only",
+  "scientific_metrics": "NOT_EVALUATED",
+  "scene_count": 32,
+  "batch_size": 2,
+  "seed_start": 87261101,
+  "condition": {
+    "scenario_id": "separated",
+    "snr_db": 10.0,
+    "cnr_db": 10.0
+  },
+  "grid": {
+    "range_cells": 32,
+    "doppler_cells": 130,
+    "physical_cells_per_cpi": 4160,
+    "scored_physical_cells": 133120
+  },
+  "timing_seconds": {
+    "generation_total": 0.24653623099584365,
+    "scoring_total": 0.007466486007615458,
+    "summary_total": 0.00960880699858535,
+    "generation_scenes_per_second": 129.79836623096378,
+    "scoring_scenes_per_second": 4285.817982831754,
+    "scoring_cells_per_second": 17829002.808580097
+  },
+  "memory_and_storage": {
+    "process_peak_rss_bytes": 136982528,
+    "maximum_in_memory_batch_array_bytes": 1001860,
+    "full_dataset_cache_written": false,
+    "estimated_hours_for_2995731_scenes_at_measured_generation_rate": 6.411078383831682,
+    "estimated_hours_for_2995731_scenes_at_measured_scoring_rate": 0.19416305203194326
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "platform": "Linux-7.0.0-44-generic-x86_64-with-glibc2.43",
+    "cpu_count": 12,
+    "cpu_model": null,
+    "cuda": {
+      "available": null,
+      "probe_error": "No module named 'torch'"
+    },
+    "scorer": "NumPy CPU B3"
+  },
+  "benchmark_only": {
+    "threshold_source": "median of same preflight batch; invalid for inference",
+    "pfa_cell": 0.013822115384615384,
+    "summary_scenes": 2,
+    "summary_runtime_seconds": 0.00960880699858535
+  }
+}

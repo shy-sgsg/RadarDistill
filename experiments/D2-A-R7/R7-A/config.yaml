@@ -1,0 +1,46 @@
+experiment: D2-A-R7-A
+protocol_version: "0.1"
+status: preregistered_definition_resource_preflight_pending
+signal_grid:
+  applicable_stage: D2-A
+  range_cells: 32
+  pulses: 130
+  prf_hz: 1300.0
+  native_doppler_bins: 130
+  native_cells_per_cpi: 4160
+  doppler_periodic: true
+  zero_padding_changes_physical_cell_count: false
+statistics:
+  pfa_workpoints: [1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5, 1.0e-6]
+  historical_cpi_workpoint: 0.05
+  confidence_level: 0.95
+  primary_threshold_comparison: strict_greater_than
+  tie_sensitivity: greater_than_or_equal
+  independent_cluster: base_scene_or_cpi
+  independent_cut_audit: one_uniform_cut_per_independent_h0_scene
+  zero_event_cp_min_n_for_1e-6: 2995731
+  fixed_cell_simultaneous_fwer: bonferroni
+  zero_event_min_h0_scenes_for_all_4160_cells_at_1e-6: 11328997
+  allow_tail_extrapolation: false
+outputs:
+  dense_detector:
+    report: [pfa_cell, pfa_cpi, mean_false_candidates_per_cpi]
+    pfa_ci: scene_cluster_and_independent_cut_exact
+  sparse_single_candidate:
+    pfa_cell: NOT_APPLICABLE
+    report: [pfa_cpi, mean_false_candidates_per_cpi, sparse_output_rate_per_nominal_cell]
+  soft_teacher_map_without_threshold:
+    pfa: NOT_APPLICABLE
+    report: [top_cell_localization, soft_mass_quality]
+splits:
+  background_fit: disjoint_from_calibration_validation_h1
+  threshold_calibration: disjoint_from_h0_verification_h1
+  model_selection: disjoint_from_h0_verification_h1
+  h0_verification: independent_base_scenes
+  h1_development: independent_base_scenes
+resource_preflight:
+  mode: streaming
+  cache_full_iq: false
+  cache_full_rd_maps: false
+  formal_sample_count: pending_throughput_and_disk_preflight
+  record: [generation_scenes_per_second, scoring_cells_per_second, peak_ram, peak_vram, disk_estimate]
